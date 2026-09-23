@@ -320,93 +320,108 @@
             width: 150px
         }
 
-        /* ② 어제 vs 그제 */
-        .yd-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px
+        /* ② 어제 vs 그제 — 지표를 행, 프레임을 열로 두는 맞대결 표 */
+        .yd-scroll {
+            overflow-x: auto
         }
 
-        .yd-card {
-            background: #f8f9fb;
-            border-radius: 10px;
-            padding: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            min-width: 0
+        .yd-table {
+            min-width: 640px
         }
 
-        .yd-card h3 {
-            margin: 0;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px
+        .yd-table th,
+        .yd-table td {
+            padding: 13px 14px;
+            text-align: center
         }
 
-        .yd-m {
-            display: flex;
-            flex-direction: column;
-            gap: 4px
+        .yd-table thead th {
+            text-align: center;
+            background: #fff
         }
 
-        .yd-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 6px
+        .yd-table th.frame {
+            font-size: 13.5px;
+            color: #202124;
+            padding: 4px 14px 12px;
+            border-bottom: 2px solid var(--c)
         }
 
-        .yd-label {
-            font-size: 12px;
-            color: #6b7078;
-            font-weight: 600
+        .yd-table th.frame > span {
+            display: inline-flex;
+            align-items: center
         }
 
-        .yd-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            gap: 8px
-        }
-
-        .yd-day {
+        .yd-table th.sub {
             font-size: 11px;
+            color: #858a92;
+            padding: 9px 14px;
+            background: #fafbfc
+        }
+
+        .yd-table th.sub.now {
+            color: #3446b8
+        }
+
+        .yd-table td.metric {
+            width: 120px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 800;
+            color: #202124;
+            padding-left: 4px
+        }
+
+        .yd-table td.metric::before {
+            content: "";
+            display: inline-block;
+            width: 3px;
+            height: 13px;
+            border-radius: 2px;
+            background: #3446b8;
+            margin-right: 9px;
+            vertical-align: -2px
+        }
+
+        .yd-table td.now {
+            font-size: 17px;
+            font-weight: 750;
+            color: #202124
+        }
+
+        .yd-table td.prev {
+            font-size: 12.5px;
+            font-weight: 600;
             color: #858a92
         }
 
-        .yd-num {
-            font-size: 12.5px;
-            color: #858a92;
-            font-weight: 600;
-            font-variant-numeric: tabular-nums;
-            white-space: nowrap
+
+        .yd-table td.yd-best {
+            background: #fff8dc
         }
 
-        .yd-row.now .yd-day {
-            color: #3446b8;
-            font-weight: 700
+        .yd-table td:hover .crown-wrap::after,
+        .yd-table td:hover .crown-wrap::before {
+            opacity: 1
         }
 
-        .yd-row.now .yd-num {
-            font-size: 17px;
-            color: #202124;
-            font-weight: 750
+        .yd-table tbody tr:last-child td {
+            border-bottom: 0
         }
 
-        .yd-track {
-            display: block;
-            height: 6px;
-            background: #e6e8ec;
-            border-radius: 3px;
-            overflow: hidden
+        .yd-table td.now .crown {
+            width: 14px;
+            height: 16px
         }
 
-        .yd-track span {
-            display: block;
-            height: 100%;
-            border-radius: 3px
+        .yd-table td.prev .crown {
+            width: 12px;
+            height: 14px
+        }
+
+        .yd-table .crown text {
+            font-size: 13.5px;
+            transform: translateY(1px)
         }
 
         .yd-chg {
@@ -431,23 +446,6 @@
         .yd-chg.flat {
             background: #eceef1;
             color: #666
-        }
-
-        .yd-head {
-            display: flex;
-            gap: 16px;
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 12px
-        }
-
-        .yd-head i {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 2px;
-            margin-right: 6px;
-            vertical-align: -1px
         }
 
         /* ③ 최근 7일 */
@@ -1104,8 +1102,7 @@
 
         @media(max-width:1100px) {
 
-            .themes,
-            .yd-grid {
+            .themes {
                 grid-template-columns: repeat(2, 1fr)
             }
 
@@ -1128,8 +1125,7 @@
                 margin-top: 12px
             }
 
-            .themes,
-            .yd-grid {
+            .themes {
                 grid-template-columns: 1fr
             }
 
@@ -1315,51 +1311,6 @@
             }
         }
 
-        /* ② 어제 vs 그제 — 지표 사이 여백 */
-        .yd-card {
-            padding: 18px 16px 8px;
-            gap: 0
-        }
-
-        .yd-card h3 {
-            padding-bottom: 14px;
-            border-bottom: 1px solid #e6e8ec
-        }
-
-        .yd-m {
-            gap: 7px;
-            padding: 20px 0
-        }
-
-        .yd-m+.yd-m {
-            border-top: 1px dashed #dfe2e7
-        }
-
-        .yd-top {
-            margin-bottom: 12px
-        }
-
-        .yd-m .yd-label {
-            font-size: 13px;
-            font-weight: 800;
-            color: #202124;
-            display: inline-flex;
-            align-items: center;
-            gap: 7px
-        }
-
-        .yd-m .yd-label::before {
-            content: "";
-            width: 3px;
-            height: 13px;
-            border-radius: 2px;
-            background: #3446b8
-        }
-
-        .yd-row+.yd-track {
-            margin-bottom: 4px
-        }
-
         /* ③ 최근 7일 — 위아래 여백 */
         .legend {
             margin: 4px 0 20px
@@ -1416,18 +1367,6 @@
         /* ④ 사이즈별 표 — 촘촘하게 */
         #sizeTable th, #sizeTable td { padding: 6px 8px }
         #sizeTable td.size-cell { padding-left: 18px }
-        /* ② 지표별 1위 표시 */
-        .yd-first { font-style: normal; font-size: 10.5px; font-weight: 800; color: #9a6a00; background: #ffe9a8; border-radius: 999px; padding: 1px 6px; margin-left: 4px }
-        .yd-m.best:hover .crown-wrap::after, .yd-m.best:hover .crown-wrap::before { opacity: 1 }
-        /* ② 카드끼리 제목·지표 줄 높이 맞춤 */
-        .yd-grid { align-items: stretch }
-        .yd-card { display: grid; grid-row: span 4; grid-template-rows: subgrid; row-gap: 0 }
-        .yd-card h3 { align-self: stretch }
-        .yd-m { justify-content: flex-start }
-        .yd-first { line-height: 1.4; vertical-align: 1px }
-        /* ② 어제·그제 순위 */
-        .yd-rank { font-style: normal; font-size: 10.5px; font-weight: 700; color: #6b7078; background: #eceef1; border-radius: 999px; padding: 1px 6px; margin-left: 2px; line-height: 1.4; vertical-align: 1px }
-        .yd-rank.first { color: #9a6a00; background: #ffe9a8; font-weight: 800 }
         /* ④ 지표 탭 */
         .m-tabs { display: flex; gap: 4px; border-bottom: 1px solid #e6e8ec; margin: 2px 0 18px }
         .m-tabs button { border: 0; background: none; font: inherit; font-size: 13.5px; font-weight: 700; color: #858a92; padding: 10px 16px 11px; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px }
@@ -1478,12 +1417,12 @@
         .rk-badge.rk1 { background: #ffe9a8; color: #9a6a00 }
         .rk-badge.rk2 { background: #e9ecf1; color: #5b6270 }
         .rk-badge.rk3 { background: #f6e0cf; color: #9a5a2a }
-        .theme-stats .rk-badge, .yd-day .rk-badge { font-style: normal; min-width: 30px; padding: 1px 6px; font-size: 10.5px; margin-left: 2px; vertical-align: 1px }   /* ①② 1·2·3위 */
+        .theme-stats .rk-badge { font-style: normal; min-width: 30px; padding: 1px 6px; font-size: 10.5px; margin-left: 2px; vertical-align: 1px }   /* ①② 1·2·3위 */
 
         /* ===== 상품 오토 프레임 페이지 전용 ===== */
-        .themes, .yd-grid { grid-template-columns: repeat(2, 1fr) }
+        .themes { grid-template-columns: repeat(2, 1fr) }
         #placeSummary { grid-template-columns: repeat(2, 1fr) }
-        @media(max-width:800px) { .themes, .yd-grid, #placeSummary { grid-template-columns: 1fr } }
+        @media(max-width:800px) { .themes, #placeSummary { grid-template-columns: 1fr } }
         .theme-name { flex-wrap: wrap; row-gap: 6px; white-space: nowrap }
         .ab-chip { display: inline-block; margin-right: 6px; padding: 1px 8px; border-radius: 999px; font-size: 10.5px; font-weight: 800; letter-spacing: .2px; line-height: 1.5 }
         .ab-chip.after { background: #3446b8; color: #fff }
@@ -1543,8 +1482,7 @@
                 <h2>2. 어제 vs 그제 오토 프레임별 비교</h2>
             </div>
             <div class="card">
-                <div class="yd-head" id="ydHead"></div>
-                <div class="yd-grid" id="yd"></div>
+                <div class="scroll yd-scroll" id="yd"></div>
             </div>
         </section>
 
@@ -1900,38 +1838,37 @@
         })();
 
         const CROWN = `<svg class="crown" viewBox="0 0 24 28" aria-hidden="true"><path d="M6 1h5l3 8H9z" fill="#3f7ee8"/><path d="M18 1h-5l-3 8h5z" fill="#d7262f"/><circle cx="12" cy="17.5" r="9" fill="#f2b705" stroke="#c98f00" stroke-width="1.5"/><circle cx="12" cy="17.5" r="6.3" fill="none" stroke="#fff3c4" stroke-width="1"/><text x="12" y="21.6" text-anchor="middle" font-size="11" font-weight="800" font-family="Arial, sans-serif" fill="#7a5200">1</text></svg>`;
-        /* ② 어제 vs 그제 */
+        // 2위·3위 메달 — 1위(CROWN)와 같은 모양, 은·동 색
+        const MEDAL_C = { 2: ['#cfd3da', '#8f949c', '#f5f6f8', '#4b5057'], 3: ['#d8945e', '#a3602c', '#f8e2cc', '#5c3410'] };
+        const MEDAL = n => n === 1 ? CROWN : MEDAL_C[n] ? `<svg class="crown" viewBox="0 0 24 28" aria-hidden="true"><path d="M6 1h5l3 8H9z" fill="#3f7ee8"/><path d="M18 1h-5l-3 8h5z" fill="#d7262f"/><circle cx="12" cy="17.5" r="9" fill="${MEDAL_C[n][0]}" stroke="${MEDAL_C[n][1]}" stroke-width="1.5"/><circle cx="12" cy="17.5" r="6.3" fill="none" stroke="${MEDAL_C[n][2]}" stroke-width="1"/><text x="12" y="21.6" text-anchor="middle" font-size="11" font-weight="800" font-family="Arial, sans-serif" fill="${MEDAL_C[n][3]}">${n}</text></svg>` : '';
+        /* ② 어제 vs 그제 — 지표를 행, 프레임을 열로 두는 맞대결 표 */
         (function () {
-            const Y = DATES[DATES.length - 1], B = DATES[DATES.length - 2], YC = '#3446b8', BC = '#b9bfca';
-            document.getElementById('ydHead').innerHTML = `<span><i style="background:${YC}"></i>어제 ${md(Y)}</span><span><i style="background:${BC}"></i>그제 ${md(B)}</span>`;
+            const Y = DATES[DATES.length - 1], B = DATES[DATES.length - 2];
             const Ys = Object.fromEntries(THEMES.map(T => [T.id, sum(pick(r => r.t === T.id && r.d === Y))]));
-            const best = Object.fromEntries(M3.map(m => [m.k, Math.max(...THEMES.map(T => Ys[T.id][m.k]))]));
             const Bs = Object.fromEntries(THEMES.map(T => [T.id, sum(pick(r => r.t === T.id && r.d === B))]));
-            // 프레임 중 순위 (데이터 없는 프레임은 제외)
+            const best = Object.fromEntries(M3.map(m => [m.k, Math.max(...THEMES.map(T => Ys[T.id][m.k]))]));
+            // 프레임 중 순위 (데이터 없는 프레임은 제외) → 금·은·동 메달
             const rank = (S, k, id) => S[id][k] > 0 ? 1 + THEMES.filter(T => S[T.id][k] > S[id][k]).length : null;
-            const rankChip = n => n ? `<em class="rk-badge rk${Math.min(n, 3)}">${n}위</em>` : '';
-            document.getElementById('yd').innerHTML = THEMES.map(T => {
-                const y = Ys[T.id], b = Bs[T.id];
-                const metrics = M3.map(m => {
-                    const yv = y[m.k], bv = b[m.k];
-                    if (!y.imp && !b.imp) return `<div class="yd-m"><div class="yd-top"><span class="yd-label">${m.label}</span><span class="yd-chg flat">데이터 없음</span></div><div class="yd-row now"><span class="yd-day">어제</span><span class="yd-num">−</span></div></div>`;
-                    if (!bv) return `<div class="yd-m"><div class="yd-top"><span class="yd-label">${m.label}</span><span class="yd-chg flat">그제 데이터 없음</span></div><div class="yd-row now"><span class="yd-day">어제</span><span class="yd-num">${m.fmt(yv)}</span></div></div>`;
+            const cell = (S, k, id, v, day) => { const n = rank(S, k, id); return n ? `<span class="crown-wrap" data-tip="${day} ${M3.find(m => m.k === k).label} ${n}위
+${THEMES.length}개 프레임 중">${MEDAL(n)}${v}</span>` : v; };
+            // 머리글 1줄: 프레임 이름 (3칸 묶음), 2줄: 어제 / 그제 / 변화
+            const head1 = THEMES.map(T => `<th class="frame sep" colspan="3" style="--c:${T.color}"><span><span class="dot" style="${sw(T)}"></span>${T.ab ? `<span class="ab-chip ${T.ab}">${AB_LABEL[T.ab]}</span>` : ''}${nm(T)}${T.ch === '카카오' ? ' (카카오)' : ''}</span></th>`).join('');
+            const head2 = THEMES.map(() => `<th class="sub now sep">어제 ${md(Y)}</th><th class="sub">그제 ${md(B)}</th><th class="sub">변화</th>`).join('');
+            const rows = M3.map(m => {
+                const cells = THEMES.map(T => {
+                    const y = Ys[T.id], b = Bs[T.id], yv = y[m.k], bv = b[m.k];
+                    if (!y.imp && !b.imp) return `<td class="now sep">−</td><td class="prev">−</td><td class="chg"><span class="yd-chg flat">데이터 없음</span></td>`;
+                    const top = yv > 0 && yv === best[m.k];
+                    const nowTd = `<td class="now sep${top ? ' yd-best' : ''}">${cell(Ys, m.k, T.id, m.fmt(yv), '어제')}</td>`;
+                    if (!bv) return `${nowTd}<td class="prev">−</td><td class="chg"><span class="yd-chg flat">그제 데이터 없음</span></td>`;
                     const diff = m.k === 'ctr' ? yv - bv : (yv / bv - 1) * 100;
                     const cls = Math.abs(diff) < 0.0005 ? 'flat' : diff > 0 ? 'rise' : 'fall';
                     const txt = `${cls === 'flat' ? '−' : diff > 0 ? '▲' : '▼'} ${Math.abs(diff).toFixed(m.k === 'ctr' ? 3 : 1)}${m.k === 'ctr' ? '%p' : '%'}`;
-                    const mx = Math.max(yv, bv) || 1;
-                    const top = yv > 0 && yv === best[m.k];
-                    const val = top ? `<span class="crown-wrap" data-tip="어제 ${m.label} 1위\n${THEMES.length}개 프레임 중 가장 높음">${CROWN}${m.fmt(yv)}</span>` : m.fmt(yv);
-                    return `<div class="yd-m${top ? ' best' : ''}">
-                        <div class="yd-top"><span class="yd-label">${m.label}</span><span class="yd-chg ${cls}">${txt}</span></div>
-                        <div class="yd-row now"><span class="yd-day">어제 ${rankChip(rank(Ys, m.k, T.id))}</span><span class="yd-num">${val}</span></div>
-                        <span class="yd-track"><span style="width:${yv / mx * 100}%;background:${YC}"></span></span>
-                        <div class="yd-row"><span class="yd-day">그제 ${rankChip(rank(Bs, m.k, T.id))}</span><span class="yd-num">${m.fmt(bv)}</span></div>
-                        <span class="yd-track"><span style="width:${bv / mx * 100}%;background:${BC}"></span></span>
-                    </div>`;
+                    return `${nowTd}<td class="prev">${cell(Bs, m.k, T.id, m.fmt(bv), '그제')}</td><td class="chg"><span class="yd-chg ${cls}">${txt}</span></td>`;
                 }).join('');
-                return `<div class="yd-card"><h3><span><span class="dot" style="${sw(T)}"></span>${nm(T)}</span></h3>${metrics}</div>`;
+                return `<tr><td class="metric">${m.label}</td>${cells}</tr>`;
             }).join('');
+            document.getElementById('yd').innerHTML = `<table class="yd-table"><thead><tr><th></th>${head1}</tr><tr><th></th>${head2}</tr></thead><tbody>${rows}</tbody></table>`;
         })();
 
         /* ③ 최근 7일 — 지표별 차트, 날짜마다 프레임별 막대 */
