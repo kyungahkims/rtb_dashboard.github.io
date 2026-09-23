@@ -2268,7 +2268,7 @@
             const cell = (S, k, id, v, day) => { const n = rank(S, k, id); return n ? `<span class="crown-wrap" data-tip="${day} ${M3.find(m => m.k === k).label} ${n}위
 ${THEMES.length}개 프레임 중">${MEDAL(n)}${v}</span>` : v; };
             // 머리글 1줄: 프레임 이름 (3칸 묶음), 2줄: 어제 / 그제 / 변화
-            const head1 = THEMES.map(T => `<th class="frame sep" colspan="3" style="--c:${T.color}"><span><span class="dot" style="${sw(T)}"></span>${T.tag ? `<span class="tag-chip">${T.tag}</span>` : ''}${nm(T)}${T.ch === '카카오' ? ' (카카오)' : ''}</span></th>`).join('');
+            const head1 = THEMES.map(T => `<th class="frame sep" colspan="3" style="--c:${T.color}"><span><span class="dot" style="${sw(T)}"></span>${nm(T)}${T.ch === '카카오' ? ' (카카오)' : ''}</span></th>`).join('');
             const head2 = THEMES.map(() => `<th class="sub now sep">어제 ${md(Y)}</th><th class="sub">그제 ${md(B)}</th><th class="sub">변화</th>`).join('');
             const rows = M3.map(m => {
                 const cells = THEMES.map(T => {
