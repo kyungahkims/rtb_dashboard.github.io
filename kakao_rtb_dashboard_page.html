@@ -1,0 +1,1169 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Kakao RTB Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+    <style>
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: #f5f6f8;
+            color: #202124;
+            font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif
+        }
+
+        .wrap {
+            margin: auto;
+            padding: 28px 32px
+        }
+
+        .head {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            margin-bottom: 22px
+        }
+
+        .head h1 {
+            margin: 0;
+            font-size: 27px
+        }
+
+        .sub {
+            color: #7b8088;
+            font-size: 13px;
+            margin-top: 7px
+        }
+
+        .date {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 9px;
+            padding: 10px 14px;
+            font-size: 13px
+        }
+
+        .kpis {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 14px
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e6e8ec;
+            border-radius: 12px;
+            padding: 26px 24px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 4px 14px rgba(0, 0, 0, .07)
+        }
+
+        .label {
+            font-size: 12px;
+            color: #7b8088
+        }
+
+        .value {
+            font-size: 26px;
+            font-weight: 750;
+            margin-top: 9px;
+            font-variant-numeric: tabular-nums;
+            overflow-wrap: anywhere
+        }
+
+        .change {
+            font-size: 12px;
+            margin-top: 8px
+        }
+
+        .up {
+            color: #198754
+        }
+
+        .down {
+            color: #d85b63
+        }
+
+        section {
+            margin-bottom: 64px
+        }
+
+        section:last-of-type {
+            margin-bottom: 24px
+        }
+
+        .title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px
+        }
+
+        .title h2 {
+            font-size: 17px;
+            font-weight: 800;
+            color: #1a1d23;
+            letter-spacing: -.01em;
+            margin: 0
+        }
+
+        .title span {
+            font-size: 12px;
+            color: #858a92
+        }
+
+        .compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px
+        }
+
+
+        .yd-head {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 14px
+        }
+
+        .yd-head i {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            margin-right: 6px;
+            vertical-align: -1px
+        }
+
+        .yd {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px
+        }
+
+        .yd-item {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            min-width: 0
+        }
+
+        .yd-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 2px
+        }
+
+        .yd-label {
+            font-size: 12px;
+            color: #6b7078;
+            font-weight: 600
+        }
+
+        .yd-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 8px;
+            margin-top: 4px
+        }
+
+        .yd-day {
+            font-size: 11px;
+            color: #858a92
+        }
+
+        .yd-num {
+            font-size: 13px;
+            color: #858a92;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap
+        }
+
+        .yd-row.now .yd-day {
+            color: #3446b8;
+            font-weight: 700
+        }
+
+        .yd-row.now .yd-num {
+            font-size: 19px;
+            color: #202124;
+            font-weight: 750
+        }
+
+        .yd-track {
+            display: block;
+            height: 6px;
+            background: #eceef1;
+            border-radius: 3px;
+            overflow: hidden
+        }
+
+        .yd-track span {
+            display: block;
+            height: 100%;
+            border-radius: 3px
+        }
+
+        .yd-chg {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 999px;
+            font-variant-numeric: tabular-nums
+        }
+
+        .yd-chg.up {
+            background: #e6f4ec;
+            color: #198754
+        }
+
+        .yd-chg.down {
+            background: #fbe9ea;
+            color: #c9444d
+        }
+
+        .yd-chg.flat {
+            background: #eceef1;
+            color: #666
+        }
+
+        .day {
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 12px
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px
+        }
+
+        .metric {
+            background: #f8f9fb;
+            border-radius: 8px;
+            padding: 11px
+        }
+
+        .metric small {
+            display: block;
+            color: #858a92;
+            font-size: 10px;
+            margin-bottom: 6px
+        }
+
+        .metric b {
+            font-size: 16px
+        }
+
+        .tabs {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+            margin-bottom: 15px
+        }
+
+        .tabs button {
+            border: 1px solid #e1e4e9;
+            background: #fff;
+            border-radius: 8px;
+            padding: 8px 13px;
+            font-size: 12px;
+            color: #666;
+            cursor: pointer
+        }
+
+        .tabs button.active {
+            background: #20242a;
+            color: #fff;
+            border-color: #20242a
+        }
+
+        .bars {
+            height: 250px;
+            display: flex;
+            align-items: end;
+            gap: 14px;
+            padding: 20px 10px 32px;
+            border-top: 1px solid #eee
+        }
+
+        .g {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            align-items: end;
+            justify-content: center;
+            position: relative
+        }
+
+        .bar {
+            width: 48%;
+            background: #5269d8;
+            border-radius: 5px 5px 0 0
+        }
+
+        .bar b {
+            position: absolute;
+            top: -18px;
+            font-size: 10px;
+            color: #555
+        }
+
+        .g span {
+            position: absolute;
+            bottom: -27px;
+            font-size: 11px;
+            color: #777
+        }
+
+        .wk-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 16px;
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 6px
+        }
+
+        .wk-legend i {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            margin-right: 6px;
+            vertical-align: -1px
+        }
+
+        .wk-scroll {
+            overflow: visible
+        }
+
+        .wk {
+            height: 270px;
+            display: flex;
+            align-items: stretch;
+            gap: 12px;
+            padding: 26px 4px 0;
+            border-bottom: 1px solid #e3e6ea
+        }
+
+        .wk-day {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-radius: 8px
+        }
+
+        .wk-day.today {
+            background: #f3f5ff
+        }
+
+        .wk-bars {
+            flex: 1;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 4px;
+            padding: 0 4px
+        }
+
+        .wk-col {
+            flex: 1;
+            max-width: 30px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center
+        }
+
+        .wk-col b {
+            font-size: 9.5px;
+            font-weight: 600;
+            color: #444;
+            white-space: nowrap;
+            margin-bottom: 3px;
+            font-variant-numeric: tabular-nums
+        }
+
+        .wk-col i {
+            display: block;
+            width: 100%;
+            border-radius: 4px 4px 0 0
+        }
+
+        .wk-col:hover i {
+            filter: brightness(.9)
+        }
+
+        .wk-date {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            padding: 8px 0 4px;
+            font-weight: 600
+        }
+
+        .wk-day.today .wk-date {
+            color: #3446b8
+        }
+
+        .wk-note {
+            font-size: 11px;
+            color: #858a92;
+            margin-top: 10px
+        }
+
+
+        .dl-toggles {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+            margin-bottom: 12px
+        }
+
+        .dl-toggles button {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            border: 1px solid #e1e4e9;
+            background: #fff;
+            border-radius: 8px;
+            padding: 7px 12px;
+            font-size: 12px;
+            color: #666;
+            cursor: pointer
+        }
+
+        .dl-toggles button i {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            border: 1.5px solid #b9bfca;
+            background: #fff;
+            flex: none;
+            position: relative
+        }
+
+        .dl-toggles button[aria-pressed="true"] i::after {
+            content: "";
+            position: absolute;
+            left: 3.5px;
+            top: 0.5px;
+            width: 4px;
+            height: 8px;
+            border: solid #fff;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg)
+        }
+
+        .dl-toggles button[aria-pressed="true"] {
+            border-color: var(--c);
+            color: #202124;
+            font-weight: 700;
+            background: color-mix(in srgb, var(--c) 9%, #fff)
+        }
+
+        .dl-toggles button[aria-pressed="true"] i {
+            background: var(--c);
+            border-color: var(--c)
+        }
+
+        .dl-chart {
+            position: relative
+        }
+
+        .dl-chart svg {
+            display: block;
+            overflow: visible
+        }
+
+        .dl-tip {
+            position: absolute;
+            top: 8px;
+            pointer-events: none;
+            background: #20242a;
+            color: #fff;
+            border-radius: 8px;
+            padding: 9px 11px;
+            font-size: 12px;
+            line-height: 1.6;
+            white-space: nowrap;
+            box-shadow: 0 4px 14px #0003;
+            z-index: 2
+        }
+
+        .dl-tip b {
+            display: block;
+            margin-bottom: 2px
+        }
+
+        .dl-tip i {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px
+        }
+
+        .dl-tip span {
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+            font-variant-numeric: tabular-nums
+        }
+
+
+        .sort-btn { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 3px 6px; margin: -3px -6px; border-radius: 6px; font: inherit; color: inherit }
+        .sort-btn:hover { background: #eef0f3; color: #202124 }
+        .sort-btn:focus-visible { outline: 2px solid #3446b8 }
+        .sort-btn .arw { display: inline-flex; flex-direction: column; font-size: 7px; line-height: 7px; color: #d3d7dd }
+        .sort-btn .arw span { padding: 1px 4px; margin: 0 -4px; cursor: pointer }
+        .sort-btn .arw span:hover { color: #6b7078 }
+        .sort-btn[data-dir="desc"] .arw .arw-up, .sort-btn[data-dir="asc"] .arw .arw-dn { color: #3446b8 }
+        .sort-btn[data-dir] { color: #3446b8; font-weight: 700 }
+
+
+        .total-row td { background: #f3f5ff; font-weight: 700; color: #202124; border-bottom: 2px solid #d9ddf5; font-size: 12.5px }
+        .total-row td:first-child { color: #3446b8 }
+
+        .chart {
+            height: 300px
+        }
+
+        .chart svg {
+            width: 100%;
+            height: 100%
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+            font-size: 12px
+        }
+
+        th,
+        td {
+            padding: 11px 10px;
+            border-bottom: 1px solid #e9ebef;
+            text-align: right;
+            white-space: nowrap
+        }
+
+        th:first-child,
+        td:first-child {
+            text-align: left
+        }
+
+        th {
+            color: #777;
+            background: #fafbfc;
+            font-size: 11px
+        }
+
+        .scroll {
+            overflow: auto
+        }
+
+        @media (max-width: 1000px) {
+            .yd {
+                grid-template-columns: repeat(3, 1fr)
+            }
+        }
+
+        @media(max-width:1000px) {
+            .kpis {
+                grid-template-columns: repeat(3, 1fr)
+            }
+
+            .metrics {
+                grid-template-columns: repeat(3, 1fr)
+            }
+        }
+
+        @media(max-width:700px) {
+            .wrap {
+                padding: 18px
+            }
+
+            .head {
+                display: block
+            }
+
+            .date {
+                display: inline-block;
+                margin-top: 12px
+            }
+
+            .kpis {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .yd {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .metrics {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .value {
+                font-size: 20px
+            }
+        }
+        /* ② 어제 vs 그제 — 여백 (Google RTB 프레임 AB 테스트와 동일한 톤) */
+        .yd-head { margin-bottom: 16px }
+        .yd { gap: 12px }
+        .yd-item { padding: 20px 18px 18px; gap: 7px }
+        .yd-top { margin-bottom: 12px }
+        .yd-label { font-size: 13px; font-weight: 800; color: #202124; display: inline-flex; align-items: center; gap: 7px }
+        .yd-label::before { content: ""; width: 3px; height: 13px; border-radius: 2px; background: #3446b8 }
+        .yd-row { margin-top: 0 }
+        .yd-row+.yd-track { margin-bottom: 4px }
+        /* ③ 최근 7일 — 막대 얇게 */
+        .wk-legend { margin-bottom: 14px }
+        .wk { gap: 0; padding-bottom: 10px }
+        .wk-day { padding: 0 22px }
+        .wk-bars { gap: 2px }
+        .wk-col { max-width: 30px }
+        .wk-col b { font-size: 9px; font-weight: 500; color: #6b7078 }
+        .wk-col i { width: 12px; border-radius: 3px 3px 0 0 }
+        /* ③ 최근 7일 — 바 호버 시 선그래프 */
+        .wk { position: relative }
+        .wk-line { position: absolute; left: 0; top: 0; pointer-events: none; overflow: visible }
+        .wk-col i, .wk-col b { transition: opacity .15s }
+        .wk.hl .wk-col:not(.on) i, .wk.hl .wk-col:not(.on) b { opacity: .2 }
+        /* 카드 안쪽 여백 — 표 카드는 기존대로 */
+        .card:has(> .scroll) { padding: 18px }
+
+
+        /* 맨 위로 버튼 */
+        .to-top { position: fixed; right: 24px; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 20; width: 44px; height: 44px; border-radius: 50%; border: 1px solid #e6e8ec; background: #fff; color: #3446b8; display: grid; place-items: center; cursor: pointer; box-shadow: 0 6px 18px rgba(0, 0, 0, .14); opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .18s, transform .18s, visibility .18s }
+        .to-top.show { opacity: 1; visibility: visible; transform: none }
+        .to-top:hover { background: #3446b8; color: #fff; border-color: #3446b8 }
+        .to-top:focus-visible { outline: 2px solid #3446b8; outline-offset: 2px }
+        body:has(.tl-open) .to-top { bottom: calc(24px + 58px + 12px + env(safe-area-inset-bottom, 0px)); right: 31px }   /* Timeline 버튼 위 */
+        /* 1. 당월 핵심 성과 — KPI 카드 디자인 */
+        .kpi { position: relative; overflow: hidden; padding: 22px 22px 20px; display: flex; flex-direction: column; gap: 12px }
+        .kpi::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: var(--c) }
+        .kpi::after { content: ""; position: absolute; right: -28px; bottom: -28px; width: 110px; height: 110px; border-radius: 50%; background: var(--c); opacity: .06; pointer-events: none }
+        .kpi-top { display: flex; align-items: center; gap: 10px }
+        .kpi-ico { flex: none; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: color-mix(in srgb, var(--c) 12%, #fff); color: var(--c) }
+        .kpi-ico svg { width: 18px; height: 18px }
+        .kpi .label { font-size: 12.5px; font-weight: 600; color: #6b7078; line-height: 1.35 }
+        .kpi .value { margin-top: 0; font-size: 27px; letter-spacing: -.02em; color: #1a1d23 }
+        .kpi-sub { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #858a92; min-height: 18px }
+        .kpi-sub b { color: #3b4048; font-weight: 700; font-variant-numeric: tabular-nums }
+        .kpi-sub .pill { padding: 1px 7px; border-radius: 999px; background: color-mix(in srgb, var(--c) 10%, #fff); color: var(--c); font-size: 11px; font-weight: 700 }
+        @media(max-width:1200px) { .kpi .value { font-size: 23px } }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <section>
+            <div class="title">
+                <h2>1. 당월 핵심 성과</h2>
+                <span id="kpiPeriod"></span>
+            </div>
+            <div class="kpis">
+                <div class="card kpi" style="--c:#3446b8">
+                    <div class="kpi-top"><span class="kpi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span><div class="label">노출수</div></div>
+                    <div class="value">112,606,428</div>
+                    <div class="kpi-sub" data-kpi="imp"></div>
+                </div>
+                <div class="card kpi" style="--c:#16a34a">
+                    <div class="kpi-top"><span class="kpi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3v4M5.2 5.2l2.8 2.8M3 9h4"/><path d="M10 10l10 4-4.5 1.5L14 20z"/></svg></span><div class="label">클릭수</div></div>
+                    <div class="value">121,498</div>
+                    <div class="kpi-sub" data-kpi="clk"></div>
+                </div>
+                <div class="card kpi" style="--c:#8b5cf6">
+                    <div class="kpi-top"><span class="kpi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 18L20 6"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg></span><div class="label">클릭률 (CTR)</div></div>
+                    <div class="value">0.108%</div>
+                    <div class="kpi-sub" data-kpi="ctr"></div>
+                </div>
+                <div class="card kpi" style="--c:#f59e0b">
+                    <div class="kpi-top"><span class="kpi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></span><div class="label">세션 ROAS (24시간 이내 구매)</div></div>
+                    <div class="value">349%</div>
+                    <div class="kpi-sub" data-kpi="roas"></div>
+                </div>
+                <div class="card kpi" style="--c:#e0262f">
+                    <div class="kpi-top"><span class="kpi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/><circle cx="16.5" cy="14.5" r="1.2"/></svg></span><div class="label">소진금액</div></div>
+                    <div class="value">69,311,013원</div>
+                    <div class="kpi-sub" data-kpi="spend"></div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="title">
+                <h2>2. 어제 vs 그제</h2>
+            </div>
+            <div class="card">
+                <div class="yd-head" id="ydHead"></div>
+                <div class="yd" id="yd"></div>
+            </div>
+        </section>
+
+        <section>
+            <div class="title">
+                <h2>3. 최근 7일 성과 비교</h2>
+            </div>
+            <div class="card">
+                <div class="wk-legend" id="wkLegend"></div>
+                <div class="wk-scroll">
+                    <div class="wk" id="wk"></div>
+                </div>
+
+            </div>
+        </section>
+
+        <section>
+            <div class="title">
+                <h2>4. 일별 데이터 그래프</h2>
+            </div>
+            <div class="card">
+                <div class="dl-toggles" id="dlToggles" role="group" aria-label="그래프에 표시할 지표 (여러 개 선택 가능)"></div>
+                <div class="chart dl-chart" id="dlChart">
+                    <svg id="dlSvg" role="img" aria-label="일별 데이터 그래프"></svg>
+                    <div class="dl-tip" id="dlTip" hidden></div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="title">
+                <h2>5. 일별 성과 테이블</h2>
+            </div>
+            <div class="card">
+                <div class="scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>날짜</th>
+                                <th>노출수</th>
+                                <th>클릭수</th>
+                                <th>클릭률 (CTR)</th>
+                                <th>세션 ROAS</th>
+                                <th>소진금액</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>09/22</td>
+                                <td>6,771,359</td>
+                                <td>6,864</td>
+                                <td>0.101%</td>
+                                <td>204%</td>
+                                <td>5,240,653원</td>
+                            </tr>
+                            <tr>
+                                <td>09/21</td>
+                                <td>7,786,331</td>
+                                <td>7,522</td>
+                                <td>0.097%</td>
+                                <td>130%</td>
+                                <td>5,721,875원</td>
+                            </tr>
+                            <tr>
+                                <td>09/20</td>
+                                <td>5,555,077</td>
+                                <td>6,374</td>
+                                <td>0.115%</td>
+                                <td>40%</td>
+                                <td>4,624,792원</td>
+                            </tr>
+                            <tr>
+                                <td>09/19</td>
+                                <td>6,661,459</td>
+                                <td>6,901</td>
+                                <td>0.104%</td>
+                                <td>63%</td>
+                                <td>4,842,363원</td>
+                            </tr>
+                            <tr>
+                                <td>09/18</td>
+                                <td>8,577,722</td>
+                                <td>8,433</td>
+                                <td>0.098%</td>
+                                <td>220%</td>
+                                <td>5,923,481원</td>
+                            </tr>
+                            <tr>
+                                <td>09/17</td>
+                                <td>6,690,181</td>
+                                <td>7,174</td>
+                                <td>0.107%</td>
+                                <td>600%</td>
+                                <td>3,948,675원</td>
+                            </tr>
+                            <tr>
+                                <td>09/16</td>
+                                <td>6,497,671</td>
+                                <td>7,268</td>
+                                <td>0.112%</td>
+                                <td>622%</td>
+                                <td>4,077,241원</td>
+                            </tr>
+                            <tr>
+                                <td>09/15</td>
+                                <td>6,681,850</td>
+                                <td>6,773</td>
+                                <td>0.101%</td>
+                                <td>814%</td>
+                                <td>3,745,057원</td>
+                            </tr>
+                            <tr>
+                                <td>09/14</td>
+                                <td>7,522,895</td>
+                                <td>7,167</td>
+                                <td>0.095%</td>
+                                <td>717%</td>
+                                <td>4,000,917원</td>
+                            </tr>
+                            <tr>
+                                <td>09/13</td>
+                                <td>4,680,436</td>
+                                <td>5,684</td>
+                                <td>0.121%</td>
+                                <td>155%</td>
+                                <td>2,665,252원</td>
+                            </tr>
+                            <tr>
+                                <td>09/12</td>
+                                <td>5,295,753</td>
+                                <td>5,822</td>
+                                <td>0.110%</td>
+                                <td>286%</td>
+                                <td>2,591,530원</td>
+                            </tr>
+                            <tr>
+                                <td>09/11</td>
+                                <td>6,585,513</td>
+                                <td>6,970</td>
+                                <td>0.106%</td>
+                                <td>413%</td>
+                                <td>3,518,715원</td>
+                            </tr>
+                            <tr>
+                                <td>09/10</td>
+                                <td>9,216,818</td>
+                                <td>7,167</td>
+                                <td>0.078%</td>
+                                <td>574%</td>
+                                <td>3,480,189원</td>
+                            </tr>
+                            <tr>
+                                <td>09/09</td>
+                                <td>4,299,340</td>
+                                <td>4,999</td>
+                                <td>0.116%</td>
+                                <td>160%</td>
+                                <td>2,562,450원</td>
+                            </tr>
+                            <tr>
+                                <td>09/08</td>
+                                <td>2,679,427</td>
+                                <td>3,402</td>
+                                <td>0.127%</td>
+                                <td>277%</td>
+                                <td>1,664,243원</td>
+                            </tr>
+                            <tr>
+                                <td>09/07</td>
+                                <td>2,597,501</td>
+                                <td>3,224</td>
+                                <td>0.124%</td>
+                                <td>199%</td>
+                                <td>1,569,670원</td>
+                            </tr>
+                            <tr>
+                                <td>09/06</td>
+                                <td>1,391,516</td>
+                                <td>2,119</td>
+                                <td>0.152%</td>
+                                <td>123%</td>
+                                <td>941,214원</td>
+                            </tr>
+                            <tr>
+                                <td>09/05</td>
+                                <td>1,603,995</td>
+                                <td>2,386</td>
+                                <td>0.149%</td>
+                                <td>449%</td>
+                                <td>1,018,219원</td>
+                            </tr>
+                            <tr>
+                                <td>09/04</td>
+                                <td>2,494,459</td>
+                                <td>3,381</td>
+                                <td>0.136%</td>
+                                <td>339%</td>
+                                <td>1,617,940원</td>
+                            </tr>
+                            <tr>
+                                <td>09/03</td>
+                                <td>2,449,010</td>
+                                <td>3,617</td>
+                                <td>0.148%</td>
+                                <td>342%</td>
+                                <td>1,739,463원</td>
+                            </tr>
+                            <tr>
+                                <td>09/02</td>
+                                <td>2,933,300</td>
+                                <td>3,873</td>
+                                <td>0.132%</td>
+                                <td>840%</td>
+                                <td>1,773,941원</td>
+                            </tr>
+                            <tr>
+                                <td>09/01</td>
+                                <td>3,634,815</td>
+                                <td>4,378</td>
+                                <td>0.120%</td>
+                                <td>379%</td>
+                                <td>2,043,133원</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+    <button type="button" class="to-top" id="toTop" aria-label="맨 위로">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    </button>
+    <script>
+        // ③ 최근 7일 성과 비교 — 날짜별로 5개 지표를 막대로 나란히 표시
+        const WEEK = [
+            { d: '09/16', imp: 6497671, clk: 7268, ctr: 0.1119, roas: 622, spend: 4077241 },
+            { d: '09/17', imp: 6690181, clk: 7174, ctr: 0.1072, roas: 600, spend: 3948675 },
+            { d: '09/18', imp: 8577722, clk: 8433, ctr: 0.0983, roas: 220, spend: 5923481 },
+            { d: '09/19', imp: 6661459, clk: 6901, ctr: 0.1036, roas: 63, spend: 4842363 },
+            { d: '09/20', imp: 5555077, clk: 6374, ctr: 0.1147, roas: 40, spend: 4624792 },
+            { d: '09/21', imp: 7786331, clk: 7522, ctr: 0.0966, roas: 130, spend: 5721875 },
+            { d: '09/22', imp: 6771359, clk: 6864, ctr: 0.1014, roas: 204, spend: 5240653 },
+        ];
+        const WK_METRICS = [
+            { k: 'imp', label: '노출수', color: '#4f6bed', fmt: v => Math.round(v).toLocaleString('ko-KR'), short: v => Math.round(v / 1e4).toLocaleString('ko-KR') + '만' },
+            { k: 'clk', label: '클릭수', color: '#ff7a59', fmt: v => Math.round(v).toLocaleString('ko-KR') },
+            { k: 'ctr', label: '클릭률 (CTR)', color: '#1fb5a3', fmt: v => v.toFixed(3) + '%' },
+            { k: 'roas', label: '세션 ROAS', color: '#f5a524', fmt: v => v + '%' },
+            { k: 'spend', label: '소진금액', color: '#9b6bdf', fmt: v => Math.round(v).toLocaleString('ko-KR') + '원', short: v => Math.round(v / 1e4).toLocaleString('ko-KR') + '만원' },
+        ];
+        (function () {
+            const max = Object.fromEntries(WK_METRICS.map(m => [m.k, Math.max(...WEEK.map(r => r[m.k]))]));
+            document.getElementById('wkLegend').innerHTML = WK_METRICS.map(m => `<span><i style="background:${m.color}"></i>${m.label}</span>`).join('');
+            document.getElementById('wk').innerHTML = WEEK.map((r, i) => `
+    <div class="wk-day${i === WEEK.length - 1 ? ' today' : ''}">
+      <div class="wk-bars">${WK_METRICS.map(m => `
+        <div class="wk-col" data-k="${m.k}" title="${r.d} ${m.label}: ${m.fmt(r[m.k])}">
+          <b>${(m.short || m.fmt)(r[m.k])}</b>
+          <i style="height:${(r[m.k] / max[m.k] * 85).toFixed(1)}%;background:${m.color}"></i>
+        </div>`).join('')}
+      </div>
+      <div class="wk-date">${r.d}${i === WEEK.length - 1 ? ' (어제)' : ''}</div>
+    </div>`).join('');
+
+            // 바에 마우스를 올리면 같은 지표의 7일 추이를 선으로 연결
+            const wk = document.getElementById('wk');
+            const NS = 'http://www.w3.org/2000/svg';
+            const svg = document.createElementNS(NS, 'svg');
+            svg.setAttribute('class', 'wk-line');
+            wk.appendChild(svg);
+            let cur = null;
+            const show = k => {
+                if (k === cur) return;
+                cur = k;
+                const m = WK_METRICS.find(x => x.k === k);
+                const box = wk.getBoundingClientRect();
+                svg.setAttribute('width', wk.scrollWidth);
+                svg.setAttribute('height', wk.clientHeight);
+                const pts = [...wk.querySelectorAll(`.wk-col[data-k="${k}"] i`)].map(el => {
+                    const r = el.getBoundingClientRect();
+                    return [r.left + r.width / 2 - box.left, r.top - box.top];
+                });
+                svg.innerHTML = `<polyline fill="none" stroke="${m.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" points="${pts.map(p => p.join(',')).join(' ')}"/>`
+                    + pts.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="3.5" fill="#fff" stroke="${m.color}" stroke-width="2"/>`).join('');
+                wk.classList.add('hl');
+                wk.querySelectorAll('.wk-col').forEach(c => c.classList.toggle('on', c.dataset.k === k));
+            };
+            wk.addEventListener('mouseover', e => { const c = e.target.closest('.wk-col'); if (c) show(c.dataset.k); });
+            wk.addEventListener('mouseleave', () => { cur = null; svg.innerHTML = ''; wk.classList.remove('hl'); });
+
+        })();
+
+        // ② 어제 vs 그제 — 어제 값 + 그제 대비 증감
+        (function () {
+            const Y = WEEK[WEEK.length - 1], B = WEEK[WEEK.length - 2]; // 어제, 그제 (WEEK 마지막 = 어제)
+            const YC = '#3446b8', BC = '#b9bfca';
+            document.getElementById('ydHead').innerHTML = `<span><i style="background:${YC}"></i>어제 ${Y.d}</span><span><i style="background:${BC}"></i>그제 ${B.d}</span>`;
+            document.getElementById('yd').innerHTML = WK_METRICS.map(m => {
+                const y = Y[m.k], b = B[m.k];
+                const ratio = m.k === 'ctr' || m.k === 'roas';
+                const diff = ratio ? y - b : (y / b - 1) * 100;
+                const txt = ratio ? `${Math.abs(diff).toFixed(m.k === 'ctr' ? 3 : 0)}%p` : `${Math.abs(diff).toFixed(1)}%`;
+                const cls = Math.abs(diff) < 0.0005 ? 'flat' : diff > 0 ? 'up' : 'down';
+                const arrow = cls === 'flat' ? '−' : diff > 0 ? '▲' : '▼';
+                const mx = Math.max(y, b);
+                return `<div class="yd-item">
+                    <div class="yd-top"><span class="yd-label">${m.label}</span><span class="yd-chg ${cls}">${arrow} ${txt}</span></div>
+                    <div class="yd-row now"><span class="yd-day">어제</span><span class="yd-num">${m.fmt(y)}</span></div>
+                    <span class="yd-track"><span style="width:${y / mx * 100}%;background:${YC}"></span></span>
+                    <div class="yd-row"><span class="yd-day">그제</span><span class="yd-num">${m.fmt(b)}</span></div>
+                    <span class="yd-track"><span style="width:${b / mx * 100}%;background:${BC}"></span></span>
+                </div>`;
+            }).join('');
+        })();
+
+        // ④ 일별 데이터 그래프 — 지표 다중 선택 (데이터는 ⑤ 표에서 읽음)
+        (function () {
+            const num = t => parseFloat(t.replace(/[^0-9.]/g, ''));
+            const DAYS = [...document.querySelectorAll('.scroll tbody tr')].map(tr => {
+                const c = [...tr.children].map(td => td.textContent.trim());
+                return { d: c[0], imp: num(c[1]), clk: num(c[2]), ctr: num(c[3]), roas: num(c[4]), spend: num(c[5]) };
+            }).reverse();
+            const sel = new Set(['clk', 'ctr']);
+            const box = document.getElementById('dlChart'), svg = document.getElementById('dlSvg'), tip = document.getElementById('dlTip');
+            const tg = document.getElementById('dlToggles');
+
+            function drawToggles() {
+                tg.innerHTML = WK_METRICS.map(m => `<button type="button" role="checkbox" data-k="${m.k}" style="--c:${m.color}" aria-checked="${sel.has(m.k)}" aria-pressed="${sel.has(m.k)}"><i></i>${m.label}</button>`).join('');
+            }
+            tg.addEventListener('click', e => {
+                const b = e.target.closest('button'); if (!b) return;
+                const k = b.dataset.k;
+                sel.has(k) ? sel.delete(k) : sel.add(k);
+                drawToggles(); draw();
+            });
+
+            const L = 24, R = 24, T = 16, B = 30;
+            let W = 0, H = 0, xs = [];
+            function draw() {
+                W = box.clientWidth; H = box.clientHeight;
+                svg.setAttribute('width', W); svg.setAttribute('height', H); svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+                const n = DAYS.length, iw = W - L - R, ih = H - T - B;
+                xs = DAYS.map((_, i) => L + (n === 1 ? iw / 2 : i / (n - 1) * iw));
+                let out = '';
+                for (let g = 0; g <= 4; g++) { const y = T + ih * g / 4; out += `<line x1="${L}" x2="${W - R}" y1="${y}" y2="${y}" stroke="#eceef1"/>`; }
+                const fs = iw / Math.max(1, n - 1) < 40 ? 9.5 : 11;   // 날짜 전부 표시 (좁으면 글씨 작게)
+                DAYS.forEach((r, i) => { out += `<text x="${xs[i]}" y="${H - 8}" font-size="${fs}" fill="#888" text-anchor="middle">${r.d}</text>`; });
+                WK_METRICS.filter(m => sel.has(m.k)).forEach(m => {
+                    const v = DAYS.map(r => r[m.k]), lo = Math.min(...v), hi = Math.max(...v), pad = (hi - lo || 1) * 0.08;
+                    const y = x => T + ih - (x - lo + pad) / (hi - lo + pad * 2) * ih;
+                    const pts = v.map((x, i) => `${xs[i].toFixed(1)},${y(x).toFixed(1)}`).join(' ');
+                    out += `<polyline fill="none" stroke="${m.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" points="${pts}"/>`;
+                    out += `<circle cx="${xs[n - 1]}" cy="${y(v[n - 1])}" r="4" fill="${m.color}" stroke="#fff" stroke-width="2"/>`;
+                    m._y = y;
+                });
+                out += `<g id="dlHover" visibility="hidden"><line id="dlLine" y1="${T}" y2="${T + ih}" stroke="#9aa0a8" stroke-dasharray="3 3"/>${WK_METRICS.filter(m => sel.has(m.k)).map(m => `<circle data-k="${m.k}" r="5" fill="${m.color}" stroke="#fff" stroke-width="2"/>`).join('')}</g>`;
+                if (!sel.size) out += `<text x="${W / 2}" y="${T + ih / 2}" font-size="13" fill="#9aa0a8" text-anchor="middle">위에서 보고 싶은 지표를 선택하세요</text>`;
+                svg.innerHTML = out;
+            }
+            function hover(e) {
+                const rect = svg.getBoundingClientRect(), x = e.clientX - rect.left;
+                let i = 0; xs.forEach((v, j) => { if (Math.abs(v - x) < Math.abs(xs[i] - x)) i = j; });
+                const r = DAYS[i], g = document.getElementById('dlHover'), ln = document.getElementById('dlLine');
+                g.setAttribute('visibility', 'visible');
+                ln.setAttribute('x1', xs[i]); ln.setAttribute('x2', xs[i]);
+                g.querySelectorAll('circle').forEach(c => { const m = WK_METRICS.find(m => m.k === c.dataset.k); c.setAttribute('cx', xs[i]); c.setAttribute('cy', m._y(r[m.k])); });
+                tip.innerHTML = `<b>${r.d}</b>` + WK_METRICS.filter(m => sel.has(m.k)).map(m => `<span><em style="font-style:normal"><i style="background:${m.color}"></i>${m.label}</em>${m.fmt(r[m.k])}</span>`).join('');
+                tip.hidden = false;
+                const tw = tip.offsetWidth;
+                tip.style.left = (xs[i] + 14 + tw > W ? xs[i] - 14 - tw : xs[i] + 14) + 'px';
+            }
+            svg.addEventListener('mousemove', hover);
+            svg.addEventListener('mouseleave', () => { tip.hidden = true; const g = document.getElementById('dlHover'); if (g) g.setAttribute('visibility', 'hidden'); });
+            window.addEventListener('resize', draw);
+            drawToggles(); draw();
+        })();
+
+        // ⑤ 일별 성과 테이블 — 헤더 클릭 정렬 (처음 클릭: 높은 순, 다시 클릭: 낮은 순)
+        (function () {
+            const table = document.querySelector('.scroll table'), tbody = table.querySelector('tbody');
+            const num = t => parseFloat(t.replace(/[^0-9.]/g, ''));
+            const ths = [...table.querySelectorAll('thead th')];
+            ths.forEach((th, i) => {
+                th.innerHTML = `<button type="button" class="sort-btn" title="▲ 큰 순 · ▼ 작은 순 (이름을 누르면 번갈아 정렬)">${th.textContent}<span class="arw" aria-hidden="true"><span class="arw-up">▲</span><span class="arw-dn">▼</span></span></button>`;
+                th.querySelector('button').addEventListener('click', e => {
+                    const b = e.currentTarget, hit = e.target.closest('.arw-up, .arw-dn'), dir = hit ? (hit.classList.contains('arw-up') ? 'desc' : 'asc') : (b.dataset.dir === 'desc' ? 'asc' : 'desc');
+                    ths.forEach(t => { delete t.querySelector('button').dataset.dir; t.removeAttribute('aria-sort'); });
+                    b.dataset.dir = dir; th.setAttribute('aria-sort', dir === 'desc' ? 'descending' : 'ascending');
+                    const rows = [...tbody.rows], key = r => i === 0 ? r.cells[0].textContent.trim() : num(r.cells[i].textContent);
+                    rows.sort((a, c) => { const x = key(a), y = key(c); return (x > y ? 1 : x < y ? -1 : 0) * (dir === 'desc' ? -1 : 1); });
+                    rows.forEach(r => tbody.appendChild(r));
+                });
+            });
+            // 처음에는 날짜 최신순
+            ths[0].querySelector('button').dataset.dir = 'desc'; ths[0].setAttribute('aria-sort', 'descending');
+        })();
+
+        // ⑤ 일별 성과 테이블 — 헤더 바로 아래 합계 행 (정렬해도 고정)
+        (function () {
+            const table = document.querySelector('.scroll table');
+            const num = t => parseFloat(t.replace(/[^0-9.]/g, ''));
+            const rows = [...table.tBodies[0].rows].map(r => [...r.cells].map(c => c.textContent.trim()));
+            const imp = rows.reduce((a, r) => a + num(r[1]), 0);
+            const clk = rows.reduce((a, r) => a + num(r[2]), 0);
+            const spend = rows.reduce((a, r) => a + num(r[5]), 0);
+            const roas = rows.reduce((a, r) => a + num(r[4]) * num(r[5]), 0) / spend;   // 소진금액 가중 평균
+            const f = n => Math.round(n).toLocaleString('ko-KR');
+            const tr = document.createElement('tr');
+            tr.className = 'total-row';
+            tr.innerHTML = `<td>합계</td><td>${f(imp)}</td><td>${f(clk)}</td><td>${(clk / imp * 100).toFixed(3)}%</td><td title="소진금액 가중 평균">${Math.round(roas)}%</td><td>${f(spend)}원</td>`;
+            table.tHead.appendChild(tr);
+        })();
+        document.querySelectorAll('.tabs').forEach(t => t.querySelectorAll('button').forEach(b => b.onclick = () => { t.querySelectorAll('button').forEach(x => x.classList.remove('active')); b.classList.add('active') }));
+    </script>
+    <script>
+        /* 맨 위로 버튼 — 300px 이상 내려가면 표시 */
+        (function () {
+            const b = document.getElementById('toTop');
+            const on = () => b.classList.toggle('show', window.scrollY > 300);
+            window.addEventListener('scroll', on, { passive: true });
+            b.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+            on();
+        })();
+    </script>
+    <script>
+        /* 1. 당월 핵심 성과 — 기간 · 일 평균 보조 지표 (5번 일별 표에서 계산) */
+        (function () {
+            const rows = [...document.querySelectorAll('#dailyTable tbody tr, table tbody tr')].map(tr => [...tr.cells].map(td => td.textContent.trim())).filter(c => /^\d\d\/\d\d$/.test(c[0] || ''));
+            if (!rows.length) return;
+            const num = s => +String(s).replace(/[^0-9.\-]/g, '');
+            const days = rows.length, dates = rows.map(r => r[0]).sort();
+            const imp = rows.reduce((a, r) => a + num(r[1]), 0), clk = rows.reduce((a, r) => a + num(r[2]), 0), spend = rows.reduce((a, r) => a + num(r[5]), 0);
+            const f = n => Math.round(n).toLocaleString('ko-KR');
+            const ctrs = rows.map(r => num(r[3]));
+            const per = document.getElementById('kpiPeriod');
+            if (per) per.textContent = `${dates[0]} ~ ${dates[dates.length - 1]} · ${days}일 누계`;
+            const sub = {
+                imp: `일 평균 <b>${f(imp / days)}</b>`,
+                clk: `일 평균 <b>${f(clk / days)}</b>`,
+                ctr: `일별 최고 <b>${Math.max(...ctrs).toFixed(3)}%</b> · 최저 <b>${Math.min(...ctrs).toFixed(3)}%</b>`,
+                roas: `세션매출 ÷ 소진 <span class="pill">24시간</span>`,
+                spend: `일 평균 <b>${f(spend / days)}원</b> · CPC <b>${clk ? f(spend / clk) : '−'}원</b>`,
+            };
+            document.querySelectorAll('.kpi-sub[data-kpi]').forEach(el => { el.innerHTML = sub[el.dataset.kpi] || ''; });
+        })();
+    </script>
+</body>
+
+</html>

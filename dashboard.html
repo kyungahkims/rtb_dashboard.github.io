@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTB Dashboard Admin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+    <style>
+        :root {
+            --bg: #f5f6f8;
+            --side: #20242a;
+            --side-hover: #2b3038;
+            --side-text: #a9afb9;
+            --accent: #5269d8;
+            --line: #e6e8ec;
+            --text: #20242a;
+            --side-w: 232px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            background: var(--bg);
+            color: var(--text);
+            font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            flex: 0 0 var(--side-w);
+            display: flex;
+            flex-direction: column;
+            background: var(--side);
+            color: #fff;
+            transition: flex-basis .2s ease;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            height: 60px;
+            padding: 0 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: .2px;
+            white-space: nowrap;
+        }
+
+        .brand-mark {
+            display: grid;
+            place-items: center;
+            flex: 0 0 28px;
+            height: 28px;
+            border-radius: 7px;
+            background: var(--accent);
+            font-size: 13px;
+        }
+
+        .nav {
+            padding: 16px 12px;
+            list-style: none;
+        }
+
+        .nav-label {
+            padding: 0 10px 10px;
+            color: #6c737e;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .8px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            height: 40px;
+            margin-bottom: 4px;
+            padding: 0 12px;
+            border-radius: 8px;
+            color: var(--side-text);
+            font-size: 14px;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: background .15s, color .15s;
+        }
+
+        .nav a:hover {
+            background: var(--side-hover);
+            color: #fff;
+        }
+
+        .nav a.active {
+            background: var(--accent);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .nav svg {
+            flex: 0 0 18px;
+            width: 18px;
+            height: 18px;
+        }
+
+        /* 그룹 메뉴 (하위 메뉴 있음) */
+        .nav .group > a .chev {
+            flex: 0 0 14px;
+            width: 14px;
+            height: 14px;
+            margin-left: auto;
+            transition: transform .15s;
+        }
+
+        .nav .group.open > a .chev {
+            transform: rotate(180deg);
+        }
+
+        .nav .group > a.active {
+            background: var(--side-hover);
+            color: #fff;
+        }
+
+        .sub {
+            display: none;
+            list-style: none;
+            margin: 0 0 6px;
+            padding: 2px 0 2px 18px;
+            border-left: 1px solid rgba(255, 255, 255, .08);
+            margin-left: 20px;
+        }
+
+        .nav .group.open .sub {
+            display: block;
+        }
+
+        .sub a {
+            height: 34px;
+            margin-bottom: 2px;
+            padding: 0 10px;
+            font-size: 13px;
+            border-radius: 6px;
+        }
+
+        .sub a::before {
+            content: "";
+            flex: 0 0 5px;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: currentColor;
+            opacity: .5;
+        }
+
+        .sub a.active::before {
+            opacity: 1;
+        }
+
+        .main {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            height: 60px;
+            padding: 0 24px;
+            border-bottom: 1px solid var(--line);
+            background: #fff;
+        }
+
+        .toggle {
+            display: grid;
+            place-items: center;
+            width: 34px;
+            height: 34px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fff;
+            color: #5d6470;
+            cursor: pointer;
+        }
+
+        .toggle:hover {
+            background: var(--bg);
+        }
+
+        .page-title {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .frame-wrap {
+            flex: 1;
+            min-height: 0;
+        }
+
+        iframe {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        body.collapsed .sidebar {
+            flex-basis: 68px;
+        }
+
+        body.collapsed .brand-text,
+        body.collapsed .nav-label,
+        body.collapsed .nav a span {
+            display: none;
+        }
+
+        body.collapsed .nav a {
+            justify-content: center;
+            padding: 0;
+        }
+
+        body.collapsed .brand {
+            padding: 0 20px;
+        }
+
+        body.collapsed .nav .chev {
+            display: none;
+        }
+
+        /* 접힌 사이드바: 그룹 아이콘에 마우스를 올리면 하위 메뉴가 오른쪽에 펼쳐짐 */
+        body.collapsed .nav .group {
+            position: relative;
+        }
+
+        body.collapsed .nav .group .sub {
+            display: none;
+            position: absolute;
+            left: 100%;
+            top: 0;
+            z-index: 50;
+            min-width: 240px;
+            margin: 0;
+            padding: 8px;
+            border: 0;
+            border-left: 14px solid transparent;      /* 아이콘 ↔ 메뉴 사이 빈틈에서도 호버 유지 */
+            background: var(--side);
+            background-clip: padding-box;
+            border-radius: 10px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, .35);
+        }
+
+        body.collapsed .nav .group:hover .sub,
+        body.collapsed .nav .group:focus-within .sub {
+            display: block;
+        }
+
+        body.collapsed .nav .group .sub::before {
+            content: attr(data-title);
+            display: block;
+            padding: 6px 10px 8px;
+            color: #6c737e;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .3px;
+            white-space: nowrap;
+        }
+
+        body.collapsed .nav .sub a {
+            justify-content: flex-start;
+            padding: 0 10px;
+        }
+
+        body.collapsed .nav .sub a span {
+            display: inline;
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-mark">R</div>
+            <span class="brand-text">RTB Admin</span>
+        </div>
+        <nav>
+            <ul class="nav">
+                <li class="nav-label">Menu</li>
+                <li>
+                    <a href="#google" data-page="google_rtb_dashboard_page.html" title="Google RTB Dashboard">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+                        <span>Google RTB</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#kakao" data-page="kakao_rtb_dashboard_page.html" title="Kakao RTB Dashboard">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/></svg>
+                        <span>Kakao RTB</span>
+                    </a>
+                </li>
+                <li class="group open" data-group="frame">
+                    <a href="#frame-fixed" title="Google RTB 프레임 AB 테스트">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                        <span>Google RTB 프레임 AB 테스트</span>
+                        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                    </a>
+                    <ul class="sub" data-title="Google RTB 프레임 AB 테스트">
+                        <li><a href="#frame-fixed" data-page="frame_test_history_page.html" title="상품 고정 프레임"><span>상품 고정 프레임</span></a></li>
+                        <li><a href="#frame-auto-web" data-page="frame_auto_web_page.html" title="상품 오토 프레임 (웹, 모바일)"><span>상품 오토 프레임 (웹, 모바일)</span></a></li>
+                        <li><a href="#frame-auto-app" data-page="frame_auto_app_page.html" title="상품 오토 프레임 (앱)"><span>상품 오토 프레임 (앱)</span></a></li>
+                        <li><a href="#frame-nonproduct" data-page="frame_nonproduct_page.html" title="비상품 프레임"><span>비상품 프레임</span></a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#qna" data-page="qna_page.html" title="Q&amp;A">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7"/><path d="M12 17h.01"/></svg>
+                        <span>Q&amp;A</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <button class="toggle" type="button" aria-label="메뉴 접기/펼치기">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            </button>
+            <h1 class="page-title"></h1>
+        </header>
+        <div class="frame-wrap">
+            <iframe id="content" title="page"></iframe>
+        </div>
+    </main>
+
+    <script>
+        const links = document.querySelectorAll('.nav a[data-page]');   // 실제 페이지가 있는 메뉴 (하위 메뉴 포함)
+        const frame = document.getElementById('content');
+        const title = document.querySelector('.page-title');
+        const LEGACY = { '#frame-test': '#frame-fixed' };                // 예전 주소 → 새 주소
+
+        function route() {
+            if (LEGACY[location.hash]) { location.replace(LEGACY[location.hash]); return; }
+            const link = [...links].find(a => a.hash === location.hash) || links[0];
+            links.forEach(a => a.classList.toggle('active', a === link));
+            // 그룹(부모) 표시: 하위 메뉴가 선택되면 부모도 강조 + 펼침
+            document.querySelectorAll('.nav .group').forEach(g => {
+                const on = g.contains(link);
+                g.querySelector(':scope > a').classList.toggle('active', on);
+                if (on) g.classList.add('open');
+            });
+            const group = link.closest('.group');
+            const full = group ? `${group.querySelector(':scope > a').title} · ${link.title}` : link.title;
+            title.textContent = full;
+            document.title = full + ' | RTB Admin';
+            if (frame.getAttribute('src') !== link.dataset.page) frame.src = link.dataset.page;
+        }
+
+        // 그룹 메뉴 클릭: 펼치기/접기 (접힌 사이드바에서는 첫 하위 페이지로 이동)
+        document.querySelectorAll('.nav .group > a').forEach(a => a.addEventListener('click', e => {
+            const g = a.closest('.group');
+            if (document.body.classList.contains('collapsed')) return;      // 접힌 상태면 href(#frame-fixed)로 이동
+            e.preventDefault();
+            g.classList.toggle('open');
+        }));
+
+        document.querySelector('.toggle').addEventListener('click', () => {
+            document.body.classList.toggle('collapsed');
+        });
+
+        window.addEventListener('hashchange', route);
+        route();
+    </script>
+</body>
+
+</html>
