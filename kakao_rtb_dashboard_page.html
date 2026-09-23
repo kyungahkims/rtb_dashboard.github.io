@@ -672,6 +672,10 @@
         .kpi-sub b { color: #3b4048; font-weight: 700; font-variant-numeric: tabular-nums }
         .kpi-sub .pill { padding: 1px 7px; border-radius: 999px; background: color-mix(in srgb, var(--c) 10%, #fff); color: var(--c); font-size: 11px; font-weight: 700 }
         @media(max-width:1200px) { .kpi .value { font-size: 23px } }
+        /* 표 행 호버 — 배경 연하게 */
+        tbody tr:hover td { background: #f3f5fa }
+        tbody tr:hover td.top { background: color-mix(in srgb, var(--r, var(--c)) 24%, #fff) }
+        tbody td { transition: background .12s }
     </style>
 </head>
 

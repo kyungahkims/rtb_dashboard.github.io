@@ -1487,6 +1487,10 @@
         .to-top:hover { background: #3446b8; color: #fff; border-color: #3446b8 }
         .to-top:focus-visible { outline: 2px solid #3446b8; outline-offset: 2px }
         body:has(.tl-open) .to-top { bottom: calc(24px + 58px + 12px + env(safe-area-inset-bottom, 0px)); right: 31px }   /* Timeline 버튼 위 */
+        /* 표 행 호버 — 배경 연하게 */
+        tbody tr:hover td { background: #f3f5fa }
+        tbody tr:hover td.top { background: color-mix(in srgb, var(--r, var(--c)) 24%, #fff) }
+        tbody td { transition: background .12s }
     </style>
 </head>
 
