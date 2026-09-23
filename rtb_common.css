@@ -1,0 +1,671 @@
+/* Google · Kakao RTB 대시보드 공통 스타일 (두 페이지가 같은 파일을 씁니다) */
+* {
+    box-sizing: border-box
+}
+
+body {
+    margin: 0;
+    background: #f5f6f8;
+    color: #202124;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif
+}
+
+.wrap {
+    margin: auto;
+    padding: 28px 32px
+}
+
+.head {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    margin-bottom: 22px
+}
+
+.head h1 {
+    margin: 0;
+    font-size: 27px
+}
+
+.sub {
+    color: #7b8088;
+    font-size: 13px;
+    margin-top: 7px
+}
+
+.date {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+    padding: 10px 14px;
+    font-size: 13px
+}
+
+.kpis {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px
+}
+
+.card {
+    background: #fff;
+    border: 1px solid #e6e8ec;
+    border-radius: 12px;
+    padding: 26px 24px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 4px 14px rgba(0, 0, 0, .07)
+}
+
+.label {
+    font-size: 12px;
+    color: #7b8088
+}
+
+.value {
+    font-size: 26px;
+    font-weight: 750;
+    margin-top: 9px;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere
+}
+
+.change {
+    font-size: 12px;
+    margin-top: 8px
+}
+
+.up {
+    color: #198754
+}
+
+.down {
+    color: #d85b63
+}
+
+section {
+    margin-bottom: 48px
+}
+
+section:last-of-type {
+    margin-bottom: 24px
+}
+
+.title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px
+}
+
+.title h2 {
+    font-size: 17px;
+    font-weight: 800;
+    color: #1a1d23;
+    letter-spacing: -.01em;
+    margin: 0
+}
+
+.title span {
+    font-size: 12px;
+    color: #858a92
+}
+
+.compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px
+}
+
+
+.yd-head {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 14px
+}
+
+.yd-head i {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    margin-right: 6px;
+    vertical-align: -1px
+}
+
+.yd {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px
+}
+
+.yd-item {
+    background: #f8f9fb;
+    border-radius: 10px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0
+}
+
+.yd-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 2px
+}
+
+.yd-label {
+    font-size: 12px;
+    color: #6b7078;
+    font-weight: 600
+}
+
+.yd-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: 4px
+}
+
+.yd-day {
+    font-size: 11px;
+    color: #858a92
+}
+
+.yd-num {
+    font-size: 13px;
+    color: #858a92;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap
+}
+
+.yd-row.now .yd-day {
+    color: #3446b8;
+    font-weight: 700
+}
+
+.yd-row.now .yd-num {
+    font-size: 19px;
+    color: #202124;
+    font-weight: 750
+}
+
+.yd-track {
+    display: block;
+    height: 6px;
+    background: #eceef1;
+    border-radius: 3px;
+    overflow: hidden
+}
+
+.yd-track span {
+    display: block;
+    height: 100%;
+    border-radius: 3px
+}
+
+.yd-chg {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-variant-numeric: tabular-nums
+}
+
+.yd-chg.up {
+    background: #e6f4ec;
+    color: #198754
+}
+
+.yd-chg.down {
+    background: #fbe9ea;
+    color: #c9444d
+}
+
+.yd-chg.flat {
+    background: #eceef1;
+    color: #666
+}
+
+.day {
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 12px
+}
+
+.metrics {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px
+}
+
+.metric {
+    background: #f8f9fb;
+    border-radius: 8px;
+    padding: 11px
+}
+
+.metric small {
+    display: block;
+    color: #858a92;
+    font-size: 10px;
+    margin-bottom: 6px
+}
+
+.metric b {
+    font-size: 16px
+}
+
+.tabs {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    margin-bottom: 15px
+}
+
+.tabs button {
+    border: 1px solid #e1e4e9;
+    background: #fff;
+    border-radius: 8px;
+    padding: 8px 13px;
+    font-size: 12px;
+    color: #666;
+    cursor: pointer
+}
+
+.tabs button.active {
+    background: #20242a;
+    color: #fff;
+    border-color: #20242a
+}
+
+.bars {
+    height: 250px;
+    display: flex;
+    align-items: end;
+    gap: 14px;
+    padding: 20px 10px 32px;
+    border-top: 1px solid #eee
+}
+
+.g {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    position: relative
+}
+
+.bar {
+    width: 48%;
+    background: #5269d8;
+    border-radius: 5px 5px 0 0
+}
+
+.bar b {
+    position: absolute;
+    top: -18px;
+    font-size: 10px;
+    color: #555
+}
+
+.g span {
+    position: absolute;
+    bottom: -27px;
+    font-size: 11px;
+    color: #777
+}
+
+.wk-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    font-size: 12px;
+    color: #555;
+    margin-bottom: 6px
+}
+
+.wk-legend i {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    margin-right: 6px;
+    vertical-align: -1px
+}
+
+.wk-scroll {
+    overflow: visible
+}
+
+.wk {
+    height: 270px;
+    display: flex;
+    align-items: stretch;
+    gap: 12px;
+    padding: 26px 4px 0;
+    border-bottom: 1px solid #e3e6ea
+}
+
+.wk-day {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px
+}
+
+.wk-day.today {
+    background: #f3f5ff
+}
+
+.wk-bars {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 4px;
+    padding: 0 4px
+}
+
+.wk-col {
+    flex: 1;
+    max-width: 30px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center
+}
+
+.wk-col b {
+    font-size: 9.5px;
+    font-weight: 600;
+    color: #444;
+    white-space: nowrap;
+    margin-bottom: 3px;
+    font-variant-numeric: tabular-nums
+}
+
+.wk-col i {
+    display: block;
+    width: 100%;
+    border-radius: 4px 4px 0 0
+}
+
+.wk-col:hover i {
+    filter: brightness(.9)
+}
+
+.wk-date {
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+    padding: 8px 0 4px;
+    font-weight: 600
+}
+
+.wk-day.today .wk-date {
+    color: #3446b8
+}
+
+.wk-note {
+    font-size: 11px;
+    color: #858a92;
+    margin-top: 10px
+}
+
+
+.dl-toggles {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    margin-bottom: 12px
+}
+
+.dl-toggles button {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: 1px solid #e1e4e9;
+    background: #fff;
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 12px;
+    color: #666;
+    cursor: pointer
+}
+
+.dl-toggles button i {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1.5px solid #b9bfca;
+    background: #fff;
+    flex: none;
+    position: relative
+}
+
+.dl-toggles button[aria-pressed="true"] i::after {
+    content: "";
+    position: absolute;
+    left: 3.5px;
+    top: 0.5px;
+    width: 4px;
+    height: 8px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg)
+}
+
+.dl-toggles button[aria-pressed="true"] {
+    border-color: var(--c);
+    color: #202124;
+    font-weight: 700;
+    background: color-mix(in srgb, var(--c) 9%, #fff)
+}
+
+.dl-toggles button[aria-pressed="true"] i {
+    background: var(--c);
+    border-color: var(--c)
+}
+
+.dl-chart {
+    position: relative
+}
+
+.dl-chart svg {
+    display: block;
+    overflow: visible
+}
+
+.dl-tip {
+    position: absolute;
+    top: 8px;
+    pointer-events: none;
+    background: #20242a;
+    color: #fff;
+    border-radius: 8px;
+    padding: 9px 11px;
+    font-size: 12px;
+    line-height: 1.6;
+    white-space: nowrap;
+    box-shadow: 0 4px 14px #0003;
+    z-index: 2
+}
+
+.dl-tip b {
+    display: block;
+    margin-bottom: 2px
+}
+
+.dl-tip i {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px
+}
+
+.dl-tip span {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    font-variant-numeric: tabular-nums
+}
+
+
+.sort-btn { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 3px 6px; margin: -3px -6px; border-radius: 6px; font: inherit; color: inherit }
+.sort-btn:hover { background: #eef0f3; color: #202124 }
+.sort-btn:focus-visible { outline: 2px solid #3446b8 }
+.sort-btn .arw { display: inline-flex; flex-direction: column; font-size: 7px; line-height: 7px; color: #d3d7dd }
+.sort-btn .arw span { padding: 1px 4px; margin: 0 -4px; cursor: pointer }
+.sort-btn .arw span:hover { color: #6b7078 }
+.sort-btn[data-dir="desc"] .arw .arw-up, .sort-btn[data-dir="asc"] .arw .arw-dn { color: #3446b8 }
+.sort-btn[data-dir] { color: #3446b8; font-weight: 700 }
+
+
+.total-row td { background: #f3f5ff; font-weight: 700; color: #202124; border-bottom: 2px solid #d9ddf5; font-size: 12.5px }
+.total-row td:first-child { color: #3446b8 }
+
+.chart {
+    height: 300px
+}
+
+.chart svg {
+    width: 100%;
+    height: 100%
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 850px;
+    font-size: 12px
+}
+
+th,
+td {
+    padding: 11px 10px;
+    border-bottom: 1px solid #e9ebef;
+    text-align: right;
+    white-space: nowrap
+}
+
+th:first-child,
+td:first-child {
+    text-align: left
+}
+
+th {
+    color: #777;
+    background: #fafbfc;
+    font-size: 11px
+}
+
+.scroll {
+    overflow: auto
+}
+
+@media (max-width: 1000px) {
+    .yd {
+        grid-template-columns: repeat(3, 1fr)
+    }
+}
+
+@media(max-width:1000px) {
+    .kpis {
+        grid-template-columns: repeat(3, 1fr)
+    }
+
+    .metrics {
+        grid-template-columns: repeat(3, 1fr)
+    }
+}
+
+@media(max-width:700px) {
+    .wrap {
+        padding: 18px
+    }
+
+    .head {
+        display: block
+    }
+
+    .date {
+        display: inline-block;
+        margin-top: 12px
+    }
+
+    .kpis {
+        grid-template-columns: 1fr 1fr
+    }
+
+    .yd {
+        grid-template-columns: 1fr 1fr
+    }
+
+    .metrics {
+        grid-template-columns: 1fr 1fr
+    }
+
+    .value {
+        font-size: 20px
+    }
+}
+/* ② 어제 vs 그제 — 여백 (Google RTB 프레임 AB 테스트와 동일한 톤) */
+.yd-head { margin-bottom: 16px }
+.yd { gap: 12px }
+.yd-item { padding: 20px 18px 18px; gap: 7px }
+.yd-top { margin-bottom: 12px }
+.yd-label { font-size: 13px; font-weight: 800; color: #202124; display: inline-flex; align-items: center; gap: 7px }
+.yd-label::before { content: ""; width: 3px; height: 13px; border-radius: 2px; background: #3446b8 }
+.yd-row { margin-top: 0 }
+.yd-row+.yd-track { margin-bottom: 4px }
+/* ③ 최근 7일 — 막대 얇게 */
+.wk-legend { margin-bottom: 14px }
+.wk { gap: 0; padding-bottom: 10px }
+.wk-day { padding: 0 22px }
+.wk-bars { gap: 2px }
+.wk-col { max-width: 30px }
+.wk-col b { font-size: 9px; font-weight: 500; color: #6b7078 }
+.wk-col i { width: 12px; border-radius: 3px 3px 0 0 }
+/* ③ 최근 7일 — 바 호버 시 선그래프 */
+.wk { position: relative }
+.wk-line { position: absolute; left: 0; top: 0; pointer-events: none; overflow: visible }
+.wk-col i, .wk-col b { transition: opacity .15s }
+.wk.hl .wk-col:not(.on) i, .wk.hl .wk-col:not(.on) b { opacity: .2 }
+/* 카드 안쪽 여백 — 표 카드는 기존대로 */
+.card:has(> .scroll) { padding: 18px }
+
+
+/* 맨 위로 버튼 */
+.to-top { position: fixed; right: 24px; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 20; width: 44px; height: 44px; border-radius: 50%; border: 1px solid #e6e8ec; background: #fff; color: #3446b8; display: grid; place-items: center; cursor: pointer; box-shadow: 0 6px 18px rgba(0, 0, 0, .14); opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .18s, transform .18s, visibility .18s }
+.to-top.show { opacity: 1; visibility: visible; transform: none }
+.to-top:hover { background: #3446b8; color: #fff; border-color: #3446b8 }
+.to-top:focus-visible { outline: 2px solid #3446b8; outline-offset: 2px }
+body:has(.tl-open) .to-top { bottom: calc(24px + 58px + 12px + env(safe-area-inset-bottom, 0px)); right: 31px }   /* Timeline 버튼 위 */
+/* 1. 당월 핵심 성과 — KPI 카드 디자인 */
+.kpi { position: relative; overflow: hidden; padding: 22px 22px 20px; display: flex; flex-direction: column; gap: 12px }
+.kpi::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: var(--c) }
+.kpi::after { content: ""; position: absolute; right: -28px; bottom: -28px; width: 110px; height: 110px; border-radius: 50%; background: var(--c); opacity: .06; pointer-events: none }
+.kpi-top { display: flex; align-items: center; gap: 10px }
+.kpi-ico { flex: none; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: color-mix(in srgb, var(--c) 12%, #fff); color: var(--c) }
+.kpi-ico svg { width: 18px; height: 18px }
+.kpi .label { font-size: 12.5px; font-weight: 600; color: #6b7078; line-height: 1.35 }
+.kpi .value { margin-top: 0; font-size: 27px; letter-spacing: -.02em; color: #1a1d23 }
+.kpi-sub { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #858a92; min-height: 18px }
+.kpi-sub b { color: #3b4048; font-weight: 700; font-variant-numeric: tabular-nums }
+.kpi-sub .pill { padding: 1px 7px; border-radius: 999px; background: color-mix(in srgb, var(--c) 10%, #fff); color: var(--c); font-size: 11px; font-weight: 700 }
+@media(max-width:1200px) { .kpi .value { font-size: 23px } }
+/* 표 행 호버 — 배경 연하게 */
+tbody tr:hover td { background: #f3f5fa }
+tbody tr:hover td.top { background: color-mix(in srgb, var(--r, var(--c)) 24%, #fff) }
+tbody td { transition: background .12s }
+    
