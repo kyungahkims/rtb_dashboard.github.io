@@ -10,7 +10,8 @@ RTB 대시보드 데이터 갱신
        - 상품 오토 프레임 (웹, 모바일).csv  (탭 구분 · date, frame, views, clicks)        → 상품 오토 프레임 (웹, 모바일) 페이지
        - 지면별.csv                         (탭 구분 · date, frame, request_size, views, clicks) → 오토 페이지 5. 지면별(요청 사이즈) 비교
        - rtb_theme_ab_result_YYYYMMDD_HHMM.xlsx  (테마 AB 결과 xlsx · 가장 정확한 집계) → 프레임 4개 페이지의 테마별/프레임별 일별,
-             상품 고정의 일별 사이즈·이름별·사이즈별 누적·지면별(6·6b 시트), 비상품의 요청 사이즈별. 있으면 아래 rtb_frame_analysis 보다 우선합니다.
+             상품 고정의 일별 사이즈·이름별·사이즈별 누적·지면별(A 시트, 없으면 6·6b), 오토의 요청 사이즈별(B 시트), 비상품의 요청 사이즈별(C 시트)·지면별(A 시트).
+             있으면 아래 rtb_frame_analysis 보다 우선합니다.
        - rtb_frame_analysis_YYYYMMDD_YYYYMMDD.xlsx  (프레임 분석 xlsx) → 지면별 비교(05·06 시트) + theme_ab 가 없을 때 나머지 전부
              01_테마별_추이                            → 상품 고정 프레임 (테마별 일별 + 이름별·사이즈별 누적)
              02_autoETC_vs_autoRed_webmob            → 상품 오토 프레임 (웹, 모바일) — autoETC(=auto_origin) vs 레드오토
@@ -200,6 +201,7 @@ def write_auto(page, rows, places, unknown=(), extra=None):
     print(f'  {page}: {dates[0][5:]} ~ {dates[-1][5:]} ({len(dates)}일 · {len(rows)}행) · '
           + ' · '.join(f'{t} 노출 {v[0]:,} 클릭 {v[1]:,}' for t, v in by_t.items())
           + f' · 지면(요청 사이즈) {len({p[1] for p in places})}개'
+          + ''.join(f' · {k} {len(v)}행 ({min(r[0] for r in v)[5:]} ~ {max(r[0] for r in v)[5:]})' for k, v in (extra or {}).items() if k.endswith('DDATA') and v)
           + (f'  ※ 매핑에 없는 frame 무시: {sorted(unknown)}' if unknown else ''))
 
 
@@ -350,6 +352,62 @@ def ab_places_daily(ab):
     return sorted([d, t, pl, v[0], v[1]] for (d, t, pl), v in agg.items())
 
 
+AB_SITE = re.compile(r'^(web|app|mob)_(.+?)_([a-z]+)_(\d+)$')
+AB_DAY_N, AB_CUM_N = 40, 60   # 페이지에 넣을 일별(날짜마다) · 누적 상위 항목 수 — 표는 그중 10~12개만 보여 줍니다
+
+
+def ab_site(tagid):
+    """web_daum.net_banner_3_N_v2 → daum.net (규칙 밖 tagid 는 그대로)"""
+    m = AB_SITE.match(str(tagid).replace('_N_v2', ''))
+    return m.group(2) if m else str(tagid)
+
+
+def ab_full_rows(ab, sheet):
+    """A·B·C 전체 시트(첫 줄 머리글) → dict 목록 (이상치 Y 제외)"""
+    rows = ab[sheet]
+    keys = [str(c).strip() if c is not None else '' for c in rows[0]]
+    return [r for r in ({k: v for k, v in zip(keys, row) if k} for row in rows[1:] if row and row[0] is not None) if r.get('이상치') != 'Y']
+
+
+def ab_daily_cum(items):
+    """(날짜, 프레임 id, 항목, 노출, 클릭) 반복 → 일별 [날짜, 프레임, 항목, 노출, 클릭](날짜마다 노출 상위 AB_DAY_N 항목) · 누적 [프레임, 항목, 노출, 클릭](상위 AB_CUM_N 항목)"""
+    daily, cum, by_day, by_all = {}, {}, {}, {}
+    for d, t, k, v, c in items:
+        if not t or not v:
+            continue
+        a = daily.setdefault((d, t, k), [0, 0]); a[0] += v; a[1] += c
+        b = cum.setdefault((t, k), [0, 0]); b[0] += v; b[1] += c
+        by_day[(d, k)] = by_day.get((d, k), 0) + v
+        by_all[k] = by_all.get(k, 0) + v
+    top_day = {}
+    for (d, k), v in by_day.items():
+        top_day.setdefault(d, []).append((v, k))
+    keep_day = {d: {k for _, k in sorted(lst, reverse=True)[:AB_DAY_N]} for d, lst in top_day.items()}
+    keep_all = {k for _, k in sorted(((v, k) for k, v in by_all.items()), reverse=True)[:AB_CUM_N]}
+    out_d = sorted([d, t, k, v[0], v[1]] for (d, t, k), v in daily.items() if k in keep_day[d])
+    out_c = sorted(([t, k, v[0], v[1]] for (t, k), v in cum.items() if k in keep_all), key=lambda x: (-x[2], x[0]))
+    return out_d, out_c
+
+
+def ab_full_places(ab, group, frame_of):
+    """A_지면일별(비교군 group) → 사이트 기준 일별 · 누적 (같은 사이트의 여러 광고 자리는 합산)"""
+    return ab_daily_cum((ab_date(r['날짜']), frame_of(str(r['테마또는프레임'])), ab_site(r['tagid']), xl_int(r['노출']), xl_int(r['클릭']))
+                        for r in ab_full_rows(ab, 'A_지면일별') if r['비교군'] == group)
+
+
+def ab_full_auto_sizes(ab, media, frame_map):
+    """B_오토요청사이즈일별(매체 media) → 요청 사이즈 기준 일별 · 누적 (unknown 사이즈 제외)"""
+    return ab_daily_cum((ab_date(r['날짜']), frame_map.get(str(r['프레임'])), str(r['요청사이즈']), xl_int(r['노출']), xl_int(r['클릭']))
+                        for r in ab_full_rows(ab, 'B_오토요청사이즈일별') if r['매체'] == media and re.fullmatch(r'\d+_\d+', str(r['요청사이즈'])))
+
+
+def ab_full_np_sizes(ab):
+    """C_비상품요청사이즈일별 → 요청 사이즈 기준 일별 · 누적 (auto형 → iauto · 사이즈형 → isize)"""
+    kind = {'auto형': 'iauto', '사이즈형': 'isize'}
+    return ab_daily_cum((ab_date(r['날짜']), kind.get(str(r['구분'])), str(r['요청사이즈']), xl_int(r['노출']), xl_int(r['클릭']))
+                        for r in ab_full_rows(ab, 'C_비상품요청사이즈일별') if re.fullmatch(r'\d+_\d+', str(r['요청사이즈'])))
+
+
 def update_fixed_xlsx(sheets, ab=None):
     """01 시트(날짜 × 테마) → DATA [날짜, 테마, '', '', 노출, 클릭] (일별 사이즈·이름 없음 · No 변형은 같은 테마로 합산)
        01 시트 '테마별 포함 frame_value' → NDATA [테마, 이름, 사이즈, 노출, 클릭] (기간 누적) · SDATA [테마, 사이즈, 노출, 클릭] 는 NDATA 를 사이즈별로 합산"""
@@ -385,7 +443,9 @@ def update_fixed_xlsx(sheets, ab=None):
     src = set_block(src, 'SDATA', 'SDATA', dump_rows(sdata), page)
     src = set_block(src, 'NDATA', 'NDATA', dump_rows(ndata), page)
     src = set_block(src, 'DDATA', 'DDATA', dump_rows(daily), page)
-    if ab and '6b_tagid_TOP15_일별' in ab:   # 지면별도 theme_ab 파일로 (6번 누적 · 6b 일별) — 없으면 CSV·rtb_frame_analysis
+    if ab and 'A_지면일별' in ab:   # 지면별: A 시트(전체 지면 일별)가 있으면 그것으로, 없으면 6·6b(상위 15) → 없으면 CSV·rtb_frame_analysis
+        places, xplaces = ab_full_places(ab, 'theme', lambda v: AB_FIXED.get(v))
+    elif ab and '6b_tagid_TOP15_일별' in ab:
         places, xplaces = ab_places_daily(ab), ab_places(ab)
     else:
         places, xplaces = read_fixed_places(), xl_places(sheets, fixed_frame_of)
@@ -652,8 +712,18 @@ def update_frames_xlsx(path, ab_path=None):
                     if v:
                         rows.append([d, t, v, sum(xl_int(r.get(f'{c}_clicks')) for c in names)])
         rows.sort()
-        places = read_places(frame_map, None) if frame_map else (xl_places(sheets, nonproduct_frame) or read_nonproduct_places())   # 비상품 지면은 xlsx 05·06 시트 누적 (없으면 CSV)
-        extra = {'ASDATA': ab_sizes(ab)} if (ab and not frame_map) else None   # 비상품 요청 사이즈별 (theme_ab 5b)
+        if ab and frame_map and 'B_오토요청사이즈일별' in ab:   # 오토 요청 사이즈: B 시트 (일별 + 누적)
+            media = 'app' if 'app' in page else 'web'
+            fm = {'RED': 'redauto', 'ETC': 'autoetc'} if media == 'web' else {'RED': 'redauto', 'COUPANG': 'coupangetc', 'ETC': 'coupangetc'}
+            daily, places = ab_full_auto_sizes(ab, media, fm)
+            extra = {'APDDATA': daily}
+        elif ab and not frame_map and 'C_비상품요청사이즈일별' in ab:   # 비상품: C 시트(요청 사이즈) + A 시트(지면), 일별 + 누적
+            sdaily, scum = ab_full_np_sizes(ab)
+            pdaily, places = ab_full_places(ab, 'nonprod', {'iauto': 'iauto', 'i사이즈': 'isize'}.get)
+            extra = {'ASDATA': scum, 'ASDDATA': sdaily, 'APDDATA': pdaily}
+        else:
+            places = read_places(frame_map, None) if frame_map else (xl_places(sheets, nonproduct_frame) or read_nonproduct_places())   # 비상품 지면은 xlsx 05·06 시트 누적 (없으면 CSV)
+            extra = {'ASDATA': ab_sizes(ab)} if (ab and not frame_map) else None   # 비상품 요청 사이즈별 (theme_ab 5b)
         write_auto(page, rows, places, extra=extra)
 
 
