@@ -291,6 +291,11 @@
             color: #c9444d
         }
 
+        .chip.fix {
+            background: #eceef1;
+            color: #4b5260
+        }
+
         .chip.ch.google {
             background: #eef0f3;
             color: #4b5260
@@ -317,7 +322,7 @@
         .tl-art .ad {
             width: 150px
         }
-        /* ② 그제 vs 어제 — 지표별 카드 (제목 + 한 줄 요약 · 막대 · 이름/1위 배지 · 증감 칩) */
+        /* ② 전전일 vs 전일 — 지표별 카드 (제목 + 한 줄 요약 · 막대 · 이름/1위 배지 · 증감 칩) */
         .yd-legend { margin-bottom: 14px }
         .yd-legend-note { color: #858a92 }
         .yd-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px }
@@ -613,6 +618,10 @@
             border-bottom: 2px solid #d9ddf5;
             font-size: 12.5px
         }
+
+        /* 표 날짜 칸: 토요일 파랑 · 일요일/공휴일 빨강 (holidays.js) */
+        td.day-sat { color: #2a6fdb }
+        td.day-sun { color: #d7262f }
 
         .total-row td:first-child {
             color: #3446b8
@@ -1079,6 +1088,17 @@
         .date-in::-webkit-datetime-edit-month-field:focus,
         .date-in::-webkit-datetime-edit-day-field:focus { background: transparent; color: inherit }
         .h2-note { margin-left: 8px; font-size: 12px; font-weight: 400; color: #858a92 }
+        /* 요약 막대 하나 — 프레임별 1위 비중 */
+        .ss-stack { grid-column: 1 / -1; background: #f8f9fb; border-radius: 10px; padding: 16px 18px 14px; position: relative }
+        .ss-stack-title { font-size: 13px; font-weight: 800; color: #202124; margin-bottom: 10px }
+        .ss-stack-title small { margin-left: 6px; font-size: 12px; font-weight: 600; color: #858a92 }
+        .ss-stack-bar { display: flex; height: 26px; border-radius: 7px; overflow: hidden; background: #e6e8ec }
+        .ss-stack-bar span { display: flex; align-items: center; justify-content: center; color: #fff; font-size: 11.5px; font-weight: 800; white-space: nowrap; overflow: hidden; box-shadow: inset 0 0 0 2px var(--r, transparent) }
+        /* 제목 옆 ? 아이콘 — 마우스를 올리면 설명 툴팁 */
+        .h2-help { display: inline-grid; place-items: center; width: 17px; height: 17px; margin-left: 8px; border-radius: 50%; background: #eceef1; color: #6b7078; font-size: 11px; font-weight: 800; vertical-align: 2px; position: relative; cursor: help }
+        .h2-help:hover, .h2-help:focus-visible { background: #3446b8; color: #fff }
+        .h2-help::after { content: attr(data-tip); position: absolute; left: 0; top: calc(100% + 10px); width: max-content; max-width: 460px; padding: 14px 16px; border-radius: 10px; background: #fff; color: #3b4048; border: 1px solid #e6e8ec; font-size: 12.5px; font-weight: 500; line-height: 1.75; white-space: pre-line; word-break: keep-all; text-align: left; box-shadow: 0 6px 20px rgba(0, 0, 0, .10); opacity: 0; pointer-events: none; transition: opacity .12s; z-index: 6 }
+        .h2-help:hover::after, .h2-help:focus-visible::after { opacity: 1 }
         /* ⑤ 1·2·3위 표시 */
         .rk-slot .rk-badge { margin-right: 8px }
         .rk-badge { display: inline-block; min-width: 34px; text-align: center; padding: 2px 7px; border-radius: 999px; font-size: 11px; font-weight: 800; line-height: 1.4 }
@@ -1118,7 +1138,7 @@
 
         <section>
             <div class="title">
-                <h2>2. 그제 vs 어제 프레임 테마별 비교</h2>
+                <h2>2. 전전일 vs 전일 프레임 테마별 비교</h2>
             </div>
             <div class="card">
                 <div class="scroll yd-scroll" id="yd"></div>
@@ -1137,7 +1157,7 @@
 
         <section>
             <div class="title">
-                <h2>4. 블랙골드 · 화이트레드 · 매거진 일별 추이 <small class="h2-note">구간 = 그날 노출된 테마 · 구간이 바뀐 날은 강조</small></h2>
+                <h2>4. 프레임 테마별 일별 추이 <span class="h2-help" data-tip="구간: 그날 어떤 배너가 나갔는지 보여 줍니다.&#10;&#160;&#160;• 단독 = 배너 하나만 나간 날&#10;&#160;&#160;• 병행 = 여러 배너가 같이 나간 날&#10;&#10;노란색 줄: 나가는 배너 조합이 전날과 달라진 날&#10;왕관: 여러 배너가 같이 나간 날 중 클릭률이 가장 높았던 배너" aria-label="구간 설명" tabindex="0">?</span></h2>
             </div>
             <div class="card">
                 <div class="scroll">
@@ -1172,7 +1192,7 @@
 
         <section>
             <div class="title">
-                <h2>6. 프레임 이름별 비교</h2>
+                <h2>6. 프레임 테마 · 사이즈별 성과 순위 <span class="h2-help" data-tip="어떤 테마의 어떤 사이즈 배너가 가장 잘 나왔는지 순위로 보여 줍니다.&#10;예: 1위 블랙골드 336×280 = 블랙골드 테마의 336×280 배너가 클릭률이 가장 높음&#10;&#10;표 읽는 법&#10;&#160;&#160;• 한 줄 = 테마 하나 × 사이즈 하나&#10;&#160;&#160;• 1 · 2 · 3위는 지금 정렬된 기준(처음엔 클릭률)으로 매깁니다&#10;&#160;&#160;• 열 제목을 누르면 노출수 · 클릭수 기준으로 바꿀 수 있습니다" aria-label="표 설명" tabindex="0">?</span></h2>
                 <div class="period-ctrl" id="namePeriod" role="group" aria-label="기간 선택">
                     <div class="seg">
                         <button type="button" data-mode="month" aria-pressed="true">9월 전체</button>
@@ -1190,7 +1210,7 @@
 
         <section>
             <div class="title">
-                <h2>7. 프레임 지면별 비교 (12개 지면) <small class="h2-note">구글 대시보드 상위 지면 12개 · 소량 지면(기타)은 제외</small></h2>
+                <h2>7. 프레임 지면별 비교 (상위 9개 지면) <span class="h2-help" data-tip="배너가 실제로 걸린 지면별로&#10;디자인 3종의 성과를 비교합니다.&#10;&#10;9월 전체: 9월 누적 기준&#10;&#160;&#160;• 노출이 많은 지면 9곳&#10;일별: 하루 단위 기준&#10;&#160;&#160;• 그날 노출이 많은 지면 9곳&#10;&#160;&#160;• 원본 일별 자료가 있는 날짜까지만 선택 가능&#10;&#10;지면은 사이트 이름 기준이며, 같은 사이트의 여러 광고 자리는 합산합니다." aria-label="지면별 표 설명" tabindex="0">?</span></h2>
                 <div class="period-ctrl" id="placePeriod" role="group" aria-label="기간 선택">
                     <div class="seg">
                         <button type="button" data-mode="month" aria-pressed="true">9월 전체</button>
@@ -1244,6 +1264,7 @@
     <button type="button" class="to-top" id="toTop" aria-label="맨 위로">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
     </button>
+    <script src="holidays.js"></script>
     <script src="frame_timeline.js"></script>
     <script>
         /* =====================================================================
@@ -1287,23 +1308,38 @@
             ["2026-09-14", "blackgold", "", "", 1105536, 357],
             ["2026-09-14", "whitered", "", "", 1106220, 404],
             ["2026-09-15", "blackgold", "", "", 1094258, 345],
-            ["2026-09-15", "whitered", "", "", 1098304, 443],
             ["2026-09-15", "magazine", "", "", 1978, 2],
+            ["2026-09-15", "whitered", "", "", 1098304, 443],
             ["2026-09-16", "blackgold", "", "", 872261, 435],
-            ["2026-09-16", "whitered", "", "", 872736, 488],
             ["2026-09-16", "magazine", "", "", 870717, 447],
+            ["2026-09-16", "whitered", "", "", 872736, 488],
             ["2026-09-17", "blackgold", "", "", 639753, 196],
-            ["2026-09-17", "whitered", "", "", 637251, 200],
             ["2026-09-17", "magazine", "", "", 639047, 210],
+            ["2026-09-17", "whitered", "", "", 637251, 200],
             ["2026-09-18", "blackgold", "", "", 893211, 257],
-            ["2026-09-18", "whitered", "", "", 893393, 298],
             ["2026-09-18", "magazine", "", "", 892810, 313],
+            ["2026-09-18", "whitered", "", "", 893393, 298],
             ["2026-09-21", "blackgold", "", "", 651901, 206],
-            ["2026-09-21", "whitered", "", "", 653048, 187],
             ["2026-09-21", "magazine", "", "", 651806, 203],
-            ["2026-09-22", "blackgold", "", "", 787847, 213],
-            ["2026-09-22", "whitered", "", "", 788522, 230],
-            ["2026-09-22", "magazine", "", "", 789005, 212],
+            ["2026-09-21", "whitered", "", "", 653048, 187],
+            ["2026-09-22", "blackgold", "", "", 787847, 207],
+            ["2026-09-22", "magazine", "", "", 789005, 206],
+            ["2026-09-22", "whitered", "", "", 788522, 224],
+            ["2026-09-23", "blackgold", "", "", 689069, 170],
+            ["2026-09-23", "magazine", "", "", 695425, 209],
+            ["2026-09-23", "whitered", "", "", 690377, 186],
+            ["2026-09-24", "blackgold", "", "", 290451, 80],
+            ["2026-09-24", "magazine", "", "", 291894, 81],
+            ["2026-09-24", "whitered", "", "", 290046, 92],
+            ["2026-09-25", "blackgold", "", "", 284673, 102],
+            ["2026-09-25", "magazine", "", "", 287750, 82],
+            ["2026-09-25", "whitered", "", "", 284387, 105],
+            ["2026-09-26", "blackgold", "", "", 300789, 97],
+            ["2026-09-26", "magazine", "", "", 303473, 105],
+            ["2026-09-26", "whitered", "", "", 300621, 92],
+            ["2026-09-27", "blackgold", "", "", 330484, 82],
+            ["2026-09-27", "magazine", "", "", 332082, 96],
+            ["2026-09-27", "whitered", "", "", 330690, 78],
         ];
         /* DATA:END */
 
@@ -1752,129 +1788,170 @@
             ["2026-09-21", "whitered", "기타 지면", 299401, 86],
         ];
         /* PDATA:END */
+        /* ⑦ 지면별 기간 누적 [테마, 지면, 노출수, 클릭수] — xlsx 05·06 시트(노출 상위 10 + CTR 상위 10 지면)에서 update_data.bat이 채움. '월 전체'에 씀 */
+        /* XPDATA:START */
+        const XPDATA = [
+            ["whitered", "web_theqoo.net_banner_1_N_v2", 3316886, 980],
+            ["whitered", "web_daum.net_banner_3_N_v2", 3133188, 437],
+            ["blackgold", "web_theqoo.net_banner_1_N_v2", 2109159, 477],
+            ["blackgold", "web_daum.net_banner_3_N_v2", 1961584, 147],
+            ["whitered", "mob_imbc.com_banner_5_N_v2", 1049255, 49],
+            ["magazine", "web_theqoo.net_banner_1_N_v2", 844172, 256],
+            ["magazine", "web_daum.net_banner_3_N_v2", 799832, 54],
+            ["blackgold", "mob_imbc.com_banner_5_N_v2", 712109, 32],
+            ["whitered", "web_daum.net_banner_1_N_v2", 703224, 1554],
+            ["whitered", "web_ppomppu.co.kr_banner_1_N_v2", 505504, 197],
+            ["whitered", "web_v.daum.net_banner_1_N_v2", 474679, 388],
+            ["blackgold", "web_daum.net_banner_1_N_v2", 448605, 594],
+            ["blackgold", "web_v.daum.net_banner_1_N_v2", 337005, 268],
+            ["blackgold", "web_ppomppu.co.kr_banner_1_N_v2", 299971, 105],
+            ["whitered", "web_quasarzone.com_banner_3_N_v2", 293994, 3],
+            ["magazine", "mob_imbc.com_banner_5_N_v2", 292349, 1],
+            ["whitered", "web_inven.co.kr_banner_0_N_v2", 219232, 20],
+            ["blackgold", "web_quasarzone.com_banner_3_N_v2", 191292, 8],
+            ["blackgold", "web_inven.co.kr_banner_0_N_v2", 187968, 21],
+            ["magazine", "web_v.daum.net_banner_1_N_v2", 158053, 140],
+            ["whitered", "mob_theqoo.net_banner_1_N_v2", 150193, 128],
+            ["magazine", "web_daum.net_banner_1_N_v2", 149097, 216],
+            ["magazine", "web_inven.co.kr_banner_0_N_v2", 140713, 5],
+            ["magazine", "web_quasarzone.com_banner_3_N_v2", 113659, 5],
+            ["blackgold", "mob_theqoo.net_banner_1_N_v2", 88629, 112],
+            ["magazine", "web_ppomppu.co.kr_banner_1_N_v2", 80235, 43],
+            ["whitered", "web_nate.com_banner_5_N_v2", 63704, 110],
+            ["magazine", "mob_theqoo.net_banner_1_N_v2", 39667, 30],
+            ["whitered", "mob_ppomppu.co.kr_banner_1_N_v2", 39324, 81],
+            ["blackgold", "web_nate.com_banner_5_N_v2", 37600, 38],
+            ["whitered", "web_khan.co.kr_banner_1_N_v2", 22636, 31],
+            ["blackgold", "mob_ppomppu.co.kr_banner_1_N_v2", 22072, 61],
+            ["blackgold", "web_khan.co.kr_banner_1_N_v2", 13771, 20],
+            ["magazine", "mob_ppomppu.co.kr_banner_1_N_v2", 11659, 17],
+            ["magazine", "web_nate.com_banner_5_N_v2", 5395, 9],
+            ["magazine", "web_khan.co.kr_banner_1_N_v2", 3603, 8],
+        ];
+        /* XPDATA:END */
 
         /* ④ 사이즈별 누적 [테마, 사이즈, 노출수, 클릭수] · ⑤ 프레임 이름별 누적 [테마, 프레임 이름, 사이즈, 노출수, 클릭수]
            — rtb_frame_analysis xlsx(01b · 01 시트)에서 update_data.bat이 채움. DATA에 일별 사이즈·이름이 없을 때 ④⑤ '월 전체'가 이걸 씀 */
         /* SDATA:START */
         const SDATA = [
-            ["blackgold", "120x600", 983795, 274],
-            ["whitered", "120x600", 1577534, 526],
-            ["magazine", "120x600", 323169, 126],
-            ["blackgold", "160x600", 1193323, 482],
-            ["whitered", "160x600", 1938218, 874],
-            ["magazine", "160x600", 411274, 187],
-            ["blackgold", "200x200", 448365, 209],
-            ["whitered", "200x200", 749084, 288],
-            ["magazine", "200x200", 149933, 39],
-            ["blackgold", "234x60", 336666, 44],
-            ["whitered", "234x60", 598364, 87],
-            ["magazine", "234x60", 90950, 2],
-            ["blackgold", "250x250", 469812, 296],
-            ["whitered", "250x250", 813266, 367],
-            ["magazine", "250x250", 148274, 51],
-            ["blackgold", "300x50", 325696, 67],
-            ["whitered", "300x50", 505768, 104],
-            ["magazine", "300x50", 99758, 16],
-            ["blackgold", "300x100", 245307, 58],
-            ["whitered", "300x100", 421678, 163],
-            ["magazine", "300x100", 79175, 40],
-            ["blackgold", "300x250", 1199033, 734],
-            ["whitered", "300x250", 1950768, 1122],
-            ["magazine", "300x250", 435495, 212],
-            ["blackgold", "300x600", 145495, 106],
-            ["whitered", "300x600", 222210, 173],
-            ["magazine", "300x600", 62244, 32],
-            ["blackgold", "320x50", 1491349, 294],
-            ["whitered", "320x50", 2354901, 578],
-            ["magazine", "320x50", 494434, 89],
-            ["blackgold", "320x100", 365826, 235],
-            ["whitered", "320x100", 600494, 497],
-            ["magazine", "320x100", 117329, 76],
-            ["blackgold", "336x280", 396419, 347],
-            ["whitered", "336x280", 656290, 420],
-            ["magazine", "336x280", 147625, 76],
-            ["magazine", "468x60", 1547, 0],
-            ["blackgold", "728x90", 3703024, 1086],
-            ["whitered", "728x90", 5720092, 2923],
-            ["magazine", "728x90", 1232507, 425],
-            ["blackgold", "970x250", 139793, 42],
-            ["whitered", "970x250", 232872, 79],
-            ["magazine", "970x250", 51649, 16],
+            ["blackgold", "120x600", 1122824, 308],
+            ["blackgold", "160x600", 1389457, 541],
+            ["blackgold", "200x200", 595487, 220],
+            ["blackgold", "234x60", 350713, 45],
+            ["blackgold", "250x250", 509102, 311],
+            ["blackgold", "300x100", 252047, 61],
+            ["blackgold", "300x250", 1582334, 881],
+            ["blackgold", "300x50", 339619, 74],
+            ["blackgold", "300x600", 218772, 145],
+            ["blackgold", "320x100", 428016, 266],
+            ["blackgold", "320x50", 1660973, 324],
+            ["blackgold", "336x280", 490444, 409],
+            ["blackgold", "728x90", 4246170, 1169],
+            ["blackgold", "970x250", 153411, 45],
+            ["magazine", "120x600", 461971, 167],
+            ["magazine", "160x600", 607139, 253],
+            ["magazine", "200x200", 297262, 55],
+            ["magazine", "234x60", 104867, 2],
+            ["magazine", "250x250", 188052, 61],
+            ["magazine", "300x100", 86044, 45],
+            ["magazine", "300x250", 819553, 347],
+            ["magazine", "300x50", 113641, 23],
+            ["magazine", "300x600", 136677, 66],
+            ["magazine", "320x100", 180084, 110],
+            ["magazine", "320x50", 664088, 121],
+            ["magazine", "336x280", 241503, 115],
+            ["magazine", "468x60", 11959, 1],
+            ["magazine", "728x90", 1778107, 567],
+            ["magazine", "970x250", 65040, 21],
+            ["whitered", "120x600", 1716153, 567],
+            ["whitered", "160x600", 2134445, 943],
+            ["whitered", "200x200", 897106, 311],
+            ["whitered", "234x60", 612331, 88],
+            ["whitered", "250x250", 852663, 381],
+            ["whitered", "300x100", 428515, 166],
+            ["whitered", "300x250", 2333246, 1249],
+            ["whitered", "300x50", 519762, 109],
+            ["whitered", "300x600", 295874, 200],
+            ["whitered", "320x100", 662739, 530],
+            ["whitered", "320x50", 2524432, 611],
+            ["whitered", "336x280", 749858, 473],
+            ["whitered", "728x90", 6264045, 3035],
+            ["whitered", "970x250", 246491, 85],
         ];
         /* SDATA:END */
         /* NDATA:START */
         const NDATA = [
             ["blackgold", "04_728_90_blackGold_ETC", "728x90", 2558856, 881],
-            ["blackgold", "728_90_blackGold_ETC", "728x90", 1058134, 192],
+            ["blackgold", "728_90_blackGold_ETC", "728x90", 1058134, 191],
             ["blackgold", "04_320_50_blackGold_ETC", "320x50", 1035249, 199],
             ["blackgold", "04_160_600_blackGold_ETC", "160x600", 819363, 341],
             ["blackgold", "04_300_250_blackGold_ETC", "300x250", 802193, 529],
             ["blackgold", "04_120_600_blackGold_ETC", "120x600", 691044, 187],
+            ["blackgold", "728_90_blackGoldNo", "728x90", 629180, 97],
+            ["blackgold", "300_250_blackGoldNo", "300x250", 449932, 161],
             ["blackgold", "320_50_blackGold_ETC", "320x50", 434044, 94],
-            ["blackgold", "160_600_blackGold_ETC", "160x600", 351183, 134],
+            ["blackgold", "160_600_blackGold_ETC", "160x600", 351183, 133],
             ["blackgold", "04_250_250_blackGold_ETC", "250x250", 334368, 224],
-            ["blackgold", "300_250_blackGold_ETC", "300x250", 330209, 192],
+            ["blackgold", "300_250_blackGold_ETC", "300x250", 330209, 191],
             ["blackgold", "04_200_200_blackGold_ETC", "200x200", 308257, 163],
             ["blackgold", "120_600_blackGold_ETC", "120x600", 277133, 82],
             ["blackgold", "04_336_280_blackGold_ETC", "336x280", 260583, 252],
             ["blackgold", "04_320_100_blackGold_ETC", "320x100", 257737, 169],
             ["blackgold", "04_234_60_blackGold_ETC", "234x60", 255004, 39],
             ["blackgold", "04_300_50_blackGold_ETC", "300x50", 233498, 54],
+            ["blackgold", "160_600_blackGoldNo", "160x600", 218911, 67],
+            ["blackgold", "320_50_blackGoldNo", "320x50", 191680, 31],
             ["blackgold", "04_300_100_blackGold_ETC", "300x100", 172820, 38],
+            ["blackgold", "200_200_blackGoldNo", "200x200", 159188, 13],
+            ["blackgold", "120_600_blackGoldNo", "120x600", 154647, 39],
             ["blackgold", "250_250_blackGold_ETC", "250x250", 130888, 71],
-            ["blackgold", "200_200_blackGold_ETC", "200x200", 128042, 45],
+            ["blackgold", "200_200_blackGold_ETC", "200x200", 128042, 44],
             ["blackgold", "336_280_blackGold_ETC", "336x280", 124223, 87],
-            ["blackgold", "320_100_blackGold_ETC", "320x100", 101540, 62],
+            ["blackgold", "336_280_blackGoldNo", "336x280", 105638, 70],
+            ["blackgold", "320_100_blackGold_ETC", "320x100", 101540, 61],
             ["blackgold", "04_970_250_blackGold_ETC", "970x250", 92976, 30],
             ["blackgold", "300_50_blackGold_ETC", "300x50", 90705, 13],
             ["blackgold", "04_300_600_blackGold_ETC", "300x600", 89304, 74],
-            ["blackgold", "728_90_blackGoldNo", "728x90", 86034, 13],
+            ["blackgold", "300_600_blackGoldNo", "300x600", 80710, 44],
             ["blackgold", "234_60_blackGold_ETC", "234x60", 80273, 5],
             ["blackgold", "300_100_blackGold_ETC", "300x100", 71423, 20],
-            ["blackgold", "300_250_blackGoldNo", "300x250", 66631, 13],
+            ["blackgold", "320_100_blackGoldNo", "320x100", 68739, 36],
             ["blackgold", "300_600_blackGold_ETC", "300x600", 48758, 27],
             ["blackgold", "970_250_blackGold_ETC", "970x250", 44723, 12],
-            ["blackgold", "160_600_blackGoldNo", "160x600", 22777, 7],
-            ["blackgold", "320_50_blackGoldNo", "320x50", 22056, 1],
-            ["blackgold", "120_600_blackGoldNo", "120x600", 15618, 5],
-            ["blackgold", "200_200_blackGoldNo", "200x200", 12066, 1],
-            ["blackgold", "336_280_blackGoldNo", "336x280", 11613, 8],
-            ["blackgold", "300_600_blackGoldNo", "300x600", 7433, 5],
-            ["blackgold", "320_100_blackGoldNo", "320x100", 6549, 4],
-            ["blackgold", "250_250_blackGoldNo", "250x250", 4556, 1],
-            ["blackgold", "970_250_blackGoldNo", "970x250", 2094, 0],
-            ["blackgold", "300_50_blackGoldNo", "300x50", 1493, 0],
-            ["blackgold", "234_60_blackGoldNo", "234x60", 1389, 0],
-            ["blackgold", "300_100_blackGoldNo", "300x100", 1064, 0],
+            ["blackgold", "250_250_blackGoldNo", "250x250", 43846, 16],
+            ["blackgold", "970_250_blackGoldNo", "970x250", 15712, 3],
+            ["blackgold", "234_60_blackGoldNo", "234x60", 15436, 1],
+            ["blackgold", "300_50_blackGoldNo", "300x50", 15416, 7],
+            ["blackgold", "300_100_blackGoldNo", "300x100", 7804, 3],
             ["magazine", "728_90_magazine_ETC", "728x90", 1146692, 410],
+            ["magazine", "728_90_magazine", "728x90", 631415, 157],
             ["magazine", "320_50_magazine_ETC", "320x50", 471959, 82],
-            ["magazine", "160_600_magazine_ETC", "160x600", 388188, 181],
-            ["magazine", "300_250_magazine_ETC", "300x250", 368507, 189],
+            ["magazine", "300_250_magazine", "300x250", 451046, 159],
+            ["magazine", "160_600_magazine_ETC", "160x600", 388188, 180],
+            ["magazine", "300_250_magazine_ETC", "300x250", 368507, 188],
             ["magazine", "120_600_magazine_ETC", "120x600", 307675, 119],
+            ["magazine", "160_600_magazine", "160x600", 218951, 73],
+            ["magazine", "320_50_magazine", "320x50", 192129, 39],
+            ["magazine", "200_200_magazine", "200x200", 159568, 16],
+            ["magazine", "120_600_magazine", "120x600", 154296, 48],
             ["magazine", "250_250_magazine_ETC", "250x250", 143705, 48],
             ["magazine", "200_200_magazine_ETC", "200x200", 137694, 39],
             ["magazine", "336_280_magazine_ETC", "336x280", 135806, 73],
             ["magazine", "320_100_magazine_ETC", "320x100", 110806, 73],
+            ["magazine", "336_280_magazine", "336x280", 105697, 42],
             ["magazine", "300_50_magazine_ETC", "300x50", 98216, 16],
             ["magazine", "234_60_magazine_ETC", "234x60", 89578, 2],
-            ["magazine", "728_90_magazine", "728x90", 85815, 15],
+            ["magazine", "300_600_magazine", "300x600", 81927, 37],
             ["magazine", "300_100_magazine_ETC", "300x100", 78116, 39],
-            ["magazine", "300_250_magazine", "300x250", 66988, 23],
+            ["magazine", "320_100_magazine", "320x100", 69278, 37],
             ["magazine", "300_600_magazine_ETC", "300x600", 54750, 29],
             ["magazine", "970_250_magazine_ETC", "970x250", 49495, 16],
-            ["magazine", "160_600_magazine", "160x600", 23086, 6],
-            ["magazine", "320_50_magazine", "320x50", 22475, 7],
-            ["magazine", "120_600_magazine", "120x600", 15494, 7],
-            ["magazine", "200_200_magazine", "200x200", 12239, 0],
-            ["magazine", "336_280_magazine", "336x280", 11819, 3],
-            ["magazine", "300_600_magazine", "300x600", 7494, 3],
-            ["magazine", "320_100_magazine", "320x100", 6523, 3],
-            ["magazine", "250_250_magazine", "250x250", 4569, 3],
-            ["magazine", "970_250_magazine", "970x250", 2154, 0],
-            ["magazine", "468_60_magazine", "468x60", 1547, 0],
-            ["magazine", "300_50_magazine", "300x50", 1542, 0],
-            ["magazine", "234_60_magazine", "234x60", 1372, 0],
-            ["magazine", "300_100_magazine", "300x100", 1059, 1],
+            ["magazine", "250_250_magazine", "250x250", 44347, 13],
+            ["magazine", "970_250_magazine", "970x250", 15545, 5],
+            ["magazine", "300_50_magazine", "300x50", 15425, 7],
+            ["magazine", "234_60_magazine", "234x60", 15289, 0],
+            ["magazine", "468_60_magazine", "468x60", 11959, 1],
+            ["magazine", "300_100_magazine", "300x100", 7928, 6],
             ["whitered", "04_728_90_whiteRed_ETC", "728x90", 4578283, 2612],
             ["whitered", "04_320_50_whiteRed_ETC", "320x50", 1899344, 488],
             ["whitered", "04_160_600_whiteRed_ETC", "160x600", 1563279, 729],
@@ -1882,41 +1959,41 @@
             ["whitered", "04_120_600_whiteRed_ETC", "120x600", 1285362, 447],
             ["whitered", "728_90_whiteRed_ETC", "728x90", 1056231, 297],
             ["whitered", "04_250_250_whiteRed_ETC", "250x250", 677044, 310],
+            ["whitered", "728_90_whiteRedNo", "728x90", 629531, 126],
             ["whitered", "04_200_200_whiteRed_ETC", "200x200", 608868, 249],
             ["whitered", "04_336_280_whiteRed_ETC", "336x280", 520062, 344],
             ["whitered", "04_234_60_whiteRed_ETC", "234x60", 516486, 75],
             ["whitered", "04_320_100_whiteRed_ETC", "320x100", 491269, 417],
+            ["whitered", "300_250_whiteRedNo", "300x250", 449450, 145],
             ["whitered", "320_50_whiteRed_ETC", "320x50", 433341, 90],
             ["whitered", "04_300_50_whiteRed_ETC", "300x50", 413991, 90],
             ["whitered", "160_600_whiteRed_ETC", "160x600", 351960, 134],
             ["whitered", "04_300_100_whiteRed_ETC", "300x100", 349558, 131],
-            ["whitered", "300_250_whiteRed_ETC", "300x250", 329939, 150],
+            ["whitered", "300_250_whiteRed_ETC", "300x250", 329939, 149],
             ["whitered", "120_600_whiteRed_ETC", "120x600", 276818, 76],
+            ["whitered", "160_600_whiteRedNo", "160x600", 219206, 80],
+            ["whitered", "320_50_whiteRedNo", "320x50", 191747, 33],
             ["whitered", "04_970_250_whiteRed_ETC", "970x250", 186345, 66],
             ["whitered", "04_300_600_whiteRed_ETC", "300x600", 165563, 137],
-            ["whitered", "250_250_whiteRed_ETC", "250x250", 131704, 56],
+            ["whitered", "200_200_whiteRedNo", "200x200", 160142, 25],
+            ["whitered", "120_600_whiteRedNo", "120x600", 153973, 44],
+            ["whitered", "250_250_whiteRed_ETC", "250x250", 131704, 54],
             ["whitered", "200_200_whiteRed_ETC", "200x200", 128096, 37],
             ["whitered", "336_280_whiteRed_ETC", "336x280", 124513, 69],
+            ["whitered", "336_280_whiteRedNo", "336x280", 105283, 60],
             ["whitered", "320_100_whiteRed_ETC", "320x100", 102673, 76],
             ["whitered", "300_50_whiteRed_ETC", "300x50", 90248, 14],
-            ["whitered", "728_90_whiteRedNo", "728x90", 85578, 14],
+            ["whitered", "300_600_whiteRedNo", "300x600", 80973, 32],
             ["whitered", "234_60_whiteRed_ETC", "234x60", 80502, 12],
-            ["whitered", "300_100_whiteRed_ETC", "300x100", 71086, 31],
-            ["whitered", "300_250_whiteRedNo", "300x250", 66972, 17],
+            ["whitered", "300_100_whiteRed_ETC", "300x100", 71086, 30],
+            ["whitered", "320_100_whiteRedNo", "320x100", 68797, 37],
             ["whitered", "300_600_whiteRed_ETC", "300x600", 49338, 31],
             ["whitered", "970_250_whiteRed_ETC", "970x250", 44412, 12],
-            ["whitered", "160_600_whiteRedNo", "160x600", 22979, 11],
-            ["whitered", "320_50_whiteRedNo", "320x50", 22216, 0],
-            ["whitered", "120_600_whiteRedNo", "120x600", 15354, 3],
-            ["whitered", "200_200_whiteRedNo", "200x200", 12120, 2],
-            ["whitered", "336_280_whiteRedNo", "336x280", 11715, 7],
-            ["whitered", "300_600_whiteRedNo", "300x600", 7309, 5],
-            ["whitered", "320_100_whiteRedNo", "320x100", 6552, 4],
-            ["whitered", "250_250_whiteRedNo", "250x250", 4518, 1],
-            ["whitered", "970_250_whiteRedNo", "970x250", 2115, 1],
-            ["whitered", "300_50_whiteRedNo", "300x50", 1529, 0],
-            ["whitered", "234_60_whiteRedNo", "234x60", 1376, 0],
-            ["whitered", "300_100_whiteRedNo", "300x100", 1034, 1],
+            ["whitered", "250_250_whiteRedNo", "250x250", 43915, 17],
+            ["whitered", "970_250_whiteRedNo", "970x250", 15734, 7],
+            ["whitered", "300_50_whiteRedNo", "300x50", 15523, 5],
+            ["whitered", "234_60_whiteRedNo", "234x60", 15343, 1],
+            ["whitered", "300_100_whiteRedNo", "300x100", 7871, 5],
         ];
         /* NDATA:END */
         /* ⑤⑥ 일별 사이즈·이름 [날짜, 테마, 프레임 이름, 사이즈, 노출수, 클릭수] — 상품 고정 프레임(일별).csv(원본 frame_value_stats)에서 update_data.bat이 채움. '일별' 선택에 씀 */
@@ -2473,91 +2550,6 @@
             ["2026-09-21", "whitered", "336_280_whiteRed_ETC", "336x280", 32976, 13],
             ["2026-09-21", "whitered", "728_90_whiteRed_ETC", "728x90", 204985, 46],
             ["2026-09-21", "whitered", "970_250_whiteRed_ETC", "970x250", 9535, 1],
-            ["2026-09-22", "blackgold", "728_90_blackGold_ETC", "728x90", 224751, 32],
-            ["2026-09-22", "blackgold", "320_50_blackGold_ETC", "320x50", 37230, 8],
-            ["2026-09-22", "blackgold", "160_600_blackGold_ETC", "160x600", 53646, 19],
-            ["2026-09-22", "blackgold", "300_250_blackGold_ETC", "300x250", 51761, 27],
-            ["2026-09-22", "blackgold", "120_600_blackGold_ETC", "120x600", 43322, 17],
-            ["2026-09-22", "blackgold", "250_250_blackGold_ETC", "250x250", 17432, 14],
-            ["2026-09-22", "blackgold", "200_200_blackGold_ETC", "200x200", 16048, 5],
-            ["2026-09-22", "blackgold", "336_280_blackGold_ETC", "336x280", 12324, 7],
-            ["2026-09-22", "blackgold", "320_100_blackGold_ETC", "320x100", 13479, 14],
-            ["2026-09-22", "blackgold", "300_50_blackGold_ETC", "300x50", 15163, 2],
-            ["2026-09-22", "blackgold", "728_90_blackGoldNo", "728x90", 86034, 13],
-            ["2026-09-22", "blackgold", "234_60_blackGold_ETC", "234x60", 13560, 2],
-            ["2026-09-22", "blackgold", "300_100_blackGold_ETC", "300x100", 14370, 1],
-            ["2026-09-22", "blackgold", "300_250_blackGoldNo", "300x250", 66631, 13],
-            ["2026-09-22", "blackgold", "300_600_blackGold_ETC", "300x600", 6779, 3],
-            ["2026-09-22", "blackgold", "970_250_blackGold_ETC", "970x250", 6609, 4],
-            ["2026-09-22", "blackgold", "160_600_blackGoldNo", "160x600", 22777, 7],
-            ["2026-09-22", "blackgold", "320_50_blackGoldNo", "320x50", 22056, 1],
-            ["2026-09-22", "blackgold", "120_600_blackGoldNo", "120x600", 15618, 5],
-            ["2026-09-22", "blackgold", "200_200_blackGoldNo", "200x200", 12066, 1],
-            ["2026-09-22", "blackgold", "336_280_blackGoldNo", "336x280", 11613, 8],
-            ["2026-09-22", "blackgold", "300_600_blackGoldNo", "300x600", 7433, 5],
-            ["2026-09-22", "blackgold", "320_100_blackGoldNo", "320x100", 6549, 4],
-            ["2026-09-22", "blackgold", "250_250_blackGoldNo", "250x250", 4556, 1],
-            ["2026-09-22", "blackgold", "970_250_blackGoldNo", "970x250", 2094, 0],
-            ["2026-09-22", "blackgold", "300_50_blackGoldNo", "300x50", 1493, 0],
-            ["2026-09-22", "blackgold", "234_60_blackGoldNo", "234x60", 1389, 0],
-            ["2026-09-22", "blackgold", "300_100_blackGoldNo", "300x100", 1064, 0],
-            ["2026-09-22", "magazine", "728_90_magazine_ETC", "728x90", 224621, 54],
-            ["2026-09-22", "magazine", "320_50_magazine_ETC", "320x50", 37705, 5],
-            ["2026-09-22", "magazine", "160_600_magazine_ETC", "160x600", 53219, 16],
-            ["2026-09-22", "magazine", "300_250_magazine_ETC", "300x250", 51141, 21],
-            ["2026-09-22", "magazine", "120_600_magazine_ETC", "120x600", 42639, 14],
-            ["2026-09-22", "magazine", "250_250_magazine_ETC", "250x250", 17311, 5],
-            ["2026-09-22", "magazine", "200_200_magazine_ETC", "200x200", 15963, 2],
-            ["2026-09-22", "magazine", "336_280_magazine_ETC", "336x280", 12214, 5],
-            ["2026-09-22", "magazine", "320_100_magazine_ETC", "320x100", 13609, 8],
-            ["2026-09-22", "magazine", "300_50_magazine_ETC", "300x50", 15157, 1],
-            ["2026-09-22", "magazine", "234_60_magazine_ETC", "234x60", 13506, 1],
-            ["2026-09-22", "magazine", "728_90_magazine", "728x90", 85815, 15],
-            ["2026-09-22", "magazine", "300_100_magazine_ETC", "300x100", 14282, 6],
-            ["2026-09-22", "magazine", "300_250_magazine", "300x250", 66988, 23],
-            ["2026-09-22", "magazine", "300_600_magazine_ETC", "300x600", 6858, 2],
-            ["2026-09-22", "magazine", "970_250_magazine_ETC", "970x250", 6604, 1],
-            ["2026-09-22", "magazine", "160_600_magazine", "160x600", 23086, 6],
-            ["2026-09-22", "magazine", "320_50_magazine", "320x50", 22475, 7],
-            ["2026-09-22", "magazine", "120_600_magazine", "120x600", 15494, 7],
-            ["2026-09-22", "magazine", "200_200_magazine", "200x200", 12239, 0],
-            ["2026-09-22", "magazine", "336_280_magazine", "336x280", 11819, 3],
-            ["2026-09-22", "magazine", "300_600_magazine", "300x600", 7494, 3],
-            ["2026-09-22", "magazine", "320_100_magazine", "320x100", 6523, 3],
-            ["2026-09-22", "magazine", "250_250_magazine", "250x250", 4569, 3],
-            ["2026-09-22", "magazine", "970_250_magazine", "970x250", 2154, 0],
-            ["2026-09-22", "magazine", "468_60_magazine", "468x60", 1547, 0],
-            ["2026-09-22", "magazine", "300_50_magazine", "300x50", 1542, 0],
-            ["2026-09-22", "magazine", "234_60_magazine", "234x60", 1372, 0],
-            ["2026-09-22", "magazine", "300_100_magazine", "300x100", 1059, 1],
-            ["2026-09-22", "whitered", "728_90_whiteRed_ETC", "728x90", 225463, 53],
-            ["2026-09-22", "whitered", "320_50_whiteRed_ETC", "320x50", 37469, 11],
-            ["2026-09-22", "whitered", "160_600_whiteRed_ETC", "160x600", 53741, 23],
-            ["2026-09-22", "whitered", "300_250_whiteRed_ETC", "300x250", 51682, 23],
-            ["2026-09-22", "whitered", "120_600_whiteRed_ETC", "120x600", 42558, 9],
-            ["2026-09-22", "whitered", "250_250_whiteRed_ETC", "250x250", 17297, 12],
-            ["2026-09-22", "whitered", "200_200_whiteRed_ETC", "200x200", 16104, 5],
-            ["2026-09-22", "whitered", "336_280_whiteRed_ETC", "336x280", 12402, 5],
-            ["2026-09-22", "whitered", "320_100_whiteRed_ETC", "320x100", 13779, 8],
-            ["2026-09-22", "whitered", "300_50_whiteRed_ETC", "300x50", 15227, 1],
-            ["2026-09-22", "whitered", "728_90_whiteRedNo", "728x90", 85578, 14],
-            ["2026-09-22", "whitered", "234_60_whiteRed_ETC", "234x60", 13543, 3],
-            ["2026-09-22", "whitered", "300_100_whiteRed_ETC", "300x100", 14496, 3],
-            ["2026-09-22", "whitered", "300_250_whiteRedNo", "300x250", 66972, 17],
-            ["2026-09-22", "whitered", "300_600_whiteRed_ETC", "300x600", 6701, 4],
-            ["2026-09-22", "whitered", "970_250_whiteRed_ETC", "970x250", 6693, 4],
-            ["2026-09-22", "whitered", "160_600_whiteRedNo", "160x600", 22979, 11],
-            ["2026-09-22", "whitered", "320_50_whiteRedNo", "320x50", 22216, 0],
-            ["2026-09-22", "whitered", "120_600_whiteRedNo", "120x600", 15354, 3],
-            ["2026-09-22", "whitered", "200_200_whiteRedNo", "200x200", 12120, 2],
-            ["2026-09-22", "whitered", "336_280_whiteRedNo", "336x280", 11715, 7],
-            ["2026-09-22", "whitered", "300_600_whiteRedNo", "300x600", 7309, 5],
-            ["2026-09-22", "whitered", "320_100_whiteRedNo", "320x100", 6552, 4],
-            ["2026-09-22", "whitered", "250_250_whiteRedNo", "250x250", 4518, 1],
-            ["2026-09-22", "whitered", "970_250_whiteRedNo", "970x250", 2115, 1],
-            ["2026-09-22", "whitered", "300_50_whiteRedNo", "300x50", 1529, 0],
-            ["2026-09-22", "whitered", "234_60_whiteRedNo", "234x60", 1376, 0],
-            ["2026-09-22", "whitered", "300_100_whiteRedNo", "300x100", 1034, 1],
         ];
         /* DDATA:END */
 
@@ -2711,7 +2703,7 @@
 
         const CROWN = `<svg class="crown" viewBox="0 0 24 28" aria-hidden="true"><path d="M6 1h5l3 8H9z" fill="#3f7ee8"/><path d="M18 1h-5l-3 8h5z" fill="#d7262f"/><circle cx="12" cy="17.5" r="9" fill="#f2b705" stroke="#c98f00" stroke-width="1.5"/><circle cx="12" cy="17.5" r="6.3" fill="none" stroke="#fff3c4" stroke-width="1"/><text x="12" y="21.6" text-anchor="middle" font-size="11" font-weight="800" font-family="Arial, sans-serif" fill="#7a5200">1</text></svg>`;
 
-        /* ② 그제 vs 어제 — 지표별 카드: 제목 + 한 줄 요약, 프레임마다 그제(연한 색)·어제(진한 색) 막대와 숫자, 이름 옆 1위 배지, 아래 증감 칩 */
+        /* ② 전전일 vs 전일 — 지표별 카드: 제목 + 한 줄 요약, 프레임마다 전전일(연한 색)·전일(진한 색) 막대와 숫자, 이름 옆 1위 배지, 아래 증감 칩 */
         (function () {
             const Y = DATES[DATES.length - 1], B = DATES[DATES.length - 2];
             const Ys = Object.fromEntries(THEMES.map(T => [T.id, sum(pick(r => r.t === T.id && r.d === Y))]));
@@ -2724,8 +2716,8 @@
             const change = (T, k) => {
                 const y = Ys[T.id], b = Bs[T.id], yv = y[k], bv = b[k];
                 if (!y.imp && !b.imp) return { cls: 'none', txt: '데이터 없음' };
-                if (!y.imp) return { cls: 'none', txt: '어제 데이터 없음' };
-                if (!b.imp || !bv) return { cls: 'none', txt: '그제 데이터 없음' };
+                if (!y.imp) return { cls: 'none', txt: '전일 데이터 없음' };
+                if (!b.imp || !bv) return { cls: 'none', txt: '전전일 데이터 없음' };
                 const diff = k === 'ctr' ? yv - bv : (yv / bv - 1) * 100;
                 const flat = k === 'ctr' ? Math.abs(diff) <= 0.001 : Math.abs(diff) <= 1;   // 요약용 '유지' 기준: CTR ±0.001%p · 노출/클릭 ±1%
                 const cls = Math.abs(diff) < 0.0005 ? 'flat' : diff > 0 ? 'rise' : 'fall';
@@ -2752,8 +2744,8 @@
                 return cs.map(x => `${nameOf(x.T)} ${dir(x)}`).join(' · ');
             };
             const wrap = document.getElementById('yd');
-            // 범례: 막대 색은 프레임 색이고, 진한 색이 어제 · 연한 색이 그제라는 것만 표시
-            wrap.innerHTML = `<div class="legend yd-legend"><span class="yd-legend-note">연한 색 = 그제 ${md(B)} · 진한 색 = 어제 ${md(Y)}</span></div>`
+            // 범례: 막대 색은 프레임 색이고, 진한 색이 전일 · 연한 색이 전전일라는 것만 표시
+            wrap.innerHTML = `<div class="legend yd-legend"><span class="yd-legend-note">연한 색 = 전전일 ${md(B)} · 진한 색 = 전일 ${md(Y)}</span></div>`
                 + `<div class="yd-cards">${M3.map(m => `<div class="yd-card">
                     <div class="yd-card-head"><h3>${m.label}</h3><span class="yd-note">${esc(note(m.k))}</span></div>
                     <div class="yd-chart" data-k="${m.k}"><svg></svg><div class="tip" hidden></div></div>
@@ -2775,15 +2767,15 @@
                         const cx = gw * i + gw / 2, y = Ys[t.id], b = Bs[t.id];
                         [[b[k], b.imp, cx - gap / 2 - bw, .3], [y[k], y.imp, cx + gap / 2, 1]].forEach(([v, has, x, op]) => {
                             const h = v / max * ih;
-                            if (h > 0) out += `<rect class="yd-bar" data-day="${op === 1 ? `어제 ${md(Y)}` : `그제 ${md(B)}`}" data-t="${i}" data-v="${v}" x="${x}" y="${T + ih - h}" width="${bw}" height="${h}" rx="3" fill="${t.color}" opacity="${op}"/>`;
-                            // 숫자 라벨: 막대보다 글자가 길면(CTR 등) 그제는 왼쪽 막대 오른끝에 맞춰 오른정렬, 어제는 오른쪽 막대 왼끝에 맞춰 왼정렬해서 겹치지 않게
+                            if (h > 0) out += `<rect class="yd-bar" data-day="${op === 1 ? `전일 ${md(Y)}` : `전전일 ${md(B)}`}" data-t="${i}" data-v="${v}" x="${x}" y="${T + ih - h}" width="${bw}" height="${h}" rx="3" fill="${t.color}" opacity="${op}"/>`;
+                            // 숫자 라벨: 막대보다 글자가 길면(CTR 등) 전전일는 왼쪽 막대 오른끝에 맞춰 오른정렬, 전일는 오른쪽 막대 왼끝에 맞춰 왼정렬해서 겹치지 않게
                             const label = has ? short(k, v) : '−', wide = label.length * 6.4 > bw + gap - 2;
                             const [lx, anchor] = !wide ? [x + bw / 2, 'middle'] : op === 1 ? [x, 'start'] : [x + bw, 'end'];
                             out += `<text x="${lx}" y="${T + ih - h - 5}" font-size="${op === 1 ? 11.5 : 10.5}" font-weight="${op === 1 ? 700 : 400}" fill="${op === 1 ? '#202124' : '#858a92'}" text-anchor="${anchor}">${label}</text>`;
                         });
                     });
                     svg.innerHTML = out;
-                    // 막대에 마우스를 올리면 어제/그제 · 프레임 · 값 툴팁
+                    // 막대에 마우스를 올리면 전일/전전일 · 프레임 · 값 툴팁
                     svg.querySelectorAll('.yd-bar').forEach(r => {
                         r.addEventListener('mouseenter', () => {
                             const t = THEMES[+r.dataset.t];
@@ -2884,6 +2876,28 @@
                 });
             });
         }
+        // 요약: 지표 1위를 차지한 항목 수를 프레임별 비중으로 막대 하나에 (사이즈별 · 지면별 표 위)
+        function stackSummary(FR, items, label, unit) {
+            const total = items.filter(r => r.win >= 0).length;
+            const cnt = FR.map((T, i) => items.filter(r => r.win === i));
+            const seg = FR.map((T, i) => {
+                const n = cnt[i].length, pct = total ? n / total * 100 : 0;
+                return n ? `<span style="width:${pct}%;${sw(T)}" data-tip="${T.name}|${label} 1위 ${n}개 (${Math.round(pct)}%)">${pct >= 12 ? `${T.name.replace(' 프레임', '')} ${Math.round(pct)}%` : ''}</span>` : '';
+            }).join('');
+            return `<div class="ss-stack"><div class="ss-stack-title">${label} 1위 비중 <small>${total}개 ${unit} 기준</small></div><div class="ss-stack-bar">${seg}</div></div>`;
+        }
+        // 비중 막대 구간에 마우스를 올리면 검은 툴팁 (프레임 · 1위 개수)
+        document.addEventListener('mouseover', e => {
+            const seg = e.target.closest('.ss-stack-bar span[data-tip]'); if (!seg) return;
+            const box = seg.closest('.ss-stack'); let tip = box.querySelector('.tip');
+            if (!tip) { tip = document.createElement('div'); tip.className = 'tip'; box.appendChild(tip); }
+            const [name, txt] = seg.dataset.tip.split('|');
+            tip.innerHTML = `<b>${name}</b><span>${txt}</span>`; tip.hidden = false;
+            const b = box.getBoundingClientRect(), r = seg.getBoundingClientRect();
+            tip.style.left = Math.max(0, Math.min(b.width - tip.offsetWidth, r.left - b.left + r.width / 2 - tip.offsetWidth / 2)) + 'px';
+            tip.style.top = (r.top - b.top - tip.offsetHeight - 8) + 'px';
+            seg.addEventListener('mouseleave', () => { tip.hidden = true; }, { once: true });
+        });
         const numTd = (v, fmt, cls = '', c = '', tip = '') => `<td class="${cls}" data-v="${v}"${c ? ` style="${cv(c)}"` : ''}>${cls.includes('top') ? `<span class="crown-wrap" data-tip="${tip}">${CROWN}${fmt(v)}</span>` : fmt(v)}</td>`;
 
         /* ④ 일별 추이 — 날짜마다 테마별 노출·클릭·CTR + 합산. 구간 = 그날 노출된 테마(단독 / 병행), 구간이 바뀐 날은 강조 */
@@ -2914,7 +2928,7 @@ ${T.name} ${m.fmt(o[m.k])}`) : cell(o, m.k, m);
                 prevKey = key;
                 return { d, v, on, pivot, all: sum(pick(r => r.d === d)) };
             }).reverse().map(({ d, v, on, pivot, all }) =>
-                `<tr class="${pivot ? 'pivot' : ''}"><td><b>${md(d)}</b></td><td class="left">${seg(on)}</td>${v.map((o, i) => winGroup(o, THEMES[i], v, d)).join('')}${group(all)}</tr>`).join('');
+                `<tr class="${pivot ? 'pivot' : ''}"><td class="${dayCls(d)}"><b>${md(d)}</b></td><td class="left">${seg(on)}</td>${v.map((o, i) => winGroup(o, THEMES[i], v, d)).join('')}${group(all)}</tr>`).join('');
             const tot = THEMES.map(T => sum(pick(r => r.t === T.id))), totAll = sum(ROWS);
             document.getElementById('transTable').innerHTML = `<thead>
                 <tr><th rowspan="2">일자</th><th rowspan="2" style="text-align:left">구간</th>
@@ -2949,14 +2963,7 @@ ${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>
             t.innerHTML = head + body;
             makeSortable(t);
             // 요약: 테마별 1위 사이즈 수
-            document.getElementById('sizeSummary').innerHTML = FR.map((T, i) => {
-                const list = rows.filter(r => r.win === i).map(r => r.S.name);
-                return `<div class="ss-item" style="${cv(T)}">
-                    <div class="ss-top"><span class="dot" style="${sw(T)}"></span>${nm(T)}<b>${m.label} 1위 · ${list.length}개 사이즈</b></div>
-                    <div class="ss-bar"><span style="width:${list.length / SIZES.length * 100}%"></span></div>
-                    <div class="ss-list">${list.join(' · ') || '−'}</div>
-                </div>`;
-            }).join('');
+            document.getElementById('sizeSummary').innerHTML = stackSummary(FR, rows.map(r => ({ win: r.win, name: r.S.name })), m.label, '사이즈');
         }
         (function () {
             const ctrl = document.getElementById('sizePeriod'), dateEl = document.getElementById('sizeDate'), tabs = document.getElementById('sizeMetric');
@@ -2989,27 +2996,27 @@ ${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>
             const inR = r => r.d >= from && r.d <= to;
             const whole = from === PERIOD_FROM && to === TODAY && NROWS.length;   // 월 전체는 기간 누적(NDATA · xlsx) · 일별은 원본 일별(DROWS)
             const src = whole ? NROWS : dpick(inR);
-            const names = [...new Set(src.map(r => r.n))];
-            const rows = names.map(n => { const rs = src.filter(r => r.n === n); return { n, T: theme(rs[0].t), size: rs[0].s, s: sum(rs) }; });
+            // 크기 × 디자인 조합으로 합산 (같은 조합의 변형 배너 _ETC · No 등은 하나로)
+            const keys = [...new Set(src.map(r => `${r.t}|${r.s}`))];
+            const rows = keys.map(k => { const [tid, size] = k.split('|'); return { T: theme(tid), size, s: sum(src.filter(r => r.t === tid && r.s === size)) }; });
             const t = document.getElementById('nameTable');
             t.innerHTML = `<thead>
-                <tr><th>프레임 이름</th><th style="text-align:left">테마</th><th data-col="2" style="text-align:left">사이즈</th>${M3.map((m, i) => `<th data-col="${i + 3}">${m.label}</th>`).join('')}</tr>
-            </thead><tbody>${rows.length ? rows.map(({ n, T, size, s }) => `<tr>
-                <td><span class="rk-slot"></span><b>${n}</b></td>
-                <td class="left"><span class="dot" style="${sw(T)}"></span>${nm(T)}</td>
-                <td class="left">${size === '비규격' ? '비규격 (오토)' : size}</td>
-                ${M3.map(m => numTd(s[m.k], m.fmt)).join('')}</tr>`).join('') : '<tr><td colspan="6" class="na" style="text-align:center">이 날짜에는 데이터가 없습니다</td></tr>'}</tbody>`;
+                <tr><th data-col="0" style="text-align:left">프레임 테마</th><th data-col="1" style="text-align:left">사이즈</th>${M3.map((m, i) => `<th data-col="${i + 2}">${m.label}</th>`).join('')}</tr>
+            </thead><tbody>${rows.length ? rows.map(({ T, size, s }) => `<tr>
+                <td class="left"><span class="rk-slot"></span><span class="dot" style="${sw(T)}"></span>${nm(T)}</td>
+                <td class="left"><b>${size === '비규격' ? '비규격 (오토)' : size}</b></td>
+                ${M3.map(m => numTd(s[m.k], m.fmt)).join('')}</tr>`).join('') : '<tr><td colspan="5" class="na" style="text-align:center">이 날짜에는 데이터가 없습니다</td></tr>'}</tbody>`;
             makeSortable(t);
-            // 프레임 이름 앞 1·2·3위 — 정렬한 지표(노출수·클릭수·CTR) 기준, 이름·사이즈로 정렬하면 CTR 기준
+            // 디자인 앞 1·2·3위 — 정렬한 지표(노출수·클릭수·CTR) 기준, 디자인·사이즈로 정렬하면 CTR 기준
             const rank = () => {
-                const th = t.querySelector('th[aria-sort]'), col = th && +th.dataset.col >= 3 ? +th.dataset.col : 5;
+                const th = t.querySelector('th[aria-sort]'), col = th && +th.dataset.col >= 2 ? +th.dataset.col : 4;
                 const trs = [...t.tBodies[0].rows].filter(r => r.cells.length > 1);
                 const order = [...trs].sort((x, y) => +y.cells[col].dataset.v - +x.cells[col].dataset.v);
                 trs.forEach(r => r.querySelector('.rk-slot').innerHTML = '');
                 order.slice(0, 3).forEach((r, i) => r.querySelector('.rk-slot').innerHTML = `<span class="rk-badge rk${i + 1}">${i + 1}위</span>`);
             };
             t.tHead.addEventListener('click', () => setTimeout(rank));
-            t.querySelector('th[data-col="5"] .arw-up').click();   // 처음에는 클릭률 (CTR) 높은 순
+            t.querySelector('th[data-col="4"] .arw-up').click();   // 처음에는 클릭률 (CTR) 높은 순
         }
         (function () {
             const ctrl = document.getElementById('namePeriod'), dateEl = document.getElementById('nameDate');
@@ -3031,26 +3038,29 @@ ${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>
             run();
         })();
         /* ⑥ 지면별 — 테마 × 지면 (지표 탭 · 9월 전체 / 일별 선택) · 지면 데이터가 들어오면 표시 */
-        const PROWS = PDATA.map(([d, t, p, imp, clk]) => ({ d, t, p, imp, clk }));
+        // 지면은 사이트 이름만 표시 (매체 · 광고 자리 번호는 표시하지 않고, 같은 사이트의 여러 자리는 합산)
+        const siteOf = p => { const m = p.replace(/_N_v2$/, '').match(/^(web|app|mob)_(.+?)_([a-z]+)_(\d+)$/); return m ? m[2] : p; };
+        const PROWS = PDATA.map(([d, t, p, imp, clk]) => ({ d, t, p: siteOf(p), imp, clk }));
+        const XPROWS = XPDATA.map(([t, p, imp, clk]) => ({ t, p: siteOf(p), imp, clk }));   // 기간 누적 (xlsx)
         const ETC_PLACE = '기타 지면';
-        // 지면 이름 표시: web_daum.net_banner_3_N_v2 → daum.net / banner 3 · web
-        const placeLabel = p => {
-            const m = p.replace(/_N_v2$/, '').match(/^(web|app|mob)_(.+?)_([a-z]+)_(\d+)$/);
-            return m ? `<b>${m[2]}</b><small>${m[3]} ${m[4]} · ${m[1]}</small>` : `<b>${p}</b>`;
-        };
+        const PLACE_N = 9;   // 표에 보여 줄 지면 수 (노출 상위 · 사이트 기준)
+        const placeLabel = p => `<b>${p}</b>`;
         function renderPlace(from, to, mk) {
-            const inR = r => r.d >= from && r.d <= to;
+            const whole = from === PERIOD_FROM && to !== from && XPROWS.length > 0;   // 월 전체: xlsx 기간 누적 · 일별: 원본 일별
+            const src = whole ? XPROWS : PROWS;
+            const inR = r => whole || (r.d >= from && r.d <= to);
             const m = M3.find(x => x.k === mk);
             const FR = THEMES;
-            const psum = fn => sum(PROWS.filter(fn));
+            const psum = fn => sum(src.filter(fn));
             const argmax = list => { let w = -1; list.forEach((o, i) => { if (o.imp && (w < 0 || o[mk] > list[w][mk])) w = i; }); return w; };
             // 지면 목록: 기간 내 노출 많은 순 — 12개 실제 지면만 ('기타 지면' 묶음은 제외)
-            const places = [...new Set(PROWS.filter(r => inR(r) && r.p !== ETC_PLACE).map(r => r.p))]
+            const places = [...new Set(src.filter(r => inR(r) && r.p !== ETC_PLACE).map(r => r.p))]
                 .map(p => ({ p, all: psum(r => inR(r) && r.p === p) }))
-                .sort((a, b) => b.all.imp - a.all.imp);
+                .sort((a, b) => b.all.imp - a.all.imp).slice(0, PLACE_N);   // 노출 상위 10개 지면
             const rows = places.map(({ p }) => ({ p, v: FR.map(T => psum(r => inR(r) && r.t === T.id && r.p === p)) }));
             rows.forEach(r => r.win = argmax(r.v));
-            const tot = FR.map(T => psum(r => inR(r) && r.t === T.id && r.p !== ETC_PLACE));   // 합계도 표에 있는 12개 지면 기준
+            const shown = new Set(rows.map(r => r.p));
+            const tot = FR.map(T => psum(r => inR(r) && r.t === T.id && shown.has(r.p)));   // 합계도 표에 있는 지면 기준
             const head = `<thead>
                 <tr><th>지면</th>${FR.map((T, i) => `<th data-col="${i + 1}" class="grp sep" style="${cv(T)}"><span class="dot" style="${sw(T)}"></span>${nm(T)}</th>`).join('')}</tr>
                 <tr class="total-row"><td>합계</td>${tot.map((o, i) => !o.imp ? `<td class="sep na" data-v="-1">−</td>` : numTd(o[mk], m.fmt, 'sep' + (i === argmax(tot) ? ' top' : ''), i === argmax(tot) ? FR[i] : '', `합계 · ${m.label} 1위
@@ -3062,22 +3072,14 @@ ${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>
             const t = document.getElementById('placeTable');
             t.innerHTML = head + `<tbody>${rows.length ? rows.map(placeRow).join('') : `<tr><td colspan="${FR.length + 1}" class="na" style="text-align:center">이 날짜에는 데이터가 없습니다</td></tr>`}</tbody>`;
             makeSortable(t);
-            // 요약: 테마별 1위 지면 수
-            const real = rows;
-            document.getElementById('placeSummary').innerHTML = FR.map((T, i) => {
-                const list = real.filter(r => r.win === i).map(r => r.p.replace(/_N_v2$/, ''));
-                return `<div class="ss-item" style="${cv(T)}">
-                    <div class="ss-top"><span class="dot" style="${sw(T)}"></span>${nm(T)}<b>${m.label} 1위 · ${list.length}개 지면</b></div>
-                    <div class="ss-bar"><span style="width:${real.length ? list.length / real.length * 100 : 0}%"></span></div>
-                    <div class="ss-list">${list.join(' · ') || '−'}</div>
-                </div>`;
-            }).join('');
+            document.getElementById('placeSummary').innerHTML = stackSummary(FR, rows.map(r => ({ win: r.win, name: r.p })), m.label, '지면');
         }
         (function () {
             const ctrl = document.getElementById('placePeriod'), dateEl = document.getElementById('placeDate'), tabs = document.getElementById('placeMetric');
             const PD = [...new Set(PROWS.map(r => r.d))].sort(), PTODAY = PD[PD.length - 1] || TODAY;
             dateEl.min = PERIOD_FROM; dateEl.max = PTODAY; dateEl.value = PTODAY;
             ctrl.querySelector('[data-mode="month"]').textContent = `${+PTODAY.slice(5, 7)}월 전체`;
+            if (!PROWS.length) ctrl.querySelector('[data-mode="day"]').hidden = true;   // 일별 지면 데이터가 없으면 월 전체만
             const run = () => {
                 const mode = ctrl.querySelector('[aria-pressed="true"]').dataset.mode;
                 const mk = tabs.querySelector('[aria-selected="true"]').dataset.metric;

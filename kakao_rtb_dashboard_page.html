@@ -461,6 +461,9 @@
 
         .total-row td { background: #f3f5ff; font-weight: 700; color: #202124; border-bottom: 2px solid #d9ddf5; font-size: 12.5px }
         .total-row td:first-child { color: #3446b8 }
+        /* 표 날짜 칸: 토요일 파랑 · 일요일/공휴일 빨강 (holidays.js) */
+        td.day-sat { color: #2a6fdb }
+        td.day-sun { color: #d7262f }
 
         .chart {
             height: 300px
@@ -547,7 +550,7 @@
                 font-size: 20px
             }
         }
-        /* ② 어제 vs 그제 — 여백 (Google RTB 프레임 AB 테스트와 동일한 톤) */
+        /* ② 전일 vs 전전일 — 여백 (Google RTB 프레임 AB 테스트와 동일한 톤) */
         .yd-head { margin-bottom: 16px }
         .yd { gap: 12px }
         .yd-item { padding: 20px 18px 18px; gap: 7px }
@@ -644,7 +647,7 @@
 
         <section>
             <div class="title">
-                <h2>2. 어제 vs 그제</h2>
+                <h2>2. 전일 vs 전전일</h2>
             </div>
             <div class="card">
                 <div class="yd-head" id="ydHead"></div>
@@ -921,6 +924,7 @@
     <button type="button" class="to-top" id="toTop" aria-label="맨 위로">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
     </button>
+    <script src="holidays.js"></script>
     <script>
         // ③ 최근 7일 성과 비교 — 날짜별로 5개 지표를 막대로 나란히 표시
         const WEEK = [
@@ -950,7 +954,7 @@
           <i style="height:${(r[m.k] / max[m.k] * 85).toFixed(1)}%;background:${m.color}"></i>
         </div>`).join('')}
       </div>
-      <div class="wk-date">${r.d}${i === WEEK.length - 1 ? ' (어제)' : ''}</div>
+      <div class="wk-date">${r.d}${i === WEEK.length - 1 ? ' (전일)' : ''}</div>
     </div>`).join('');
 
             // 바에 마우스를 올리면 같은 지표의 7일 추이를 선으로 연결
@@ -981,11 +985,11 @@
 
         })();
 
-        // ② 어제 vs 그제 — 어제 값 + 그제 대비 증감
+        // ② 전일 vs 전전일 — 전일 값 + 전전일 대비 증감
         (function () {
-            const Y = WEEK[WEEK.length - 1], B = WEEK[WEEK.length - 2]; // 어제, 그제 (WEEK 마지막 = 어제)
+            const Y = WEEK[WEEK.length - 1], B = WEEK[WEEK.length - 2]; // 전일, 전전일 (WEEK 마지막 = 전일)
             const YC = '#3446b8', BC = '#b9bfca';
-            document.getElementById('ydHead').innerHTML = `<span><i style="background:${YC}"></i>어제 ${Y.d}</span><span><i style="background:${BC}"></i>그제 ${B.d}</span>`;
+            document.getElementById('ydHead').innerHTML = `<span><i style="background:${YC}"></i>전일 ${Y.d}</span><span><i style="background:${BC}"></i>전전일 ${B.d}</span>`;
             document.getElementById('yd').innerHTML = WK_METRICS.map(m => {
                 const y = Y[m.k], b = B[m.k];
                 const ratio = m.k === 'ctr' || m.k === 'roas';
@@ -996,9 +1000,9 @@
                 const mx = Math.max(y, b);
                 return `<div class="yd-item">
                     <div class="yd-top"><span class="yd-label">${m.label}</span><span class="yd-chg ${cls}">${arrow} ${txt}</span></div>
-                    <div class="yd-row now"><span class="yd-day">어제</span><span class="yd-num">${m.fmt(y)}</span></div>
+                    <div class="yd-row now"><span class="yd-day">전일</span><span class="yd-num">${m.fmt(y)}</span></div>
                     <span class="yd-track"><span style="width:${y / mx * 100}%;background:${YC}"></span></span>
-                    <div class="yd-row"><span class="yd-day">그제</span><span class="yd-num">${m.fmt(b)}</span></div>
+                    <div class="yd-row"><span class="yd-day">전전일</span><span class="yd-num">${m.fmt(b)}</span></div>
                     <span class="yd-track"><span style="width:${b / mx * 100}%;background:${BC}"></span></span>
                 </div>`;
             }).join('');
@@ -1135,6 +1139,7 @@
             document.querySelectorAll('.kpi-sub[data-kpi]').forEach(el => { el.innerHTML = sub[el.dataset.kpi] || ''; });
         })();
     </script>
+    <script>markDateCells();   // 일별 표 날짜 칸: 토·일·공휴일 색 (holidays.js)</script>
 </body>
 
 </html>

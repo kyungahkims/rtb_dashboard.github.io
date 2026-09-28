@@ -207,6 +207,58 @@
             font-weight: 700;
         }
 
+        /* 제목 옆 ? 아이콘 — 마우스를 올리면 이 페이지가 무엇인지 설명 */
+        .page-help {
+            display: inline-grid;
+            place-items: center;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--bg);
+            border: 1px solid var(--line);
+            color: #6b7078;
+            font-size: 11px;
+            font-weight: 800;
+            position: relative;
+            cursor: help;
+        }
+
+        .page-help::after {
+            content: attr(data-tip);
+            position: absolute;
+            left: 0;
+            top: calc(100% + 10px);
+            width: max-content;
+            max-width: 480px;
+            padding: 14px 16px;
+            border-radius: 10px;
+            background: #fff;
+            color: #3b4048;
+            border: 1px solid var(--line);
+            font-size: 12.5px;
+            font-weight: 500;
+            line-height: 1.75;
+            white-space: pre-line;
+            word-break: keep-all;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, .10);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .12s;
+            z-index: 30;
+        }
+
+        .page-help:hover,
+        .page-help:focus-visible {
+            background: #3446b8;
+            border-color: #3446b8;
+            color: #fff;
+        }
+
+        .page-help:hover::after,
+        .page-help:focus-visible::after {
+            opacity: 1;
+        }
+
         .frame-wrap {
             flex: 1;
             min-height: 0;
@@ -301,13 +353,13 @@
             <ul class="nav">
                 <li class="nav-label">Menu</li>
                 <li>
-                    <a href="#google" data-page="google_rtb_dashboard_page.html" title="Google RTB Dashboard">
+                    <a href="#google" data-page="google_rtb_dashboard_page.html" data-help="구글 RTB 광고의 이번 달 성과입니다.&#10;노출 · 클릭 · 클릭률 · ROAS(광고비 대비 매출) · 소진금액을&#10;전일 대비 · 최근 7일 · 날짜별 표로 보여 줍니다." title="Google RTB Dashboard">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
                         <span>Google RTB</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#kakao" data-page="kakao_rtb_dashboard_page.html" title="Kakao RTB Dashboard">
+                    <a href="#kakao" data-page="kakao_rtb_dashboard_page.html" data-help="카카오 RTB 광고의 이번 달 성과입니다.&#10;노출 · 클릭 · 클릭률 · ROAS(광고비 대비 매출) · 소진금액을&#10;전일 대비 · 최근 7일 · 날짜별 표로 보여 줍니다." title="Kakao RTB Dashboard">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/></svg>
                         <span>Kakao RTB</span>
                     </a>
@@ -319,14 +371,14 @@
                         <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
                     </a>
                     <ul class="sub" data-title="Google RTB 프레임 AB 테스트">
-                        <li><a href="#frame-fixed" data-page="frame_test_history_page.html" title="상품 고정 프레임"><span>상품 고정 프레임</span></a></li>
-                        <li><a href="#frame-auto-web" data-page="frame_auto_web_page.html" title="상품 오토 프레임 (웹, 모바일)"><span>상품 오토 프레임 (웹, 모바일)</span></a></li>
-                        <li><a href="#frame-auto-app" data-page="frame_auto_app_page.html" title="상품 오토 프레임 (앱)"><span>상품 오토 프레임 (앱)</span></a></li>
-                        <li><a href="#frame-nonproduct" data-page="frame_nonproduct_page.html" title="비상품 프레임"><span>비상품 프레임</span></a></li>
+                        <li><a href="#frame-fixed" data-page="frame_test_history_page.html" data-help="상품 고정 배너의 디자인 3종(블랙골드 · 화이트레드 · 매거진)이&#10;각각 얼마나 클릭됐는지 비교합니다.&#10;배너 크기별 · 배너별 · 노출된 지면별로도 볼 수 있습니다." title="상품 고정 프레임"><span>상품 고정 프레임</span></a></li>
+                        <li><a href="#frame-auto-web" data-page="frame_auto_web_page.html" data-help="웹 · 모바일에서 쓰는 오토 배너의&#10;새 디자인(레드오토)과 기존 디자인(auto_origin)을 비교합니다.&#10;&#10;오토 배너: 광고 자리 크기에 따라 배너가 알아서 바뀌어&#10;어떤 크기에도 대응되는 배너" title="상품 오토 프레임 (웹, 모바일)"><span>상품 오토 프레임 (웹, 모바일)</span></a></li>
+                        <li><a href="#frame-auto-app" data-page="frame_auto_app_page.html" data-help="앱에서 쓰는 오토 배너의&#10;새 디자인(레드오토)과 기존 디자인(auto_origin)을 비교합니다.&#10;&#10;오토 배너: 광고 자리 크기에 따라 배너가 알아서 바뀌어&#10;어떤 크기에도 대응되는 배너" title="상품 오토 프레임 (앱)"><span>상품 오토 프레임 (앱)</span></a></li>
+                        <li><a href="#frame-nonproduct" data-page="frame_nonproduct_page.html" data-help="상품이 아닌 배너에서&#10;광고 자리 크기에 따라 알아서 바뀌는 오토 배너(iauto)와&#10;예전에 크기별로 따로 만들던 배너를 비교합니다." title="비상품 프레임"><span>비상품 프레임</span></a></li>
                     </ul>
                 </li>
                 <li>
-                    <a href="#qna" data-page="qna_page.html" title="Q&amp;A">
+                    <a href="#qna" data-page="qna_page.html" data-help="대시보드 숫자에 대해 자주 나오는&#10;질문과 답을 모아 둔 페이지입니다." title="Q&amp;A">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7"/><path d="M12 17h.01"/></svg>
                         <span>Q&amp;A</span>
                     </a>
@@ -341,6 +393,7 @@
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
             </button>
             <h1 class="page-title"></h1>
+            <span class="page-help" id="pageHelp" tabindex="0" aria-label="페이지 설명">?</span>
         </header>
         <div class="frame-wrap">
             <iframe id="content" title="page"></iframe>
@@ -366,6 +419,7 @@
             const group = link.closest('.group');
             const full = group ? `${group.querySelector(':scope > a').title} · ${link.title}` : link.title;
             title.textContent = full;
+            document.getElementById('pageHelp').dataset.tip = link.dataset.help || '';   // 제목 옆 ? 아이콘: 이 페이지가 무엇인지 설명
             document.title = full + ' | RTB Admin';
             if (frame.getAttribute('src') !== link.dataset.page) frame.src = link.dataset.page;
         }

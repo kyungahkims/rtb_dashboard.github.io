@@ -10,10 +10,11 @@ RTB 대시보드 데이터 갱신
        - 상품 오토 프레임 (웹, 모바일).csv  (탭 구분 · date, frame, views, clicks)        → 상품 오토 프레임 (웹, 모바일) 페이지
        - 지면별.csv                         (탭 구분 · date, frame, request_size, views, clicks) → 오토 페이지 5. 지면별(요청 사이즈) 비교
        - rtb_frame_analysis_YYYYMMDD_YYYYMMDD.xlsx  (프레임 분석 xlsx) → 프레임 AB 테스트 4개 페이지 전부
-             01_테마별_추이 · 01b_테마별_사이즈별_추이 → 상품 고정 프레임 (테마별 일별 + 사이즈별·이름별 누적)
-             02_autoETC_vs_autoRed_webmob            → 상품 오토 프레임 (웹, 모바일)
-             03_coupangETC_vs_autoRed_app            → 상품 오토 프레임 (앱)
+             01_테마별_추이                            → 상품 고정 프레임 (테마별 일별 + 이름별·사이즈별 누적)
+             02_autoETC_vs_autoRed_webmob            → 상품 오토 프레임 (웹, 모바일) — autoETC(=auto_origin) vs 레드오토
+             03_coupangETC_vs_autoRed_app            → 상품 오토 프레임 (앱) — coupangETC(=auto_origin) vs 레드오토
              04_i사이즈그룹_vs_iauto                  → 비상품 프레임 (iauto vs 옛 i사이즈 프레임 12개 합산)
+             05·06_매체Top10                           → 상품 고정 7번 · 비상품 5번 지면별 비교의 '월 전체'(기간 누적, 노출 상위 10 + CTR 상위 10 지면)
        - 지면별(고정).csv · 지면별(비상품).csv  (탭 구분 · date, theme, place, views, clicks) → 상품 고정 프레임 7번 · 비상품 프레임 5번 지면별 비교
        - 상품 고정 프레임(일별).csv            (탭 구분 · date, theme, name, size, views, clicks) → 상품 고정 프레임 5·6번 '일별' 선택
              둘 다 원본 일별 파일(tag_stats_MMDD.csv · frame_value_stats_MMDD.csv)이 있는 폴더에서 만듭니다:  python update_data.py --places "폴더 경로"
@@ -241,33 +242,38 @@ def xl_size(frame_value):
     return f'{m.group(1)}x{m.group(2)}' if m else '비규격'
 
 
-XL_FIXED = {'blackGold': 'blackgold', 'whiteRed': 'whitered', 'magazine': 'magazine'}   # xlsx 테마 → 페이지 테마 id (verygoodtour 는 제외)
+XL_FIXED = {'blackGold': 'blackgold', 'blackGoldNo': 'blackgold', 'whiteRed': 'whitered', 'whiteRedNo': 'whitered', 'magazine': 'magazine'}   # xlsx 테마 → 페이지 테마 id (No 변형은 같은 테마로 합산 · verygoodtour 는 제외)
 XL_AUTO = [   # (시트, 페이지, {페이지 프레임 id: xlsx 열 접두어}, 지면별.csv frame 매핑)
-    ('02_autoETC_vs_autoRed_webmob', 'frame_auto_web_page.html', {'redauto': 'autoRedETC(web+mob)', 'autoetc': 'autoETC(전체)'}, {'autoRedETC': 'redauto', 'autoETC': 'autoetc'}),
-    ('03_coupangETC_vs_autoRed_app', 'frame_auto_app_page.html', {'redauto': 'autoRedETC(app)', 'coupangetc': 'coupangETC(전체)'}, {'autoRedETC': 'redauto', 'coupangETC': 'coupangetc'}),
-    ('04_i사이즈그룹_vs_iauto', 'frame_nonproduct_page.html', {'iauto': 'iauto', 'isize': '옛i사이즈그룹'}, None),
+    # auto_origin = 기존 프레임의 새 이름 (웹: autoETC → auto_origin · 앱: coupangETC → auto_origin) → 기존 프레임 id 에 합산
+    ('02_autoETC_vs_autoRed_webmob', 'frame_auto_web_page.html', {'redauto': ['autoRedETC(web+mob)'], 'autoetc': ['autoETC(전체)', 'auto_origin(web+mob)']}, {'autoRedETC': 'redauto', 'autoETC': 'autoetc', 'auto_origin': 'autoetc'}),
+    ('03_coupangETC_vs_autoRed_app', 'frame_auto_app_page.html', {'redauto': ['autoRedETC(app)'], 'coupangetc': ['coupangETC(전체)', 'auto_origin(app)']}, {'autoRedETC': 'redauto', 'coupangETC': 'coupangetc', 'auto_origin': 'coupangetc'}),
+    ('04_i사이즈그룹_vs_iauto', 'frame_nonproduct_page.html', {'iauto': ['iauto'], 'isize': ['옛i사이즈그룹']}, None),
 ]
 
 
 def update_fixed_xlsx(sheets):
-    """01 시트(날짜 × 테마) → DATA [날짜, 테마, '', '', 노출, 클릭] (일별 사이즈·이름 없음)
-       01b 시트(사이즈 × 테마) → SDATA [테마, 사이즈, 노출, 클릭] · 01 시트 '테마별 포함 frame_value' → NDATA [테마, 이름, 사이즈, 노출, 클릭] (기간 누적)"""
-    rows = []
+    """01 시트(날짜 × 테마) → DATA [날짜, 테마, '', '', 노출, 클릭] (일별 사이즈·이름 없음 · No 변형은 같은 테마로 합산)
+       01 시트 '테마별 포함 frame_value' → NDATA [테마, 이름, 사이즈, 노출, 클릭] (기간 누적) · SDATA [테마, 사이즈, 노출, 클릭] 는 NDATA 를 사이즈별로 합산"""
+    daily = {}
     for r in xl_table(sheets['01_테마별_추이'], 'date', 'blackGold_views'):
         d = xl_date(r['date'])
         for xt, t in XL_FIXED.items():
             v = xl_int(r.get(f'{xt}_views'))
             if v:
-                rows.append([d, t, '', '', v, xl_int(r.get(f'{xt}_clicks'))])
+                a = daily.setdefault((d, t), [0, 0])
+                a[0] += v
+                a[1] += xl_int(r.get(f'{xt}_clicks'))
+    rows = sorted([d, t, '', '', v, c] for (d, t), (v, c) in daily.items())
     ndata = [[XL_FIXED[r['theme']], r['frame_value'], xl_size(r['frame_value']), xl_int(r['views']), xl_int(r['clicks'])]
              for r in xl_table(sheets['01_테마별_추이'], 'theme', 'frame_value') if r['theme'] in XL_FIXED]
-    sdata = []
-    for r in xl_table(sheets['01b_테마별_사이즈별_추이'], 'size', 'blackGold_views'):
-        size = str(r['size']).replace('_', 'x')
-        for xt, t in XL_FIXED.items():
-            v = xl_int(r.get(f'{xt}_views'))
-            if v:
-                sdata.append([t, size, v, xl_int(r.get(f'{xt}_clicks'))])
+    by_size = {}
+    for t, n, size, v, c in ndata:
+        if size == '비규격':
+            continue
+        a = by_size.setdefault((t, size), [0, 0])
+        a[0] += v
+        a[1] += c
+    sdata = sorted([t, size, v, c] for (t, size), (v, c) in by_size.items())
     page = 'frame_test_history_page.html'
     p = os.path.join(DIR, page)
     src = open(p, encoding='utf-8').read()
@@ -279,6 +285,8 @@ def update_fixed_xlsx(sheets):
     src = set_block(src, 'DDATA', 'DDATA', dump_rows(daily), page)
     places = read_fixed_places()
     src = set_block(src, 'PDATA', 'PDATA', dump_rows(places), page)
+    xplaces = xl_places(sheets, fixed_frame_of)
+    src = set_block(src, 'XPDATA', 'XPDATA', dump_rows(xplaces), page)
     open(p, 'w', encoding='utf-8', newline='').write(src)
     dates = sorted({r[0] for r in rows})
     by_t = {}
@@ -290,7 +298,8 @@ def update_fixed_xlsx(sheets):
           + ' · '.join(f'{t} 노출 {v[0]:,} 클릭 {v[1]:,}' for t, v in by_t.items())
           + f' · 사이즈 {len({r[1] for r in sdata})}개 · 프레임 이름 {len(ndata)}개'
           + (f' · 일별 사이즈 {min(r[0] for r in daily)[5:]} ~ {max(r[0] for r in daily)[5:]}' if daily else ' · 일별 사이즈 없음')
-          + (f' · 지면 {len({r[2] for r in places if r[2] != ETC_PLACE})}개 ({min(r[0] for r in places)[5:]} ~ {max(r[0] for r in places)[5:]})' if places else ' · 지면 데이터 없음'))
+          + (f' · 일별 지면 {len({r[2] for r in places if r[2] != ETC_PLACE})}개 ({min(r[0] for r in places)[5:]} ~ {max(r[0] for r in places)[5:]})' if places else ' · 일별 지면 없음')
+          + f' · xlsx 누적 지면 {len({r[1] for r in xplaces})}개')
 
 
 ETC_PLACE = '기타 지면'
@@ -421,6 +430,32 @@ def read_fixed_places():
     return read_place_csv('고정')
 
 
+def xl_places(sheets, frame_of):
+    """05(노출 상위 10) · 06(CTR 상위 10) 시트의 'Top 10 frame_value별 세부' → 기간 누적 [프레임 id, 지면, 노출, 클릭]
+       frame_of(frame_value) 가 페이지 프레임 id 를 돌려주는 것만 모읍니다 (두 시트에 겹치는 지면은 한 번만)"""
+    agg, seen = {}, set()
+    for sh in ('05_매체Top10_노출기준', '06_매체Top10_CTR기준'):
+        if sh not in sheets:
+            continue
+        for r in xl_table(sheets[sh], 'rank', 'tag_descriptor', 'frame_value'):
+            key = (r['tag_descriptor'], r['frame_value'])
+            if key in seen:
+                continue
+            seen.add(key)
+            t = frame_of(str(r['frame_value']))
+            if not t:
+                continue
+            a = agg.setdefault((t, r['tag_descriptor']), [0, 0])
+            a[0] += xl_int(r['views'])
+            a[1] += xl_int(r['clicks'])
+    return sorted(([t, pl, v[0], v[1]] for (t, pl), v in agg.items()), key=lambda x: (-x[2], x[0]))
+
+
+def fixed_frame_of(fv):
+    low = fv.lower()
+    return next((v for k, v in FIXED_KEYWORD.items() if k in low), None)
+
+
 def read_nonproduct_places():
     """지면별(비상품).csv → 기간 누적 [프레임 id, 지면, 노출, 클릭] ('기타 지면' 제외 · 오토 페이지 APDATA와 같은 꼴)"""
     agg = {}
@@ -475,14 +510,15 @@ def update_frames_xlsx(path):
     update_fixed_xlsx(sheets)
     for sheet, page, cols, frame_map in XL_AUTO:
         rows = []
-        for r in xl_table(sheets[sheet], 'date', *[f'{c}_views' for c in cols.values()]):
+        for r in xl_table(sheets[sheet], 'date', *[c[0] + '_views' for c in cols.values()]):   # 프레임의 첫 열은 필수, 나머지 열(auto_origin 등)은 없으면 0
             d = xl_date(r['date'])
-            for t, col in cols.items():
-                v = xl_int(r.get(f'{col}_views'))
+            for t, names in cols.items():
+                v = sum(xl_int(r.get(f'{c}_views')) for c in names)
                 if v:
-                    rows.append([d, t, v, xl_int(r.get(f'{col}_clicks'))])
+                    rows.append([d, t, v, sum(xl_int(r.get(f'{c}_clicks')) for c in names)])
         rows.sort()
-        write_auto(page, rows, read_places(frame_map, None) if frame_map else read_nonproduct_places())
+        places = read_places(frame_map, None) if frame_map else (xl_places(sheets, nonproduct_frame) or read_nonproduct_places())   # 비상품 지면은 xlsx 05·06 시트 누적 (없으면 CSV)
+        write_auto(page, rows, places)
 
 
 if __name__ == '__main__':

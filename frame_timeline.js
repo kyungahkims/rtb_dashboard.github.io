@@ -3,25 +3,27 @@
    (상품 고정 프레임 · 상품 오토 프레임 (웹, 모바일) · 상품 오토 프레임 (앱) · 비상품 프레임)
    항목을 고치면 네 페이지에 모두 반영됩니다. 최근 순으로 표시됩니다.
      ch    : 채널 (구글 · 카카오)
-     type  : deploy 배포 · ratio 노출 비중 조정 · copy 문구·네이밍 변경
+     type  : deploy 배포 · ratio 노출 비중 조정 · copy 문구·네이밍 변경 · fix 수정
      theme : 대상 프레임 id — 페이지의 THEMES에 있으면 그 색·배너, 없으면 아래 TL_TARGET의 이름·색만
    ===================================================================== */
 const TIMELINE = [
-    { d: '2026-09-15', ch: '구글', type: 'deploy', theme: 'magazine', title: '매거진 배너 배포', desc: '09-15 퇴근 후 매거진 배너 배포.' },
-    { d: '2026-09-11', ch: '구글', type: 'ratio', theme: 'blackgold', title: '레드 / 블랙 반반 노출로 복귀', desc: '09-11부터 레드·블랙 프레임을 다시 반반씩 노출.' },
-    { d: '2026-09-09', ch: '구글', type: 'deploy', theme: 'redauto', title: '상품 auto (app/web) 배포', desc: '09-09 상품 auto 프레임 app/web 배포.' },
-    { d: '2026-09-09', ch: '구글', type: 'ratio', theme: 'blackgold', title: '블랙 프레임 단독 노출', desc: '09-09부터 블랙 프레임만 노출.' },
-    { d: '2026-09-04', ch: '구글', type: 'copy', theme: 'whitered', title: '문구 수정 + 레드 프레임 단독 노출', desc: '09-04 문구 수정. 이날부터 레드 프레임만 노출.' },
-    { d: '2026-09-02', ch: '구글', type: 'deploy', theme: 'whitered', title: '레드 프레임 배포 + 고정형(비상품) auto 배포', desc: '09-02 레드 프레임 배포, 고정형(비상품) auto 프레임 배포.' },
-    { d: '2026-08-26', ch: '구글', type: 'deploy', theme: 'blackgold', title: '블랙골드 프레임 배포 (정방형)', desc: '08-26 블랙골드 프레임 정방형 배포.' },
+    { d: '2026-09-22', ch: '구글', type: 'ratio', theme: 'autoorigin', title: '상품 오토 배너를 기존 디자인(auto_origin)으로 되돌림', desc: '레드오토 디자인 대신 기존 오토 배너(auto_origin 프레임)를 다시 내보내기 시작했습니다.' },
+    { d: '2026-09-15', ch: '구글', type: 'deploy', theme: 'magazine', title: '매거진 디자인 추가 · 상품 개수 자동 조절', desc: '상품 고정 배너에 세 번째 디자인인 매거진을 추가했습니다. 배너 크기에 따라 보여 주는 상품 개수도 자동으로 맞추도록 바꿨습니다.' },
+    { d: '2026-09-09', ch: '구글', type: 'deploy', theme: 'redauto', title: '상품 오토 배너를 레드오토 디자인으로 교체', desc: '웹·모바일과 앱의 오토 배너(광고 자리 크기에 따라 알아서 바뀌는 배너)를 기존 디자인(auto_origin 프레임)에서 새 레드오토 디자인으로 바꿨습니다. 새 디자인과 기존 디자인의 성과 비교(AB 테스트)가 이날부터 시작됐습니다.' },
+    { d: '2026-09-02', ch: '구글', type: 'deploy', theme: 'whitered', title: '화이트레드 디자인 추가 · 비상품 배너를 오토 배너 하나로 통합', desc: '상품 고정 배너에 화이트레드 디자인을 추가했습니다. 비상품 배너는 크기별로 따로 만들던 14개를 광고 자리 크기에 따라 알아서 바뀌는 오토 배너(iauto) 하나로 합쳤습니다.' },
+    { d: '2026-08-26', ch: '구글', type: 'deploy', theme: 'blackgold', title: '블랙골드 디자인 배너 출시', desc: '새 블랙골드 디자인을 상품 고정 배너 14개 크기 전부에 적용했습니다.' },
+    { d: '2026-08-19', ch: '구글', type: 'fix', theme: 'common', title: '배너 노출 조건 정리', desc: '네이티브 광고 자리를 정해진 비율대로 받도록 고쳤고, 너무 작은 자리(50 미만)에는 입찰하지 않게 했습니다. 고정 배너가 먼저 나가도록 우선순위도 조정했습니다.' },
+    { d: '2026-08-11', ch: '구글', type: 'fix', theme: 'common', title: '네이티브 광고 로고 오류 수정', desc: '네이티브 광고에서 로고가 잘못 나오던 문제를 고쳤습니다.' },
 ];
-const TYPE_LABEL = { deploy: '배포', ratio: '노출 비중 조정', copy: '문구·네이밍 변경' };
+const TYPE_LABEL = { deploy: '배포', ratio: '노출 비중 조정', copy: '문구·네이밍 변경', fix: '수정' };
 // 페이지 THEMES에 없는 대상의 이름·색·배너 — 어느 페이지에서 열어도 Timeline이 똑같이 보이도록 4개 프레임 배너를 여기서도 정의
 const TL_TARGET = {
     blackgold: { id: 'blackgold', name: '블랙골드 프레임', color: '#2b2d31', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/blackGold/ui/openRtb_blackGold_250x250_ui.html' },
     whitered: { id: 'whitered', name: '화이트레드 프레임', color: '#e0262f', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/whiteRed/ui/openRtb_whiteRed_250x250_ui.html' },
     magazine: { id: 'magazine', name: '매거진 프레임', color: '#8b5cf6', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/simpleMagazine/ui/openRtb_simple_magazine_250x250_ui.html' },
     redauto: { id: 'redauto', name: '레드오토 프레임', color: '#e0262f', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/auto/dev/openRtbAuto_red.html', tpl: true },
+    autoorigin: { id: 'autoorigin', name: 'auto_origin 프레임 (기존 오토 배너)', color: '#22c55e' },
+    common: { id: 'common', name: '공통 (전체 프레임)', color: '#9aa0a8' },
     iseries: { id: 'iseries', name: 'i 시리즈', color: '#9aa0a8' },
     coupang: { id: 'coupang', name: '쿠팡 프레임', color: '#9aa0a8' },
     sel: { id: 'sel', name: 'SEL · A/B/C/D 변형', color: '#9aa0a8' },

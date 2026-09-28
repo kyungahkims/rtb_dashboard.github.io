@@ -289,6 +289,11 @@
             color: #c9444d
         }
 
+        .chip.fix {
+            background: #eceef1;
+            color: #4b5260
+        }
+
         .chip.ch.google {
             background: #eef0f3;
             color: #4b5260
@@ -315,7 +320,7 @@
         .tl-art .ad {
             width: 150px
         }
-        /* ② 그제 vs 어제 — 지표별 카드 (제목 + 한 줄 요약 · 막대 · 이름/1위 배지 · 증감 칩) */
+        /* ② 전전일 vs 전일 — 지표별 카드 (제목 + 한 줄 요약 · 막대 · 이름/1위 배지 · 증감 칩) */
         .yd-legend { margin-bottom: 14px }
         .yd-legend-note { color: #858a92 }
         .yd-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px }
@@ -607,6 +612,10 @@
             border-bottom: 2px solid #d9ddf5;
             font-size: 12.5px
         }
+
+        /* 표 날짜 칸: 토요일 파랑 · 일요일/공휴일 빨강 (holidays.js) */
+        td.day-sat { color: #2a6fdb }
+        td.day-sun { color: #d7262f }
 
         .total-row td:first-child {
             color: #3446b8
@@ -1059,6 +1068,17 @@
         .date-in::-webkit-datetime-edit-month-field:focus,
         .date-in::-webkit-datetime-edit-day-field:focus { background: transparent; color: inherit }
         .h2-note { margin-left: 8px; font-size: 12px; font-weight: 400; color: #858a92 }
+        /* 요약 막대 하나 — 프레임별 1위 비중 */
+        .ss-stack { grid-column: 1 / -1; background: #f8f9fb; border-radius: 10px; padding: 16px 18px 14px; position: relative }
+        .ss-stack-title { font-size: 13px; font-weight: 800; color: #202124; margin-bottom: 10px }
+        .ss-stack-title small { margin-left: 6px; font-size: 12px; font-weight: 600; color: #858a92 }
+        .ss-stack-bar { display: flex; height: 26px; border-radius: 7px; overflow: hidden; background: #e6e8ec }
+        .ss-stack-bar span { display: flex; align-items: center; justify-content: center; color: #fff; font-size: 11.5px; font-weight: 800; white-space: nowrap; overflow: hidden; box-shadow: inset 0 0 0 2px var(--r, transparent) }
+        /* 제목 옆 ? 아이콘 — 마우스를 올리면 설명 툴팁 */
+        .h2-help { display: inline-grid; place-items: center; width: 17px; height: 17px; margin-left: 8px; border-radius: 50%; background: #eceef1; color: #6b7078; font-size: 11px; font-weight: 800; vertical-align: 2px; position: relative; cursor: help }
+        .h2-help:hover, .h2-help:focus-visible { background: #3446b8; color: #fff }
+        .h2-help::after { content: attr(data-tip); position: absolute; left: 0; top: calc(100% + 10px); width: max-content; max-width: 460px; padding: 14px 16px; border-radius: 10px; background: #fff; color: #3b4048; border: 1px solid #e6e8ec; font-size: 12.5px; font-weight: 500; line-height: 1.75; white-space: pre-line; word-break: keep-all; text-align: left; box-shadow: 0 6px 20px rgba(0, 0, 0, .10); opacity: 0; pointer-events: none; transition: opacity .12s; z-index: 6 }
+        .h2-help:hover::after, .h2-help:focus-visible::after { opacity: 1 }
         /* ⑤ 1·2·3위 표시 */
         .rk-slot .rk-badge { margin-right: 8px }
         .rk-badge { display: inline-block; min-width: 34px; text-align: center; padding: 2px 7px; border-radius: 999px; font-size: 11px; font-weight: 800; line-height: 1.4 }
@@ -1079,15 +1099,13 @@
         .kind-chip { display: inline-block; margin-right: 6px; padding: 1px 7px; border-radius: 5px; background: #eceef1; color: #4b5563; font-size: 11px; font-weight: 700; line-height: 1.5 }   /* ① 상품 / 비상품 */
         .theme-name .chip.ch { margin-left: 6px; font-size: 10.5px; padding: 1px 7px }
         .theme-view { margin-left: auto }
-        /* ④ 전환 추이 표 */
+        /* ④ 일별 추이 표 */
         #transTable th, #transTable td { padding: 6px 8px; white-space: nowrap }
         #transTable th.grp { text-align: center }
         #transTable tr.pivot td { background: #fff7e0 }
         #transTable tr.pivot td.top { background: color-mix(in srgb, var(--r, var(--c)) 16%, #fff) }   /* 강조 행에서도 1위 칸은 프레임 색 */
-        .seg-chip { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; line-height: 1.5 }
-        /* 구간 칩 — 표 머리글의 프레임 색(--c)을 그대로 씀. 병행은 두 색을 반씩 */
-        .seg-chip.red, .seg-chip.auto { background: color-mix(in srgb, var(--c) 14%, #fff); color: color-mix(in srgb, var(--c) 78%, #000) }
-        .seg-chip.both { background: linear-gradient(90deg, color-mix(in srgb, var(--c) 22%, #fff) 50%, color-mix(in srgb, var(--c2) 22%, #fff) 50%); color: #202124 }
+        .seg-chip { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; line-height: 1.5; color: #202124 }
+        .seg-chip.one { background: color-mix(in srgb, var(--c) 14%, #fff); color: color-mix(in srgb, var(--c) 78%, #000) }   /* 테마 하나 — 그 테마 색 */
         .seg-chip.none { background: #eceef1; color: #6b7078 }
         /* ⑤ 지면 표 */
         #placeTable th, #placeTable td { padding: 6px 8px }
@@ -1114,7 +1132,7 @@
 
         <section>
             <div class="title">
-                <h2>1. 오토 프레임별 성과</h2>
+                <h2>1. 프레임별 성과</h2>
                 <div class="period-ctrl" id="themePeriod" role="group" aria-label="기간 선택">
                     <div class="seg">
                         <button type="button" data-mode="month" aria-pressed="true">9월 전체</button>
@@ -1128,7 +1146,7 @@
 
         <section>
             <div class="title">
-                <h2>2. 그제 vs 어제 오토 프레임별 비교</h2>
+                <h2>2. 전전일 vs 전일 프레임별 비교</h2>
             </div>
             <div class="card">
                 <div class="scroll yd-scroll" id="yd"></div>
@@ -1137,7 +1155,7 @@
 
         <section>
             <div class="title">
-                <h2>3. 최근 7일 오토 프레임별 비교</h2>
+                <h2>3. 최근 7일 프레임별 비교</h2>
             </div>
             <div class="card">
                 <div class="legend" id="w7Legend"></div>
@@ -1147,7 +1165,7 @@
 
         <section>
             <div class="title">
-                <h2>4. 레드오토 · coupangETC 일별 추이</h2>
+                <h2>4. 프레임별 일별 추이 <span class="h2-help" data-tip="구간: 그날 어떤 배너가 나갔는지 보여 줍니다.&#10;&#160;&#160;• 단독 = 배너 하나만 나간 날&#10;&#160;&#160;• 병행 = 여러 배너가 같이 나간 날&#10;&#10;노란색 줄: 나가는 배너 조합이 전날과 달라진 날&#10;왕관: 여러 배너가 같이 나간 날 중 클릭률이 가장 높았던 배너" aria-label="구간 설명" tabindex="0">?</span></h2>
             </div>
             <div class="card">
                 <div class="scroll">
@@ -1158,7 +1176,7 @@
 
         <section>
             <div class="title">
-                <h2>5. 사이즈별 프레임 비교 (12개 사이즈) <small class="h2-note">요청 사이즈 기준 · 기간 누적 · 노출 상위 12개</small></h2>
+                <h2>5. 사이즈별 프레임 비교 (12개 사이즈) <span class="h2-help" data-tip="광고 자리 크기(요청 사이즈)별로&#10;두 배너의 성과를 비교합니다.&#10;&#10;기준: 9월 누적&#10;사이즈: 노출이 많은 크기 12개" aria-label="사이즈별 표 설명" tabindex="0">?</span></h2>
             </div>
             <div class="card">
                 <div class="m-tabs" id="placeMetric" role="tablist" aria-label="지표 선택">
@@ -1203,6 +1221,7 @@
     <button type="button" class="to-top" id="toTop" aria-label="맨 위로">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
     </button>
+    <script src="holidays.js"></script>
     <script src="frame_timeline.js"></script>
     <script>
         /* =====================================================================
@@ -1210,11 +1229,11 @@
            ===================================================================== */
         const sw = T => `background:${T.color}${T.ring ? `;box-shadow:inset 0 0 0 2px ${T.ring}` : ''}`;
         const cv = T => `--c:${T.color}${T.ring ? `;--r:${T.ring}` : ''}`;
-        // 오토 프레임 2개 (앱): 레드오토 (autoRedETC, 상품 auto) · coupangETC. 레드오토만 배너 미리보기(src/view)가 있습니다.
+        // 오토 프레임 2개 (앱): 레드오토 (autoRedETC, 상품 auto · 신규) · auto_origin (기존, 09-22부터 다시 노출). 레드오토만 배너 미리보기(src/view)가 있습니다.
         const THEMES = [
             { id: 'redauto', name: '레드오토 프레임', ab: 'after', ch: '구글', code: 'autoRedETC', desc: '상품 auto · 09-09 투입', color: '#e0262f',
               src: 'https://kyungahkims.github.io/openRtb_banners.github.io/auto/dev/openRtbAuto_red.html', tpl: true, view: 'https://kyungahkims.github.io/openRtb_banners.github.io/dev_openRtbAuto_view.html' },
-            { id: 'coupangetc', name: 'coupangETC', ab: 'before', ch: '구글', code: 'coupangETC', desc: 'coupangETC', color: '#22c55e', src: '' },   // 데이터: update_data.py (rtb_frame_analysis xlsx)
+            { id: 'coupangetc', name: 'auto_origin 프레임', ab: 'before', ch: '구글', code: 'auto_origin', desc: 'auto_origin 프레임 (기존)', color: '#22c55e', src: '' },   // 데이터: update_data.py (rtb_frame_analysis xlsx)
         ];
         const AB_LABEL = { after: 'After · 신규', before: 'Before · 기존' };   // 비포/애프터 비교 표시 (ab: 'after' = 새로 만든 프레임)
         const MIN_IMP = 1000;   // 이보다 노출이 적으면 CTR을 0(집계 제외)으로 — 노출 수십에 클릭만 잡힌 값 방지
@@ -1240,7 +1259,13 @@
             ["2026-09-17", "redauto", 778598, 1508],
             ["2026-09-18", "redauto", 648581, 1417],
             ["2026-09-21", "redauto", 663151, 1013],
-            ["2026-09-22", "redauto", 188148, 229],
+            ["2026-09-22", "coupangetc", 105724, 77],
+            ["2026-09-22", "redauto", 188350, 196],
+            ["2026-09-23", "coupangetc", 340821, 257],
+            ["2026-09-24", "coupangetc", 389334, 266],
+            ["2026-09-25", "coupangetc", 398670, 248],
+            ["2026-09-26", "coupangetc", 392736, 239],
+            ["2026-09-27", "coupangetc", 394405, 220],
         ];
         /* ADATA:END */
         /* 지면별 누적 [프레임 id, 요청 사이즈, 노출수, 클릭수] — 지면별.csv에서 update_data.bat이 자동으로 바꿉니다 */
@@ -1355,7 +1380,7 @@
         const DATES = [...new Set(ROWS.map(r => r.d))].sort();
         const TODAY = DATES[DATES.length - 1] || ymd(new Date());
         const PERIOD_FROM = TODAY.slice(0, 8) + '01';
-        THEMES.forEach(T => { const ds = ROWS.filter(r => r.t === T.id).map(r => r.d).sort(); T.from = ds[0]; T.to = ds[ds.length - 1]; });
+        THEMES.forEach(T => { const ds = ROWS.filter(r => r.t === T.id && r.imp >= MIN_IMP).map(r => r.d).sort(); T.from = ds[0]; T.to = ds[ds.length - 1]; });
 
         /* ---------- 공통 ---------- */
         const sum = rows => { const o = { imp: 0, clk: 0 }; for (const r of rows) { o.imp += r.imp; o.clk += r.clk; } o.ctr = o.imp >= MIN_IMP ? o.clk / o.imp * 100 : 0; return o; };
@@ -1450,7 +1475,7 @@
             // 프레임 중 순위 (② 와 같은 표시)
             const themeRank = (id, k) => { const n = TS[id][k] > 0 ? 1 + THEMES.filter(T => TS[T.id][k] > TS[id][k]).length : 0; return n ? `<em class="rk-badge rk${Math.min(n, 3)}">${n}위</em>` : ''; };
             document.getElementById('themes').innerHTML = THEMES.map(T => {
-                const s = TS[T.id], ds = [...new Set(pick(r => inR(r) && r.t === T.id).map(r => r.d))].sort();
+                const s = TS[T.id], ds = [...new Set(pick(r => inR(r) && r.t === T.id && r.imp >= MIN_IMP).map(r => r.d))].sort();   // 데이터 기간: 집계 제외(노출 MIN_IMP 미만)인 날은 뺌
                 const period = !ds.length ? '데이터 없음' : from === to ? `데이터: <b>${md(from)}</b>` : `데이터: <b>${md(ds[0])} ~ ${md(ds[ds.length - 1])}</b>`;
                 const view = T.view ? `<a class="theme-view" href="${T.view}" target="_blank" rel="noopener" title="${T.name} 전체 사이즈 미리보기 (새 탭)">프레임 미리보기<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></a>` : '';
                 return `<article class="card theme">
@@ -1487,7 +1512,7 @@
         })();
 
         const CROWN = `<svg class="crown" viewBox="0 0 24 28" aria-hidden="true"><path d="M6 1h5l3 8H9z" fill="#3f7ee8"/><path d="M18 1h-5l-3 8h5z" fill="#d7262f"/><circle cx="12" cy="17.5" r="9" fill="#f2b705" stroke="#c98f00" stroke-width="1.5"/><circle cx="12" cy="17.5" r="6.3" fill="none" stroke="#fff3c4" stroke-width="1"/><text x="12" y="21.6" text-anchor="middle" font-size="11" font-weight="800" font-family="Arial, sans-serif" fill="#7a5200">1</text></svg>`;
-        /* ② 그제 vs 어제 — 지표별 카드: 제목 + 한 줄 요약, 프레임마다 그제(연한 색)·어제(진한 색) 막대와 숫자, 이름 옆 1위 배지, 아래 증감 칩 */
+        /* ② 전전일 vs 전일 — 지표별 카드: 제목 + 한 줄 요약, 프레임마다 전전일(연한 색)·전일(진한 색) 막대와 숫자, 이름 옆 1위 배지, 아래 증감 칩 */
         (function () {
             const Y = DATES[DATES.length - 1], B = DATES[DATES.length - 2];
             const Ys = Object.fromEntries(THEMES.map(T => [T.id, sum(pick(r => r.t === T.id && r.d === Y))]));
@@ -1500,8 +1525,8 @@
             const change = (T, k) => {
                 const y = Ys[T.id], b = Bs[T.id], yv = y[k], bv = b[k];
                 if (!y.imp && !b.imp) return { cls: 'none', txt: '데이터 없음' };
-                if (!y.imp) return { cls: 'none', txt: '어제 데이터 없음' };
-                if (!b.imp || !bv) return { cls: 'none', txt: '그제 데이터 없음' };
+                if (!y.imp) return { cls: 'none', txt: '전일 데이터 없음' };
+                if (!b.imp || !bv) return { cls: 'none', txt: '전전일 데이터 없음' };
                 const diff = k === 'ctr' ? yv - bv : (yv / bv - 1) * 100;
                 const flat = k === 'ctr' ? Math.abs(diff) <= 0.001 : Math.abs(diff) <= 1;   // 요약용 '유지' 기준: CTR ±0.001%p · 노출/클릭 ±1%
                 const cls = Math.abs(diff) < 0.0005 ? 'flat' : diff > 0 ? 'rise' : 'fall';
@@ -1528,8 +1553,8 @@
                 return cs.map(x => `${nameOf(x.T)} ${dir(x)}`).join(' · ');
             };
             const wrap = document.getElementById('yd');
-            // 범례: 막대 색은 프레임 색이고, 진한 색이 어제 · 연한 색이 그제라는 것만 표시
-            wrap.innerHTML = `<div class="legend yd-legend"><span class="yd-legend-note">연한 색 = 그제 ${md(B)} · 진한 색 = 어제 ${md(Y)}</span></div>`
+            // 범례: 막대 색은 프레임 색이고, 진한 색이 전일 · 연한 색이 전전일라는 것만 표시
+            wrap.innerHTML = `<div class="legend yd-legend"><span class="yd-legend-note">연한 색 = 전전일 ${md(B)} · 진한 색 = 전일 ${md(Y)}</span></div>`
                 + `<div class="yd-cards">${M3.map(m => `<div class="yd-card">
                     <div class="yd-card-head"><h3>${m.label}</h3><span class="yd-note">${esc(note(m.k))}</span></div>
                     <div class="yd-chart" data-k="${m.k}"><svg></svg><div class="tip" hidden></div></div>
@@ -1551,15 +1576,15 @@
                         const cx = gw * i + gw / 2, y = Ys[t.id], b = Bs[t.id];
                         [[b[k], b.imp, cx - gap / 2 - bw, .3], [y[k], y.imp, cx + gap / 2, 1]].forEach(([v, has, x, op]) => {
                             const h = v / max * ih;
-                            if (h > 0) out += `<rect class="yd-bar" data-day="${op === 1 ? `어제 ${md(Y)}` : `그제 ${md(B)}`}" data-t="${i}" data-v="${v}" x="${x}" y="${T + ih - h}" width="${bw}" height="${h}" rx="3" fill="${t.color}" opacity="${op}"/>`;
-                            // 숫자 라벨: 막대보다 글자가 길면(CTR 등) 그제는 왼쪽 막대 오른끝에 맞춰 오른정렬, 어제는 오른쪽 막대 왼끝에 맞춰 왼정렬해서 겹치지 않게
+                            if (h > 0) out += `<rect class="yd-bar" data-day="${op === 1 ? `전일 ${md(Y)}` : `전전일 ${md(B)}`}" data-t="${i}" data-v="${v}" x="${x}" y="${T + ih - h}" width="${bw}" height="${h}" rx="3" fill="${t.color}" opacity="${op}"/>`;
+                            // 숫자 라벨: 막대보다 글자가 길면(CTR 등) 전전일는 왼쪽 막대 오른끝에 맞춰 오른정렬, 전일는 오른쪽 막대 왼끝에 맞춰 왼정렬해서 겹치지 않게
                             const label = has ? short(k, v) : '−', wide = label.length * 6.4 > bw + gap - 2;
                             const [lx, anchor] = !wide ? [x + bw / 2, 'middle'] : op === 1 ? [x, 'start'] : [x + bw, 'end'];
                             out += `<text x="${lx}" y="${T + ih - h - 5}" font-size="${op === 1 ? 11.5 : 10.5}" font-weight="${op === 1 ? 700 : 400}" fill="${op === 1 ? '#202124' : '#858a92'}" text-anchor="${anchor}">${label}</text>`;
                         });
                     });
                     svg.innerHTML = out;
-                    // 막대에 마우스를 올리면 어제/그제 · 프레임 · 값 툴팁
+                    // 막대에 마우스를 올리면 전일/전전일 · 프레임 · 값 툴팁
                     svg.querySelectorAll('.yd-bar').forEach(r => {
                         r.addEventListener('mouseenter', () => {
                             const t = THEMES[+r.dataset.t];
@@ -1660,20 +1685,45 @@
                 });
             });
         }
+        // 요약: 지표 1위를 차지한 항목 수를 프레임별 비중으로 막대 하나에 (사이즈별 · 지면별 표 위)
+        function stackSummary(FR, items, label, unit) {
+            const total = items.filter(r => r.win >= 0).length;
+            const cnt = FR.map((T, i) => items.filter(r => r.win === i));
+            const seg = FR.map((T, i) => {
+                const n = cnt[i].length, pct = total ? n / total * 100 : 0;
+                return n ? `<span style="width:${pct}%;${sw(T)}" data-tip="${T.name}|${label} 1위 ${n}개 (${Math.round(pct)}%)">${pct >= 12 ? `${T.name.replace(' 프레임', '')} ${Math.round(pct)}%` : ''}</span>` : '';
+            }).join('');
+            return `<div class="ss-stack"><div class="ss-stack-title">${label} 1위 비중 <small>${total}개 ${unit} 기준</small></div><div class="ss-stack-bar">${seg}</div></div>`;
+        }
+        // 비중 막대 구간에 마우스를 올리면 검은 툴팁 (프레임 · 1위 개수)
+        document.addEventListener('mouseover', e => {
+            const seg = e.target.closest('.ss-stack-bar span[data-tip]'); if (!seg) return;
+            const box = seg.closest('.ss-stack'); let tip = box.querySelector('.tip');
+            if (!tip) { tip = document.createElement('div'); tip.className = 'tip'; box.appendChild(tip); }
+            const [name, txt] = seg.dataset.tip.split('|');
+            tip.innerHTML = `<b>${name}</b><span>${txt}</span>`; tip.hidden = false;
+            const b = box.getBoundingClientRect(), r = seg.getBoundingClientRect();
+            tip.style.left = Math.max(0, Math.min(b.width - tip.offsetWidth, r.left - b.left + r.width / 2 - tip.offsetWidth / 2)) + 'px';
+            tip.style.top = (r.top - b.top - tip.offsetHeight - 8) + 'px';
+            seg.addEventListener('mouseleave', () => { tip.hidden = true; }, { once: true });
+        });
         const numTd = (v, fmt, cls = '', c = '', tip = '') => `<td class="${cls}" data-v="${v}"${c ? ` style="${cv(c)}"` : ''}>${cls.includes('top') ? `<span class="crown-wrap" data-tip="${tip}">${CROWN}${fmt(v)}</span>` : fmt(v)}</td>`;
 
 
-        /* ④ 레드오토 · coupangETC 일별 추이 */
+        /* ④ 일별 추이 — 날짜마다 프레임별 노출·클릭·CTR + 합산. 구간 = 그날 노출된 프레임(단독 / 병행), 구간이 바뀐 날은 강조 */
         (function () {
-            const R = theme('redauto'), A = theme('coupangetc');
             const day = (t, d) => sum(pick(r => r.t === t && r.d === d));
-            const seg = (r, a) => {
-                const rr = r.imp >= MIN_IMP, aa = a.imp >= MIN_IMP;
-                return rr && aa ? ['both', '병행'] : rr ? ['red', '레드오토 단독'] : aa ? ['auto', 'coupangETC 단독'] : ['none', '−'];
+            const active = vals => THEMES.filter((T, i) => vals[i].imp >= MINV);
+            const seg = on => {
+                if (!on.length) return `<span class="seg-chip none">−</span>`;
+                if (on.length === 1) return `<span class="seg-chip one" style="${cv(on[0])}">${on[0].name.replace(' 프레임', '')} 단독</span>`;
+                // 병행 — 노출된 프레임 색을 칸으로 나눠 표시
+                const n = on.length, bg = on.map((T, i) => `color-mix(in srgb, ${T.color} 22%, #fff) ${i / n * 100}% ${(i + 1) / n * 100}%`).join(', ');
+                return `<span class="seg-chip" style="background:linear-gradient(90deg, ${bg})">${on.map(T => T.name.replace(' 프레임', '')).join(' · ')} 병행</span>`;
             };
             const cell = (o, k, m) => `<td class="sep" data-v="${o.imp ? o[k] : -1}">${o.imp ? m.fmt(o[k]) : '−'}</td>`;
-            const group = (o) => M3.map(m => cell(o, m.k, m)).join('');
-            const MINV = MIN_IMP;
+            const group = o => M3.map(m => cell(o, m.k, m)).join('');
+            const MINV = typeof MIN_IMP === 'number' ? MIN_IMP : 1;
             // 병행(2개 이상 노출)인 날은 클릭률 1위 프레임 칸에만 왕관 + 색 강조
             const winGroup = (o, T, list, d) => M3.map(m => {
                 const on = list.filter(x => x.imp >= MINV);
@@ -1681,20 +1731,21 @@
                 return win ? numTd(o[m.k], m.fmt, 'sep top', T, `${md(d)} · ${m.label} 1위
 ${T.name} ${m.fmt(o[m.k])}`) : cell(o, m.k, m);
             }).join('');
-            const rows = [...DATES].reverse().map(d => {
-                const r = day(R.id, d), a = day(A.id, d), both = sum(pick(x => (x.t === R.id || x.t === A.id) && x.d === d));
-                const [cls, label] = seg(r, a);
-                return `<tr class="${cls === 'both' ? 'pivot' : ''}"><td><b>${md(d)}</b></td><td class="left"><span class="seg-chip ${cls}" style="${cls === 'red' ? cv(R) : cls === 'auto' ? cv(A) : cls === 'both' ? `--c:${R.color};--c2:${A.color}` : ''}">${label}</span></td>${winGroup(r, R, [r, a], d)}${winGroup(a, A, [r, a], d)}${group(both)}</tr>`;
-            }).join('');
-            const tot = t => sum(pick(r => t.includes(r.t)));
-            const TR = tot([R.id]), TA = tot([A.id]), TB = tot([R.id, A.id]);
+            let prevKey = null;
+            const rows = [...DATES].map(d => {   // 과거 → 최신 순으로 구간 변화를 판단한 뒤 최신순으로 표시
+                const v = THEMES.map(T => day(T.id, d)), on = active(v), key = on.map(T => T.id).join('+');
+                const pivot = prevKey !== null && key !== prevKey;
+                prevKey = key;
+                return { d, v, on, pivot, all: sum(pick(r => r.d === d)) };
+            }).reverse().map(({ d, v, on, pivot, all }) =>
+                `<tr class="${pivot ? 'pivot' : ''}"><td class="${dayCls(d)}"><b>${md(d)}</b></td><td class="left">${seg(on)}</td>${v.map((o, i) => winGroup(o, THEMES[i], v, d)).join('')}${group(all)}</tr>`).join('');
+            const tot = THEMES.map(T => sum(pick(r => r.t === T.id))), totAll = sum(ROWS);
             document.getElementById('transTable').innerHTML = `<thead>
                 <tr><th rowspan="2">일자</th><th rowspan="2" style="text-align:left">구간</th>
-                    <th colspan="3" class="grp sep" style="${cv(R)}"><span class="dot" style="${sw(R)}"></span>${nm(R)}</th>
-                    <th colspan="3" class="grp sep" style="${cv(A)}"><span class="dot" style="${sw(A)}"></span>${nm(A)}</th>
+                    ${THEMES.map(T => `<th colspan="3" class="grp sep" style="${cv(T)}"><span class="dot" style="${sw(T)}"></span>${nm(T)}</th>`).join('')}
                     <th colspan="3" class="grp sep">합산</th></tr>
-                <tr>${[R, A, { name: '합산' }].map(() => M3.map(m => `<th class="sep">${m.label.replace(' (CTR)', '')}</th>`).join('')).join('')}</tr>
-                <tr class="total-row"><td>합계</td><td class="left">${DATES.length}일</td>${group(TR)}${group(TA)}${group(TB)}</tr>
+                <tr>${[...THEMES, { name: '합산' }].map(() => M3.map(m => `<th class="sep">${m.label.replace(' (CTR)', '')}</th>`).join('')).join('')}</tr>
+                <tr class="total-row"><td>합계</td><td class="left">${DATES.length}일</td>${tot.map(group).join('')}${group(totAll)}</tr>
             </thead><tbody>${rows}</tbody>`;
         })();
 
@@ -1730,14 +1781,7 @@ ${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>
             const t = document.getElementById('placeTable');
             t.innerHTML = head + `<tbody>${rows.map(placeRow).join('')}</tbody>`;
             makeSortable(t);
-            document.getElementById('placeSummary').innerHTML = FR.map((T, i) => {
-                const list = rows.filter(r => r.win === i).map(r => r.p.replace(/^(\d+)_(\d+)$/, '$1×$2'));
-                return `<div class="ss-item" style="${cv(T)}">
-                    <div class="ss-top"><span class="dot" style="${sw(T)}"></span>${nm(T)}${T.ch === '카카오' ? ' (카카오)' : ''}<b>${m.label} 1위 · ${list.length}개 사이즈</b></div>
-                    <div class="ss-bar"><span style="width:${rows.length ? list.length / rows.length * 100 : 0}%"></span></div>
-                    <div class="ss-list">${list.join(' · ') || '−'}</div>
-                </div>`;
-            }).join('');
+            document.getElementById('placeSummary').innerHTML = stackSummary(FR, rows.map(r => ({ win: r.win, name: r.p.replace(/^(\d+)_(\d+)$/, '$1×$2') })), m.label, '사이즈');
         }
         (function () {
             const tabs = document.getElementById('placeMetric');
