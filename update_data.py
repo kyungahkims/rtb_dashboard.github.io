@@ -9,7 +9,9 @@ RTB 대시보드 데이터 갱신
        - 상품 오토 프레임(앱).csv           (탭 구분 · date, frame, views, clicks)        → 상품 오토 프레임 (앱) 페이지
        - 상품 오토 프레임 (웹, 모바일).csv  (탭 구분 · date, frame, views, clicks)        → 상품 오토 프레임 (웹, 모바일) 페이지
        - 지면별.csv                         (탭 구분 · date, frame, request_size, views, clicks) → 오토 페이지 5. 지면별(요청 사이즈) 비교
-       - rtb_frame_analysis_YYYYMMDD_YYYYMMDD.xlsx  (프레임 분석 xlsx) → 프레임 AB 테스트 4개 페이지 전부
+       - rtb_theme_ab_result_YYYYMMDD_HHMM.xlsx  (테마 AB 결과 xlsx · 가장 정확한 집계) → 프레임 4개 페이지의 테마별/프레임별 일별,
+             상품 고정의 일별 사이즈·이름별·사이즈별 누적·지면별(6·6b 시트), 비상품의 요청 사이즈별. 있으면 아래 rtb_frame_analysis 보다 우선합니다.
+       - rtb_frame_analysis_YYYYMMDD_YYYYMMDD.xlsx  (프레임 분석 xlsx) → 지면별 비교(05·06 시트) + theme_ab 가 없을 때 나머지 전부
              01_테마별_추이                            → 상품 고정 프레임 (테마별 일별 + 이름별·사이즈별 누적)
              02_autoETC_vs_autoRed_webmob            → 상품 오토 프레임 (웹, 모바일) — autoETC(=auto_origin) vs 레드오토
              03_coupangETC_vs_autoRed_app            → 상품 오토 프레임 (앱) — coupangETC(=auto_origin) vs 레드오토
@@ -180,12 +182,14 @@ def read_places(frame_map, skip_day):
     return sorted(([t, p, v[0], v[1]] for (t, p), v in agg.items()), key=lambda x: (-x[2], x[0]))
 
 
-def write_auto(page, rows, places, unknown=()):
+def write_auto(page, rows, places, unknown=(), extra=None):
     """[날짜, 프레임 id, 노출, 클릭] 행 → 오토·비상품 페이지의 ADATA · APDATA"""
     p = os.path.join(DIR, page)
     src = open(p, encoding='utf-8').read()
     src = set_block(src, 'ADATA', 'ADATA', dump_rows(rows), page)
     src = set_block(src, 'APDATA', 'APDATA', dump_rows(places), page)
+    for name, data in (extra or {}).items():   # 페이지별 추가 블록 (비상품: ASDATA 요청 사이즈별)
+        src = set_block(src, name, name, dump_rows(data), page)
     dates = sorted({r[0] for r in rows})
     open(p, 'w', encoding='utf-8', newline='').write(src)
     by_t = {}
@@ -251,7 +255,102 @@ XL_AUTO = [   # (시트, 페이지, {페이지 프레임 id: xlsx 열 접두어}
 ]
 
 
-def update_fixed_xlsx(sheets):
+AB_FIXED = {'blackGold': 'blackgold', 'blackGoldNo': 'blackgold', 'whiteRed': 'whitered', 'whiteRedNo': 'whitered', 'magazine': 'magazine'}   # theme_ab 테마 → 페이지 테마 id (기본 · verygoodtour 제외)
+AB_DATE = re.compile(r'^\d{4}-\d\d-\d\d')
+
+
+def ab_table(rows, dates_only=True):
+    """theme_ab 시트(첫 줄이 머리글) → dict 목록. dates_only 면 첫 칸이 날짜인 행만 (아래쪽 '공존일 합계' 같은 요약 행 제외)"""
+    keys = [str(c).strip() if c is not None else '' for c in rows[0]]
+    out = []
+    for r in rows[1:]:
+        if r[0] is None or str(r[0]) == '':
+            continue
+        if dates_only and not AB_DATE.match(str(r[0])):
+            continue
+        out.append({k: v for k, v in zip(keys, r) if k})
+    return out
+
+
+def ab_date(v):
+    return str(v)[:10]
+
+
+def update_fixed_ab(ab):
+    """rtb_theme_ab_result: 1_테마_일별 → DATA · 2_사이즈테마_일별 → DDATA(일별 사이즈·이름) · NDATA/SDATA 는 DDATA 누적"""
+    daily = {}
+    for r in ab_table(ab['1_테마_일별']):
+        d = ab_date(r['날짜'])
+        for xt, t in AB_FIXED.items():
+            v = xl_int(r.get(f'{xt}_노출'))
+            if v:
+                a = daily.setdefault((d, t), [0, 0])
+                a[0] += v
+                a[1] += xl_int(r.get(f'{xt}_클릭'))
+    rows = sorted([d, t, '', '', v, c] for (d, t), (v, c) in daily.items())
+    ddata = []
+    for r in ab_table(ab['2_사이즈테마_일별']):
+        t = AB_FIXED.get(str(r['테마']))
+        if not t or not xl_int(r['노출']):
+            continue
+        ddata.append([ab_date(r['날짜']), t, str(r['키']), str(r['사이즈']).replace('_', 'x'), xl_int(r['노출']), xl_int(r['클릭'])])
+    ddata.sort()
+    by_name, by_size = {}, {}
+    for d, t, n, size, v, c in ddata:
+        a = by_name.setdefault((t, n, size), [0, 0]); a[0] += v; a[1] += c
+        b = by_size.setdefault((t, size), [0, 0]); b[0] += v; b[1] += c
+    ndata = sorted([t, n, size, v, c] for (t, n, size), (v, c) in by_name.items())
+    sdata = sorted([t, size, v, c] for (t, size), (v, c) in by_size.items())
+    return rows, ddata, ndata, sdata
+
+
+def ab_top_rows(rows):
+    """'(a) 노출수 TOP15' 같은 소제목 + 머리글이 여러 번 나오는 시트 → dict 목록 (소제목·빈 줄 건너뜀)"""
+    hdr, out = None, []
+    for r in rows:
+        if not r or r[0] is None or str(r[0]).startswith('('):
+            continue
+        if r[0] == 'tagid' or r[0] == '날짜':
+            hdr = [str(c).strip() if c is not None else '' for c in r]
+            continue
+        if hdr:
+            out.append({k: v for k, v in zip(hdr, r) if k})
+    return out
+
+
+def ab_theme_of(size_theme):
+    """'728_90_whiteRed' → 페이지 테마 id (기본 · verygoodtour 는 None)"""
+    return AB_FIXED.get(str(size_theme).rsplit('_', 1)[-1])
+
+
+def ab_places(ab):
+    """6_tagid_TOP15: 노출·클릭·CTR 상위 15 목록을 합쳐(같은 tagid·사이즈_테마는 한 번) → XPDATA [테마, 지면, 노출, 클릭] (9월 누적)"""
+    agg, seen = {}, set()
+    for r in ab_top_rows(ab['6_tagid_TOP15']):
+        key = (r['tagid'], r['사이즈_테마'])
+        t = ab_theme_of(r['사이즈_테마'])
+        if key in seen or not t:
+            continue
+        seen.add(key)
+        a = agg.setdefault((t, r['tagid']), [0, 0]); a[0] += xl_int(r['노출']); a[1] += xl_int(r['클릭'])
+    return sorted(([t, pl, v[0], v[1]] for (t, pl), v in agg.items()), key=lambda x: (-x[2], x[0]))
+
+
+def ab_places_daily(ab):
+    """6b_tagid_TOP15_일별: 날짜마다 노출·클릭·CTR 상위 15 목록을 합쳐 → PDATA [날짜, 테마, 지면, 노출, 클릭]"""
+    agg, seen = {}, set()
+    for r in ab_top_rows(ab['6b_tagid_TOP15_일별']):
+        d = ab_date(r['날짜'])
+        key = (d, r['tagid'], r['사이즈_테마'])
+        t = AB_FIXED.get(str(r['테마']))
+        if key in seen or not t:
+            continue
+        seen.add(key)
+        a = agg.setdefault((d, t, r['tagid']), [0, 0]); a[0] += xl_int(r['노출']); a[1] += xl_int(r['클릭'])
+    return sorted([d, t, pl, v[0], v[1]] for (d, t, pl), v in agg.items())
+
+
+def update_fixed_xlsx(sheets, ab=None):
     """01 시트(날짜 × 테마) → DATA [날짜, 테마, '', '', 노출, 클릭] (일별 사이즈·이름 없음 · No 변형은 같은 테마로 합산)
        01 시트 '테마별 포함 frame_value' → NDATA [테마, 이름, 사이즈, 노출, 클릭] (기간 누적) · SDATA [테마, 사이즈, 노출, 클릭] 는 NDATA 를 사이즈별로 합산"""
     daily = {}
@@ -274,18 +373,23 @@ def update_fixed_xlsx(sheets):
         a[0] += v
         a[1] += c
     sdata = sorted([t, size, v, c] for (t, size), (v, c) in by_size.items())
+    daily = read_fixed_daily()
+    if not ab:
+        daily += derive_missing_daily(rows, ndata, daily)
+    if ab:   # rtb_theme_ab_result 가 있으면 테마별 일별 · 일별 사이즈 · 이름별 · 사이즈별 누적을 모두 그 파일로 (가장 정확한 집계)
+        rows, daily, ndata, sdata = update_fixed_ab(ab)
     page = 'frame_test_history_page.html'
     p = os.path.join(DIR, page)
     src = open(p, encoding='utf-8').read()
     src = set_block(src, 'DATA', 'DATA', dump_rows(rows), page)
     src = set_block(src, 'SDATA', 'SDATA', dump_rows(sdata), page)
     src = set_block(src, 'NDATA', 'NDATA', dump_rows(ndata), page)
-    daily = read_fixed_daily()
-    daily += derive_missing_daily(rows, ndata, daily)
     src = set_block(src, 'DDATA', 'DDATA', dump_rows(daily), page)
-    places = read_fixed_places()
+    if ab and '6b_tagid_TOP15_일별' in ab:   # 지면별도 theme_ab 파일로 (6번 누적 · 6b 일별) — 없으면 CSV·rtb_frame_analysis
+        places, xplaces = ab_places_daily(ab), ab_places(ab)
+    else:
+        places, xplaces = read_fixed_places(), xl_places(sheets, fixed_frame_of)
     src = set_block(src, 'PDATA', 'PDATA', dump_rows(places), page)
-    xplaces = xl_places(sheets, fixed_frame_of)
     src = set_block(src, 'XPDATA', 'XPDATA', dump_rows(xplaces), page)
     open(p, 'w', encoding='utf-8', newline='').write(src)
     dates = sorted({r[0] for r in rows})
@@ -504,21 +608,53 @@ def derive_missing_daily(theme_rows, ndata, daily):
     return out
 
 
-def update_frames_xlsx(path):
+AB_AUTO = {   # rtb_theme_ab_result: 페이지 → (시트, {프레임 id: [열 접두어 …]})  · 3번 시트 = 웹·모바일, 4번 = 앱, 5번 = 비상품
+    'frame_auto_web_page.html': ('3_autoRED_vs_autoETC', {'redauto': ['RED'], 'autoetc': ['ETC']}),
+    'frame_auto_app_page.html': ('4_app_coupang_RED_ETC', {'redauto': ['RED'], 'coupangetc': ['COUPANG', 'ETC']}),
+    'frame_nonproduct_page.html': ('5_비상품화_일별', {'iauto': ['auto형(iauto+auto_i)'], 'isize': ['사이즈형(i{size})']}),
+}
+
+
+def ab_sizes(ab):
+    """5b_비상품화_요청사이즈별 → [프레임 id, 요청 사이즈, 노출, 클릭] (사이즈형은 같은 사이즈의 프레임을 합산, auto형은 사이즈당 한 번)"""
+    agg, seen = {}, set()
+    for r in ab_table(ab['5b_비상품화_요청사이즈별'], dates_only=False):
+        size = str(r['요청사이즈'])
+        if not re.fullmatch(r'\d+_\d+', size):
+            continue
+        a = agg.setdefault(('isize', size), [0, 0]); a[0] += xl_int(r['사이즈형_노출']); a[1] += xl_int(r['사이즈형_클릭'])
+        if size not in seen:
+            seen.add(size)
+            b = agg.setdefault(('iauto', size), [0, 0]); b[0] += xl_int(r['auto형_노출']); b[1] += xl_int(r['auto형_클릭'])
+    return sorted(([t, size, v[0], v[1]] for (t, size), v in agg.items() if v[0]), key=lambda x: (-x[2], x[0]))
+
+
+def update_frames_xlsx(path, ab_path=None):
     sheets = load_xlsx(path)
-    print(f'[프레임 xlsx] {os.path.basename(path)}')
-    update_fixed_xlsx(sheets)
+    ab = load_xlsx(ab_path) if ab_path else None
+    print(f'[프레임 xlsx] {os.path.basename(path)}' + (f' + {os.path.basename(ab_path)} (테마별·일별·사이즈별은 이 파일 기준)' if ab_path else ''))
+    update_fixed_xlsx(sheets, ab)
     for sheet, page, cols, frame_map in XL_AUTO:
         rows = []
-        for r in xl_table(sheets[sheet], 'date', *[c[0] + '_views' for c in cols.values()]):   # 프레임의 첫 열은 필수, 나머지 열(auto_origin 등)은 없으면 0
-            d = xl_date(r['date'])
-            for t, names in cols.items():
-                v = sum(xl_int(r.get(f'{c}_views')) for c in names)
-                if v:
-                    rows.append([d, t, v, sum(xl_int(r.get(f'{c}_clicks')) for c in names)])
+        if ab:
+            ab_sheet, ab_cols = AB_AUTO[page]
+            for r in ab_table(ab[ab_sheet]):
+                d = ab_date(r['날짜'])
+                for t, names in ab_cols.items():
+                    v = sum(xl_int(r.get(f'{c}_노출')) for c in names)
+                    if v:
+                        rows.append([d, t, v, sum(xl_int(r.get(f'{c}_클릭')) for c in names)])
+        else:
+            for r in xl_table(sheets[sheet], 'date', *[c[0] + '_views' for c in cols.values()]):   # 프레임의 첫 열은 필수, 나머지 열(auto_origin 등)은 없으면 0
+                d = xl_date(r['date'])
+                for t, names in cols.items():
+                    v = sum(xl_int(r.get(f'{c}_views')) for c in names)
+                    if v:
+                        rows.append([d, t, v, sum(xl_int(r.get(f'{c}_clicks')) for c in names)])
         rows.sort()
         places = read_places(frame_map, None) if frame_map else (xl_places(sheets, nonproduct_frame) or read_nonproduct_places())   # 비상품 지면은 xlsx 05·06 시트 누적 (없으면 CSV)
-        write_auto(page, rows, places)
+        extra = {'ASDATA': ab_sizes(ab)} if (ab and not frame_map) else None   # 비상품 요청 사이즈별 (theme_ab 5b)
+        write_auto(page, rows, places, extra=extra)
 
 
 if __name__ == '__main__':
@@ -538,5 +674,6 @@ if __name__ == '__main__':
     xlsx = glob.glob(os.path.join(DIR, 'rtb_frame_analysis_*.xlsx'))
     if not xlsx:
         sys.exit('rtb_frame_analysis_*.xlsx 파일이 없어 프레임 페이지는 갱신하지 못했습니다')
-    update_frames_xlsx(max(xlsx, key=os.path.getmtime))
+    ab = glob.glob(os.path.join(DIR, 'rtb_theme_ab_result_*.xlsx'))
+    update_frames_xlsx(max(xlsx, key=os.path.getmtime), max(ab, key=os.path.getmtime) if ab else None)
     print('완료')

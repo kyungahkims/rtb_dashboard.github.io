@@ -1108,10 +1108,10 @@
         .seg-chip.one { background: color-mix(in srgb, var(--c) 14%, #fff); color: color-mix(in srgb, var(--c) 78%, #000) }   /* 테마 하나 — 그 테마 색 */
         .seg-chip.none { background: #eceef1; color: #6b7078 }
         /* ⑤ 지면 표 */
-        #placeTable th, #placeTable td { padding: 6px 8px }
-        #placeTable th.grp { text-align: right }
-        #placeTable td.place-cell { padding-left: 18px; white-space: nowrap }
-        #placeTable td.place-cell small { display: block; font-weight: 400; color: #858a92; font-size: 11px; margin-top: 1px }
+        #placeTable th, #placeTable td, #sizeTable th, #sizeTable td { padding: 6px 8px }
+        #placeTable th.grp, #sizeTable th.grp { text-align: right }
+        #placeTable td.place-cell, #sizeTable td.place-cell { padding-left: 18px; white-space: nowrap }
+        #placeTable td.place-cell small, #sizeTable td.place-cell small { display: block; font-weight: 400; color: #858a92; font-size: 11px; margin-top: 1px }
         #placeTable td.place-cell .chip.ch { margin-left: 6px; font-size: 10px; padding: 0 6px; vertical-align: 1px }
         .ad-empty { display: grid; place-items: center; height: 100%; padding: 12px; text-align: center; font-size: 12px; color: #858a92; line-height: 1.5 }
         .ad.ad-slot:has(.ad-empty) { aspect-ratio: 1; background: #fafbfc }
@@ -1169,7 +1169,7 @@
 
         <section>
             <div class="title">
-                <h2>4. 프레임별 일별 추이 <span class="h2-help" data-tip="구간: 그날 어떤 배너가 나갔는지 보여 줍니다.&#10;&#160;&#160;• 단독 = 배너 하나만 나간 날&#10;&#160;&#160;• 병행 = 여러 배너가 같이 나간 날&#10;&#10;노란색 줄: 나가는 배너 조합이 전날과 달라진 날&#10;왕관: 여러 배너가 같이 나간 날 중 클릭률이 가장 높았던 배너" aria-label="구간 설명" tabindex="0">?</span></h2>
+                <h2>4. 프레임별 일별 추이 <span class="h2-help" data-tip="구간: 그날 어떤 배너가 나갔는지 보여 줍니다.&#10;&#160;&#160;• 단독 = 배너 하나만 나간 날&#10;&#160;&#160;• 병행 = 여러 배너가 같이 나간 날&#10;&#10;노란색 줄: 나가는 배너 조합이 전날과 달라진 날&#10;1위 메달: 여러 배너가 같이 나간 날 중 클릭률이 가장 높았던 배너" aria-label="구간 설명" tabindex="0">?</span></h2>
             </div>
             <div class="card">
                 <div class="scroll">
@@ -1178,9 +1178,26 @@
             </div>
         </section>
 
+        <section id="sizeSection">
+            <div class="title">
+                <h2>5. 사이즈별 프레임 비교 (10개 사이즈) <span class="h2-help" data-tip="광고 자리 크기(요청 사이즈)별로&#10;두 프레임의 성과를 비교합니다.&#10;오토 프레임은 자리 크기에 맞춰 나가므로&#10;요청 사이즈가 곧 실제로 나간 배너 크기입니다.&#10;&#10;기준: 9월 누적&#10;사이즈: 요청 사이즈 10개" aria-label="사이즈별 표 설명" tabindex="0">?</span></h2>
+            </div>
+            <div class="card">
+                <div class="m-tabs" id="sizeMetric" role="tablist" aria-label="지표 선택">
+                    <button type="button" role="tab" data-metric="imp" aria-selected="false">노출수</button>
+                    <button type="button" role="tab" data-metric="clk" aria-selected="false">클릭수</button>
+                    <button type="button" role="tab" data-metric="ctr" aria-selected="true">클릭률 (CTR)</button>
+                </div>
+                <div class="ss" id="sizeSummary"></div>
+                <div class="scroll">
+                    <table id="sizeTable"></table>
+                </div>
+            </div>
+        </section>
+
         <section id="placeSection">
             <div class="title">
-                <h2>5. 프레임 지면별 비교 (상위 10개 지면) <span class="h2-help" data-tip="배너가 실제로 걸린 지면별로&#10;두 배너의 성과를 비교합니다.&#10;&#10;기준: 9월 누적&#10;지면: 노출이 많은 지면 10곳&#10;&#10;지면은 사이트 이름 기준이며, 같은 사이트의 여러 광고 자리는 합산합니다." aria-label="지면별 표 설명" tabindex="0">?</span></h2>
+                <h2>6. 프레임 지면별 비교 (상위 10개 지면) <span class="h2-help" data-tip="배너가 실제로 걸린 지면별로&#10;두 배너의 성과를 비교합니다.&#10;&#10;기준: 9월 누적&#10;지면: 노출이 많은 지면 10곳&#10;&#10;지면은 사이트 이름 기준이며, 같은 사이트의 여러 광고 자리는 합산합니다." aria-label="지면별 표 설명" tabindex="0">?</span></h2>
             </div>
             <div class="card">
                 <div class="m-tabs" id="placeMetric" role="tablist" aria-label="지표 선택">
@@ -1245,32 +1262,31 @@
         /* 데이터 [날짜, 프레임 id, 노출수, 클릭수] — update_data.bat이 자동으로 바꿉니다 */
         /* ADATA:START */
         const ADATA = [
-            ["2026-09-01", "iauto", 10583, 0],
-            ["2026-09-01", "isize", 1070427, 367],
-            ["2026-09-02", "iauto", 368170, 90],
-            ["2026-09-02", "isize", 782536, 155],
-            ["2026-09-03", "iauto", 1240167, 366],
-            ["2026-09-04", "iauto", 1240441, 397],
-            ["2026-09-05", "iauto", 826627, 269],
-            ["2026-09-06", "iauto", 869050, 285],
-            ["2026-09-07", "iauto", 1100801, 325],
-            ["2026-09-08", "iauto", 1001443, 352],
-            ["2026-09-09", "iauto", 922560, 349],
-            ["2026-09-09", "isize", 854, 0],
-            ["2026-09-10", "iauto", 964237, 366],
-            ["2026-09-11", "iauto", 1119181, 296],
-            ["2026-09-14", "iauto", 820051, 263],
-            ["2026-09-15", "iauto", 827718, 266],
-            ["2026-09-16", "iauto", 1136420, 450],
-            ["2026-09-17", "iauto", 1396951, 428],
-            ["2026-09-18", "iauto", 1673756, 416],
-            ["2026-09-21", "iauto", 1296964, 290],
-            ["2026-09-22", "iauto", 1420493, 260],
-            ["2026-09-23", "iauto", 1083653, 170],
-            ["2026-09-24", "iauto", 582881, 144],
-            ["2026-09-25", "iauto", 544450, 115],
-            ["2026-09-26", "iauto", 599142, 154],
-            ["2026-09-27", "iauto", 685431, 126],
+            ["2026-09-01", "iauto", 10595, 0],
+            ["2026-09-01", "isize", 1069956, 440],
+            ["2026-09-02", "iauto", 368360, 104],
+            ["2026-09-02", "isize", 779749, 158],
+            ["2026-09-03", "iauto", 1240601, 388],
+            ["2026-09-04", "iauto", 1241088, 417],
+            ["2026-09-05", "iauto", 827117, 281],
+            ["2026-09-06", "iauto", 869755, 294],
+            ["2026-09-07", "iauto", 1101542, 342],
+            ["2026-09-08", "iauto", 1002149, 364],
+            ["2026-09-09", "iauto", 923476, 367],
+            ["2026-09-10", "iauto", 964874, 389],
+            ["2026-09-11", "iauto", 1119887, 307],
+            ["2026-09-14", "iauto", 820702, 277],
+            ["2026-09-15", "iauto", 828284, 273],
+            ["2026-09-16", "iauto", 1136420, 363],
+            ["2026-09-17", "iauto", 1397781, 441],
+            ["2026-09-18", "iauto", 1675086, 426],
+            ["2026-09-21", "iauto", 1394594, 293],
+            ["2026-09-22", "iauto", 1421433, 264],
+            ["2026-09-23", "iauto", 1084712, 170],
+            ["2026-09-24", "iauto", 583355, 145],
+            ["2026-09-25", "iauto", 544848, 106],
+            ["2026-09-26", "iauto", 600081, 154],
+            ["2026-09-27", "iauto", 685814, 126],
         ];
         /* ADATA:END */
         /* 지면별 누적 [프레임 id, 요청 사이즈, 노출수, 클릭수] — 지면별.csv에서 update_data.bat이 자동으로 바꿉니다 */
@@ -1306,6 +1322,32 @@
             ["isize", "web_khan.co.kr_banner_1_N_v2", 536, 0],
         ];
         /* APDATA:END */
+
+        /* ⑤ 요청 사이즈별 누적 [프레임 id, 요청 사이즈, 노출수, 클릭수] — rtb_theme_ab_result xlsx(5b 시트)에서 update_data.bat이 채움 */
+        /* ASDATA:START */
+        const ASDATA = [
+            ["iauto", "320_50", 3733968, 1519],
+            ["iauto", "200_200", 2650356, 398],
+            ["iauto", "250_250", 2559487, 890],
+            ["iauto", "728_90", 2402010, 699],
+            ["iauto", "160_600", 1308170, 351],
+            ["iauto", "120_600", 953509, 160],
+            ["iauto", "300_250", 815958, 318],
+            ["iauto", "320_100", 726669, 239],
+            ["isize", "320_50", 413983, 230],
+            ["isize", "300_250", 317310, 111],
+            ["iauto", "970_250", 268521, 43],
+            ["isize", "728_90", 263043, 90],
+            ["isize", "200_200", 250898, 32],
+            ["isize", "250_250", 241035, 45],
+            ["iauto", "300_600", 123264, 44],
+            ["isize", "160_600", 122938, 38],
+            ["isize", "320_100", 112405, 24],
+            ["isize", "120_600", 111115, 19],
+            ["isize", "970_250", 12591, 4],
+            ["isize", "300_600", 4387, 5],
+        ];
+        /* ASDATA:END */
 
         const pad = n => String(n).padStart(2, '0');
         const ymd = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
@@ -1629,7 +1671,7 @@
                 const n = cnt[i].length, pct = total ? n / total * 100 : 0;
                 return n ? `<span style="width:${pct}%;${sw(T)}" data-tip="${T.name}|${label} 1위 ${n}개 (${Math.round(pct)}%)">${pct >= 12 ? `${T.name.replace(' 프레임', '')} ${Math.round(pct)}%` : ''}</span>` : '';
             }).join('');
-            return `<div class="ss-stack"><div class="ss-stack-title">${label} 1위 비중 <small>${total}개 ${unit} 기준</small></div><div class="ss-stack-bar">${seg}</div></div>`;
+            return `<div class="ss-stack"><div class="ss-stack-title">${label} 1위 비중</div><div class="ss-stack-bar">${seg}</div></div>`;
         }
         // 비중 막대 구간에 마우스를 올리면 검은 툴팁 (프레임 · 1위 개수)
         document.addEventListener('mouseover', e => {
@@ -1660,7 +1702,7 @@
             const cell = (o, k, m) => `<td class="sep" data-v="${o.imp ? o[k] : -1}">${o.imp ? m.fmt(o[k]) : '−'}</td>`;
             const group = o => M3.map(m => cell(o, m.k, m)).join('');
             const MINV = typeof MIN_IMP === 'number' ? MIN_IMP : 1;
-            // 병행(2개 이상 노출)인 날은 클릭률 1위 프레임 칸에만 왕관 + 색 강조
+            // 병행(2개 이상 노출)인 날은 클릭률 1위 프레임 칸에만 1위 메달 + 색 강조
             const winGroup = (o, T, list, d) => M3.map(m => {
                 const on = list.filter(x => x.imp >= MINV);
                 const win = m.k === 'ctr' && on.length >= 2 && o.imp >= MINV && o[m.k] > 0 && o[m.k] === Math.max(...on.map(x => x[m.k]));
@@ -1685,7 +1727,47 @@ ${T.name} ${m.fmt(o[m.k])}`) : cell(o, m.k, m);
             </thead><tbody>${rows}</tbody>`;
         })();
 
-        /* ⑤ 지면별 — 기간 누적, 노출 상위 12개 지면 × 오토 프레임 (지표 탭) */
+        /* ⑤ 요청 사이즈별 — 기간 누적, 요청 사이즈 10개 × 프레임 (지표 탭) */
+        const RSROWS = ASDATA.map(([t, p, imp, clk]) => ({ t, p, imp, clk }));
+        if (!RSROWS.length) document.getElementById('sizeSection').hidden = true;   // 요청 사이즈 데이터가 없으면 숨김
+        const RSIZE_N = 10;
+        const rsizeLabel = p => { const m = p.match(/^(\d+)_(\d+)$/); return m ? `<b>${m[1]}×${m[2]}</b><small>요청 사이즈</small>` : `<b>${p}</b>`; };
+        function renderRSize(mk) {
+            const m = M3.find(x => x.k === mk);
+            const FR = THEMES;
+            const psum = fn => sum(RSROWS.filter(fn));
+            const argmax = list => { let w = -1; list.forEach((o, i) => { if (o.imp && (w < 0 || o[mk] > list[w][mk])) w = i; }); return w; };
+            const sizes = [...new Set(RSROWS.map(r => r.p))]
+                .map(p => ({ p, all: psum(r => r.p === p) }))
+                .sort((a, b) => b.all.imp - a.all.imp).slice(0, RSIZE_N);
+            const rows = sizes.map(({ p }) => ({ p, v: FR.map(T => psum(r => r.t === T.id && r.p === p)) }));
+            rows.forEach(r => r.win = argmax(r.v));
+            const shown = new Set(rows.map(r => r.p));
+            const tot = FR.map(T => psum(r => r.t === T.id && shown.has(r.p)));   // 합계는 표에 있는 사이즈 기준
+            const head = `<thead>
+                <tr><th>사이즈</th>${FR.map((T, i) => `<th data-col="${i + 1}" class="grp sep" style="${cv(T)}"><span class="dot" style="${sw(T)}"></span>${nm(T)}</th>`).join('')}</tr>
+                <tr class="total-row"><td>합계</td>${tot.map((o, i) => !o.imp ? `<td class="sep na" data-v="-1">−</td>` : numTd(o[mk], m.fmt, 'sep' + (i === argmax(tot) ? ' top' : ''), i === argmax(tot) ? FR[i] : '', `합계 · ${m.label} 1위\n${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>
+            </thead>`;
+            const row = ({ p, v, win }) => `<tr><td class="place-cell">${rsizeLabel(p)}</td>${v.map((o, i) => !o.imp
+                ? `<td class="sep na" data-v="-1">−</td>`
+                : numTd(o[mk], m.fmt, 'sep' + (i === win ? ' top' : ''), i === win ? FR[i] : '', `${p} · ${m.label} 1위\n${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>`;
+            const t = document.getElementById('sizeTable');
+            t.innerHTML = head + `<tbody>${rows.map(row).join('')}</tbody>`;
+            makeSortable(t);
+            document.getElementById('sizeSummary').innerHTML = stackSummary(FR, rows.map(r => ({ win: r.win, name: r.p.replace(/^(\d+)_(\d+)$/, '$1×$2') })), m.label, '사이즈');
+        }
+        (function () {
+            const tabs = document.getElementById('sizeMetric');
+            const run = () => renderRSize(tabs.querySelector('[aria-selected="true"]').dataset.metric);
+            tabs.addEventListener('click', e => {
+                const b = e.target.closest('button[data-metric]'); if (!b) return;
+                tabs.querySelectorAll('button[data-metric]').forEach(x => x.setAttribute('aria-selected', x === b));
+                run();
+            });
+            run();
+        })();
+
+        /* ⑥ 지면별 — 기간 누적, 노출 상위 지면 × 프레임 (지표 탭) */
         // 지면은 사이트 이름만 표시 (매체 · 광고 자리 번호는 표시하지 않고, 같은 사이트의 여러 자리는 합산)
         const siteOf = p => { const m = p.replace(/_N_v2$/, '').match(/^(web|app|mob)_(.+?)_([a-z]+)_(\d+)$/); return m ? m[2] : p; };
         const PROWS = APDATA.map(([t, p, imp, clk]) => ({ t, p: siteOf(p), imp, clk }));
