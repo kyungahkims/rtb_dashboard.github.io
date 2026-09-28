@@ -3,31 +3,22 @@ RTB 대시보드 데이터 갱신
 
 사용법
   1. 이 폴더에 새로 받은 통계 파일을 넣는다
-       - google_openRTB_일자별통계.xls  (이름 뒤에 날짜가 붙어 있어도 됨)
-       - kakao_rtb_day_report.xls
-       - 상품 고정 프레임.csv              (탭 구분 · date, theme, size, views, clicks)  → 상품 고정 프레임 페이지
-       - 상품 오토 프레임(앱).csv           (탭 구분 · date, frame, views, clicks)        → 상품 오토 프레임 (앱) 페이지
-       - 상품 오토 프레임 (웹, 모바일).csv  (탭 구분 · date, frame, views, clicks)        → 상품 오토 프레임 (웹, 모바일) 페이지
-       - 지면별.csv                         (탭 구분 · date, frame, request_size, views, clicks) → 오토 페이지 5. 지면별(요청 사이즈) 비교
-       - rtb_theme_ab_result_YYYYMMDD_HHMM.xlsx  (테마 AB 결과 xlsx · 가장 정확한 집계) → 프레임 4개 페이지의 테마별/프레임별 일별,
-             상품 고정의 일별 사이즈·이름별·사이즈별 누적·지면별(A 시트, 없으면 6·6b), 오토의 요청 사이즈별(B 시트), 비상품의 요청 사이즈별(C 시트)·지면별(A 시트).
-             있으면 아래 rtb_frame_analysis 보다 우선합니다.
-       - rtb_frame_analysis_YYYYMMDD_YYYYMMDD.xlsx  (프레임 분석 xlsx) → 지면별 비교(05·06 시트) + theme_ab 가 없을 때 나머지 전부
-             01_테마별_추이                            → 상품 고정 프레임 (테마별 일별 + 이름별·사이즈별 누적)
-             02_autoETC_vs_autoRed_webmob            → 상품 오토 프레임 (웹, 모바일) — autoETC(=auto_origin) vs 레드오토
-             03_coupangETC_vs_autoRed_app            → 상품 오토 프레임 (앱) — coupangETC(=auto_origin) vs 레드오토
-             04_i사이즈그룹_vs_iauto                  → 비상품 프레임 (iauto vs 옛 i사이즈 프레임 12개 합산)
-             05·06_매체Top10                           → 상품 고정 7번 · 비상품 5번 지면별 비교의 '월 전체'(기간 누적, 노출 상위 10 + CTR 상위 10 지면)
-       - 지면별(고정).csv · 지면별(비상품).csv  (탭 구분 · date, theme, place, views, clicks) → 상품 고정 프레임 7번 · 비상품 프레임 5번 지면별 비교
-       - 상품 고정 프레임(일별).csv            (탭 구분 · date, theme, name, size, views, clicks) → 상품 고정 프레임 5·6번 '일별' 선택
-             둘 다 원본 일별 파일(tag_stats_MMDD.csv · frame_value_stats_MMDD.csv)이 있는 폴더에서 만듭니다:  python update_data.py --places "폴더 경로"
-             (고정: 테마 키워드 blackGold·whiteRed·magazine 프레임 · 비상품: iauto·i{가로}_{세로} 프레임,
-              이상치(views<100 · clicks>views · ctr>=1) 제외, 노출 상위 12개 지면 + 나머지는 '기타 지면')
+       - google_openRTB_일자별통계.xls  (이름 뒤에 날짜가 붙어 있어도 됨)      → Google RTB 페이지
+       - kakao_rtb_day_report.xls                                              → Kakao RTB 페이지
+       - rtb_theme_ab_result_YYYYMMDD_HHMM.xlsx  (테마 AB 결과 xlsx)            → 프레임 AB 테스트 4개 페이지 전부
+             1_테마_일별 · 2_사이즈테마_일별      → 상품 고정 1~6번
+             3_autoRED_vs_autoETC                → 오토 (웹, 모바일) 1~4번
+             4_app_coupang_RED_ETC               → 오토 (앱) 1~4번
+             5_비상품화_일별                      → 비상품 1~4번
+             A_지면일별                           → 상품 고정 7번 · 비상품 6번 (9월 전체 + 일별)
+             B_오토요청사이즈일별                  → 오토 (웹, 모바일 · 앱) 5번 (9월 전체 + 일별)
+             C_비상품요청사이즈일별                → 비상품 5번 (9월 전체 + 일별)
+             (A·B·C 가 없는 예전 파일이면 6·6b 시트(상위 15 지면)와 5b 시트로 채우고, 그것도 없으면 rtb_frame_analysis xlsx · CSV 로 돌아갑니다)
   2. update_data.bat 더블클릭 (또는 python update_data.py · 프레임 페이지만: python update_data.py --frames)
 
 - 파일이 여러 개면 가장 최근에 받은 파일을 사용합니다.
-- 파일을 받은 날(이름의 날짜, 없으면 파일 수정 날짜)은 집계 중이라 제외합니다.
-- 지면별.csv가 없으면 오토 페이지 5번은 비워 둡니다.
+- Google · Kakao 는 파일을 받은 날(이름의 날짜, 없으면 파일 수정 날짜)이 집계 중이라 제외합니다.
+- 지면별 · 사이즈별 표는 페이지 용량 때문에 누적 상위 60개, 날짜별 상위 40개 항목만 넣습니다 (표는 그중 10~12개만 보여 줍니다).
 """
 import csv
 import glob
@@ -411,31 +402,31 @@ def ab_full_np_sizes(ab):
 def update_fixed_xlsx(sheets, ab=None):
     """01 시트(날짜 × 테마) → DATA [날짜, 테마, '', '', 노출, 클릭] (일별 사이즈·이름 없음 · No 변형은 같은 테마로 합산)
        01 시트 '테마별 포함 frame_value' → NDATA [테마, 이름, 사이즈, 노출, 클릭] (기간 누적) · SDATA [테마, 사이즈, 노출, 클릭] 는 NDATA 를 사이즈별로 합산"""
-    daily = {}
-    for r in xl_table(sheets['01_테마별_추이'], 'date', 'blackGold_views'):
-        d = xl_date(r['date'])
-        for xt, t in XL_FIXED.items():
-            v = xl_int(r.get(f'{xt}_views'))
-            if v:
-                a = daily.setdefault((d, t), [0, 0])
-                a[0] += v
-                a[1] += xl_int(r.get(f'{xt}_clicks'))
-    rows = sorted([d, t, '', '', v, c] for (d, t), (v, c) in daily.items())
-    ndata = [[XL_FIXED[r['theme']], r['frame_value'], xl_size(r['frame_value']), xl_int(r['views']), xl_int(r['clicks'])]
-             for r in xl_table(sheets['01_테마별_추이'], 'theme', 'frame_value') if r['theme'] in XL_FIXED]
-    by_size = {}
-    for t, n, size, v, c in ndata:
-        if size == '비규격':
-            continue
-        a = by_size.setdefault((t, size), [0, 0])
-        a[0] += v
-        a[1] += c
-    sdata = sorted([t, size, v, c] for (t, size), (v, c) in by_size.items())
-    daily = read_fixed_daily()
-    if not ab:
-        daily += derive_missing_daily(rows, ndata, daily)
     if ab:   # rtb_theme_ab_result 가 있으면 테마별 일별 · 일별 사이즈 · 이름별 · 사이즈별 누적을 모두 그 파일로 (가장 정확한 집계)
         rows, daily, ndata, sdata = update_fixed_ab(ab)
+    else:    # 예전 방식: rtb_frame_analysis 01 시트 + CSV
+        daily = {}
+        for r in xl_table(sheets['01_테마별_추이'], 'date', 'blackGold_views'):
+            d = xl_date(r['date'])
+            for xt, t in XL_FIXED.items():
+                v = xl_int(r.get(f'{xt}_views'))
+                if v:
+                    a = daily.setdefault((d, t), [0, 0])
+                    a[0] += v
+                    a[1] += xl_int(r.get(f'{xt}_clicks'))
+        rows = sorted([d, t, '', '', v, c] for (d, t), (v, c) in daily.items())
+        ndata = [[XL_FIXED[r['theme']], r['frame_value'], xl_size(r['frame_value']), xl_int(r['views']), xl_int(r['clicks'])]
+                 for r in xl_table(sheets['01_테마별_추이'], 'theme', 'frame_value') if r['theme'] in XL_FIXED]
+        by_size = {}
+        for t, n, size, v, c in ndata:
+            if size == '비규격':
+                continue
+            a = by_size.setdefault((t, size), [0, 0])
+            a[0] += v
+            a[1] += c
+        sdata = sorted([t, size, v, c] for (t, size), (v, c) in by_size.items())
+        daily = read_fixed_daily()
+        daily += derive_missing_daily(rows, ndata, daily)
     page = 'frame_test_history_page.html'
     p = os.path.join(DIR, page)
     src = open(p, encoding='utf-8').read()
@@ -690,9 +681,10 @@ def ab_sizes(ab):
 
 
 def update_frames_xlsx(path, ab_path=None):
-    sheets = load_xlsx(path)
+    """path = rtb_frame_analysis xlsx (없으면 None) · ab_path = rtb_theme_ab_result xlsx (있으면 이 파일이 우선)"""
+    sheets = load_xlsx(path) if path else {}
     ab = load_xlsx(ab_path) if ab_path else None
-    print(f'[프레임 xlsx] {os.path.basename(path)}' + (f' + {os.path.basename(ab_path)} (테마별·일별·사이즈별은 이 파일 기준)' if ab_path else ''))
+    print('[프레임 xlsx] ' + ' + '.join(os.path.basename(x) for x in (ab_path, path) if x))
     update_fixed_xlsx(sheets, ab)
     for sheet, page, cols, frame_map in XL_AUTO:
         rows = []
@@ -742,8 +734,8 @@ if __name__ == '__main__':
             update_page(page, reader(src), skip)
 
     xlsx = glob.glob(os.path.join(DIR, 'rtb_frame_analysis_*.xlsx'))
-    if not xlsx:
-        sys.exit('rtb_frame_analysis_*.xlsx 파일이 없어 프레임 페이지는 갱신하지 못했습니다')
     ab = glob.glob(os.path.join(DIR, 'rtb_theme_ab_result_*.xlsx'))
-    update_frames_xlsx(max(xlsx, key=os.path.getmtime), max(ab, key=os.path.getmtime) if ab else None)
+    if not ab and not xlsx:
+        sys.exit('rtb_theme_ab_result_*.xlsx 파일이 없어 프레임 페이지는 갱신하지 못했습니다')
+    update_frames_xlsx(max(xlsx, key=os.path.getmtime) if xlsx else None, max(ab, key=os.path.getmtime) if ab else None)
     print('완료')
