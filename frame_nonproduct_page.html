@@ -99,10 +99,6 @@
             flex: none
         }
 
-        .num {
-            font-variant-numeric: tabular-nums
-        }
-
         /* ① 테마별 성과 박스 */
         .themes {
             display: grid;
@@ -523,10 +519,6 @@
             box-shadow: inset 3px 0 0 var(--c)
         }
 
-        td.size-cell {
-            padding-left: 22px
-        }
-
         .win {
             display: inline-flex;
             align-items: center;
@@ -600,12 +592,6 @@
 
         td.left {
             text-align: left
-        }
-
-        .cell-name {
-            display: flex;
-            align-items: center;
-            gap: 10px
         }
 
         .cell-name .ad {
@@ -695,116 +681,15 @@
             height: 100%
         }
 
-        .ad-btn {
-            display: inline-block;
-            border-radius: 1.4cqw;
-            padding: 2.2cqw 4cqw;
-            font-size: 4.2cqw;
-            font-weight: 700
-        }
-
-        .ad-hide {
-            display: inline-block;
-            padding: 1.6cqw 3cqw;
-            border-radius: 1.4cqw;
-            font-size: 4cqw;
-            font-weight: 700;
-            background: repeating-linear-gradient(135deg, rgba(0, 0, 0, .08) 0 2cqw, rgba(0, 0, 0, .02) 2cqw 4cqw)
-        }
-
-        .ad-tag {
-            position: absolute;
-            right: 1.6cqw;
-            bottom: 1.4cqw;
-            font-size: 2.4cqw;
-            color: rgba(128, 128, 128, .9)
-        }
-
-        .ad-blackgold {
-            background: radial-gradient(120% 90% at 50% 0%, #232018 0%, #0b0b0a 60%);
-            color: #f4ecd8;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1.8cqw;
-            text-align: center;
-            padding: 6cqw
-        }
-
-        .ad-blackgold::before {
-            content: "";
-            position: absolute;
-            inset: 3cqw;
-            border: 1px solid #c9a54a;
-            pointer-events: none
-        }
-
-        .ad-blackgold .eyebrow {
-            font-size: 3.2cqw;
-            letter-spacing: .35em;
-            color: #d8b65c;
-            font-weight: 700
-        }
-
         .ad-blackgold .img {
             width: 36cqw;
             height: 32cqw
-        }
-
-        .ad-blackgold .ttl {
-            font-size: 5.4cqw;
-            font-weight: 700
         }
 
         .ad-blackgold .price {
             font-size: 6.4cqw;
             font-weight: 700;
             color: #e2c270
-        }
-
-        .ad-blackgold .ad-btn {
-            border: 1px solid #d8b65c;
-            color: #e2c270;
-            padding: 1.6cqw 5cqw;
-            font-size: 3.8cqw
-        }
-
-        .ad-blackgold .ad-hide {
-            background: repeating-linear-gradient(135deg, rgba(226, 194, 112, .22) 0 2cqw, rgba(226, 194, 112, .06) 2cqw 4cqw);
-            color: #e2c270
-        }
-
-        .ad-whitered {
-            background: #fff;
-            color: #1c1c1c;
-            display: grid;
-            grid-template-rows: auto 1fr;
-            border: 1px solid #eee
-        }
-
-        .ad-whitered .band {
-            background: #d7262f;
-            color: #fff;
-            font-weight: 800;
-            font-size: 4.6cqw;
-            padding: 2.6cqw 5cqw;
-            display: flex;
-            justify-content: space-between
-        }
-
-        .ad-whitered .band em {
-            font-style: normal;
-            background: #fff;
-            color: #d7262f;
-            border-radius: 1cqw;
-            padding: 0 2cqw
-        }
-
-        .ad-whitered .row {
-            display: grid;
-            grid-template-columns: 46% 1fr;
-            align-items: center
         }
 
         .ad-whitered .img {
@@ -816,11 +701,6 @@
             display: flex;
             flex-direction: column;
             gap: 2cqw
-        }
-
-        .ad-whitered .ttl {
-            font-size: 5.4cqw;
-            font-weight: 700
         }
 
         .ad-whitered .price {
@@ -836,29 +716,6 @@
             font-weight: 400
         }
 
-        .ad-whitered .ad-btn {
-            background: #d7262f;
-            color: #fff;
-            align-self: flex-start
-        }
-
-        .ad-redauto {
-            background: linear-gradient(160deg, #e3182f 0%, #a80e22 100%);
-            color: #fff;
-            padding: 5cqw;
-            display: flex;
-            flex-direction: column;
-            gap: 3cqw
-        }
-
-        .ad-redauto .head2 {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 4.6cqw;
-            font-weight: 800
-        }
-
         .ad-redauto .auto {
             font-size: 3cqw;
             background: rgba(255, 255, 255, .18);
@@ -867,75 +724,8 @@
             font-weight: 700
         }
 
-        .ad-redauto .tiles {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2.4cqw;
-            flex: 1
-        }
-
-        .ad-redauto .tile {
-            background: #fff;
-            color: #222;
-            border-radius: 2cqw;
-            padding: 2cqw;
-            display: flex;
-            flex-direction: column;
-            gap: 1cqw;
-            justify-content: space-between
-        }
-
         .ad-redauto .tile .img {
             height: 17cqw
-        }
-
-        .ad-redauto .tile b {
-            font-size: 3.6cqw;
-            color: #d0142b
-        }
-
-        .ad-redauto .tile span {
-            font-size: 2.9cqw;
-            color: #666
-        }
-
-        .ad-redauto .foot {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 3.6cqw
-        }
-
-        .ad-redauto .dots i {
-            display: inline-block;
-            width: 1.8cqw;
-            height: 1.8cqw;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, .45);
-            margin-left: 1.2cqw
-        }
-
-        .ad-redauto .dots i:first-child {
-            background: #fff;
-            width: 5cqw;
-            border-radius: 1cqw
-        }
-
-        .ad-redauto .cta {
-            font-weight: 700;
-            background: #fff;
-            color: #c8102e;
-            border-radius: 1.2cqw;
-            padding: 1.2cqw 3cqw
-        }
-
-        .ad-magazine {
-            background: #f3eee4;
-            color: #1f1b16;
-            display: grid;
-            grid-template-columns: 1fr 42%;
-            padding: 5cqw;
-            gap: 3cqw
         }
 
         .ad-magazine .col {
@@ -945,26 +735,12 @@
             min-width: 0
         }
 
-        .ad-magazine .issue {
-            font-size: 2.9cqw;
-            letter-spacing: .2em;
-            border-bottom: 1px solid #1f1b16;
-            padding-bottom: 1.6cqw;
-            font-weight: 700
-        }
-
         .ad-magazine .hl {
             font-family: Georgia, "Noto Serif KR", serif;
             font-size: 7.2cqw;
             line-height: 1.18;
             font-weight: 700;
             letter-spacing: -.03em
-        }
-
-        .ad-magazine .lede {
-            font-size: 3.3cqw;
-            color: #5c554b;
-            line-height: 1.4
         }
 
         .ad-magazine .price {
@@ -985,11 +761,6 @@
             display: flex;
             align-items: center;
             padding: 4cqw
-        }
-
-        .ad-magazine .ad-hide {
-            font-size: 3.4cqw;
-            padding: 1.2cqw 2.4cqw
         }
 
         @media(max-width:1100px) {
@@ -1054,13 +825,6 @@
             border: 0;
             transform-origin: 0 0;      /* 칸 폭에 맞게 축소 (fitBannerSlots) */
             pointer-events: none;       /* 대시보드에서 실수로 광고 클릭 방지 */
-        }
-
-        .head-right {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 8px
         }
 
         .tl-open {
@@ -1249,16 +1013,12 @@
         .ss-list { line-height: 1.7 }
         /* ④ 기간 선택 */
         .period-ctrl { display: flex; align-items: center; gap: 8px; flex-wrap: wrap }
-        .period-cap { font-size: 12px; color: #858a92 }
         .seg { display: inline-flex; background: #f1f2f4; border-radius: 9px; padding: 3px }
         .seg button { border: 0; background: transparent; padding: 6px 14px; border-radius: 7px; font: inherit; font-size: 12.5px; font-weight: 600; color: #6b7078; cursor: pointer }
         .seg button[aria-pressed="true"] { background: #fff; color: #3446b8; font-weight: 800; box-shadow: 0 1px 3px #0002 }
         .seg button:focus-visible, .date-in:focus-visible { outline: 2px solid #3446b8; outline-offset: 1px }
         .date-in { border: 1px solid #d6d9de; border-radius: 8px; padding: 6px 10px; font: inherit; font-size: 12.5px; color: #202124; background: #fff }
         td.na { color: #c3c7ce }
-        /* ④ 사이즈별 표 — 촘촘하게 */
-        #sizeTable th, #sizeTable td { padding: 6px 8px }
-        #sizeTable td.size-cell { padding-left: 18px }
         /* ④ 지표 탭 */
         .m-tabs { display: flex; gap: 4px; border-bottom: 1px solid #e6e8ec; margin: 2px 0 18px }
         .m-tabs button { border: 0; background: none; font: inherit; font-size: 13.5px; font-weight: 700; color: #858a92; padding: 10px 16px 11px; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px }
@@ -1284,7 +1044,6 @@
         /* 카드 안쪽 여백 — 표 카드는 기존대로 */
         .card:has(> .scroll) { padding: 18px }
 
-
         /* 블랙골드처럼 테두리색(--r)이 있는 프레임 */
         .tl-dot { box-shadow: 0 0 0 2px var(--r, var(--c)) }
         .win::before, .ss-bar span { box-shadow: inset 0 0 0 2px var(--r, transparent) }
@@ -1292,9 +1051,6 @@
         /* ③ 최근 7일 — 막대 호버 시 선그래프 */
         .w7-chart .bar { transition: opacity .15s }
         .w7-chart.hl .bar:not(.on) { opacity: .2 }
-        /* ⑤ 프레임 이름별 — 높이 고정 + 스크롤 (헤더는 위에 고정) */
-        .name-scroll { max-height: 520px; overflow-y: auto }
-        .name-scroll thead th { position: sticky; top: 0; z-index: 1 }
         .date-in { cursor: pointer }
         /* 날짜 칸 — 눌러도 파랗게 선택·복사되지 않게 */
         .date-in { -webkit-user-select: none; user-select: none; caret-color: transparent }
@@ -1466,7 +1222,6 @@
         ];
         const AB_LABEL = { after: 'After · 신규', before: 'Before · 기존' };   // 비포/애프터 비교 표시 (ab: 'after' = 새로 만든 프레임)
         const MIN_IMP = 1000;   // 이보다 노출이 적으면 CTR을 0(집계 제외)으로 — 노출 수십에 클릭만 잡힌 값 방지
-        const PERIOD = {"시작": "2026-09-01", "끝": "2026-09-22", "집행일수": 18};
 
         /* 데이터 [날짜, 프레임 id, 노출수, 클릭수] — update_data.bat이 자동으로 바꿉니다 */
         /* ADATA:START */
@@ -1665,7 +1420,6 @@
         })();
 
         const CROWN = `<svg class="crown" viewBox="0 0 24 28" aria-hidden="true"><path d="M6 1h5l3 8H9z" fill="#3f7ee8"/><path d="M18 1h-5l-3 8h5z" fill="#d7262f"/><circle cx="12" cy="17.5" r="9" fill="#f2b705" stroke="#c98f00" stroke-width="1.5"/><circle cx="12" cy="17.5" r="6.3" fill="none" stroke="#fff3c4" stroke-width="1"/><text x="12" y="21.6" text-anchor="middle" font-size="11" font-weight="800" font-family="Arial, sans-serif" fill="#7a5200">1</text></svg>`;
-        const MEDAL = n => n === 1 ? CROWN : '';   // ② 어제 vs 그제: 1위(금메달)만 표시, 2·3위는 메달 없음 (툴팁에는 순위 유지)
         /* ② 그제 vs 어제 — 지표별 카드: 제목 + 한 줄 요약, 프레임마다 그제(연한 색)·어제(진한 색) 막대와 숫자, 이름 옆 1위 배지, 아래 증감 칩 */
         (function () {
             const Y = DATES[DATES.length - 1], B = DATES[DATES.length - 2];
@@ -1902,7 +1656,6 @@ ${T.name} ${m.fmt(o[m.k])}`) : cell(o, m.k, m);
             rows.forEach(r => r.win = argmax(r.v));
             const shown = new Set(rows.map(r => r.p));
             const tot = FR.map(T => psum(r => r.t === T.id && shown.has(r.p)));   // 합계는 표에 있는 지면 기준
-            const plain = o => o.imp ? m.fmt(o[mk]) : '−';
             const head = `<thead>
                 <tr><th>지면</th>${FR.map((T, i) => `<th data-col="${i + 1}" class="grp sep" style="${cv(T)}"><span class="dot" style="${sw(T)}"></span>${nm(T)}${T.ch === '카카오' ? '<br><small>(카카오)</small>' : ''}</th>`).join('')}</tr>
                 <tr class="total-row"><td>합계</td>${tot.map((o, i) => !o.imp ? `<td class="sep na" data-v="-1">−</td>` : numTd(o[mk], m.fmt, 'sep' + (i === argmax(tot) ? ' top' : ''), i === argmax(tot) ? FR[i] : '', `합계 · ${m.label} 1위

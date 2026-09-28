@@ -5,14 +5,15 @@ RTB 대시보드 데이터 갱신
   1. 이 폴더에 새로 받은 통계 파일을 넣는다
        - google_openRTB_일자별통계.xls  (이름 뒤에 날짜가 붙어 있어도 됨)
        - kakao_rtb_day_report.xls
-       - (xlsx가 없을 때만) 상품 고정 프레임.csv · 상품 오토 프레임(앱).csv · 상품 오토 프레임 (웹, 모바일).csv  (탭 구분, 예전 방식)
+       - 상품 고정 프레임.csv              (탭 구분 · date, theme, size, views, clicks)  → 상품 고정 프레임 페이지
+       - 상품 오토 프레임(앱).csv           (탭 구분 · date, frame, views, clicks)        → 상품 오토 프레임 (앱) 페이지
+       - 상품 오토 프레임 (웹, 모바일).csv  (탭 구분 · date, frame, views, clicks)        → 상품 오토 프레임 (웹, 모바일) 페이지
        - 지면별.csv                         (탭 구분 · date, frame, request_size, views, clicks) → 오토 페이지 5. 지면별(요청 사이즈) 비교
        - rtb_frame_analysis_YYYYMMDD_YYYYMMDD.xlsx  (프레임 분석 xlsx) → 프레임 AB 테스트 4개 페이지 전부
              01_테마별_추이 · 01b_테마별_사이즈별_추이 → 상품 고정 프레임 (테마별 일별 + 사이즈별·이름별 누적)
              02_autoETC_vs_autoRed_webmob            → 상품 오토 프레임 (웹, 모바일)
              03_coupangETC_vs_autoRed_app            → 상품 오토 프레임 (앱)
              04_i사이즈그룹_vs_iauto                  → 비상품 프레임 (iauto vs 옛 i사이즈 프레임 12개 합산)
-         xlsx가 있으면 프레임 페이지는 xlsx로 채우고 CSV(상품 고정/오토 프레임)는 쓰지 않습니다. 지면별.csv는 그대로 씁니다.
        - 지면별(고정).csv · 지면별(비상품).csv  (탭 구분 · date, theme, place, views, clicks) → 상품 고정 프레임 7번 · 비상품 프레임 5번 지면별 비교
        - 상품 고정 프레임(일별).csv            (탭 구분 · date, theme, name, size, views, clicks) → 상품 고정 프레임 5·6번 '일별' 선택
              둘 다 원본 일별 파일(tag_stats_MMDD.csv · frame_value_stats_MMDD.csv)이 있는 폴더에서 만듭니다:  python update_data.py --places "폴더 경로"
@@ -22,7 +23,7 @@ RTB 대시보드 데이터 갱신
 
 - 파일이 여러 개면 가장 최근에 받은 파일을 사용합니다.
 - 파일을 받은 날(이름의 날짜, 없으면 파일 수정 날짜)은 집계 중이라 제외합니다.
-- 프레임 CSV가 없으면 그 페이지는 건너뜁니다. 지면별.csv가 없으면 오토 페이지 5번은 비워 둡니다. 고정 페이지 6번(지면별)은 데이터가 없어 비어 있습니다.
+- 지면별.csv가 없으면 오토 페이지 5번은 비워 둡니다.
 """
 import csv
 import glob
@@ -160,46 +161,6 @@ def dump_rows(rows):
     return ',\n'.join('            ' + json.dumps(list(r), ensure_ascii=False) for r in rows)
 
 
-FIXED_THEME = {'blackGold': 'blackgold', 'whiteRed': 'whitered', 'magazine': 'magazine'}   # CSV theme → 페이지 테마 id
-
-
-def update_fixed(path, skip_day):
-    """상품 고정 프레임.csv (date, theme, size, views, clicks) → frame_test_history_page.html 의 DATA
-       프레임 이름은 CSV에 없어 '사이즈_테마_ETC' 로 만듭니다 (예: 300_250_blackGold_ETC). 지면별(PDATA)은 비웁니다."""
-    agg = {}
-    for r in read_csv(path):
-        t = FIXED_THEME.get(r.get('theme'))
-        if not t or r['date'][5:].replace('-', '/') == skip_day:
-            continue
-        size = r['size'].replace('_', 'x')
-        name = f"{r['size']}_{r['theme']}_ETC"
-        a = agg.setdefault((r['date'], t, name, size), [0, 0])
-        a[0] += int(num(r['views']))
-        a[1] += int(num(r['clicks']))
-    rows = sorted([*k, *v] for k, v in agg.items())
-    page = 'frame_test_history_page.html'
-    p = os.path.join(DIR, page)
-    src = open(p, encoding='utf-8').read()
-    src = set_block(src, 'DATA', 'DATA', dump_rows(rows), page)
-    src = set_block(src, 'PDATA', 'PDATA', dump_rows(read_fixed_places()), page)
-    open(p, 'w', encoding='utf-8', newline='').write(src)
-    dates = sorted({r[0] for r in rows})
-    by_t = {}
-    for d, t, n, s, imp, clk in rows:
-        by_t.setdefault(t, [0, 0])
-        by_t[t][0] += imp
-        by_t[t][1] += clk
-    print(f'  {page}: {dates[0][5:]} ~ {dates[-1][5:]} ({len(dates)}일 · {len(rows)}행) · '
-          + ' · '.join(f'{t} 노출 {v[0]:,} 클릭 {v[1]:,}' for t, v in by_t.items()))
-
-
-# 오토 페이지: (CSV 이름 패턴, 페이지, CSV frame 값 → 페이지 프레임 id). frame 값은 앞부분만 맞으면 됨 (autoRedETC(app_) → autoRedETC)
-AUTO_PAGES = [
-    ('상품 오토 프레임(앱)*.csv', 'frame_auto_app_page.html', {'autoRedETC': 'redauto', 'coupangETC': 'coupangetc'}),
-    ('상품 오*프레임 (웹, 모바일)*.csv', 'frame_auto_web_page.html', {'autoRedETC': 'redauto', 'autoETC': 'autoetc'}),
-]
-
-
 def read_places(frame_map, skip_day):
     """지면별.csv (date, frame, request_size, views, clicks) → 누적 [프레임 id, 요청 사이즈, 노출, 클릭] (없으면 빈 목록)"""
     files = [f for f in glob.glob(os.path.join(DIR, '지면별*.csv')) if '(' not in os.path.basename(f)]   # 지면별(고정)·지면별(비상품).csv는 별도
@@ -218,31 +179,13 @@ def read_places(frame_map, skip_day):
     return sorted(([t, p, v[0], v[1]] for (t, p), v in agg.items()), key=lambda x: (-x[2], x[0]))
 
 
-def update_auto(path, skip_day, page, frame_map):
-    """상품 오토 프레임 CSV (date, frame, views, clicks) → 오토 페이지의 ADATA. 지면별.csv가 있으면 APDATA(요청 사이즈별 누적)도 채웁니다."""
-    rows = []
-    unknown = set()
-    for r in read_csv(path):
-        if r['date'][5:].replace('-', '/') == skip_day:
-            continue
-        t = next((v for k, v in sorted(frame_map.items(), key=lambda x: -len(x[0])) if r['frame'].startswith(k)), None)
-        if not t:
-            unknown.add(r['frame'])
-            continue
-        rows.append([r['date'], t, int(num(r['views'])), int(num(r['clicks']))])
-    rows.sort()
-    write_auto(page, rows, read_places(frame_map, skip_day), unknown)
-
-
 def write_auto(page, rows, places, unknown=()):
-    """[날짜, 프레임 id, 노출, 클릭] 행 → 오토·비상품 페이지의 ADATA · APDATA · PERIOD"""
+    """[날짜, 프레임 id, 노출, 클릭] 행 → 오토·비상품 페이지의 ADATA · APDATA"""
     p = os.path.join(DIR, page)
     src = open(p, encoding='utf-8').read()
     src = set_block(src, 'ADATA', 'ADATA', dump_rows(rows), page)
     src = set_block(src, 'APDATA', 'APDATA', dump_rows(places), page)
     dates = sorted({r[0] for r in rows})
-    period = {'시작': dates[0], '끝': dates[-1], '집행일수': len(dates)} if dates else {}
-    src = re.sub(r'const PERIOD = \{[^\n]*\};', 'const PERIOD = ' + json.dumps(period, ensure_ascii=False) + ';', src, count=1)
     open(p, 'w', encoding='utf-8', newline='').write(src)
     by_t = {}
     for d, t, imp, clk in rows:
@@ -557,20 +500,7 @@ if __name__ == '__main__':
             update_page(page, reader(src), skip)
 
     xlsx = glob.glob(os.path.join(DIR, 'rtb_frame_analysis_*.xlsx'))
-    if xlsx:
-        update_frames_xlsx(max(xlsx, key=os.path.getmtime))
-    else:
-        fixed = [f for f in glob.glob(os.path.join(DIR, '상품 고정 프레임*.csv')) if '(일별)' not in os.path.basename(f)]
-        if fixed:
-            src = max(fixed, key=os.path.getmtime)
-            skip = file_day(src)
-            print(f'[상품 고정 프레임] {os.path.basename(src)}  (제외: {skip} 집계 중)')
-            update_fixed(src, skip)
-        for pattern, page, frame_map in AUTO_PAGES:
-            files = glob.glob(os.path.join(DIR, pattern))
-            if files:
-                src = max(files, key=os.path.getmtime)
-                skip = file_day(src)
-                print(f'[{page}] {os.path.basename(src)}  (제외: {skip} 집계 중)')
-                update_auto(src, skip, page, frame_map)
+    if not xlsx:
+        sys.exit('rtb_frame_analysis_*.xlsx 파일이 없어 프레임 페이지는 갱신하지 못했습니다')
+    update_frames_xlsx(max(xlsx, key=os.path.getmtime))
     print('완료')

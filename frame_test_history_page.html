@@ -99,10 +99,6 @@
             flex: none
         }
 
-        .num {
-            font-variant-numeric: tabular-nums
-        }
-
         /* ① 테마별 성과 박스 */
         .themes {
             display: grid;
@@ -604,12 +600,6 @@
             text-align: left
         }
 
-        .cell-name {
-            display: flex;
-            align-items: center;
-            gap: 10px
-        }
-
         .cell-name .ad {
             width: 56px;
             flex: none;
@@ -697,116 +687,15 @@
             height: 100%
         }
 
-        .ad-btn {
-            display: inline-block;
-            border-radius: 1.4cqw;
-            padding: 2.2cqw 4cqw;
-            font-size: 4.2cqw;
-            font-weight: 700
-        }
-
-        .ad-hide {
-            display: inline-block;
-            padding: 1.6cqw 3cqw;
-            border-radius: 1.4cqw;
-            font-size: 4cqw;
-            font-weight: 700;
-            background: repeating-linear-gradient(135deg, rgba(0, 0, 0, .08) 0 2cqw, rgba(0, 0, 0, .02) 2cqw 4cqw)
-        }
-
-        .ad-tag {
-            position: absolute;
-            right: 1.6cqw;
-            bottom: 1.4cqw;
-            font-size: 2.4cqw;
-            color: rgba(128, 128, 128, .9)
-        }
-
-        .ad-blackgold {
-            background: radial-gradient(120% 90% at 50% 0%, #232018 0%, #0b0b0a 60%);
-            color: #f4ecd8;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1.8cqw;
-            text-align: center;
-            padding: 6cqw
-        }
-
-        .ad-blackgold::before {
-            content: "";
-            position: absolute;
-            inset: 3cqw;
-            border: 1px solid #c9a54a;
-            pointer-events: none
-        }
-
-        .ad-blackgold .eyebrow {
-            font-size: 3.2cqw;
-            letter-spacing: .35em;
-            color: #d8b65c;
-            font-weight: 700
-        }
-
         .ad-blackgold .img {
             width: 36cqw;
             height: 32cqw
-        }
-
-        .ad-blackgold .ttl {
-            font-size: 5.4cqw;
-            font-weight: 700
         }
 
         .ad-blackgold .price {
             font-size: 6.4cqw;
             font-weight: 700;
             color: #e2c270
-        }
-
-        .ad-blackgold .ad-btn {
-            border: 1px solid #d8b65c;
-            color: #e2c270;
-            padding: 1.6cqw 5cqw;
-            font-size: 3.8cqw
-        }
-
-        .ad-blackgold .ad-hide {
-            background: repeating-linear-gradient(135deg, rgba(226, 194, 112, .22) 0 2cqw, rgba(226, 194, 112, .06) 2cqw 4cqw);
-            color: #e2c270
-        }
-
-        .ad-whitered {
-            background: #fff;
-            color: #1c1c1c;
-            display: grid;
-            grid-template-rows: auto 1fr;
-            border: 1px solid #eee
-        }
-
-        .ad-whitered .band {
-            background: #d7262f;
-            color: #fff;
-            font-weight: 800;
-            font-size: 4.6cqw;
-            padding: 2.6cqw 5cqw;
-            display: flex;
-            justify-content: space-between
-        }
-
-        .ad-whitered .band em {
-            font-style: normal;
-            background: #fff;
-            color: #d7262f;
-            border-radius: 1cqw;
-            padding: 0 2cqw
-        }
-
-        .ad-whitered .row {
-            display: grid;
-            grid-template-columns: 46% 1fr;
-            align-items: center
         }
 
         .ad-whitered .img {
@@ -818,11 +707,6 @@
             display: flex;
             flex-direction: column;
             gap: 2cqw
-        }
-
-        .ad-whitered .ttl {
-            font-size: 5.4cqw;
-            font-weight: 700
         }
 
         .ad-whitered .price {
@@ -838,29 +722,6 @@
             font-weight: 400
         }
 
-        .ad-whitered .ad-btn {
-            background: #d7262f;
-            color: #fff;
-            align-self: flex-start
-        }
-
-        .ad-redauto {
-            background: linear-gradient(160deg, #e3182f 0%, #a80e22 100%);
-            color: #fff;
-            padding: 5cqw;
-            display: flex;
-            flex-direction: column;
-            gap: 3cqw
-        }
-
-        .ad-redauto .head2 {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 4.6cqw;
-            font-weight: 800
-        }
-
         .ad-redauto .auto {
             font-size: 3cqw;
             background: rgba(255, 255, 255, .18);
@@ -869,75 +730,8 @@
             font-weight: 700
         }
 
-        .ad-redauto .tiles {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2.4cqw;
-            flex: 1
-        }
-
-        .ad-redauto .tile {
-            background: #fff;
-            color: #222;
-            border-radius: 2cqw;
-            padding: 2cqw;
-            display: flex;
-            flex-direction: column;
-            gap: 1cqw;
-            justify-content: space-between
-        }
-
         .ad-redauto .tile .img {
             height: 17cqw
-        }
-
-        .ad-redauto .tile b {
-            font-size: 3.6cqw;
-            color: #d0142b
-        }
-
-        .ad-redauto .tile span {
-            font-size: 2.9cqw;
-            color: #666
-        }
-
-        .ad-redauto .foot {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 3.6cqw
-        }
-
-        .ad-redauto .dots i {
-            display: inline-block;
-            width: 1.8cqw;
-            height: 1.8cqw;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, .45);
-            margin-left: 1.2cqw
-        }
-
-        .ad-redauto .dots i:first-child {
-            background: #fff;
-            width: 5cqw;
-            border-radius: 1cqw
-        }
-
-        .ad-redauto .cta {
-            font-weight: 700;
-            background: #fff;
-            color: #c8102e;
-            border-radius: 1.2cqw;
-            padding: 1.2cqw 3cqw
-        }
-
-        .ad-magazine {
-            background: #f3eee4;
-            color: #1f1b16;
-            display: grid;
-            grid-template-columns: 1fr 42%;
-            padding: 5cqw;
-            gap: 3cqw
         }
 
         .ad-magazine .col {
@@ -947,26 +741,12 @@
             min-width: 0
         }
 
-        .ad-magazine .issue {
-            font-size: 2.9cqw;
-            letter-spacing: .2em;
-            border-bottom: 1px solid #1f1b16;
-            padding-bottom: 1.6cqw;
-            font-weight: 700
-        }
-
         .ad-magazine .hl {
             font-family: Georgia, "Noto Serif KR", serif;
             font-size: 7.2cqw;
             line-height: 1.18;
             font-weight: 700;
             letter-spacing: -.03em
-        }
-
-        .ad-magazine .lede {
-            font-size: 3.3cqw;
-            color: #5c554b;
-            line-height: 1.4
         }
 
         .ad-magazine .price {
@@ -987,11 +767,6 @@
             display: flex;
             align-items: center;
             padding: 4cqw
-        }
-
-        .ad-magazine .ad-hide {
-            font-size: 3.4cqw;
-            padding: 1.2cqw 2.4cqw
         }
 
         @media(max-width:1100px) {
@@ -1056,13 +831,6 @@
             border: 0;
             transform-origin: 0 0;      /* 칸 폭에 맞게 축소 (fitBannerSlots) */
             pointer-events: none;       /* 대시보드에서 실수로 광고 클릭 방지 */
-        }
-
-        .head-right {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 8px
         }
 
         .tl-open {
@@ -1251,7 +1019,6 @@
         .ss-list { line-height: 1.7 }
         /* ④ 기간 선택 */
         .period-ctrl { display: flex; align-items: center; gap: 8px; flex-wrap: wrap }
-        .period-cap { font-size: 12px; color: #858a92 }
         .seg { display: inline-flex; background: #f1f2f4; border-radius: 9px; padding: 3px }
         .seg button { border: 0; background: transparent; padding: 6px 14px; border-radius: 7px; font: inherit; font-size: 12.5px; font-weight: 600; color: #6b7078; cursor: pointer }
         .seg button[aria-pressed="true"] { background: #fff; color: #3446b8; font-weight: 800; box-shadow: 0 1px 3px #0002 }
@@ -1293,7 +1060,6 @@
         #placeTable td.place-cell small { display: block; font-weight: 400; color: #858a92; font-size: 11px; margin-top: 1px }
         /* 카드 안쪽 여백 — 표 카드는 기존대로 */
         .card:has(> .scroll) { padding: 18px }
-
 
         /* 블랙골드처럼 테두리색(--r)이 있는 프레임 */
         .tl-dot { box-shadow: 0 0 0 2px var(--r, var(--c)) }
@@ -1486,7 +1252,7 @@
         // 프레임 표시색 (ring이 있으면 테두리색)
         const sw = T => `background:${T.color}${T.ring ? `;box-shadow:inset 0 0 0 2px ${T.ring}` : ''}`;
         const cv = T => `--c:${T.color}${T.ring ? `;--r:${T.ring}` : ''}`;
-        // 테마 id ← CSV theme: blackGold · whiteRed · magazine (레드오토는 상품 오토 프레임 페이지)
+        // 테마 id: blackgold · whitered · magazine (레드오토는 상품 오토 프레임 페이지)
         const THEMES = [
             // src: 250x250 배너 페이지 (iframe 250px로 그린 뒤 칸 크기에 맞게 축소) · view: 전체 사이즈 미리보기 페이지 (① 카드의 '프레임 미리보기' 링크)
             { id: 'blackgold', name: '블랙골드 프레임', tag: 'After · 신규', color: '#2b2d31', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/blackGold/ui/openRtb_blackGold_250x250_ui.html', view: 'https://kyungahkims.github.io/openRtb_banners.github.io/total_banners_view.html#section-black-gold' },
@@ -1495,7 +1261,7 @@
         ];
         const SIZES = ['300x250', '336x280', '250x250', '200x200', '728x90', '970x250', '234x60', '160x600', '300x600', '120x600', '320x50', '320x100', '300x50', '300x100'].map(name => ({ name }));
 
-        /* 데이터 [날짜, 테마, 프레임 이름, 사이즈, 노출수, 클릭수] — update_data.bat이 자동으로 바꿉니다 (rtb_frame_analysis xlsx가 있으면 테마별 일별만 · 프레임 이름·사이즈는 빈칸, 없으면 상품 고정 프레임.csv) */
+        /* 데이터 [날짜, 테마, 프레임 이름, 사이즈, 노출수, 클릭수] — update_data.bat이 rtb_frame_analysis xlsx(01 시트)로 채웁니다 — 테마별 일별 합계이며 프레임 이름·사이즈 칸은 비어 있음 */
         /* DATA:START */
         const DATA = [
             ["2026-09-01", "blackgold", "", "", 7040, 1],
@@ -2797,7 +2563,6 @@
 
         const pad = n => String(n).padStart(2, '0');
         const ymd = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-        const addDays = (s, n) => { const [y, m, d] = s.split('-').map(Number); return ymd(new Date(y, m - 1, d + n)); };
         const md = s => s.slice(5).replace('-', '/');
 
         const ROWS = DATA.map(([d, t, n, s, imp, clk]) => ({ d, t, n, s, imp, clk }));
@@ -2809,7 +2574,6 @@
         /* ---------- 공통 ---------- */
         const sum = rows => { const o = { imp: 0, clk: 0 }; for (const r of rows) { o.imp += r.imp; o.clk += r.clk; } o.ctr = o.imp ? o.clk / o.imp * 100 : 0; return o; };
         const pick = (fn) => ROWS.filter(fn);
-        const inPeriod = r => r.d >= PERIOD_FROM && r.d <= TODAY;
         const SROWS = SDATA.map(([t, s, imp, clk]) => ({ t, s, imp, clk }));
         const NROWS = NDATA.map(([t, n, s, imp, clk]) => ({ t, n, s, imp, clk }));
         // 일별 사이즈·이름: DATA 에 사이즈가 있으면 그것, 없으면 DDATA(원본 일별) — ⑤⑥ '일별' 선택에 씀
@@ -2827,10 +2591,6 @@
         const theme = id => THEMES.find(t => t.id === id);
         // 프레임 이름 — 마우스를 올리면 배너 툴팁 (frameTip)
         const nm = (T, short = false) => `<span class="fname" data-frame-tip="${T.id}">${short ? T.name.replace(' 프레임', '') : T.name}</span>`;
-
-        function bag(body, handle, accent) {
-            return `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M35 36 C35 16 65 16 65 36" fill="none" stroke="${handle}" stroke-width="5" stroke-linecap="round"/><path d="M18 36 H82 L75 88 H25 Z" fill="${body}"/><path d="M18 36 H82 L81 44 H19 Z" fill="${handle}" opacity=".35"/><rect x="42" y="54" width="16" height="9" rx="2" fill="${accent}"/></svg>`;
-        }
         function frameArt(id, o = {}) {
             // 배너 이미지 자리: 테두리 박스만. THEMES의 src(또는 o.src)에 주소를 넣으면 iframe으로 표시됩니다.
             const T = theme(id), src = o.src || T.src || '';
@@ -2950,7 +2710,6 @@
         })();
 
         const CROWN = `<svg class="crown" viewBox="0 0 24 28" aria-hidden="true"><path d="M6 1h5l3 8H9z" fill="#3f7ee8"/><path d="M18 1h-5l-3 8h5z" fill="#d7262f"/><circle cx="12" cy="17.5" r="9" fill="#f2b705" stroke="#c98f00" stroke-width="1.5"/><circle cx="12" cy="17.5" r="6.3" fill="none" stroke="#fff3c4" stroke-width="1"/><text x="12" y="21.6" text-anchor="middle" font-size="11" font-weight="800" font-family="Arial, sans-serif" fill="#7a5200">1</text></svg>`;
-        const MEDAL = n => n === 1 ? CROWN : '';   // ② 어제 vs 그제: 1위(금메달)만 표시, 2·3위는 메달 없음 (툴팁에는 순위 유지)
 
         /* ② 그제 vs 어제 — 지표별 카드: 제목 + 한 줄 요약, 프레임마다 그제(연한 색)·어제(진한 색) 막대와 숫자, 이름 옆 1위 배지, 아래 증감 칩 */
         (function () {
@@ -3148,7 +2907,6 @@
                 return win ? numTd(o[m.k], m.fmt, 'sep top', T, `${md(d)} · ${m.label} 1위
 ${T.name} ${m.fmt(o[m.k])}`) : cell(o, m.k, m);
             }).join('');
-            const days = [...DATES].reverse();
             let prevKey = null;
             const rows = [...DATES].map(d => {   // 과거 → 최신 순으로 구간 변화를 판단한 뒤 최신순으로 표시
                 const v = THEMES.map(T => day(T.id, d)), on = active(v), key = on.map(T => T.id).join('+');
@@ -3178,7 +2936,6 @@ ${T.name} ${m.fmt(o[m.k])}`) : cell(o, m.k, m);
             const rows = SIZES.map(S => ({ S, v: FR.map(T => sum(src(r => r.t === T.id && r.s === S.name))) }));
             rows.forEach(r => r.win = argmax(r.v));
             const tot = FR.map(T => sum(src(r => r.t === T.id)));
-            const plain = o => o.imp ? m.fmt(o[mk]) : '−';
             const head = `<thead>
                 <tr><th>사이즈</th>${FR.map((T, i) => `<th data-col="${i + 1}" class="grp sep" style="${cv(T)}"><span class="dot" style="${sw(T)}"></span>${nm(T)}</th>`).join('')}</tr>
                 <tr class="total-row"><td>합계</td>${tot.map((o, i) => !o.imp ? `<td class="sep na" data-v="-1">−</td>` : numTd(o[mk], m.fmt, 'sep' + (i === argmax(tot) ? ' top' : ''), i === argmax(tot) ? FR[i] : '', `합계 · ${m.label} 1위
@@ -3294,7 +3051,6 @@ ${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>
             const rows = places.map(({ p }) => ({ p, v: FR.map(T => psum(r => inR(r) && r.t === T.id && r.p === p)) }));
             rows.forEach(r => r.win = argmax(r.v));
             const tot = FR.map(T => psum(r => inR(r) && r.t === T.id && r.p !== ETC_PLACE));   // 합계도 표에 있는 12개 지면 기준
-            const plain = o => o.imp ? m.fmt(o[mk]) : '−';
             const head = `<thead>
                 <tr><th>지면</th>${FR.map((T, i) => `<th data-col="${i + 1}" class="grp sep" style="${cv(T)}"><span class="dot" style="${sw(T)}"></span>${nm(T)}</th>`).join('')}</tr>
                 <tr class="total-row"><td>합계</td>${tot.map((o, i) => !o.imp ? `<td class="sep na" data-v="-1">−</td>` : numTd(o[mk], m.fmt, 'sep' + (i === argmax(tot) ? ' top' : ''), i === argmax(tot) ? FR[i] : '', `합계 · ${m.label} 1위
