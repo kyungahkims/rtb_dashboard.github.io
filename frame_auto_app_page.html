@@ -1787,6 +1787,7 @@
             function draw() {
                 wrap.querySelectorAll('.yd-chart').forEach(box => {
                     const k = box.dataset.k, m = M3.find(x => x.k === k), svg = box.querySelector('svg'), tip = box.querySelector('.tip');
+                    svg.setAttribute('width', 0);   // 먼저 0으로 줄여야 칸이 좁아졌을 때(메뉴 펼침 등) 새 폭을 제대로 읽음 — 안 그러면 이전 폭의 SVG가 칸을 붙들어 가로 스크롤이 생김
                     const W = box.clientWidth, H = box.clientHeight, T = 20, ih = H - T - 2;
                     const max = Math.max(...THEMES.flatMap(t => [Ys[t.id][k], Bs[t.id][k]])) || 1;
                     svg.setAttribute('width', W); svg.setAttribute('height', H);
@@ -1835,6 +1836,7 @@
             function draw() {
                 wrap.querySelectorAll('.w7-chart').forEach(box => {
                     const k = box.dataset.k, m = M3.find(x => x.k === k), svg = box.querySelector('svg'), tip = box.querySelector('.tip');
+                    svg.setAttribute('width', 0);   // 먼저 0으로 줄여야 칸이 좁아졌을 때(메뉴 펼침 등) 새 폭을 제대로 읽음 — 안 그러면 이전 폭의 SVG가 칸을 붙들어 가로 스크롤이 생김
                     const W = box.clientWidth, H = box.clientHeight, L = 46, R = 6, T = 8, B = 26, iw = W - L - R, ih = H - T - B;
                     const max = nice(Math.max(...data.flatMap(o => THEMES.map(t => o[t.id][k]))) || 1);
                     svg.setAttribute('width', W); svg.setAttribute('height', H);
