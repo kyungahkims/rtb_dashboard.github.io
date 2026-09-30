@@ -1037,6 +1037,27 @@
         /* ④ 사이즈별 표 — 촘촘하게 */
         #sizeTable th, #sizeTable td { padding: 6px 8px }
         #sizeTable td.size-cell { padding-left: 18px }
+        #sizeTable th.all, #sizeTable td.all { background: #f7f8fa; font-weight: 700; color: #1a1d23 }   /* 3종 합계 · 평균 열 */
+        /* ⑧ 추가 사이즈 배너 영향 */
+        .ns-kpi { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 14px }
+        .ns-kpi .ss-item { gap: 4px; padding: 14px 16px }
+        .ns-kpi .k-label { font-size: 12px; color: #6b7078; font-weight: 700 }
+        .ns-kpi .k-val { font-size: 22px; font-weight: 800; color: #1a1d23; letter-spacing: -.01em; font-variant-numeric: tabular-nums }
+        .ns-kpi .k-val.up { color: #1a7f4b }
+        .ns-kpi .k-val.down { color: #d7262f }
+        .ns-kpi .k-sub { font-size: 11.5px; color: #858a92 }
+        .ns-verdict { margin: 0 0 16px; padding: 12px 16px; border-radius: 10px; background: #eef0fb; color: #1a1d23; font-size: 13px; line-height: 1.65 }
+        .ns-verdict b { color: #3446b8 }
+        #newSizeTable th, #newSizeTable td { padding: 6px 8px; white-space: nowrap }
+        #newSizeTable tbody.grp td { background: #f7f8fa; font-weight: 700 }
+        #newSizeTable td.pp-up { color: #1a7f4b; font-weight: 700 }
+        #newSizeTable td.pp-down { color: #d7262f; font-weight: 700 }
+        .ns-legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 12px; color: #6b7078; margin: 20px 0 6px }
+        .ns-legend i { display: inline-block; width: 16px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 6px }
+        .ns-legend i.bar { width: 10px; height: 10px; border-radius: 2px; background: #dfe3ea }
+        .ns-chart { position: relative; height: 240px }
+        .ns-chart svg { display: block; overflow: visible }
+        @media(max-width:700px) { .ns-kpi { grid-template-columns: 1fr } }
         /* ④ 일별 추이 표 */
         #transTable th, #transTable td { padding: 6px 8px; white-space: nowrap }
         #transTable th.grp { text-align: center }
@@ -1229,6 +1250,22 @@
                 <div class="scroll">
                     <table id="placeTable"></table>
                 </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="title">
+                <h2>8. 추가 사이즈 배너 영향 (5개 사이즈) <span class="h2-help" data-tip="이전 배너에 없던 사이즈 5개(234×60 · 300×50 · 300×100 · 336×280 · 468×60)가&#10;전체 평균 클릭률을 끌어내렸는지 확인합니다.&#10;&#10;보는 법&#10;&#160;&#160;• 추가 5종 CTR vs 기존 9종 CTR — 추가 사이즈가 기존보다 낮으면 평균을 끌어내림&#10;&#160;&#160;• 결론 — 추가 사이즈를 뺀 CTR과 전체 CTR의 차이 (%p)가 곧 영향&#10;&#160;&#160;• 일별 그래프 — 두 CTR 선이 같이 움직이면 사이즈가 아닌 다른 원인&#10;&#10;블랙골드 · 화이트레드 · 매거진 3종을 합산한 값입니다" aria-label="표 설명" tabindex="0">?</span></h2>
+                <span id="newSizeRange"></span>
+            </div>
+            <div class="card">
+                <div class="ns-kpi" id="newSizeKpi"></div>
+                <p class="ns-verdict" id="newSizeVerdict"></p>
+                <div class="scroll">
+                    <table id="newSizeTable"></table>
+                </div>
+                <div class="ns-legend" id="newSizeLegend"></div>
+                <div class="ns-chart" id="newSizeChart"><svg></svg><div class="tip" hidden></div></div>
             </div>
         </section>
 
@@ -5086,14 +5123,20 @@ ${T.name} ${m.fmt(o[m.k])}`) : cell(o, m.k, m);
             const rows = SIZES.map(S => ({ S, v: FR.map(T => sum(src(r => r.t === T.id && r.s === S.name))) }));
             rows.forEach(r => r.win = argmax(r.v));
             const tot = FR.map(T => sum(src(r => r.t === T.id)));
+            // 3종 합계 열 — 노출·클릭은 세 테마 합계, 클릭률은 합산 클릭 ÷ 합산 노출 (노출 가중 평균)
+            const allOf = list => { const o = { imp: 0, clk: 0 }; list.forEach(v => { o.imp += v.imp; o.clk += v.clk; }); o.ctr = o.imp ? o.clk / o.imp * 100 : 0; return o; };
+            const allLabel = mk === 'ctr' ? '3종 평균' : '3종 합계';
+            const allTip = mk === 'ctr' ? '세 테마의 클릭 합계 ÷ 노출 합계' : '세 테마의 ' + m.label + ' 합계';
+            const allTd = o => !o.imp ? `<td class="sep all na" data-v="-1">−</td>` : numTd(o[mk], m.fmt, 'sep all');
+            const totAll = allOf(tot);
             const head = `<thead>
-                <tr><th>사이즈</th>${FR.map((T, i) => `<th data-col="${i + 1}" class="grp sep" style="${cv(T)}"><span class="dot" style="${sw(T)}"></span>${nm(T)}</th>`).join('')}</tr>
+                <tr><th>사이즈</th>${FR.map((T, i) => `<th data-col="${i + 1}" class="grp sep" style="${cv(T)}"><span class="dot" style="${sw(T)}"></span>${nm(T)}</th>`).join('')}<th data-col="${FR.length + 1}" class="grp sep all" title="${allTip}">${allLabel}</th></tr>
                 <tr class="total-row"><td>합계</td>${tot.map((o, i) => !o.imp ? `<td class="sep na" data-v="-1">−</td>` : numTd(o[mk], m.fmt, 'sep' + (i === argmax(tot) ? ' top' : ''), i === argmax(tot) ? FR[i] : '', `합계 · ${m.label} 1위
-${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>
+${FR[i].name} ${m.fmt(o[mk])}`)).join('')}${allTd(totAll)}</tr>
             </thead>`;
             const sizeRow = ({ S, v, win }) => `<tr><td class="size-cell"><b>${S.name}</b></td>${v.map((o, i) => !o.imp
                 ? `<td class="sep na" data-v="-1">−</td>`
-                : numTd(o[mk], m.fmt, 'sep' + (i === win ? ' top' : ''), i === win ? FR[i] : '', `${S.name} · ${m.label} 1위\n${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>`;
+                : numTd(o[mk], m.fmt, 'sep' + (i === win ? ' top' : ''), i === win ? FR[i] : '', `${S.name} · ${m.label} 1위\n${FR[i].name} ${m.fmt(o[mk])}`)).join('')}${allTd(allOf(v))}</tr>`;
             const body = `<tbody>${rows.map(sizeRow).join('')}</tbody>`;
             const t = document.getElementById('sizeTable');
             t.innerHTML = head + body;
@@ -5125,6 +5168,116 @@ ${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>
             });
             dateEl.addEventListener('change', run);
             run();
+        })();
+
+        /* ⑧ 추가 사이즈 배너 영향 — 이전 배너에 없던 5개 사이즈가 평균 CTR을 끌어내렸는지 (3종 합산 · 일별 원본 DROWS) */
+        (function () {
+            const NEW_SIZES = ['234x60', '300x50', '300x100', '336x280', '468x60'];
+            const isNew = sz => NEW_SIZES.includes(sz);
+            const sec = document.getElementById('newSizeKpi').closest('section');
+            const rows = DROWS.filter(r => r.s && r.s !== '비규격');
+            if (!rows.length) { sec.hidden = true; return; }
+            const FR = ['blackgold', 'whitered', 'magazine'].map(theme);
+            const all = sum(rows), nw = sum(rows.filter(r => isNew(r.s))), old = sum(rows.filter(r => !isNew(r.s)));
+            const oldCnt = new Set(rows.filter(r => !isNew(r.s)).map(r => r.s)).size;
+            const share = all.imp ? nw.imp / all.imp * 100 : 0;
+            const diff = all.ctr - old.ctr;   // 추가 사이즈가 전체 CTR에 미친 영향 (%p) — 음수면 끌어내림
+            const pp = v => Math.abs(v) < 0.0005 ? '0.000%p' : (v > 0 ? '+' : '−') + Math.abs(v).toFixed(3) + '%p';   // ±0.0005 미만은 0으로
+            const sizeNm = sz => sz.replace('x', '×');
+            document.getElementById('newSizeRange').textContent = `${md(DDATES[0])} ~ ${md(DTODAY)} · 3종 합산`;
+
+            // 요약 4칸
+            const kpi = (label, val, sub, cls = '') => `<div class="ss-item"><span class="k-label">${label}</span><span class="k-val ${cls}">${val}</span><span class="k-sub">${sub}</span></div>`;
+            document.getElementById('newSizeKpi').innerHTML =
+                kpi('추가 5종 CTR', pct(nw.ctr), `노출 ${f(nw.imp)} · 클릭 ${f(nw.clk)}`) +
+                kpi(`기존 ${oldCnt}종 CTR`, pct(old.ctr), `노출 ${f(old.imp)} · 클릭 ${f(old.clk)}`);
+
+            // 사이즈별 표 — 추가 5종 + 합계 행
+            const bySize = NEW_SIZES.map(sz => ({ sz, o: sum(rows.filter(r => r.s === sz)), t: FR.map(T => sum(rows.filter(r => r.s === sz && r.t === T.id))) }))
+                .filter(x => x.o.imp).sort((a, b) => b.o.imp - a.o.imp);
+            const ppTd = v => `<td class="${Math.abs(v) < 0.0005 ? '' : v < 0 ? 'pp-down' : 'pp-up'}" data-v="${v}">${pp(v)}</td>`;
+            const line = (name, o, t, cls = '') => `<tr class="${cls}"><td class="left"><b>${name}</b></td>${numTd(o.imp, f)}<td data-v="${all.imp ? o.imp / all.imp * 100 : 0}">${(all.imp ? o.imp / all.imp * 100 : 0).toFixed(1)}%</td>${numTd(o.clk, f)}${numTd(o.ctr, pct)}${ppTd(o.ctr - old.ctr)}${t.map(v => v.imp ? numTd(v.ctr, pct) : `<td class="na" data-v="-1">−</td>`).join('')}</tr>`;
+            const tbl = document.getElementById('newSizeTable');
+            tbl.innerHTML = `<thead><tr>
+                <th data-col="0" style="text-align:left">사이즈</th><th data-col="1">노출수</th><th data-col="2">노출 비중</th><th data-col="3">클릭수</th><th data-col="4">클릭률 (CTR)</th><th data-col="5" title="기존 ${oldCnt}종 평균 CTR과의 차이">기존 대비</th>
+                ${FR.map((T, i) => `<th data-col="${i + 6}" class="grp" style="${cv(T)}"><span class="dot" style="${sw(T)}"></span>${nm(T, true)} CTR</th>`).join('')}
+            </tr></thead>
+            <tbody>${bySize.map(x => line(sizeNm(x.sz) + ' (추가)', x.o, x.t)).join('')}</tbody>
+            <tbody class="grp">
+                ${line('추가 5종 합계', nw, FR.map(T => sum(rows.filter(r => isNew(r.s) && r.t === T.id))), 'type-row')}
+                ${line(`기존 ${oldCnt}종 합계`, old, FR.map(T => sum(rows.filter(r => !isNew(r.s) && r.t === T.id))), 'type-row')}
+                ${line(`전체 (${oldCnt + bySize.length}종)`, all, FR.map(T => sum(rows.filter(r => r.t === T.id))), 'type-row')}
+            </tbody>`;
+            makeSortable(tbl);
+
+            // 일별: 추가 5종 CTR · 기존 CTR · 추가 사이즈 노출 비중
+            const days = DDATES;
+            const daily = days.map(d => {
+                const dr = rows.filter(r => r.d === d), a = sum(dr), n = sum(dr.filter(r => isNew(r.s))), o = sum(dr.filter(r => !isNew(r.s)));
+                return { d, a, n, o, share: a.imp ? n.imp / a.imp * 100 : 0 };
+            }).filter(x => x.a.imp);
+            const avg = (list, k) => { const o = sum(list.map(x => x[k])); return o.ctr; };
+            const k = Math.min(3, Math.floor(daily.length / 2)) || 1;
+            const head3 = daily.slice(0, k), tail3 = daily.slice(-k);
+            const oldFrom = avg(head3, 'o'), oldTo = avg(tail3, 'o'), newFrom = avg(head3, 'n'), newTo = avg(tail3, 'n');
+            const shFrom = head3.reduce((t, x) => t + x.share, 0) / head3.length, shTo = tail3.reduce((t, x) => t + x.share, 0) / tail3.length;
+            const best = [...bySize].sort((a, b) => b.o.ctr - a.o.ctr)[0], worst = [...bySize].sort((a, b) => a.o.ctr - b.o.ctr)[0];
+
+            // 결론 문장
+            let v;
+            if (Math.abs(diff) < 0.001) v = `추가 사이즈 5종을 빼고 계산해도 전체 CTR은 <b>${pct(all.ctr)} → ${pct(old.ctr)}</b>로 차이가 ${pp(diff)}입니다. 추가 5종 CTR(${pct(nw.ctr)})이 기존 ${oldCnt}종(${pct(old.ctr)})과 거의 같고 노출 비중도 ${share.toFixed(1)}%라 <b>평균 CTR을 끌어내리지 않았습니다.</b>`;
+            else if (diff < 0) v = `추가 사이즈 5종이 전체 CTR을 <b>${pp(diff)}</b> 끌어내렸습니다 (추가 제외 시 ${pct(old.ctr)} → 포함 ${pct(all.ctr)}). 추가 5종 CTR ${pct(nw.ctr)} · 기존 ${oldCnt}종 ${pct(old.ctr)} · 노출 비중 ${share.toFixed(1)}%입니다.`;
+            else v = `추가 사이즈 5종이 전체 CTR을 오히려 <b>${pp(diff)}</b> 끌어올렸습니다 (추가 제외 시 ${pct(old.ctr)} → 포함 ${pct(all.ctr)}). 추가 5종 CTR ${pct(nw.ctr)} · 기존 ${oldCnt}종 ${pct(old.ctr)} · 노출 비중 ${share.toFixed(1)}%입니다.`;
+            if (best && worst && best !== worst) v += ` 사이즈별로는 ${sizeNm(best.sz)}(${pct(best.o.ctr)})이 기존 평균보다 높고 ${sizeNm(worst.sz)}(${pct(worst.o.ctr)})은 낮아 서로 상쇄됩니다.`;
+            if (daily.length >= 4) v += `<br>일별로 보면 기존 ${oldCnt}종 CTR이 ${md(head3[0].d)}~${md(head3[k - 1].d)} ${pct(oldFrom)}에서 ${md(tail3[0].d)}~${md(tail3[k - 1].d)} ${pct(oldTo)}로 ${oldTo < oldFrom ? '내려갔고' : '올라갔고'}, 추가 5종도 ${pct(newFrom)} → ${pct(newTo)}로 같은 방향입니다. 추가 사이즈 노출 비중은 ${shFrom.toFixed(1)}% → ${shTo.toFixed(1)}%로 ${shTo < shFrom ? '오히려 줄었습니다' : '늘었습니다'}. ${oldTo < oldFrom && shTo <= shFrom ? '<b>9월 중 CTR 하락은 추가 사이즈가 아니라 사이즈와 무관한 원인(지면 구성 변화)입니다.</b>' : ''}`;
+            document.getElementById('newSizeVerdict').innerHTML = v;
+
+            // 일별 그래프
+            const C_NEW = '#3446b8', C_OLD = '#9aa0a8';
+            document.getElementById('newSizeLegend').innerHTML = `<span><i style="background:${C_NEW}"></i>추가 5종 CTR</span><span><i style="background:${C_OLD}"></i>기존 ${oldCnt}종 CTR</span><span><i class="bar"></i>추가 사이즈 노출 비중 (오른쪽 축)</span>`;
+            const nice = v => { if (!(v > 0)) return 1; const p = Math.pow(10, Math.floor(Math.log10(v))); for (const q of [1, 2, 2.5, 5, 10]) if (q * p >= v) return q * p; return v; };
+            const box = document.getElementById('newSizeChart'), svg = box.querySelector('svg'), tip = box.querySelector('.tip');
+            function draw() {
+                svg.setAttribute('width', 0);
+                const W = box.clientWidth, H = box.clientHeight, L = 50, R = 44, T = 10, B = 26, iw = W - L - R, ih = H - T - B;
+                const maxC = nice(Math.max(...daily.flatMap(x => [x.n.ctr, x.o.ctr]))), maxS = nice(Math.max(...daily.map(x => x.share)));
+                const gw = iw / daily.length, X = i => L + gw * i + gw / 2, Y = val => T + ih - val / maxC * ih, YS = val => T + ih - val / maxS * ih;
+                svg.setAttribute('width', W); svg.setAttribute('height', H);
+                let out = '';
+                for (let g = 0; g <= 4; g++) {
+                    const y = T + ih - ih * g / 4;
+                    out += `<line x1="${L}" x2="${W - R}" y1="${y}" y2="${y}" stroke="${g ? '#f2f3f5' : '#e6e8ec'}"/>`;
+                    out += `<text x="${L - 6}" y="${y + 4}" font-size="10" fill="#b3b8bf" text-anchor="end">${(maxC * g / 4).toFixed(3)}%</text>`;
+                    out += `<text x="${W - R + 6}" y="${y + 4}" font-size="10" fill="#b3b8bf" text-anchor="start">${Math.round(maxS * g / 4)}%</text>`;
+                }
+                const bw = Math.max(3, Math.min(14, gw * 0.5));
+                daily.forEach((x, i) => { const h = x.share / maxS * ih; if (h > 0) out += `<rect x="${X(i) - bw / 2}" y="${T + ih - h}" width="${bw}" height="${h}" rx="2" fill="#dfe3ea"/>`; });
+                const poly = (key, color, dash) => {
+                    const pts = daily.map((x, i) => x[key].imp ? `${X(i)},${Y(x[key].ctr)}` : null).filter(Boolean);
+                    return `<polyline fill="none" stroke="${color}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"${dash ? ' stroke-dasharray="5 4"' : ''} points="${pts.join(' ')}"/>` +
+                        daily.map((x, i) => x[key].imp ? `<circle cx="${X(i)}" cy="${Y(x[key].ctr)}" r="3" fill="#fff" stroke="${color}" stroke-width="2"/>` : '').join('');
+                };
+                out += poly('o', C_OLD, true) + poly('n', C_NEW, false);
+                const step = Math.max(1, Math.ceil(daily.length / 14));
+                daily.forEach((x, i) => {
+                    out += `<rect class="hit" data-i="${i}" x="${L + gw * i}" y="${T}" width="${gw}" height="${ih}" fill="transparent"/>`;
+                    if (i % step === 0 || i === daily.length - 1) out += `<text x="${X(i)}" y="${H - 8}" font-size="10.5" fill="#888" text-anchor="middle">${md(x.d)}</text>`;
+                });
+                svg.innerHTML = out;
+                svg.querySelectorAll('.hit').forEach(h => {
+                    h.addEventListener('mouseenter', () => {
+                        const x = daily[+h.dataset.i];
+                        tip.innerHTML = `<b>${md(x.d)}</b><span><em style="font-style:normal"><i style="background:${C_NEW}"></i>추가 5종</em>${x.n.imp ? pct(x.n.ctr) + ' (' + f(x.n.imp) + ')' : '−'}</span><span><em style="font-style:normal"><i style="background:${C_OLD}"></i>기존 ${oldCnt}종</em>${x.o.imp ? pct(x.o.ctr) + ' (' + f(x.o.imp) + ')' : '−'}</span><span><em style="font-style:normal"><i style="background:#dfe3ea"></i>추가 비중</em>${x.share.toFixed(1)}%</span>`;
+                        tip.hidden = false;
+                        const gx = L + gw * (+h.dataset.i), tw = tip.offsetWidth;
+                        tip.style.left = (gx + gw + tw > W ? gx - tw - 4 : gx + gw + 4) + 'px'; tip.style.top = '0px';
+                        h.setAttribute('fill', 'rgba(52,70,184,.06)');
+                    });
+                    h.addEventListener('mouseleave', () => { tip.hidden = true; h.setAttribute('fill', 'transparent'); });
+                });
+            }
+            window.addEventListener('resize', draw);
+            draw();
         })();
 
         /* ⑤ 프레임 이름별 — 실제 프레임 이름 전부 (9월 전체 / 일별 선택) */
