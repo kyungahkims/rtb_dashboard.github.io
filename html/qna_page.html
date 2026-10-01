@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q&A</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/qna_page.css">
+</head>
+
+<body>
+    <div class="wrap">
+        <section>
+            <div class="title">
+                <h2>Q&amp;A</h2>
+            </div>
+            <div class="qa-tools">
+                <input type="search" class="qa-search" id="qaSearch" placeholder="질문·답변 검색" aria-label="질문·답변 검색">
+                <div class="qa-cats" id="qaCats" role="group" aria-label="분류"></div>
+                <span class="qa-count" id="qaCount"></span>
+            </div>
+            <div class="qa-list" id="qaList"></div>
+        </section>
+    </div>
+
+    <button type="button" class="to-top" id="toTop" aria-label="맨 위로">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    </button>
+    <script>
+        /* Q&A 목록, 여기만 고치면 됨. date 내림차순으로 표시
+           cat: 분류, q: 질문, a: 답변 (줄바꿈 = 문단), date: 등록일 YYYY-MM-DD */
+        const QNA = [
+            /* 핵심 요약 */
+            { cat: '핵심 요약', q: '9월(1~29일) 성과는 한 줄로 어떻게 정리되나요?', date: '2026-09-30',
+              a: '두 채널 합계 소진 1억 3,390만원 · 매출 약 4억 300만원 · ROAS 301%입니다.\nGoogle은 소진 3,529만원 · ROAS 401%, Kakao는 소진 9,860만원 · ROAS 265%입니다. 예산의 74%가 Kakao에 들어가 있지만 효율은 Google이 더 좋습니다.\n추석 연휴 4일(9/24~27)이 ROAS 48%로 월 누계를 40%p 끌어내렸습니다. 연휴를 빼면 341%입니다.\n연휴 뒤 9/28~29 Google은 평일 수준(ROAS 396%)으로 돌아왔지만, Kakao는 105%로 회복되지 않았습니다.\n매출은 클릭 후 24시간 안의 구매(세션매출) 기준 추정치입니다.' },
+            { cat: '핵심 요약', q: '추석 연휴(9/24~9/27)에는 어땠고, 연휴가 끝난 뒤에는 돌아왔나요?', date: '2026-09-30',
+              a: '연휴에는 클릭은 들어왔지만 구매로 이어지지 않았습니다. 노출은 절반으로 줄고 ROAS는 Google 69% · Kakao 45%였습니다.\nGoogle은 소진이 일 61만원(평일의 절반)으로 자연히 줄었지만, Kakao는 노출이 줄었는데도 소진이 일 398만원으로 평일과 같았습니다. 연휴 4일 Kakao 소진 1,592만원에 매출 718만원입니다.\n연휴 뒤 Google은 9/28 ROAS 756%로 바로 회복했지만, Kakao는 9/28~29 ROAS 108% · 102%로 연휴 수준 그대로입니다. Kakao 부진은 연휴 때문만이 아닙니다.\n10월 연휴(10/3 · 10/5 · 10/9)에는 Kakao 일 예산을 미리 낮춰 두는 것이 좋습니다.' },
+            { cat: '핵심 요약', q: '예산을 더 쓰면 그만큼 더 벌리는 구조인가요?', date: '2026-09-30',
+              a: '일정 수준까지만 그렇습니다.\nKakao는 9/10부터 일 소진을 199만원 → 350만원으로 늘렸을 때 ROAS 550%로 9월 최고였습니다. 9/18부터 441만~592만원으로 더 늘리자 ROAS 126%로 떨어졌고, 지금(9/28~29)도 일 448만원에 ROAS 105%입니다. 늘린 뒤 12일째 회복이 없습니다.\nGoogle도 9/16부터 일 소진을 130만원 → 150만~210만원으로 늘리자 ROAS가 595% → 261%로 떨어졌고, 연휴 뒤 92만원으로 줄자 396%로 돌아왔습니다.\n두 채널 모두 "더 쓰면 클릭 단가만 오르는" 구간입니다. Kakao 일 소진을 350만원으로 되돌리고 한 주 확인한 뒤 확대 여부를 정하는 것을 권합니다.' },
+            { cat: '핵심 요약', q: '프레임 AB 테스트 결론은 무엇이고, 어떤 프레임을 남겨야 하나요?', date: '2026-09-30',
+              a: '상품 고정 프레임(블랙골드 · 화이트레드 · 매거진): 3종을 똑같이 노출한 9/16~9/29 기준 클릭률은 매거진 0.034% · 화이트레드 0.033% · 블랙골드 0.030%로 거의 같습니다. 하루 단위 1위는 12일 중 매거진 8일이고 최근 4일은 연속 매거진입니다. 사이즈별로는 정방형은 블랙골드, 가로형 · 세로형은 매거진이 1위입니다. 하나만 남긴다면 매거진, 나눠 쓴다면 정방형 블랙골드 · 나머지 매거진입니다.\n상품 오토 프레임(레드오토 vs 기존 프레임): 레드오토가 웹 · 모바일 +6%, 앱 +54%로 앞섰습니다. 다만 9/22에 기존 프레임으로 되돌린 뒤 앱 클릭률이 3분의 1로 떨어졌고, 9/28에 레드오토로 다시 바꿔도 돌아오지 않았습니다. 앱 하락은 프레임이 아닌 다른 원인입니다.\n비상품 프레임: 사이즈별 12개를 하나로 합친 뒤에도 클릭률(0.028% vs 0.032%)과 물량이 유지됐습니다. 관리 부담이 12분의 1로 줄어 전환은 성공입니다.\n프레임 데이터에는 매출이 없어 "잘 클릭되는 프레임"까지만 알 수 있습니다. "잘 팔리는 프레임"은 프레임별 매출 데이터가 붙어야 판단할 수 있습니다.' },
+            { cat: '핵심 요약', q: '지금 바로 확인이 필요한 이상 신호는 무엇인가요?', date: '2026-09-30',
+              a: '네 가지입니다.\n1) Kakao ROAS 미회복: 9/17까지 ROAS 479%였던 채널이 9/18 이후 12일째 100%입니다. 연휴가 끝난 9/28~29에도 108% · 102%입니다. 9/18 전후 입찰가 · 타겟 · 소재 변경과 상품 · 프로모션 변화를 확인해야 합니다.\n2) 앱 오토 프레임 클릭률: 9/22 이후 레드오토 기간(0.17~0.31%)의 3분의 1(0.06~0.08%)로 떨어졌고, 9/28에 레드오토로 되돌려도 회복되지 않았습니다. 노출은 그대로라 앱 쪽 지면 · 태그 설정 점검이 필요합니다.\n3) Kakao 클릭 단가(CPC): 9/18부터 12일째 700원 안팎으로, 그 전(430~560원)보다 40% 비쌉니다.\n4) Google 클릭률: 노출은 연휴 전 수준(일 700만대)으로 돌아왔는데 클릭률은 0.027%로 9월 초(0.047%)의 절반입니다. 9/16 이후 늘어난 노출이 반응 낮은 지면에 몰려 있습니다.\n마지막 날(9/29) 숫자는 집계가 끝나지 않아 다음 갱신 때 바뀔 수 있습니다.' },
+            { cat: '핵심 요약', q: '10월에는 무엇을 바꿔야 하나요?', date: '2026-09-30',
+              a: '1) Kakao 일 예산을 350만원으로 되돌립니다. 지금은 일 448만원에 ROAS 100%대입니다. 500%대로 회복되는지 한 주 확인한 뒤 다시 늘립니다.\n2) 10/3 · 10/5 · 10/9 연휴는 Kakao 일 예산 상한을 미리 낮춥니다. 9월 휴일 ROAS는 평일의 5분의 1(Google 80% · Kakao 90%)이었습니다.\n3) 앱 오토 프레임은 레드오토를 유지하되, 클릭률 하락 원인이 프레임이 아니므로 앱 지면 · 태그 설정을 점검합니다.\n4) 상품 고정 프레임은 정방형 블랙골드 · 가로형 · 세로형 매거진으로 나눠 쓰거나, 하나만 쓴다면 매거진으로 갑니다.\n5) 프레임별 매출 · ROAS 데이터를 붙입니다. 지금은 클릭률까지만 있어 어떤 프레임이 잘 팔리는지는 알 수 없습니다.' },
+            /* Google RTB */
+            { cat: 'Google RTB', q: '주말 · 공휴일 ROAS가 유독 낮은 이유는? 일별 ROAS는 왜 이렇게 들쭉날쭉한가요?', date: '2026-09-30',
+              a: '9월 휴일 10일 평균 ROAS는 80%, 평일 19일은 514%입니다. 휴일에도 클릭률은 평일과 같거나 높습니다. 광고는 클릭되는데 휴일에는 구매를 안 하는 것으로, 광고 문제가 아니라 구매 행동의 요일 차이입니다.\n일별 ROAS가 15%(9/24)에서 1,616%(9/11)까지 벌어지는 것은 고단가 상품 몇 건이 하루 매출을 크게 흔들기 때문입니다. 9/28(756%)과 9/29(67%)처럼 같은 평일 이틀도 11배 차이가 납니다.\n하루 숫자로 판단하지 말고 7일 합계나 월 누계(401%)로 보는 것이 맞습니다.' },
+            /* Kakao RTB */
+            { cat: 'Kakao RTB', q: '9/18 이후 ROAS가 급락했어요. 왜 그런가요? 연휴가 끝나도 회복이 안 되나요?', date: '2026-09-30',
+              a: '9/17까지 ROAS 479%였다가 9/18 이후 12일 동안 100%입니다. 9/18~23 평일 126%, 추석 연휴 45%, 연휴 뒤 9/28~29에도 105%입니다. 같은 기간 클릭 단가(CPC)도 430~560원에서 700원 안팎으로 올랐습니다.\n클릭 수는 그대로입니다. 클릭이 줄어든 것이 아니라 클릭당 비용이 오르고, 클릭 뒤 구매가 줄었습니다. 연휴가 끝난 평일에도 낮으므로 휴일 효과가 아닙니다.\n9/18에 바뀐 입찰가 · 타겟 · 소재 설정이 있는지, 상품 재고 · 프로모션 종료 같은 외부 요인이 있는지 확인이 필요합니다. 그 전까지는 일 소진을 350만원으로 되돌리는 것을 권합니다.' },
+            { cat: 'Kakao RTB', q: 'Kakao 클릭률이 Google보다 3배 높은데, 왜 ROAS는 Google이 더 높나요?', date: '2026-09-30',
+              a: '클릭률은 Kakao 0.115% · Google 0.037%로 Kakao가 3배 높지만, ROAS는 Google 401% · Kakao 265%입니다.\nKakao는 클릭 단가가 606원으로 Google(453원)보다 비싸고, 클릭이 구매로 이어지는 비율도 낮습니다. 클릭은 잘 나오지만 그 클릭이 비싸고 덜 팔린다는 뜻입니다.\n예산을 옮긴다면 Google 쪽이 효율은 좋지만, Google은 노출을 크게 늘린 9/16 이후 클릭률이 떨어진 적이 있어 단계적으로 늘리며 확인해야 합니다.' },
+            /* 프레임 */
+            { cat: '상품 고정 프레임', q: '프레임 3종 클릭률이 9월 내내 같이 떨어지는데 괜찮은 건가요?', date: '2026-09-30',
+              a: '프레임 문제는 아닙니다. 세 프레임 클릭률이 9월 초 0.05~0.06%에서 9월 말 0.03% 안팎으로 같이 내려갔고, 비상품 프레임과 Google 채널 전체도 같은 기울기입니다. 특정 프레임의 피로라면 전부 같이 내려가지 않습니다.\n원인은 지면입니다. 9/16 이후 노출이 크게 늘면서 클릭률이 낮은 지면(theqoo.net 0.032% · imbc.com 0.005%)의 비중이 커졌습니다. daum.net(0.043%) · nate.com(0.075%) 같은 지면과 2~10배 차이가 납니다.\n프레임 우열은 같은 날의 상대 순위로 보면 됩니다. 균등 노출 구간(9/16~29) 기준 매거진 · 화이트레드 · 블랙골드가 사실상 동률이고, 하루 1위는 매거진이 가장 많습니다.' },
+            { cat: '상품 오토 프레임', q: '레드오토를 9/22에 기존 프레임으로 되돌렸다가 9/28에 다시 레드오토로 바꿨는데, 결과는 어떤가요?', date: '2026-09-30',
+              a: '웹 · 모바일은 차이가 거의 없고, 앱은 되돌려도 회복되지 않았습니다.\n웹 · 모바일: 레드오토 0.051%, 기존 프레임 0.048~0.056%, 9/29 레드오토 0.060%로 두 프레임의 차이는 크지 않습니다.\n앱: 레드오토 기간(9/9~22) 0.215%였는데 기존 프레임으로 되돌린 9/23~28에 0.065%로 떨어졌고, 9/28 레드오토 재적용 뒤에도 0.075~0.082%입니다. 노출은 그대로이고 클릭만 빠졌습니다.\n프레임을 바꿔도 돌아오지 않았으니 원인은 프레임이 아닙니다. 9/22 전후 앱 쪽 지면 · 태그 · 클릭 집계 설정 변경 여부를 확인해야 합니다.' },
+        ];
+
+        const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+        const items = [...QNA].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+        const cats = ['전체', ...new Set(items.map(x => x.cat).filter(Boolean))];
+        let cat = '전체', kw = '';
+        const catsEl = document.getElementById('qaCats'), listEl = document.getElementById('qaList'), countEl = document.getElementById('qaCount');
+        catsEl.innerHTML = cats.map(c => `<button type="button" data-cat="${esc(c)}" aria-pressed="${c === cat}">${esc(c)}</button>`).join('');
+        catsEl.addEventListener('click', e => {
+            const b = e.target.closest('button[data-cat]'); if (!b) return;
+            cat = b.dataset.cat;
+            catsEl.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+            render();
+        });
+        document.getElementById('qaSearch').addEventListener('input', e => { kw = e.target.value.trim().toLowerCase(); render(); });
+        function render() {
+            const shown = items.filter(x => (cat === '전체' || x.cat === cat) && (!kw || (x.q + ' ' + x.a).toLowerCase().includes(kw)));
+            countEl.textContent = `${shown.length} / ${items.length}개`;
+            listEl.innerHTML = shown.length ? shown.map((x, i) => `<details class="qa"${kw && i === 0 ? ' open' : ''}>
+                <summary><span class="q-mark">Q</span>${x.cat ? `<span class="q-cat">${esc(x.cat)}</span>` : ''}<span>${esc(x.q)}</span>
+                    <svg class="q-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+                <div class="a"><span class="a-mark">A</span><div class="a-body">${x.a.split('\n').map(p => `<p>${esc(p)}</p>`).join('')}${x.date ? `<div class="a-meta">${x.date}</div>` : ''}</div></div>
+            </details>`).join('') : '<div class="qa-empty">조건에 맞는 질문이 없습니다.</div>';
+        }
+        render();
+    </script>
+    <script>
+        /* 맨 위로 버튼 */
+        (function () {
+            const b = document.getElementById('toTop');
+            const on = () => b.classList.toggle('show', window.scrollY > 300);
+            window.addEventListener('scroll', on, { passive: true });
+            b.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+            on();
+        })();
+    </script>
+</body>
+
+</html>

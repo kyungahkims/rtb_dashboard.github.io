@@ -1,0 +1,3050 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>비상품 프레임</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/frame_nonproduct_page.css">
+</head>
+<body>
+    <div class="wrap">
+
+        <section>
+            <div class="title">
+                <h2>1. 프레임별 성과</h2>
+                <div class="period-ctrl" id="themePeriod" role="group" aria-label="기간 선택">
+                    <div class="seg">
+                        <button type="button" data-mode="month" aria-pressed="true">9월 전체</button>
+                        <button type="button" data-mode="day" aria-pressed="false">일별</button>
+                    </div>
+                    <input type="date" id="themeDate" class="date-in" aria-label="날짜 선택" hidden>
+                </div>
+            </div>
+            <div class="themes" id="themes"></div>
+        </section>
+
+        <section>
+            <div class="title">
+                <h2>2. 전전일 vs 전일 프레임별 비교</h2>
+            </div>
+            <div class="card">
+                <div class="scroll yd-scroll" id="yd"></div>
+            </div>
+        </section>
+
+        <section>
+            <div class="title">
+                <h2>3. 최근 7일 프레임별 비교</h2>
+            </div>
+            <div class="card">
+                <div class="legend" id="w7Legend"></div>
+                <div class="w7" id="w7"></div>
+            </div>
+        </section>
+
+        <section>
+            <div class="title">
+                <h2>4. 프레임별 일별 추이 <span class="h2-help" data-tip="구간: 그날 어떤 배너가 나갔는지 보여 줍니다.&#10;&#160;&#160;• 단독 = 배너 하나만 나간 날&#10;&#160;&#160;• 병행 = 여러 배너가 같이 나간 날&#10;&#10;노란색 줄: 나가는 배너 조합이 전날과 달라진 날&#10;1위 메달: 여러 배너가 같이 나간 날 중 클릭률이 가장 높았던 배너" aria-label="구간 설명" tabindex="0">?</span></h2>
+            </div>
+            <div class="card">
+                <div class="scroll">
+                    <table id="transTable"></table>
+                </div>
+            </div>
+        </section>
+
+        <section id="sizeSection">
+            <div class="title">
+                <h2>5. 사이즈별 프레임 비교 (10개 사이즈) <span class="h2-help" data-tip="광고 자리 크기(요청 사이즈)별로&#10;두 프레임의 성과를 비교합니다.&#10;오토 프레임은 자리 크기에 맞춰 나가므로&#10;요청 사이즈가 곧 실제로 나간 배너 크기입니다.&#10;&#10;9월 전체: 9월 누적 기준&#10;&#160;&#160;• 노출이 많은 요청 사이즈 10개&#10;일별: 하루 단위 기준&#10;&#160;&#160;• 그날 노출이 많은 요청 사이즈 10개" aria-label="사이즈별 표 설명" tabindex="0">?</span></h2>
+                <div class="period-ctrl" id="sizePeriod" role="group" aria-label="기간 선택">
+                    <div class="seg">
+                        <button type="button" data-mode="month" aria-pressed="true">9월 전체</button>
+                        <button type="button" data-mode="day" aria-pressed="false">일별</button>
+                    </div>
+                    <input type="date" id="sizeDate" class="date-in" aria-label="날짜 선택" hidden>
+                </div>
+            </div>
+            <div class="card">
+                <div class="m-tabs" id="sizeMetric" role="tablist" aria-label="지표 선택">
+                    <button type="button" role="tab" data-metric="imp" aria-selected="false">노출수</button>
+                    <button type="button" role="tab" data-metric="clk" aria-selected="false">클릭수</button>
+                    <button type="button" role="tab" data-metric="ctr" aria-selected="true">클릭률 (CTR)</button>
+                </div>
+                <div class="ss" id="sizeSummary"></div>
+                <div class="scroll">
+                    <table id="sizeTable"></table>
+                </div>
+            </div>
+        </section>
+
+        <section id="placeSection">
+            <div class="title">
+                <h2>6. 프레임 지면별 비교 (상위 10개 지면) <span class="h2-help" data-tip="배너가 실제로 걸린 지면별로&#10;두 배너의 성과를 비교합니다.&#10;&#10;9월 전체: 9월 누적 기준&#10;&#160;&#160;• 노출이 많은 지면 10곳&#10;일별: 하루 단위 기준&#10;&#160;&#160;• 그날 노출이 많은 지면 10곳&#10;&#10;지면은 사이트 이름 기준이며, 같은 사이트의 여러 광고 자리는 합산합니다." aria-label="지면별 표 설명" tabindex="0">?</span></h2>
+                <div class="period-ctrl" id="placePeriod" role="group" aria-label="기간 선택">
+                    <div class="seg">
+                        <button type="button" data-mode="month" aria-pressed="true">9월 전체</button>
+                        <button type="button" data-mode="day" aria-pressed="false">일별</button>
+                    </div>
+                    <input type="date" id="placeDate" class="date-in" aria-label="날짜 선택" hidden>
+                </div>
+            </div>
+            <div class="card">
+                <div class="m-tabs" id="placeMetric" role="tablist" aria-label="지표 선택">
+                    <button type="button" role="tab" data-metric="imp" aria-selected="false">노출수</button>
+                    <button type="button" role="tab" data-metric="clk" aria-selected="false">클릭수</button>
+                    <button type="button" role="tab" data-metric="ctr" aria-selected="true">클릭률 (CTR)</button>
+                </div>
+                <div class="ss" id="placeSummary"></div>
+                <div class="scroll">
+                    <table id="placeTable"></table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <button type="button" class="tl-open" id="tlOpen" aria-haspopup="dialog" aria-label="프레임 변경 Timeline 보기">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 7v5l3 2" />
+        </svg>
+        <span class="tl-open-label">프레임 변경 Timeline</span>
+    </button>
+
+    <dialog class="tl-modal" id="tlModal" aria-labelledby="tlModalTitle">
+        <div class="tl-modal-head">
+            <div>
+                <h2 id="tlModalTitle">프레임 변경 Timeline</h2>
+            </div>
+            <button type="button" class="tl-close" id="tlClose" aria-label="닫기">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" aria-hidden="true">
+                    <path d="M6 6l12 12M18 6L6 18" />
+                </svg>
+            </button>
+        </div>
+        <div class="tl-modal-body">
+            <ol class="tl" id="timeline"></ol>
+        </div>
+    </dialog>
+
+    <button type="button" class="to-top" id="toTop" aria-label="맨 위로">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    </button>
+    <script src="../js/holidays.js"></script>
+    <script src="../js/frame_timeline.js"></script>
+    <script>
+        /* 설정 */
+        const sw = T => `background:${T.color}${T.ring ? `;box-shadow:inset 0 0 0 2px ${T.ring}` : ''}`;
+        const cv = T => `--c:${T.color}${T.ring ? `;--r:${T.ring}` : ''}`;
+        // iauto: 비상품 오토, isize: 사이즈별 고정 12개
+        const THEMES = [
+            { id: 'iauto', name: 'iauto 프레임', ab: 'after', ch: '구글', code: 'iauto', desc: '비상품 auto · 09-02 투입', color: '#3446b8', src: '',
+              img: 'https://manage.mobon.net/ad/imgfile//20240617185940-tJb4iOIAxf-336x280.jpg', view: 'https://kyungahkims.github.io/openRtb_banners.github.io/total_banners_view.html' },
+            { id: 'isize', name: 'i사이즈별 고정 프레임 (12개)', ab: 'before', ch: '구글', code: 'i{가로}_{세로}', desc: 'i사이즈별 고정 프레임 (12개)', color: '#22c55e', src: '' },
+        ];
+        const AB_LABEL = { after: 'After · 신규', before: 'Before · 기존' };
+        const MIN_IMP = 1000;   // 노출이 이보다 적으면 CTR 집계 제외
+
+        /* 일별 [날짜, 프레임, 노출, 클릭] */
+        /* ADATA:START */
+        const ADATA = [
+            ["2026-09-01", "iauto", 10595, 0],
+            ["2026-09-01", "isize", 1069956, 440],
+            ["2026-09-02", "iauto", 368360, 104],
+            ["2026-09-02", "isize", 779749, 158],
+            ["2026-09-03", "iauto", 1240601, 388],
+            ["2026-09-04", "iauto", 1241088, 417],
+            ["2026-09-05", "iauto", 827117, 281],
+            ["2026-09-06", "iauto", 869755, 294],
+            ["2026-09-07", "iauto", 1101542, 342],
+            ["2026-09-08", "iauto", 1002149, 364],
+            ["2026-09-09", "iauto", 923476, 367],
+            ["2026-09-10", "iauto", 964874, 389],
+            ["2026-09-11", "iauto", 1119887, 307],
+            ["2026-09-14", "iauto", 820702, 277],
+            ["2026-09-15", "iauto", 828284, 273],
+            ["2026-09-16", "iauto", 1136420, 363],
+            ["2026-09-17", "iauto", 1397781, 441],
+            ["2026-09-18", "iauto", 1675086, 426],
+            ["2026-09-21", "iauto", 1394594, 293],
+            ["2026-09-22", "iauto", 1421433, 264],
+            ["2026-09-23", "iauto", 1084712, 170],
+            ["2026-09-24", "iauto", 583355, 145],
+            ["2026-09-25", "iauto", 544848, 106],
+            ["2026-09-26", "iauto", 600081, 154],
+            ["2026-09-27", "iauto", 685814, 126],
+            ["2026-09-28", "iauto", 817035, 176],
+            ["2026-09-29", "iauto", 897826, 204],
+            ["2026-09-30", "iauto", 860940, 216],
+        ];
+        /* ADATA:END */
+        /* 지면별 누적 [프레임, 지면, 노출, 클릭] */
+        /* APDATA:START */
+        const APDATA = [
+            ["iauto", "daum.net", 5201989, 757],
+            ["iauto", "theqoo.net", 2058231, 608],
+            ["iauto", "inven.co.kr", 1539291, 116],
+            ["iauto", "v.daum.net", 1213482, 348],
+            ["iauto", "maplescouter.com", 998573, 202],
+            ["iauto", "com.read.goodnovel", 917788, 609],
+            ["iauto", "ppomppu.co.kr", 837092, 232],
+            ["iauto", "quasarzone.com", 813374, 27],
+            ["iauto", "imbc.com", 612350, 29],
+            ["isize", "daum.net", 522300, 119],
+            ["iauto", "jeomsinpf1.co.kr", 411809, 167],
+            ["iauto", "nate.com", 393914, 177],
+            ["iauto", "com.nbt.moves", 366309, 55],
+            ["iauto", "cafe.daum.net", 365855, 103],
+            ["iauto", "wisetoto.com", 356601, 51],
+            ["iauto", "dogdrip.net", 290835, 122],
+            ["iauto", "luckieverse.com", 287376, 233],
+            ["iauto", "meaegi.com", 232199, 4],
+            ["iauto", "droom.sleepIfUCan", 209142, 25],
+            ["iauto", "com.lottemembers.android", 207272, 110],
+            ["iauto", "com.skplanet.ocb.locker", 201133, 474],
+            ["iauto", "slrclub.com", 188788, 38],
+            ["iauto", "lol.ps", 186180, 41],
+            ["iauto", "com.cashwalk.cashwalk", 179644, 59],
+            ["iauto", "khan.co.kr", 170858, 33],
+            ["iauto", "com.peak", 168409, 16],
+            ["iauto", "sbs.co.kr", 164924, 9],
+            ["iauto", "munhwa.com", 164665, 12],
+            ["iauto", "dvdprime.com", 162366, 27],
+            ["iauto", "damoang.net", 151857, 39],
+            ["isize", "theqoo.net", 146078, 42],
+            ["isize", "com.read.goodnovel", 141150, 96],
+            ["iauto", "humoruniv.com", 138274, 83],
+            ["iauto", "donga.com", 131049, 5],
+            ["iauto", "com.cashslide", 128321, 4],
+            ["isize", "v.daum.net", 126564, 39],
+            ["iauto", "dmitory.com", 116484, 16],
+            ["iauto", "hankyung.com", 114495, 9],
+            ["iauto", "snulife.com", 111603, 4],
+            ["iauto", "co.luckies.app", 108502, 27],
+            ["iauto", "edaily.co.kr", 108068, 6],
+            ["iauto", "itssa.co.kr", 107162, 14],
+            ["iauto", "instiz.net", 103412, 31],
+            ["iauto", "teamblind.com", 94569, 13],
+            ["iauto", "com.find.spot.photo.hunt.differences.free.hidden", 79551, 53],
+            ["iauto", "deeplol.gg", 76890, 19],
+            ["isize", "ppomppu.co.kr", 72821, 16],
+            ["iauto", "kr.investing.com", 65516, 6],
+            ["iauto", "com.artifyapp.timestamp", 64495, 6],
+            ["iauto", "seoul.co.kr", 64242, 4],
+            ["iauto", "semaphore.stockclient", 63286, 32],
+            ["iauto", "fc-info.com", 61496, 10],
+            ["iauto", "news1.kr", 60523, 14],
+            ["iauto", "hankookilbo.com", 60174, 10],
+            ["iauto", "com.heroines.heroines", 58235, 12],
+            ["iauto", "namu.wiki", 54087, 18],
+            ["isize", "quasarzone.com", 53640, 6],
+            ["iauto", "piku.co.kr", 52134, 25],
+            ["iauto", "coinpan.com", 51745, 10],
+            ["isize", "nate.com", 49963, 7],
+            ["iauto", "etnews.com", 48696, 4],
+            ["iauto", "sportsseoul.com", 47244, 12],
+            ["iauto", "prod.danawa.com", 40713, 2],
+            ["isize", "imbc.com", 40303, 5],
+            ["iauto", "mania.kr", 39792, 22],
+            ["iauto", "ddanzi.com", 38542, 14],
+            ["iauto", "biz.chosun.com", 38389, 5],
+            ["iauto", "hani.co.kr", 37866, 25],
+            ["isize", "cafe.daum.net", 30947, 5],
+            ["isize", "inven.co.kr", 30529, 8],
+            ["isize", "jeomsinpf1.co.kr", 28919, 14],
+            ["isize", "slrclub.com", 28916, 6],
+            ["isize", "com.lottemembers.android", 24327, 12],
+            ["isize", "com.nbt.moves", 20470, 3],
+            ["isize", "dvdprime.com", 19694, 3],
+            ["isize", "maplescouter.com", 18907, 2],
+            ["isize", "droom.sleepIfUCan", 17682, 1],
+            ["isize", "luckieverse.com", 17440, 17],
+            ["isize", "com.cashwalk.cashwalk", 15542, 2],
+            ["isize", "wisetoto.com", 15480, 6],
+            ["isize", "damoang.net", 15077, 10],
+            ["isize", "khan.co.kr", 14471, 0],
+            ["isize", "munhwa.com", 11902, 0],
+            ["isize", "dogdrip.net", 11359, 2],
+            ["isize", "itssa.co.kr", 8757, 4],
+            ["isize", "donga.com", 8345, 0],
+            ["isize", "dmitory.com", 8022, 5],
+            ["isize", "hankookilbo.com", 7987, 0],
+            ["isize", "semaphore.stockclient", 7493, 1],
+            ["isize", "snulife.com", 7480, 1],
+            ["isize", "hankyung.com", 6780, 0],
+            ["isize", "com.peak", 6612, 1],
+            ["isize", "com.cashslide", 6432, 1],
+            ["isize", "edaily.co.kr", 6309, 0],
+            ["isize", "lol.ps", 6178, 0],
+            ["isize", "sbs.co.kr", 6016, 0],
+            ["isize", "com.find.spot.photo.hunt.differences.free.hidden", 5445, 5],
+            ["isize", "co.luckies.app", 5259, 0],
+            ["isize", "teamblind.com", 5248, 0],
+            ["isize", "instiz.net", 5066, 1],
+            ["isize", "fc-info.com", 4864, 1],
+            ["isize", "news1.kr", 4849, 0],
+            ["isize", "biz.chosun.com", 4517, 0],
+            ["isize", "piku.co.kr", 4289, 0],
+            ["isize", "com.heroines.heroines", 3958, 2],
+            ["isize", "prod.danawa.com", 3879, 0],
+            ["isize", "hani.co.kr", 3651, 9],
+            ["isize", "seoul.co.kr", 3391, 1],
+            ["isize", "com.artifyapp.timestamp", 3317, 0],
+            ["isize", "mania.kr", 3288, 1],
+            ["isize", "etnews.com", 2868, 1],
+            ["isize", "kr.investing.com", 2778, 0],
+            ["isize", "ddanzi.com", 2677, 2],
+            ["isize", "sportsseoul.com", 2443, 0],
+            ["isize", "deeplol.gg", 2087, 0],
+            ["isize", "meaegi.com", 2035, 0],
+            ["isize", "coinpan.com", 1408, 0],
+            ["isize", "humoruniv.com", 368, 0],
+            ["isize", "com.skplanet.ocb.locker", 338, 0],
+        ];
+        /* APDATA:END */
+
+        /* 지면별 일별 [날짜, 프레임, 지면, 노출, 클릭] */
+        /* APDDATA:START */
+        const APDDATA = [
+            ["2026-09-01", "iauto", "cafe.daum.net", 135, 0],
+            ["2026-09-01", "iauto", "co.luckies.app", 37, 0],
+            ["2026-09-01", "iauto", "com.cashslide", 23, 0],
+            ["2026-09-01", "iauto", "com.cashwalk.cashwalk", 124, 0],
+            ["2026-09-01", "iauto", "com.find.spot.photo.hunt.differences.free.hidden", 58, 0],
+            ["2026-09-01", "iauto", "com.lottemembers.android", 114, 0],
+            ["2026-09-01", "iauto", "com.nbt.moves", 65, 0],
+            ["2026-09-01", "iauto", "com.peak", 41, 0],
+            ["2026-09-01", "iauto", "com.read.goodnovel", 691, 0],
+            ["2026-09-01", "iauto", "damoang.net", 41, 0],
+            ["2026-09-01", "iauto", "daum.net", 3132, 0],
+            ["2026-09-01", "iauto", "dmitory.com", 49, 0],
+            ["2026-09-01", "iauto", "dogdrip.net", 73, 0],
+            ["2026-09-01", "iauto", "donga.com", 44, 0],
+            ["2026-09-01", "iauto", "droom.sleepIfUCan", 28, 0],
+            ["2026-09-01", "iauto", "dvdprime.com", 69, 0],
+            ["2026-09-01", "iauto", "edaily.co.kr", 42, 0],
+            ["2026-09-01", "iauto", "fc-info.com", 21, 0],
+            ["2026-09-01", "iauto", "hankookilbo.com", 32, 0],
+            ["2026-09-01", "iauto", "hankyung.com", 56, 0],
+            ["2026-09-01", "iauto", "imbc.com", 158, 0],
+            ["2026-09-01", "iauto", "instiz.net", 50, 0],
+            ["2026-09-01", "iauto", "inven.co.kr", 129, 0],
+            ["2026-09-01", "iauto", "itssa.co.kr", 31, 0],
+            ["2026-09-01", "iauto", "jeomsinpf1.co.kr", 118, 0],
+            ["2026-09-01", "iauto", "khan.co.kr", 73, 0],
+            ["2026-09-01", "iauto", "luckieverse.com", 69, 0],
+            ["2026-09-01", "iauto", "maplescouter.com", 136, 0],
+            ["2026-09-01", "iauto", "mlbpark.donga.com", 43, 0],
+            ["2026-09-01", "iauto", "munhwa.com", 84, 0],
+            ["2026-09-01", "iauto", "nate.com", 461, 0],
+            ["2026-09-01", "iauto", "ppomppu.co.kr", 364, 0],
+            ["2026-09-01", "iauto", "quasarzone.com", 455, 0],
+            ["2026-09-01", "iauto", "sbs.co.kr", 30, 0],
+            ["2026-09-01", "iauto", "semaphore.stockclient", 59, 0],
+            ["2026-09-01", "iauto", "slrclub.com", 155, 0],
+            ["2026-09-01", "iauto", "snulife.com", 18, 0],
+            ["2026-09-01", "iauto", "theqoo.net", 930, 0],
+            ["2026-09-01", "iauto", "v.daum.net", 819, 0],
+            ["2026-09-01", "iauto", "wisetoto.com", 80, 0],
+            ["2026-09-01", "isize", "cafe.daum.net", 15543, 3],
+            ["2026-09-01", "isize", "co.luckies.app", 3373, 0],
+            ["2026-09-01", "isize", "com.cashslide", 3902, 1],
+            ["2026-09-01", "isize", "com.cashwalk.cashwalk", 11578, 2],
+            ["2026-09-01", "isize", "com.find.spot.photo.hunt.differences.free.hidden", 3713, 3],
+            ["2026-09-01", "isize", "com.lottemembers.android", 15213, 10],
+            ["2026-09-01", "isize", "com.nbt.moves", 10805, 3],
+            ["2026-09-01", "isize", "com.peak", 4549, 0],
+            ["2026-09-01", "isize", "com.read.goodnovel", 109605, 78],
+            ["2026-09-01", "isize", "damoang.net", 8463, 9],
+            ["2026-09-01", "isize", "daum.net", 277742, 84],
+            ["2026-09-01", "isize", "dmitory.com", 4066, 3],
+            ["2026-09-01", "isize", "dogdrip.net", 6803, 1],
+            ["2026-09-01", "isize", "donga.com", 4330, 0],
+            ["2026-09-01", "isize", "droom.sleepIfUCan", 10915, 1],
+            ["2026-09-01", "isize", "dvdprime.com", 10746, 3],
+            ["2026-09-01", "isize", "edaily.co.kr", 3831, 0],
+            ["2026-09-01", "isize", "fc-info.com", 3570, 1],
+            ["2026-09-01", "isize", "hankookilbo.com", 4573, 0],
+            ["2026-09-01", "isize", "hankyung.com", 3662, 0],
+            ["2026-09-01", "isize", "imbc.com", 25318, 4],
+            ["2026-09-01", "isize", "instiz.net", 3621, 1],
+            ["2026-09-01", "isize", "inven.co.kr", 16234, 8],
+            ["2026-09-01", "isize", "itssa.co.kr", 4541, 3],
+            ["2026-09-01", "isize", "jeomsinpf1.co.kr", 16589, 9],
+            ["2026-09-01", "isize", "khan.co.kr", 7190, 0],
+            ["2026-09-01", "isize", "luckieverse.com", 9718, 12],
+            ["2026-09-01", "isize", "maplescouter.com", 12693, 1],
+            ["2026-09-01", "isize", "mlbpark.donga.com", 3262, 7],
+            ["2026-09-01", "isize", "munhwa.com", 6476, 0],
+            ["2026-09-01", "isize", "nate.com", 29836, 3],
+            ["2026-09-01", "isize", "ppomppu.co.kr", 41262, 10],
+            ["2026-09-01", "isize", "quasarzone.com", 36361, 6],
+            ["2026-09-01", "isize", "sbs.co.kr", 3508, 0],
+            ["2026-09-01", "isize", "semaphore.stockclient", 5607, 0],
+            ["2026-09-01", "isize", "slrclub.com", 17779, 4],
+            ["2026-09-01", "isize", "snulife.com", 4129, 1],
+            ["2026-09-01", "isize", "theqoo.net", 84249, 29],
+            ["2026-09-01", "isize", "v.daum.net", 53048, 19],
+            ["2026-09-01", "isize", "wisetoto.com", 10191, 6],
+            ["2026-09-02", "iauto", "cafe.daum.net", 5924, 2],
+            ["2026-09-02", "iauto", "co.luckies.app", 1235, 0],
+            ["2026-09-02", "iauto", "com.cashslide", 875, 0],
+            ["2026-09-02", "iauto", "com.cashwalk.cashwalk", 2572, 1],
+            ["2026-09-02", "iauto", "com.find.spot.photo.hunt.differences.free.hidden", 1381, 0],
+            ["2026-09-02", "iauto", "com.lottemembers.android", 3674, 1],
+            ["2026-09-02", "iauto", "com.nbt.moves", 3178, 0],
+            ["2026-09-02", "iauto", "com.peak", 2748, 0],
+            ["2026-09-02", "iauto", "com.read.goodnovel", 28979, 26],
+            ["2026-09-02", "iauto", "damoang.net", 1103, 0],
+            ["2026-09-02", "iauto", "daum.net", 86289, 8],
+            ["2026-09-02", "iauto", "dmitory.com", 1505, 0],
+            ["2026-09-02", "iauto", "dogdrip.net", 1522, 2],
+            ["2026-09-02", "iauto", "donga.com", 1945, 0],
+            ["2026-09-02", "iauto", "droom.sleepIfUCan", 130, 0],
+            ["2026-09-02", "iauto", "dvdprime.com", 1730, 1],
+            ["2026-09-02", "iauto", "edaily.co.kr", 919, 1],
+            ["2026-09-02", "iauto", "hankookilbo.com", 1524, 0],
+            ["2026-09-02", "iauto", "hankyung.com", 2241, 0],
+            ["2026-09-02", "iauto", "humoruniv.com", 3241, 1],
+            ["2026-09-02", "iauto", "imbc.com", 16199, 1],
+            ["2026-09-02", "iauto", "inven.co.kr", 7918, 0],
+            ["2026-09-02", "iauto", "itssa.co.kr", 2104, 0],
+            ["2026-09-02", "iauto", "jeomsinpf1.co.kr", 5559, 3],
+            ["2026-09-02", "iauto", "khan.co.kr", 1865, 0],
+            ["2026-09-02", "iauto", "lol.ps", 2261, 0],
+            ["2026-09-02", "iauto", "luckieverse.com", 4675, 1],
+            ["2026-09-02", "iauto", "maplescouter.com", 5509, 1],
+            ["2026-09-02", "iauto", "munhwa.com", 1983, 0],
+            ["2026-09-02", "iauto", "nate.com", 8582, 1],
+            ["2026-09-02", "iauto", "news1.kr", 569, 0],
+            ["2026-09-02", "iauto", "ppomppu.co.kr", 12893, 4],
+            ["2026-09-02", "iauto", "quasarzone.com", 12158, 1],
+            ["2026-09-02", "iauto", "sbs.co.kr", 2492, 0],
+            ["2026-09-02", "iauto", "slrclub.com", 4312, 0],
+            ["2026-09-02", "iauto", "snulife.com", 1067, 0],
+            ["2026-09-02", "iauto", "teamblind.com", 1405, 0],
+            ["2026-09-02", "iauto", "theqoo.net", 38036, 10],
+            ["2026-09-02", "iauto", "v.daum.net", 36052, 8],
+            ["2026-09-02", "iauto", "wisetoto.com", 2134, 0],
+            ["2026-09-02", "isize", "cafe.daum.net", 15404, 2],
+            ["2026-09-02", "isize", "co.luckies.app", 1886, 0],
+            ["2026-09-02", "isize", "com.cashslide", 2530, 0],
+            ["2026-09-02", "isize", "com.cashwalk.cashwalk", 3964, 0],
+            ["2026-09-02", "isize", "com.find.spot.photo.hunt.differences.free.hidden", 1732, 2],
+            ["2026-09-02", "isize", "com.lottemembers.android", 9114, 2],
+            ["2026-09-02", "isize", "com.nbt.moves", 9665, 0],
+            ["2026-09-02", "isize", "com.peak", 2063, 1],
+            ["2026-09-02", "isize", "com.read.goodnovel", 31545, 18],
+            ["2026-09-02", "isize", "damoang.net", 6614, 1],
+            ["2026-09-02", "isize", "daum.net", 244558, 35],
+            ["2026-09-02", "isize", "dmitory.com", 3956, 2],
+            ["2026-09-02", "isize", "dogdrip.net", 4556, 1],
+            ["2026-09-02", "isize", "donga.com", 4015, 0],
+            ["2026-09-02", "isize", "droom.sleepIfUCan", 6767, 0],
+            ["2026-09-02", "isize", "dvdprime.com", 8948, 0],
+            ["2026-09-02", "isize", "edaily.co.kr", 2478, 0],
+            ["2026-09-02", "isize", "hankookilbo.com", 3414, 0],
+            ["2026-09-02", "isize", "hankyung.com", 3118, 0],
+            ["2026-09-02", "isize", "humoruniv.com", 105, 0],
+            ["2026-09-02", "isize", "imbc.com", 14985, 1],
+            ["2026-09-02", "isize", "inven.co.kr", 14295, 0],
+            ["2026-09-02", "isize", "itssa.co.kr", 4216, 1],
+            ["2026-09-02", "isize", "jeomsinpf1.co.kr", 12330, 5],
+            ["2026-09-02", "isize", "khan.co.kr", 7281, 0],
+            ["2026-09-02", "isize", "lol.ps", 2961, 0],
+            ["2026-09-02", "isize", "luckieverse.com", 7722, 5],
+            ["2026-09-02", "isize", "maplescouter.com", 6214, 1],
+            ["2026-09-02", "isize", "munhwa.com", 5426, 0],
+            ["2026-09-02", "isize", "nate.com", 20127, 4],
+            ["2026-09-02", "isize", "news1.kr", 2332, 0],
+            ["2026-09-02", "isize", "ppomppu.co.kr", 31559, 6],
+            ["2026-09-02", "isize", "quasarzone.com", 17279, 0],
+            ["2026-09-02", "isize", "sbs.co.kr", 2508, 0],
+            ["2026-09-02", "isize", "slrclub.com", 11137, 2],
+            ["2026-09-02", "isize", "snulife.com", 3351, 0],
+            ["2026-09-02", "isize", "teamblind.com", 2731, 0],
+            ["2026-09-02", "isize", "theqoo.net", 61829, 13],
+            ["2026-09-02", "isize", "v.daum.net", 73516, 20],
+            ["2026-09-02", "isize", "wisetoto.com", 5289, 0],
+            ["2026-09-03", "iauto", "cafe.daum.net", 24262, 8],
+            ["2026-09-03", "iauto", "co.luckies.app", 3499, 1],
+            ["2026-09-03", "iauto", "com.artifyapp.timestamp", 3963, 2],
+            ["2026-09-03", "iauto", "com.cashwalk.cashwalk", 10177, 2],
+            ["2026-09-03", "iauto", "com.lottemembers.android", 12918, 6],
+            ["2026-09-03", "iauto", "com.nbt.moves", 10813, 2],
+            ["2026-09-03", "iauto", "com.peak", 5425, 0],
+            ["2026-09-03", "iauto", "com.read.goodnovel", 104090, 66],
+            ["2026-09-03", "iauto", "damoang.net", 6051, 2],
+            ["2026-09-03", "iauto", "daum.net", 301389, 64],
+            ["2026-09-03", "iauto", "dmitory.com", 5146, 1],
+            ["2026-09-03", "iauto", "dogdrip.net", 8438, 4],
+            ["2026-09-03", "iauto", "donga.com", 9194, 0],
+            ["2026-09-03", "iauto", "droom.sleepIfUCan", 7019, 0],
+            ["2026-09-03", "iauto", "dvdprime.com", 9466, 0],
+            ["2026-09-03", "iauto", "edaily.co.kr", 4580, 0],
+            ["2026-09-03", "iauto", "hankookilbo.com", 5288, 0],
+            ["2026-09-03", "iauto", "hankyung.com", 7102, 0],
+            ["2026-09-03", "iauto", "humoruniv.com", 9895, 5],
+            ["2026-09-03", "iauto", "imbc.com", 32307, 4],
+            ["2026-09-03", "iauto", "instiz.net", 4541, 2],
+            ["2026-09-03", "iauto", "inven.co.kr", 26887, 5],
+            ["2026-09-03", "iauto", "itssa.co.kr", 5605, 4],
+            ["2026-09-03", "iauto", "jeomsinpf1.co.kr", 18689, 7],
+            ["2026-09-03", "iauto", "khan.co.kr", 10125, 2],
+            ["2026-09-03", "iauto", "lol.ps", 4176, 0],
+            ["2026-09-03", "iauto", "luckieverse.com", 14078, 15],
+            ["2026-09-03", "iauto", "maplescouter.com", 21742, 3],
+            ["2026-09-03", "iauto", "munhwa.com", 9069, 1],
+            ["2026-09-03", "iauto", "nate.com", 33193, 17],
+            ["2026-09-03", "iauto", "ppomppu.co.kr", 41056, 11],
+            ["2026-09-03", "iauto", "quasarzone.com", 39868, 2],
+            ["2026-09-03", "iauto", "sbs.co.kr", 4645, 0],
+            ["2026-09-03", "iauto", "seoul.co.kr", 3587, 0],
+            ["2026-09-03", "iauto", "slrclub.com", 11580, 5],
+            ["2026-09-03", "iauto", "snulife.com", 7202, 0],
+            ["2026-09-03", "iauto", "teamblind.com", 4449, 0],
+            ["2026-09-03", "iauto", "theqoo.net", 119892, 39],
+            ["2026-09-03", "iauto", "v.daum.net", 91084, 19],
+            ["2026-09-03", "iauto", "wisetoto.com", 5233, 4],
+            ["2026-09-04", "iauto", "cafe.daum.net", 24323, 7],
+            ["2026-09-04", "iauto", "com.cashslide", 3744, 0],
+            ["2026-09-04", "iauto", "com.cashwalk.cashwalk", 6926, 4],
+            ["2026-09-04", "iauto", "com.lottemembers.android", 9705, 4],
+            ["2026-09-04", "iauto", "com.nbt.moves", 10256, 0],
+            ["2026-09-04", "iauto", "com.peak", 5118, 2],
+            ["2026-09-04", "iauto", "com.read.goodnovel", 99454, 89],
+            ["2026-09-04", "iauto", "com.skplanet.ocb.locker", 4134, 14],
+            ["2026-09-04", "iauto", "damoang.net", 4123, 1],
+            ["2026-09-04", "iauto", "daum.net", 340671, 61],
+            ["2026-09-04", "iauto", "dmitory.com", 5039, 0],
+            ["2026-09-04", "iauto", "dogdrip.net", 10193, 3],
+            ["2026-09-04", "iauto", "donga.com", 5943, 0],
+            ["2026-09-04", "iauto", "droom.sleepIfUCan", 6071, 0],
+            ["2026-09-04", "iauto", "dvdprime.com", 13917, 3],
+            ["2026-09-04", "iauto", "edaily.co.kr", 4862, 0],
+            ["2026-09-04", "iauto", "hankookilbo.com", 4646, 1],
+            ["2026-09-04", "iauto", "hankyung.com", 6858, 2],
+            ["2026-09-04", "iauto", "humoruniv.com", 8291, 4],
+            ["2026-09-04", "iauto", "imbc.com", 23460, 3],
+            ["2026-09-04", "iauto", "instiz.net", 6124, 1],
+            ["2026-09-04", "iauto", "inven.co.kr", 30916, 11],
+            ["2026-09-04", "iauto", "itssa.co.kr", 4629, 1],
+            ["2026-09-04", "iauto", "jeomsinpf1.co.kr", 17720, 8],
+            ["2026-09-04", "iauto", "khan.co.kr", 9796, 2],
+            ["2026-09-04", "iauto", "lol.ps", 6508, 0],
+            ["2026-09-04", "iauto", "luckieverse.com", 12365, 8],
+            ["2026-09-04", "iauto", "machugi.io", 4120, 0],
+            ["2026-09-04", "iauto", "maplescouter.com", 19114, 4],
+            ["2026-09-04", "iauto", "munhwa.com", 10035, 1],
+            ["2026-09-04", "iauto", "nate.com", 34176, 21],
+            ["2026-09-04", "iauto", "ppomppu.co.kr", 38156, 10],
+            ["2026-09-04", "iauto", "quasarzone.com", 27365, 1],
+            ["2026-09-04", "iauto", "sbs.co.kr", 4284, 0],
+            ["2026-09-04", "iauto", "slrclub.com", 6813, 1],
+            ["2026-09-04", "iauto", "snulife.com", 5780, 0],
+            ["2026-09-04", "iauto", "teamblind.com", 5458, 0],
+            ["2026-09-04", "iauto", "theqoo.net", 110940, 28],
+            ["2026-09-04", "iauto", "v.daum.net", 89702, 26],
+            ["2026-09-04", "iauto", "wisetoto.com", 10800, 3],
+            ["2026-09-05", "iauto", "cafe.daum.net", 10310, 6],
+            ["2026-09-05", "iauto", "co.luckies.app", 3889, 1],
+            ["2026-09-05", "iauto", "com.cashslide", 3282, 0],
+            ["2026-09-05", "iauto", "com.cashwalk.cashwalk", 7249, 1],
+            ["2026-09-05", "iauto", "com.find.spot.photo.hunt.differences.free.hidden", 2989, 1],
+            ["2026-09-05", "iauto", "com.lottemembers.android", 11471, 10],
+            ["2026-09-05", "iauto", "com.nbt.moves", 11163, 5],
+            ["2026-09-05", "iauto", "com.peak", 6063, 1],
+            ["2026-09-05", "iauto", "com.read.goodnovel", 94544, 65],
+            ["2026-09-05", "iauto", "com.skplanet.ocb.locker", 6003, 26],
+            ["2026-09-05", "iauto", "damoang.net", 4715, 1],
+            ["2026-09-05", "iauto", "daum.net", 152945, 22],
+            ["2026-09-05", "iauto", "deeplol.gg", 3066, 1],
+            ["2026-09-05", "iauto", "dmitory.com", 3442, 1],
+            ["2026-09-05", "iauto", "dogdrip.net", 7401, 8],
+            ["2026-09-05", "iauto", "donga.com", 4962, 0],
+            ["2026-09-05", "iauto", "droom.sleepIfUCan", 6164, 0],
+            ["2026-09-05", "iauto", "dvdprime.com", 5562, 0],
+            ["2026-09-05", "iauto", "edaily.co.kr", 5360, 0],
+            ["2026-09-05", "iauto", "hankyung.com", 4410, 0],
+            ["2026-09-05", "iauto", "humoruniv.com", 8208, 3],
+            ["2026-09-05", "iauto", "imbc.com", 25237, 1],
+            ["2026-09-05", "iauto", "instiz.net", 3863, 0],
+            ["2026-09-05", "iauto", "inven.co.kr", 28329, 2],
+            ["2026-09-05", "iauto", "jeomsinpf1.co.kr", 15626, 8],
+            ["2026-09-05", "iauto", "khan.co.kr", 4150, 2],
+            ["2026-09-05", "iauto", "lol.ps", 9420, 1],
+            ["2026-09-05", "iauto", "luckieverse.com", 12507, 4],
+            ["2026-09-05", "iauto", "machugi.io", 5164, 0],
+            ["2026-09-05", "iauto", "maplescouter.com", 27405, 4],
+            ["2026-09-05", "iauto", "munhwa.com", 6098, 0],
+            ["2026-09-05", "iauto", "nate.com", 8163, 3],
+            ["2026-09-05", "iauto", "ppomppu.co.kr", 28021, 5],
+            ["2026-09-05", "iauto", "quasarzone.com", 34486, 0],
+            ["2026-09-05", "iauto", "sbs.co.kr", 4248, 0],
+            ["2026-09-05", "iauto", "snulife.com", 4394, 0],
+            ["2026-09-05", "iauto", "teamblind.com", 2942, 0],
+            ["2026-09-05", "iauto", "theqoo.net", 81406, 29],
+            ["2026-09-05", "iauto", "v.daum.net", 26804, 11],
+            ["2026-09-05", "iauto", "wisetoto.com", 11336, 5],
+            ["2026-09-06", "iauto", "cafe.daum.net", 9051, 2],
+            ["2026-09-06", "iauto", "co.luckies.app", 3188, 0],
+            ["2026-09-06", "iauto", "com.artifyapp.timestamp", 3388, 0],
+            ["2026-09-06", "iauto", "com.cashslide", 3918, 0],
+            ["2026-09-06", "iauto", "com.cashwalk.cashwalk", 8632, 5],
+            ["2026-09-06", "iauto", "com.lottemembers.android", 13667, 11],
+            ["2026-09-06", "iauto", "com.nbt.moves", 12940, 2],
+            ["2026-09-06", "iauto", "com.peak", 6853, 0],
+            ["2026-09-06", "iauto", "com.read.goodnovel", 124308, 84],
+            ["2026-09-06", "iauto", "com.skplanet.ocb.locker", 8995, 27],
+            ["2026-09-06", "iauto", "damoang.net", 3538, 2],
+            ["2026-09-06", "iauto", "daum.net", 135495, 23],
+            ["2026-09-06", "iauto", "dogdrip.net", 7053, 0],
+            ["2026-09-06", "iauto", "donga.com", 4276, 0],
+            ["2026-09-06", "iauto", "droom.sleepIfUCan", 6667, 0],
+            ["2026-09-06", "iauto", "dvdprime.com", 5034, 1],
+            ["2026-09-06", "iauto", "edaily.co.kr", 6082, 0],
+            ["2026-09-06", "iauto", "hankyung.com", 7013, 0],
+            ["2026-09-06", "iauto", "humoruniv.com", 8041, 7],
+            ["2026-09-06", "iauto", "imbc.com", 22240, 2],
+            ["2026-09-06", "iauto", "inven.co.kr", 32496, 1],
+            ["2026-09-06", "iauto", "jeomsinpf1.co.kr", 18208, 7],
+            ["2026-09-06", "iauto", "khan.co.kr", 5095, 0],
+            ["2026-09-06", "iauto", "lol.ps", 8515, 3],
+            ["2026-09-06", "iauto", "luckieverse.com", 12101, 5],
+            ["2026-09-06", "iauto", "machugi.io", 5235, 0],
+            ["2026-09-06", "iauto", "maplescouter.com", 47623, 8],
+            ["2026-09-06", "iauto", "meaegi.com", 4574, 0],
+            ["2026-09-06", "iauto", "munhwa.com", 6482, 0],
+            ["2026-09-06", "iauto", "nate.com", 5200, 0],
+            ["2026-09-06", "iauto", "piku.co.kr", 3584, 3],
+            ["2026-09-06", "iauto", "ppomppu.co.kr", 26446, 3],
+            ["2026-09-06", "iauto", "quasarzone.com", 26482, 2],
+            ["2026-09-06", "iauto", "sbs.co.kr", 4191, 0],
+            ["2026-09-06", "iauto", "seoul.co.kr", 3672, 0],
+            ["2026-09-06", "iauto", "slrclub.com", 3213, 0],
+            ["2026-09-06", "iauto", "snulife.com", 5892, 1],
+            ["2026-09-06", "iauto", "theqoo.net", 81072, 20],
+            ["2026-09-06", "iauto", "v.daum.net", 21187, 12],
+            ["2026-09-06", "iauto", "wisetoto.com", 11116, 2],
+            ["2026-09-07", "iauto", "cafe.daum.net", 12528, 2],
+            ["2026-09-07", "iauto", "com.abi.dream.unpacking", 2659, 3],
+            ["2026-09-07", "iauto", "com.cashslide", 2967, 0],
+            ["2026-09-07", "iauto", "com.cashwalk.cashwalk", 6571, 1],
+            ["2026-09-07", "iauto", "com.lottemembers.android", 10209, 9],
+            ["2026-09-07", "iauto", "com.nbt.moves", 9264, 6],
+            ["2026-09-07", "iauto", "com.peak", 4558, 0],
+            ["2026-09-07", "iauto", "com.read.goodnovel", 79558, 55],
+            ["2026-09-07", "iauto", "com.skplanet.ocb.locker", 7637, 26],
+            ["2026-09-07", "iauto", "damoang.net", 4506, 0],
+            ["2026-09-07", "iauto", "daum.net", 388845, 52],
+            ["2026-09-07", "iauto", "dmitory.com", 6363, 0],
+            ["2026-09-07", "iauto", "dogdrip.net", 9077, 2],
+            ["2026-09-07", "iauto", "donga.com", 3858, 1],
+            ["2026-09-07", "iauto", "droom.sleepIfUCan", 4680, 1],
+            ["2026-09-07", "iauto", "dvdprime.com", 6188, 1],
+            ["2026-09-07", "iauto", "edaily.co.kr", 4669, 0],
+            ["2026-09-07", "iauto", "hankyung.com", 4169, 0],
+            ["2026-09-07", "iauto", "humoruniv.com", 3638, 2],
+            ["2026-09-07", "iauto", "imbc.com", 20190, 1],
+            ["2026-09-07", "iauto", "instiz.net", 3206, 2],
+            ["2026-09-07", "iauto", "inven.co.kr", 20394, 5],
+            ["2026-09-07", "iauto", "itssa.co.kr", 3101, 1],
+            ["2026-09-07", "iauto", "jeomsinpf1.co.kr", 15504, 8],
+            ["2026-09-07", "iauto", "khan.co.kr", 6147, 2],
+            ["2026-09-07", "iauto", "lol.ps", 4153, 0],
+            ["2026-09-07", "iauto", "luckieverse.com", 9826, 8],
+            ["2026-09-07", "iauto", "maplescouter.com", 22888, 6],
+            ["2026-09-07", "iauto", "meaegi.com", 2897, 0],
+            ["2026-09-07", "iauto", "munhwa.com", 6542, 0],
+            ["2026-09-07", "iauto", "nate.com", 20624, 10],
+            ["2026-09-07", "iauto", "ppomppu.co.kr", 28312, 10],
+            ["2026-09-07", "iauto", "quasarzone.com", 22517, 0],
+            ["2026-09-07", "iauto", "sbs.co.kr", 5839, 0],
+            ["2026-09-07", "iauto", "semaphore.stockclient", 3271, 3],
+            ["2026-09-07", "iauto", "slrclub.com", 4507, 0],
+            ["2026-09-07", "iauto", "teamblind.com", 3138, 2],
+            ["2026-09-07", "iauto", "theqoo.net", 99118, 29],
+            ["2026-09-07", "iauto", "v.daum.net", 85532, 22],
+            ["2026-09-07", "iauto", "wisetoto.com", 6206, 2],
+            ["2026-09-08", "iauto", "cafe.daum.net", 11141, 2],
+            ["2026-09-08", "iauto", "co.luckies.app", 2864, 1],
+            ["2026-09-08", "iauto", "com.artifyapp.timestamp", 2889, 0],
+            ["2026-09-08", "iauto", "com.cashslide", 3130, 0],
+            ["2026-09-08", "iauto", "com.cashwalk.cashwalk", 19220, 7],
+            ["2026-09-08", "iauto", "com.lottemembers.android", 9000, 3],
+            ["2026-09-08", "iauto", "com.nbt.moves", 8199, 3],
+            ["2026-09-08", "iauto", "com.peak", 8806, 0],
+            ["2026-09-08", "iauto", "com.read.goodnovel", 77391, 54],
+            ["2026-09-08", "iauto", "com.skplanet.ocb.locker", 9591, 29],
+            ["2026-09-08", "iauto", "damoang.net", 4678, 0],
+            ["2026-09-08", "iauto", "daum.net", 302087, 58],
+            ["2026-09-08", "iauto", "dmitory.com", 5710, 1],
+            ["2026-09-08", "iauto", "dogdrip.net", 8072, 12],
+            ["2026-09-08", "iauto", "donga.com", 3819, 0],
+            ["2026-09-08", "iauto", "droom.sleepIfUCan", 9999, 0],
+            ["2026-09-08", "iauto", "dvdprime.com", 7244, 3],
+            ["2026-09-08", "iauto", "edaily.co.kr", 3625, 0],
+            ["2026-09-08", "iauto", "hankyung.com", 2618, 0],
+            ["2026-09-08", "iauto", "humoruniv.com", 3143, 1],
+            ["2026-09-08", "iauto", "imbc.com", 21435, 1],
+            ["2026-09-08", "iauto", "instiz.net", 2839, 0],
+            ["2026-09-08", "iauto", "inven.co.kr", 18574, 0],
+            ["2026-09-08", "iauto", "itssa.co.kr", 4836, 0],
+            ["2026-09-08", "iauto", "jeomsinpf1.co.kr", 11152, 4],
+            ["2026-09-08", "iauto", "khan.co.kr", 7900, 0],
+            ["2026-09-08", "iauto", "lol.ps", 6696, 1],
+            ["2026-09-08", "iauto", "luckieverse.com", 7752, 8],
+            ["2026-09-08", "iauto", "maplescouter.com", 18291, 5],
+            ["2026-09-08", "iauto", "munhwa.com", 4419, 0],
+            ["2026-09-08", "iauto", "nate.com", 24070, 10],
+            ["2026-09-08", "iauto", "ppomppu.co.kr", 25286, 9],
+            ["2026-09-08", "iauto", "quasarzone.com", 28323, 2],
+            ["2026-09-08", "iauto", "sbs.co.kr", 4163, 2],
+            ["2026-09-08", "iauto", "semaphore.stockclient", 6071, 5],
+            ["2026-09-08", "iauto", "slrclub.com", 4534, 1],
+            ["2026-09-08", "iauto", "teamblind.com", 2947, 0],
+            ["2026-09-08", "iauto", "theqoo.net", 74801, 28],
+            ["2026-09-08", "iauto", "v.daum.net", 68443, 25],
+            ["2026-09-08", "iauto", "wisetoto.com", 7498, 3],
+            ["2026-09-09", "iauto", "cafe.daum.net", 14054, 1],
+            ["2026-09-09", "iauto", "co.luckies.app", 4184, 0],
+            ["2026-09-09", "iauto", "com.artifyapp.timestamp", 4935, 0],
+            ["2026-09-09", "iauto", "com.cashslide", 3994, 0],
+            ["2026-09-09", "iauto", "com.cashwalk.cashwalk", 25145, 6],
+            ["2026-09-09", "iauto", "com.find.spot.photo.hunt.differences.free.hidden", 3705, 6],
+            ["2026-09-09", "iauto", "com.heroines.heroines", 3615, 1],
+            ["2026-09-09", "iauto", "com.lottemembers.android", 9789, 7],
+            ["2026-09-09", "iauto", "com.nbt.moves", 9853, 3],
+            ["2026-09-09", "iauto", "com.peak", 11917, 3],
+            ["2026-09-09", "iauto", "com.read.goodnovel", 75727, 51],
+            ["2026-09-09", "iauto", "com.skplanet.ocb.locker", 6656, 32],
+            ["2026-09-09", "iauto", "daum.net", 202298, 43],
+            ["2026-09-09", "iauto", "dmitory.com", 4207, 0],
+            ["2026-09-09", "iauto", "dogdrip.net", 7457, 1],
+            ["2026-09-09", "iauto", "donga.com", 4532, 0],
+            ["2026-09-09", "iauto", "droom.sleepIfUCan", 7408, 2],
+            ["2026-09-09", "iauto", "dvdprime.com", 6609, 0],
+            ["2026-09-09", "iauto", "edaily.co.kr", 5308, 1],
+            ["2026-09-09", "iauto", "hankyung.com", 4595, 0],
+            ["2026-09-09", "iauto", "humoruniv.com", 4417, 3],
+            ["2026-09-09", "iauto", "imbc.com", 19379, 1],
+            ["2026-09-09", "iauto", "instiz.net", 3826, 2],
+            ["2026-09-09", "iauto", "inven.co.kr", 16092, 5],
+            ["2026-09-09", "iauto", "jeomsinpf1.co.kr", 9574, 4],
+            ["2026-09-09", "iauto", "khan.co.kr", 7312, 1],
+            ["2026-09-09", "iauto", "lol.ps", 5621, 2],
+            ["2026-09-09", "iauto", "luckieverse.com", 9444, 6],
+            ["2026-09-09", "iauto", "maplescouter.com", 19915, 2],
+            ["2026-09-09", "iauto", "meaegi.com", 3469, 0],
+            ["2026-09-09", "iauto", "munhwa.com", 6436, 0],
+            ["2026-09-09", "iauto", "nate.com", 21075, 15],
+            ["2026-09-09", "iauto", "ppomppu.co.kr", 29261, 8],
+            ["2026-09-09", "iauto", "quasarzone.com", 17883, 1],
+            ["2026-09-09", "iauto", "sbs.co.kr", 4407, 0],
+            ["2026-09-09", "iauto", "semaphore.stockclient", 7545, 4],
+            ["2026-09-09", "iauto", "slrclub.com", 5140, 2],
+            ["2026-09-09", "iauto", "theqoo.net", 74705, 26],
+            ["2026-09-09", "iauto", "v.daum.net", 60883, 23],
+            ["2026-09-09", "iauto", "wisetoto.com", 12492, 4],
+            ["2026-09-10", "iauto", "cafe.daum.net", 17617, 5],
+            ["2026-09-10", "iauto", "com.artifyapp.timestamp", 4134, 1],
+            ["2026-09-10", "iauto", "com.cashwalk.cashwalk", 16378, 2],
+            ["2026-09-10", "iauto", "com.find.spot.photo.hunt.differences.free.hidden", 3491, 3],
+            ["2026-09-10", "iauto", "com.lottemembers.android", 8649, 11],
+            ["2026-09-10", "iauto", "com.nbt.moves", 9953, 0],
+            ["2026-09-10", "iauto", "com.peak", 11153, 0],
+            ["2026-09-10", "iauto", "com.read.goodnovel", 55327, 30],
+            ["2026-09-10", "iauto", "com.skplanet.ocb.locker", 11511, 40],
+            ["2026-09-10", "iauto", "damoang.net", 5595, 4],
+            ["2026-09-10", "iauto", "daum.net", 211737, 56],
+            ["2026-09-10", "iauto", "dmitory.com", 4816, 1],
+            ["2026-09-10", "iauto", "dogdrip.net", 9835, 8],
+            ["2026-09-10", "iauto", "donga.com", 4217, 1],
+            ["2026-09-10", "iauto", "droom.sleepIfUCan", 6163, 0],
+            ["2026-09-10", "iauto", "dvdprime.com", 8211, 2],
+            ["2026-09-10", "iauto", "edaily.co.kr", 6236, 0],
+            ["2026-09-10", "iauto", "hankyung.com", 4600, 0],
+            ["2026-09-10", "iauto", "humoruniv.com", 5874, 1],
+            ["2026-09-10", "iauto", "imbc.com", 20652, 1],
+            ["2026-09-10", "iauto", "instiz.net", 3839, 4],
+            ["2026-09-10", "iauto", "inven.co.kr", 27466, 5],
+            ["2026-09-10", "iauto", "itssa.co.kr", 3372, 1],
+            ["2026-09-10", "iauto", "jeomsinpf1.co.kr", 11803, 7],
+            ["2026-09-10", "iauto", "khan.co.kr", 9152, 2],
+            ["2026-09-10", "iauto", "lol.ps", 3812, 1],
+            ["2026-09-10", "iauto", "luckieverse.com", 9171, 13],
+            ["2026-09-10", "iauto", "maplescouter.com", 27266, 5],
+            ["2026-09-10", "iauto", "meaegi.com", 3770, 0],
+            ["2026-09-10", "iauto", "munhwa.com", 5370, 0],
+            ["2026-09-10", "iauto", "nate.com", 19753, 12],
+            ["2026-09-10", "iauto", "ppomppu.co.kr", 30939, 14],
+            ["2026-09-10", "iauto", "quasarzone.com", 21790, 1],
+            ["2026-09-10", "iauto", "sbs.co.kr", 5358, 2],
+            ["2026-09-10", "iauto", "semaphore.stockclient", 5502, 2],
+            ["2026-09-10", "iauto", "slrclub.com", 7085, 1],
+            ["2026-09-10", "iauto", "teamblind.com", 3288, 1],
+            ["2026-09-10", "iauto", "theqoo.net", 81548, 21],
+            ["2026-09-10", "iauto", "v.daum.net", 72869, 20],
+            ["2026-09-10", "iauto", "wisetoto.com", 9325, 2],
+            ["2026-09-11", "iauto", "cafe.daum.net", 27174, 5],
+            ["2026-09-11", "iauto", "com.artifyapp.timestamp", 4803, 0],
+            ["2026-09-11", "iauto", "com.cashwalk.cashwalk", 5547, 1],
+            ["2026-09-11", "iauto", "com.lottemembers.android", 4493, 2],
+            ["2026-09-11", "iauto", "com.nbt.moves", 6884, 4],
+            ["2026-09-11", "iauto", "com.peak", 12371, 1],
+            ["2026-09-11", "iauto", "com.skplanet.ocb.locker", 6297, 19],
+            ["2026-09-11", "iauto", "damoang.net", 7052, 0],
+            ["2026-09-11", "iauto", "daum.net", 333131, 41],
+            ["2026-09-11", "iauto", "dmitory.com", 7222, 3],
+            ["2026-09-11", "iauto", "dogdrip.net", 10515, 2],
+            ["2026-09-11", "iauto", "donga.com", 4333, 0],
+            ["2026-09-11", "iauto", "droom.sleepIfUCan", 8725, 0],
+            ["2026-09-11", "iauto", "dvdprime.com", 12540, 0],
+            ["2026-09-11", "iauto", "edaily.co.kr", 5576, 0],
+            ["2026-09-11", "iauto", "fc-info.com", 2870, 0],
+            ["2026-09-11", "iauto", "hankyung.com", 4700, 0],
+            ["2026-09-11", "iauto", "humoruniv.com", 4773, 3],
+            ["2026-09-11", "iauto", "imbc.com", 28355, 2],
+            ["2026-09-11", "iauto", "instiz.net", 6322, 3],
+            ["2026-09-11", "iauto", "inven.co.kr", 36308, 4],
+            ["2026-09-11", "iauto", "itssa.co.kr", 4848, 0],
+            ["2026-09-11", "iauto", "jeomsinpf1.co.kr", 12813, 4],
+            ["2026-09-11", "iauto", "khan.co.kr", 10175, 4],
+            ["2026-09-11", "iauto", "kr.investing.com", 4650, 1],
+            ["2026-09-11", "iauto", "lol.ps", 4414, 0],
+            ["2026-09-11", "iauto", "luckieverse.com", 8855, 5],
+            ["2026-09-11", "iauto", "maplescouter.com", 31760, 5],
+            ["2026-09-11", "iauto", "meaegi.com", 3219, 0],
+            ["2026-09-11", "iauto", "munhwa.com", 6770, 0],
+            ["2026-09-11", "iauto", "nate.com", 23510, 13],
+            ["2026-09-11", "iauto", "ppomppu.co.kr", 42961, 8],
+            ["2026-09-11", "iauto", "quasarzone.com", 24392, 0],
+            ["2026-09-11", "iauto", "sbs.co.kr", 6187, 1],
+            ["2026-09-11", "iauto", "slrclub.com", 10154, 2],
+            ["2026-09-11", "iauto", "snulife.com", 3748, 0],
+            ["2026-09-11", "iauto", "teamblind.com", 4230, 0],
+            ["2026-09-11", "iauto", "theqoo.net", 101956, 39],
+            ["2026-09-11", "iauto", "v.daum.net", 88306, 26],
+            ["2026-09-11", "iauto", "wisetoto.com", 8381, 2],
+            ["2026-09-14", "iauto", "cafe.daum.net", 10477, 6],
+            ["2026-09-14", "iauto", "co.luckies.app", 2648, 0],
+            ["2026-09-14", "iauto", "com.artifyapp.timestamp", 2917, 0],
+            ["2026-09-14", "iauto", "com.cashslide", 3705, 1],
+            ["2026-09-14", "iauto", "com.cashwalk.cashwalk", 5873, 2],
+            ["2026-09-14", "iauto", "com.lottemembers.android", 3177, 2],
+            ["2026-09-14", "iauto", "com.nbt.moves", 11098, 0],
+            ["2026-09-14", "iauto", "com.peak", 9439, 0],
+            ["2026-09-14", "iauto", "com.skplanet.ocb.locker", 5129, 20],
+            ["2026-09-14", "iauto", "daum.net", 319651, 39],
+            ["2026-09-14", "iauto", "deeplol.gg", 2232, 0],
+            ["2026-09-14", "iauto", "dmitory.com", 4043, 0],
+            ["2026-09-14", "iauto", "dogdrip.net", 5531, 5],
+            ["2026-09-14", "iauto", "donga.com", 4155, 0],
+            ["2026-09-14", "iauto", "droom.sleepIfUCan", 5808, 3],
+            ["2026-09-14", "iauto", "edaily.co.kr", 5219, 0],
+            ["2026-09-14", "iauto", "hankyung.com", 3701, 0],
+            ["2026-09-14", "iauto", "humoruniv.com", 2543, 1],
+            ["2026-09-14", "iauto", "imbc.com", 30882, 5],
+            ["2026-09-14", "iauto", "inven.co.kr", 17263, 5],
+            ["2026-09-14", "iauto", "itssa.co.kr", 2910, 0],
+            ["2026-09-14", "iauto", "jeomsinpf1.co.kr", 9091, 3],
+            ["2026-09-14", "iauto", "khan.co.kr", 5469, 3],
+            ["2026-09-14", "iauto", "lol.ps", 2295, 1],
+            ["2026-09-14", "iauto", "luckieverse.com", 8157, 2],
+            ["2026-09-14", "iauto", "maplescouter.com", 22365, 2],
+            ["2026-09-14", "iauto", "meaegi.com", 3124, 0],
+            ["2026-09-14", "iauto", "munhwa.com", 4237, 0],
+            ["2026-09-14", "iauto", "nate.com", 10497, 8],
+            ["2026-09-14", "iauto", "news1.kr", 2222, 1],
+            ["2026-09-14", "iauto", "ppomppu.co.kr", 25830, 9],
+            ["2026-09-14", "iauto", "quasarzone.com", 12082, 0],
+            ["2026-09-14", "iauto", "sbs.co.kr", 5936, 1],
+            ["2026-09-14", "iauto", "semaphore.stockclient", 2404, 1],
+            ["2026-09-14", "iauto", "seoul.co.kr", 2468, 1],
+            ["2026-09-14", "iauto", "slrclub.com", 3876, 0],
+            ["2026-09-14", "iauto", "teamblind.com", 2458, 1],
+            ["2026-09-14", "iauto", "theqoo.net", 63335, 18],
+            ["2026-09-14", "iauto", "v.daum.net", 41837, 31],
+            ["2026-09-14", "iauto", "wisetoto.com", 6696, 0],
+            ["2026-09-15", "iauto", "cafe.daum.net", 12272, 10],
+            ["2026-09-15", "iauto", "com.artifyapp.timestamp", 4187, 0],
+            ["2026-09-15", "iauto", "com.cashslide", 3064, 0],
+            ["2026-09-15", "iauto", "com.cashwalk.cashwalk", 5521, 0],
+            ["2026-09-15", "iauto", "com.lottemembers.android", 2946, 0],
+            ["2026-09-15", "iauto", "com.nbt.moves", 8184, 3],
+            ["2026-09-15", "iauto", "com.peak", 10331, 2],
+            ["2026-09-15", "iauto", "com.skmc.okcashbag.home_google", 2914, 0],
+            ["2026-09-15", "iauto", "com.skplanet.ocb.locker", 4894, 17],
+            ["2026-09-15", "iauto", "daum.net", 312322, 45],
+            ["2026-09-15", "iauto", "dmitory.com", 4989, 0],
+            ["2026-09-15", "iauto", "dogdrip.net", 8272, 4],
+            ["2026-09-15", "iauto", "donga.com", 6212, 0],
+            ["2026-09-15", "iauto", "droom.sleepIfUCan", 6879, 0],
+            ["2026-09-15", "iauto", "dvdprime.com", 2635, 0],
+            ["2026-09-15", "iauto", "edaily.co.kr", 4760, 0],
+            ["2026-09-15", "iauto", "hankyung.com", 3714, 2],
+            ["2026-09-15", "iauto", "humoruniv.com", 2811, 2],
+            ["2026-09-15", "iauto", "imbc.com", 23171, 0],
+            ["2026-09-15", "iauto", "inven.co.kr", 15567, 4],
+            ["2026-09-15", "iauto", "itssa.co.kr", 2655, 0],
+            ["2026-09-15", "iauto", "jeomsinpf1.co.kr", 9002, 4],
+            ["2026-09-15", "iauto", "khan.co.kr", 8169, 3],
+            ["2026-09-15", "iauto", "kr.co.studio161.newscash", 3680, 0],
+            ["2026-09-15", "iauto", "kr.investing.com", 2853, 0],
+            ["2026-09-15", "iauto", "lol.ps", 2756, 0],
+            ["2026-09-15", "iauto", "luckieverse.com", 9237, 10],
+            ["2026-09-15", "iauto", "maplescouter.com", 14658, 4],
+            ["2026-09-15", "iauto", "meaegi.com", 3442, 0],
+            ["2026-09-15", "iauto", "munhwa.com", 3633, 0],
+            ["2026-09-15", "iauto", "nate.com", 13548, 14],
+            ["2026-09-15", "iauto", "ppomppu.co.kr", 27436, 14],
+            ["2026-09-15", "iauto", "quasarzone.com", 19453, 2],
+            ["2026-09-15", "iauto", "sbs.co.kr", 4383, 0],
+            ["2026-09-15", "iauto", "semaphore.stockclient", 3362, 3],
+            ["2026-09-15", "iauto", "seoul.co.kr", 2910, 0],
+            ["2026-09-15", "iauto", "slrclub.com", 5285, 3],
+            ["2026-09-15", "iauto", "theqoo.net", 59196, 24],
+            ["2026-09-15", "iauto", "v.daum.net", 41682, 18],
+            ["2026-09-15", "iauto", "wisetoto.com", 7558, 1],
+            ["2026-09-16", "iauto", "cafe.daum.net", 20593, 7],
+            ["2026-09-16", "iauto", "co.luckies.app", 4888, 0],
+            ["2026-09-16", "iauto", "com.cashslide", 5441, 0],
+            ["2026-09-16", "iauto", "com.cashwalk.cashwalk", 8847, 3],
+            ["2026-09-16", "iauto", "com.find.spot.photo.hunt.differences.free.hidden", 5103, 0],
+            ["2026-09-16", "iauto", "com.lottemembers.android", 7376, 5],
+            ["2026-09-16", "iauto", "com.nbt.moves", 14781, 0],
+            ["2026-09-16", "iauto", "com.peak", 12859, 1],
+            ["2026-09-16", "iauto", "com.read.goodnovel", 17740, 7],
+            ["2026-09-16", "iauto", "com.skmc.okcashbag.home_google", 13856, 0],
+            ["2026-09-16", "iauto", "com.skplanet.ocb.locker", 9467, 14],
+            ["2026-09-16", "iauto", "damoang.net", 5190, 3],
+            ["2026-09-16", "iauto", "daum.net", 268848, 65],
+            ["2026-09-16", "iauto", "deeplol.gg", 5369, 1],
+            ["2026-09-16", "iauto", "dmitory.com", 4934, 2],
+            ["2026-09-16", "iauto", "dogdrip.net", 13264, 5],
+            ["2026-09-16", "iauto", "donga.com", 8171, 2],
+            ["2026-09-16", "iauto", "droom.sleepIfUCan", 5625, 1],
+            ["2026-09-16", "iauto", "edaily.co.kr", 7709, 2],
+            ["2026-09-16", "iauto", "hankyung.com", 7207, 0],
+            ["2026-09-16", "iauto", "imbc.com", 39714, 1],
+            ["2026-09-16", "iauto", "inven.co.kr", 29086, 3],
+            ["2026-09-16", "iauto", "jeomsinpf1.co.kr", 12845, 8],
+            ["2026-09-16", "iauto", "khan.co.kr", 7271, 2],
+            ["2026-09-16", "iauto", "kr.co.studio161.newscash", 4960, 0],
+            ["2026-09-16", "iauto", "kr.investing.com", 5319, 1],
+            ["2026-09-16", "iauto", "lol.ps", 6569, 0],
+            ["2026-09-16", "iauto", "luckieverse.com", 16549, 12],
+            ["2026-09-16", "iauto", "maplescouter.com", 29051, 4],
+            ["2026-09-16", "iauto", "meaegi.com", 11256, 0],
+            ["2026-09-16", "iauto", "munhwa.com", 7018, 4],
+            ["2026-09-16", "iauto", "namu.wiki", 5559, 6],
+            ["2026-09-16", "iauto", "nate.com", 19747, 6],
+            ["2026-09-16", "iauto", "ppomppu.co.kr", 41926, 17],
+            ["2026-09-16", "iauto", "quasarzone.com", 43641, 3],
+            ["2026-09-16", "iauto", "sbs.co.kr", 8598, 1],
+            ["2026-09-16", "iauto", "slrclub.com", 9129, 1],
+            ["2026-09-16", "iauto", "theqoo.net", 96328, 28],
+            ["2026-09-16", "iauto", "v.daum.net", 53241, 17],
+            ["2026-09-16", "iauto", "wisetoto.com", 24159, 2],
+            ["2026-09-17", "iauto", "cafe.daum.net", 11689, 9],
+            ["2026-09-17", "iauto", "co.luckies.app", 7942, 6],
+            ["2026-09-17", "iauto", "com.cashslide", 6975, 0],
+            ["2026-09-17", "iauto", "com.cashwalk.cashwalk", 8842, 6],
+            ["2026-09-17", "iauto", "com.lottemembers.android", 11691, 2],
+            ["2026-09-17", "iauto", "com.nbt.moves", 23138, 4],
+            ["2026-09-17", "iauto", "com.peak", 11485, 1],
+            ["2026-09-17", "iauto", "com.read.goodnovel", 17485, 11],
+            ["2026-09-17", "iauto", "com.skplanet.ocb.locker", 10905, 16],
+            ["2026-09-17", "iauto", "damoang.net", 6010, 3],
+            ["2026-09-17", "iauto", "daum.net", 247576, 45],
+            ["2026-09-17", "iauto", "dmitory.com", 4985, 2],
+            ["2026-09-17", "iauto", "dogdrip.net", 15187, 12],
+            ["2026-09-17", "iauto", "donga.com", 8463, 1],
+            ["2026-09-17", "iauto", "droom.sleepIfUCan", 12463, 0],
+            ["2026-09-17", "iauto", "edaily.co.kr", 5386, 0],
+            ["2026-09-17", "iauto", "fc-info.com", 5567, 1],
+            ["2026-09-17", "iauto", "hankyung.com", 8137, 0],
+            ["2026-09-17", "iauto", "imbc.com", 40083, 3],
+            ["2026-09-17", "iauto", "inven.co.kr", 28188, 5],
+            ["2026-09-17", "iauto", "itssa.co.kr", 5190, 3],
+            ["2026-09-17", "iauto", "jeomsinpf1.co.kr", 19307, 9],
+            ["2026-09-17", "iauto", "khan.co.kr", 6826, 1],
+            ["2026-09-17", "iauto", "kr.investing.com", 5424, 1],
+            ["2026-09-17", "iauto", "lol.ps", 12900, 2],
+            ["2026-09-17", "iauto", "luckieverse.com", 18452, 15],
+            ["2026-09-17", "iauto", "mapleroad.kr", 7095, 1],
+            ["2026-09-17", "iauto", "maplescouter.com", 281604, 60],
+            ["2026-09-17", "iauto", "meaegi.com", 46391, 2],
+            ["2026-09-17", "iauto", "munhwa.com", 6750, 2],
+            ["2026-09-17", "iauto", "nate.com", 17354, 6],
+            ["2026-09-17", "iauto", "news1.kr", 5205, 1],
+            ["2026-09-17", "iauto", "ppomppu.co.kr", 40598, 23],
+            ["2026-09-17", "iauto", "quasarzone.com", 38205, 3],
+            ["2026-09-17", "iauto", "sbs.co.kr", 8335, 1],
+            ["2026-09-17", "iauto", "slrclub.com", 8159, 3],
+            ["2026-09-17", "iauto", "snulife.com", 5850, 0],
+            ["2026-09-17", "iauto", "theqoo.net", 85385, 34],
+            ["2026-09-17", "iauto", "v.daum.net", 39468, 10],
+            ["2026-09-17", "iauto", "wisetoto.com", 15126, 3],
+            ["2026-09-18", "iauto", "cafe.daum.net", 19628, 8],
+            ["2026-09-18", "iauto", "co.luckies.app", 7431, 1],
+            ["2026-09-18", "iauto", "com.cashslide", 7181, 1],
+            ["2026-09-18", "iauto", "com.cashwalk.cashwalk", 9043, 7],
+            ["2026-09-18", "iauto", "com.lottemembers.android", 13759, 11],
+            ["2026-09-18", "iauto", "com.nbt.moves", 21441, 5],
+            ["2026-09-18", "iauto", "com.peak", 15841, 1],
+            ["2026-09-18", "iauto", "com.read.goodnovel", 15069, 9],
+            ["2026-09-18", "iauto", "com.skplanet.ocb.locker", 10372, 24],
+            ["2026-09-18", "iauto", "damoang.net", 12046, 1],
+            ["2026-09-18", "iauto", "daum.net", 278709, 36],
+            ["2026-09-18", "iauto", "deeplol.gg", 8042, 2],
+            ["2026-09-18", "iauto", "dogdrip.net", 23043, 6],
+            ["2026-09-18", "iauto", "donga.com", 8818, 0],
+            ["2026-09-18", "iauto", "droom.sleepIfUCan", 10018, 3],
+            ["2026-09-18", "iauto", "dvdprime.com", 8399, 3],
+            ["2026-09-18", "iauto", "hankyung.com", 8780, 2],
+            ["2026-09-18", "iauto", "imbc.com", 37302, 1],
+            ["2026-09-18", "iauto", "instiz.net", 6800, 1],
+            ["2026-09-18", "iauto", "inven.co.kr", 139857, 5],
+            ["2026-09-18", "iauto", "itssa.co.kr", 9145, 0],
+            ["2026-09-18", "iauto", "jeomsinpf1.co.kr", 22279, 9],
+            ["2026-09-18", "iauto", "khan.co.kr", 7952, 2],
+            ["2026-09-18", "iauto", "lol.ps", 14506, 6],
+            ["2026-09-18", "iauto", "luckieverse.com", 18788, 11],
+            ["2026-09-18", "iauto", "mapleroad.kr", 7213, 3],
+            ["2026-09-18", "iauto", "maplescouter.com", 190006, 45],
+            ["2026-09-18", "iauto", "meaegi.com", 57635, 1],
+            ["2026-09-18", "iauto", "munhwa.com", 11486, 1],
+            ["2026-09-18", "iauto", "nate.com", 25330, 9],
+            ["2026-09-18", "iauto", "news1.kr", 5998, 3],
+            ["2026-09-18", "iauto", "ppomppu.co.kr", 45609, 16],
+            ["2026-09-18", "iauto", "quasarzone.com", 97599, 1],
+            ["2026-09-18", "iauto", "sbs.co.kr", 11707, 1],
+            ["2026-09-18", "iauto", "slrclub.com", 9781, 1],
+            ["2026-09-18", "iauto", "snulife.com", 5832, 1],
+            ["2026-09-18", "iauto", "teamblind.com", 5571, 0],
+            ["2026-09-18", "iauto", "theqoo.net", 107687, 35],
+            ["2026-09-18", "iauto", "v.daum.net", 65721, 15],
+            ["2026-09-18", "iauto", "wisetoto.com", 17396, 6],
+            ["2026-09-21", "iauto", "cafe.daum.net", 28947, 5],
+            ["2026-09-21", "iauto", "coinpan.com", 4876, 1],
+            ["2026-09-21", "iauto", "com.cashslide", 5134, 0],
+            ["2026-09-21", "iauto", "com.lottemembers.android", 9746, 6],
+            ["2026-09-21", "iauto", "com.nbt.moves", 16364, 5],
+            ["2026-09-21", "iauto", "com.peak", 11830, 1],
+            ["2026-09-21", "iauto", "com.read.goodnovel", 12082, 4],
+            ["2026-09-21", "iauto", "com.skplanet.ocb.locker", 9425, 15],
+            ["2026-09-21", "iauto", "damoang.net", 16346, 5],
+            ["2026-09-21", "iauto", "daum.net", 342133, 31],
+            ["2026-09-21", "iauto", "dmitory.com", 5474, 0],
+            ["2026-09-21", "iauto", "dogdrip.net", 16792, 10],
+            ["2026-09-21", "iauto", "donga.com", 8433, 0],
+            ["2026-09-21", "iauto", "droom.sleepIfUCan", 11802, 2],
+            ["2026-09-21", "iauto", "dvdprime.com", 13170, 3],
+            ["2026-09-21", "iauto", "edaily.co.kr", 4771, 1],
+            ["2026-09-21", "iauto", "hankyung.com", 7719, 0],
+            ["2026-09-21", "iauto", "humoruniv.com", 9146, 4],
+            ["2026-09-21", "iauto", "imbc.com", 28582, 1],
+            ["2026-09-21", "iauto", "instiz.net", 8776, 1],
+            ["2026-09-21", "iauto", "inven.co.kr", 112108, 10],
+            ["2026-09-21", "iauto", "itssa.co.kr", 8090, 1],
+            ["2026-09-21", "iauto", "jeomsinpf1.co.kr", 15760, 8],
+            ["2026-09-21", "iauto", "khan.co.kr", 11781, 0],
+            ["2026-09-21", "iauto", "lol.ps", 7893, 1],
+            ["2026-09-21", "iauto", "luckieverse.com", 11961, 10],
+            ["2026-09-21", "iauto", "maplescouter.com", 16504, 4],
+            ["2026-09-21", "iauto", "meaegi.com", 7108, 0],
+            ["2026-09-21", "iauto", "munhwa.com", 15574, 2],
+            ["2026-09-21", "iauto", "namu.wiki", 5022, 2],
+            ["2026-09-21", "iauto", "nate.com", 22449, 5],
+            ["2026-09-21", "iauto", "ppomppu.co.kr", 46560, 12],
+            ["2026-09-21", "iauto", "quasarzone.com", 61145, 0],
+            ["2026-09-21", "iauto", "sbs.co.kr", 9441, 0],
+            ["2026-09-21", "iauto", "slrclub.com", 15717, 4],
+            ["2026-09-21", "iauto", "snulife.com", 10331, 1],
+            ["2026-09-21", "iauto", "teamblind.com", 8334, 2],
+            ["2026-09-21", "iauto", "theqoo.net", 133587, 41],
+            ["2026-09-21", "iauto", "v.daum.net", 70002, 9],
+            ["2026-09-21", "iauto", "wisetoto.com", 13385, 0],
+            ["2026-09-22", "iauto", "82cook.com", 6318, 0],
+            ["2026-09-22", "iauto", "cafe.daum.net", 25852, 4],
+            ["2026-09-22", "iauto", "co.luckies.app", 4809, 0],
+            ["2026-09-22", "iauto", "coinpan.com", 5596, 2],
+            ["2026-09-22", "iauto", "com.cashslide", 5179, 0],
+            ["2026-09-22", "iauto", "com.lottemembers.android", 7397, 4],
+            ["2026-09-22", "iauto", "com.nbt.moves", 15537, 3],
+            ["2026-09-22", "iauto", "com.read.goodnovel", 8775, 5],
+            ["2026-09-22", "iauto", "com.skplanet.ocb.locker", 8354, 8],
+            ["2026-09-22", "iauto", "damoang.net", 21476, 2],
+            ["2026-09-22", "iauto", "daum.net", 375055, 22],
+            ["2026-09-22", "iauto", "dmitory.com", 9611, 2],
+            ["2026-09-22", "iauto", "dogdrip.net", 22265, 5],
+            ["2026-09-22", "iauto", "donga.com", 7871, 0],
+            ["2026-09-22", "iauto", "droom.sleepIfUCan", 10817, 1],
+            ["2026-09-22", "iauto", "dvdprime.com", 24191, 3],
+            ["2026-09-22", "iauto", "humoruniv.com", 7627, 6],
+            ["2026-09-22", "iauto", "imbc.com", 29990, 1],
+            ["2026-09-22", "iauto", "instiz.net", 12843, 6],
+            ["2026-09-22", "iauto", "inven.co.kr", 69245, 5],
+            ["2026-09-22", "iauto", "itssa.co.kr", 8514, 1],
+            ["2026-09-22", "iauto", "jeomsinpf1.co.kr", 17783, 7],
+            ["2026-09-22", "iauto", "khan.co.kr", 11452, 5],
+            ["2026-09-22", "iauto", "kr.investing.com", 9199, 0],
+            ["2026-09-22", "iauto", "lol.ps", 9504, 1],
+            ["2026-09-22", "iauto", "luckieverse.com", 11690, 16],
+            ["2026-09-22", "iauto", "maplescouter.com", 13185, 5],
+            ["2026-09-22", "iauto", "meaegi.com", 9800, 0],
+            ["2026-09-22", "iauto", "munhwa.com", 14300, 0],
+            ["2026-09-22", "iauto", "namu.wiki", 7676, 0],
+            ["2026-09-22", "iauto", "nate.com", 21020, 2],
+            ["2026-09-22", "iauto", "ppomppu.co.kr", 46707, 12],
+            ["2026-09-22", "iauto", "quasarzone.com", 60319, 2],
+            ["2026-09-22", "iauto", "sbs.co.kr", 8325, 0],
+            ["2026-09-22", "iauto", "slrclub.com", 16382, 3],
+            ["2026-09-22", "iauto", "snulife.com", 9649, 0],
+            ["2026-09-22", "iauto", "teamblind.com", 9023, 2],
+            ["2026-09-22", "iauto", "theqoo.net", 146830, 40],
+            ["2026-09-22", "iauto", "v.daum.net", 87920, 14],
+            ["2026-09-22", "iauto", "wisetoto.com", 21867, 3],
+            ["2026-09-23", "iauto", "cafe.daum.net", 17524, 2],
+            ["2026-09-23", "iauto", "co.luckies.app", 4508, 1],
+            ["2026-09-23", "iauto", "coinpan.com", 5100, 1],
+            ["2026-09-23", "iauto", "com.cashslide", 6595, 0],
+            ["2026-09-23", "iauto", "com.lottemembers.android", 5883, 3],
+            ["2026-09-23", "iauto", "com.nbt.moves", 19040, 1],
+            ["2026-09-23", "iauto", "com.read.goodnovel", 6849, 2],
+            ["2026-09-23", "iauto", "com.skplanet.ocb.locker", 5941, 12],
+            ["2026-09-23", "iauto", "damoang.net", 8659, 0],
+            ["2026-09-23", "iauto", "daum.net", 285004, 12],
+            ["2026-09-23", "iauto", "dmitory.com", 8653, 0],
+            ["2026-09-23", "iauto", "dogdrip.net", 18300, 3],
+            ["2026-09-23", "iauto", "donga.com", 6130, 0],
+            ["2026-09-23", "iauto", "droom.sleepIfUCan", 5922, 0],
+            ["2026-09-23", "iauto", "dvdprime.com", 5702, 1],
+            ["2026-09-23", "iauto", "hankyung.com", 4044, 1],
+            ["2026-09-23", "iauto", "humoruniv.com", 5376, 5],
+            ["2026-09-23", "iauto", "imbc.com", 15580, 0],
+            ["2026-09-23", "iauto", "instiz.net", 5510, 1],
+            ["2026-09-23", "iauto", "inven.co.kr", 111775, 8],
+            ["2026-09-23", "iauto", "itssa.co.kr", 4813, 0],
+            ["2026-09-23", "iauto", "jeomsinpf1.co.kr", 18915, 9],
+            ["2026-09-23", "iauto", "khan.co.kr", 8700, 0],
+            ["2026-09-23", "iauto", "kr.investing.com", 4736, 0],
+            ["2026-09-23", "iauto", "lol.ps", 7272, 4],
+            ["2026-09-23", "iauto", "luckieverse.com", 8885, 4],
+            ["2026-09-23", "iauto", "maplescouter.com", 18732, 4],
+            ["2026-09-23", "iauto", "meaegi.com", 9416, 0],
+            ["2026-09-23", "iauto", "munhwa.com", 7425, 0],
+            ["2026-09-23", "iauto", "namu.wiki", 4407, 2],
+            ["2026-09-23", "iauto", "nate.com", 17866, 9],
+            ["2026-09-23", "iauto", "ppomppu.co.kr", 37904, 7],
+            ["2026-09-23", "iauto", "quasarzone.com", 38740, 3],
+            ["2026-09-23", "iauto", "sbs.co.kr", 8160, 0],
+            ["2026-09-23", "iauto", "slrclub.com", 13740, 4],
+            ["2026-09-23", "iauto", "snulife.com", 4747, 1],
+            ["2026-09-23", "iauto", "teamblind.com", 4721, 3],
+            ["2026-09-23", "iauto", "theqoo.net", 82439, 17],
+            ["2026-09-23", "iauto", "v.daum.net", 58703, 10],
+            ["2026-09-23", "iauto", "wisetoto.com", 15938, 0],
+            ["2026-09-24", "iauto", "cafe.daum.net", 4138, 0],
+            ["2026-09-24", "iauto", "co.luckies.app", 4562, 3],
+            ["2026-09-24", "iauto", "coinpan.com", 3412, 1],
+            ["2026-09-24", "iauto", "com.cashslide", 6623, 1],
+            ["2026-09-24", "iauto", "com.find.spot.photo.hunt.differences.free.hidden", 2552, 1],
+            ["2026-09-24", "iauto", "com.lottemembers.android", 8925, 2],
+            ["2026-09-24", "iauto", "com.nbt.moves", 18515, 0],
+            ["2026-09-24", "iauto", "com.peak", 2454, 0],
+            ["2026-09-24", "iauto", "com.read.goodnovel", 8671, 5],
+            ["2026-09-24", "iauto", "com.skplanet.ocb.locker", 8062, 16],
+            ["2026-09-24", "iauto", "damoang.net", 3457, 2],
+            ["2026-09-24", "iauto", "daum.net", 16763, 3],
+            ["2026-09-24", "iauto", "deeplol.gg", 2659, 2],
+            ["2026-09-24", "iauto", "dogdrip.net", 12142, 4],
+            ["2026-09-24", "iauto", "donga.com", 3492, 0],
+            ["2026-09-24", "iauto", "droom.sleepIfUCan", 6831, 0],
+            ["2026-09-24", "iauto", "edaily.co.kr", 2340, 0],
+            ["2026-09-24", "iauto", "fc-info.com", 5778, 2],
+            ["2026-09-24", "iauto", "hankyung.com", 3057, 0],
+            ["2026-09-24", "iauto", "humoruniv.com", 5114, 3],
+            ["2026-09-24", "iauto", "imbc.com", 9276, 0],
+            ["2026-09-24", "iauto", "inven.co.kr", 131610, 7],
+            ["2026-09-24", "iauto", "itssa.co.kr", 3197, 0],
+            ["2026-09-24", "iauto", "jeomsinpf1.co.kr", 18554, 11],
+            ["2026-09-24", "iauto", "khan.co.kr", 2434, 0],
+            ["2026-09-24", "iauto", "lol.ps", 10162, 3],
+            ["2026-09-24", "iauto", "luckieverse.com", 7575, 11],
+            ["2026-09-24", "iauto", "mapleland.gg", 2417, 0],
+            ["2026-09-24", "iauto", "maplescouter.com", 37065, 11],
+            ["2026-09-24", "iauto", "meaegi.com", 7578, 0],
+            ["2026-09-24", "iauto", "munhwa.com", 4970, 0],
+            ["2026-09-24", "iauto", "namu.wiki", 2981, 0],
+            ["2026-09-24", "iauto", "ppomppu.co.kr", 22043, 4],
+            ["2026-09-24", "iauto", "quasarzone.com", 25710, 1],
+            ["2026-09-24", "iauto", "sbs.co.kr", 8016, 0],
+            ["2026-09-24", "iauto", "slrclub.com", 2956, 1],
+            ["2026-09-24", "iauto", "snulife.com", 4404, 0],
+            ["2026-09-24", "iauto", "theqoo.net", 34697, 13],
+            ["2026-09-24", "iauto", "v.daum.net", 5314, 1],
+            ["2026-09-24", "iauto", "wisetoto.com", 19852, 2],
+            ["2026-09-25", "iauto", "cafe.daum.net", 3488, 1],
+            ["2026-09-25", "iauto", "co.luckies.app", 5067, 1],
+            ["2026-09-25", "iauto", "coinpan.com", 2721, 2],
+            ["2026-09-25", "iauto", "com.cashslide", 7101, 0],
+            ["2026-09-25", "iauto", "com.cashwalk.cashwalk", 2348, 0],
+            ["2026-09-25", "iauto", "com.find.spot.photo.hunt.differences.free.hidden", 2397, 4],
+            ["2026-09-25", "iauto", "com.heroines.heroines", 1920, 0],
+            ["2026-09-25", "iauto", "com.lottemembers.android", 8239, 3],
+            ["2026-09-25", "iauto", "com.nbt.moves", 18486, 2],
+            ["2026-09-25", "iauto", "com.peak", 2311, 0],
+            ["2026-09-25", "iauto", "com.read.goodnovel", 4730, 0],
+            ["2026-09-25", "iauto", "com.skplanet.ocb.locker", 9438, 20],
+            ["2026-09-25", "iauto", "damoang.net", 3580, 0],
+            ["2026-09-25", "iauto", "daum.net", 11572, 0],
+            ["2026-09-25", "iauto", "deeplol.gg", 2794, 2],
+            ["2026-09-25", "iauto", "dogdrip.net", 8237, 2],
+            ["2026-09-25", "iauto", "donga.com", 2990, 0],
+            ["2026-09-25", "iauto", "droom.sleepIfUCan", 12942, 5],
+            ["2026-09-25", "iauto", "edaily.co.kr", 2302, 0],
+            ["2026-09-25", "iauto", "fc-info.com", 3152, 0],
+            ["2026-09-25", "iauto", "hankyung.com", 2524, 0],
+            ["2026-09-25", "iauto", "humoruniv.com", 5989, 1],
+            ["2026-09-25", "iauto", "imbc.com", 10289, 0],
+            ["2026-09-25", "iauto", "inven.co.kr", 121917, 2],
+            ["2026-09-25", "iauto", "jeomsinpf1.co.kr", 16968, 7],
+            ["2026-09-25", "iauto", "lol.ps", 9679, 1],
+            ["2026-09-25", "iauto", "luckieverse.com", 9602, 11],
+            ["2026-09-25", "iauto", "mapleland.gg", 2541, 0],
+            ["2026-09-25", "iauto", "maplescouter.com", 24057, 0],
+            ["2026-09-25", "iauto", "meaegi.com", 7739, 0],
+            ["2026-09-25", "iauto", "munhwa.com", 3802, 0],
+            ["2026-09-25", "iauto", "namu.wiki", 2852, 0],
+            ["2026-09-25", "iauto", "ppomppu.co.kr", 22758, 1],
+            ["2026-09-25", "iauto", "quasarzone.com", 21264, 0],
+            ["2026-09-25", "iauto", "sbs.co.kr", 7130, 0],
+            ["2026-09-25", "iauto", "slrclub.com", 3795, 0],
+            ["2026-09-25", "iauto", "snulife.com", 3451, 0],
+            ["2026-09-25", "iauto", "theqoo.net", 35451, 7],
+            ["2026-09-25", "iauto", "v.daum.net", 4353, 0],
+            ["2026-09-25", "iauto", "wisetoto.com", 21947, 1],
+            ["2026-09-26", "iauto", "cafe.daum.net", 4050, 1],
+            ["2026-09-26", "iauto", "co.luckies.app", 7583, 4],
+            ["2026-09-26", "iauto", "coinpan.com", 3099, 2],
+            ["2026-09-26", "iauto", "com.cashslide", 7152, 0],
+            ["2026-09-26", "iauto", "com.find.spot.photo.hunt.differences.free.hidden", 4163, 5],
+            ["2026-09-26", "iauto", "com.heroines.heroines", 3167, 0],
+            ["2026-09-26", "iauto", "com.lottemembers.android", 6772, 3],
+            ["2026-09-26", "iauto", "com.nbt.moves", 22630, 1],
+            ["2026-09-26", "iauto", "com.peak", 2815, 0],
+            ["2026-09-26", "iauto", "com.read.goodnovel", 3667, 2],
+            ["2026-09-26", "iauto", "com.skplanet.ocb.locker", 11836, 17],
+            ["2026-09-26", "iauto", "damoang.net", 3917, 2],
+            ["2026-09-26", "iauto", "daum.net", 13900, 5],
+            ["2026-09-26", "iauto", "deeplol.gg", 4593, 0],
+            ["2026-09-26", "iauto", "dogdrip.net", 12535, 4],
+            ["2026-09-26", "iauto", "donga.com", 3462, 0],
+            ["2026-09-26", "iauto", "droom.sleepIfUCan", 9088, 2],
+            ["2026-09-26", "iauto", "dvdprime.com", 2854, 1],
+            ["2026-09-26", "iauto", "edaily.co.kr", 2722, 0],
+            ["2026-09-26", "iauto", "fc-info.com", 3336, 0],
+            ["2026-09-26", "iauto", "hankyung.com", 2203, 0],
+            ["2026-09-26", "iauto", "humoruniv.com", 5700, 4],
+            ["2026-09-26", "iauto", "imbc.com", 17457, 0],
+            ["2026-09-26", "iauto", "inven.co.kr", 127305, 9],
+            ["2026-09-26", "iauto", "jeomsinpf1.co.kr", 20830, 5],
+            ["2026-09-26", "iauto", "lol.ps", 12453, 2],
+            ["2026-09-26", "iauto", "luckieverse.com", 15425, 18],
+            ["2026-09-26", "iauto", "mapleland.gg", 2806, 0],
+            ["2026-09-26", "iauto", "maplescouter.com", 23109, 5],
+            ["2026-09-26", "iauto", "meaegi.com", 7187, 0],
+            ["2026-09-26", "iauto", "munhwa.com", 2994, 0],
+            ["2026-09-26", "iauto", "namu.wiki", 2536, 0],
+            ["2026-09-26", "iauto", "ppomppu.co.kr", 20511, 5],
+            ["2026-09-26", "iauto", "quasarzone.com", 29459, 1],
+            ["2026-09-26", "iauto", "sbs.co.kr", 8497, 0],
+            ["2026-09-26", "iauto", "slrclub.com", 3968, 0],
+            ["2026-09-26", "iauto", "snulife.com", 3667, 0],
+            ["2026-09-26", "iauto", "theqoo.net", 39640, 10],
+            ["2026-09-26", "iauto", "v.daum.net", 4903, 2],
+            ["2026-09-26", "iauto", "wisetoto.com", 20393, 3],
+            ["2026-09-27", "iauto", "cafe.daum.net", 5567, 1],
+            ["2026-09-27", "iauto", "co.luckies.app", 5945, 1],
+            ["2026-09-27", "iauto", "coinpan.com", 3810, 0],
+            ["2026-09-27", "iauto", "com.cashslide", 5991, 0],
+            ["2026-09-27", "iauto", "com.cashwalk.cashwalk", 3790, 0],
+            ["2026-09-27", "iauto", "com.find.spot.photo.hunt.differences.free.hidden", 8183, 5],
+            ["2026-09-27", "iauto", "com.heroines.heroines", 3367, 0],
+            ["2026-09-27", "iauto", "com.lottemembers.android", 5784, 1],
+            ["2026-09-27", "iauto", "com.nbt.moves", 18746, 2],
+            ["2026-09-27", "iauto", "com.peak", 3387, 1],
+            ["2026-09-27", "iauto", "com.read.goodnovel", 17693, 5],
+            ["2026-09-27", "iauto", "com.skplanet.ocb.locker", 12961, 18],
+            ["2026-09-27", "iauto", "damoang.net", 4337, 3],
+            ["2026-09-27", "iauto", "daum.net", 16959, 1],
+            ["2026-09-27", "iauto", "deeplol.gg", 2719, 0],
+            ["2026-09-27", "iauto", "dogdrip.net", 11363, 1],
+            ["2026-09-27", "iauto", "donga.com", 3187, 0],
+            ["2026-09-27", "iauto", "droom.sleepIfUCan", 11705, 1],
+            ["2026-09-27", "iauto", "edaily.co.kr", 2710, 0],
+            ["2026-09-27", "iauto", "hankyung.com", 2724, 0],
+            ["2026-09-27", "iauto", "humoruniv.com", 6306, 4],
+            ["2026-09-27", "iauto", "imbc.com", 23414, 0],
+            ["2026-09-27", "iauto", "inven.co.kr", 131058, 6],
+            ["2026-09-27", "iauto", "jeomsinpf1.co.kr", 22976, 9],
+            ["2026-09-27", "iauto", "khan.co.kr", 3270, 0],
+            ["2026-09-27", "iauto", "lol.ps", 10408, 4],
+            ["2026-09-27", "iauto", "luckieverse.com", 13433, 11],
+            ["2026-09-27", "iauto", "mapleland.gg", 3448, 0],
+            ["2026-09-27", "iauto", "maplescouter.com", 36432, 7],
+            ["2026-09-27", "iauto", "meaegi.com", 10324, 0],
+            ["2026-09-27", "iauto", "munhwa.com", 2718, 0],
+            ["2026-09-27", "iauto", "namu.wiki", 3390, 0],
+            ["2026-09-27", "iauto", "ppomppu.co.kr", 28020, 4],
+            ["2026-09-27", "iauto", "quasarzone.com", 32579, 1],
+            ["2026-09-27", "iauto", "sbs.co.kr", 7457, 0],
+            ["2026-09-27", "iauto", "slrclub.com", 3691, 1],
+            ["2026-09-27", "iauto", "snulife.com", 5318, 0],
+            ["2026-09-27", "iauto", "theqoo.net", 44694, 8],
+            ["2026-09-27", "iauto", "v.daum.net", 5586, 1],
+            ["2026-09-27", "iauto", "wisetoto.com", 26248, 2],
+            ["2026-09-28", "iauto", "cafe.daum.net", 12401, 1],
+            ["2026-09-28", "iauto", "co.luckies.app", 4434, 2],
+            ["2026-09-28", "iauto", "coinpan.com", 4346, 0],
+            ["2026-09-28", "iauto", "com.cashslide", 9107, 0],
+            ["2026-09-28", "iauto", "com.find.spot.photo.hunt.differences.free.hidden", 3699, 1],
+            ["2026-09-28", "iauto", "com.lottemembers.android", 6723, 1],
+            ["2026-09-28", "iauto", "com.nbt.moves", 21392, 2],
+            ["2026-09-28", "iauto", "com.read.goodnovel", 5805, 2],
+            ["2026-09-28", "iauto", "com.skplanet.ocb.locker", 9039, 19],
+            ["2026-09-28", "iauto", "damoang.net", 6193, 3],
+            ["2026-09-28", "iauto", "daum.net", 93678, 9],
+            ["2026-09-28", "iauto", "dmitory.com", 5911, 0],
+            ["2026-09-28", "iauto", "dogdrip.net", 13437, 4],
+            ["2026-09-28", "iauto", "donga.com", 4436, 0],
+            ["2026-09-28", "iauto", "droom.sleepIfUCan", 9805, 1],
+            ["2026-09-28", "iauto", "dvdprime.com", 4890, 0],
+            ["2026-09-28", "iauto", "edaily.co.kr", 3138, 0],
+            ["2026-09-28", "iauto", "humoruniv.com", 5295, 7],
+            ["2026-09-28", "iauto", "imbc.com", 23053, 0],
+            ["2026-09-28", "iauto", "inven.co.kr", 92063, 3],
+            ["2026-09-28", "iauto", "itssa.co.kr", 5311, 1],
+            ["2026-09-28", "iauto", "jeomsinpf1.co.kr", 23737, 5],
+            ["2026-09-28", "iauto", "khan.co.kr", 7391, 1],
+            ["2026-09-28", "iauto", "lol.ps", 6352, 3],
+            ["2026-09-28", "iauto", "luckieverse.com", 12258, 11],
+            ["2026-09-28", "iauto", "maplescouter.com", 16167, 4],
+            ["2026-09-28", "iauto", "meaegi.com", 7071, 1],
+            ["2026-09-28", "iauto", "munhwa.com", 6175, 1],
+            ["2026-09-28", "iauto", "namu.wiki", 3799, 1],
+            ["2026-09-28", "iauto", "nate.com", 11353, 3],
+            ["2026-09-28", "iauto", "news1.kr", 2999, 2],
+            ["2026-09-28", "iauto", "ppomppu.co.kr", 35288, 6],
+            ["2026-09-28", "iauto", "quasarzone.com", 27046, 0],
+            ["2026-09-28", "iauto", "sbs.co.kr", 6987, 0],
+            ["2026-09-28", "iauto", "slrclub.com", 9895, 2],
+            ["2026-09-28", "iauto", "snulife.com", 3895, 0],
+            ["2026-09-28", "iauto", "teamblind.com", 4277, 1],
+            ["2026-09-28", "iauto", "theqoo.net", 90671, 23],
+            ["2026-09-28", "iauto", "v.daum.net", 27378, 7],
+            ["2026-09-28", "iauto", "wisetoto.com", 20010, 0],
+            ["2026-09-29", "iauto", "cafe.daum.net", 17543, 7],
+            ["2026-09-29", "iauto", "co.luckies.app", 5266, 1],
+            ["2026-09-29", "iauto", "com.cashslide", 7801, 0],
+            ["2026-09-29", "iauto", "com.find.spot.photo.hunt.differences.free.hidden", 4532, 3],
+            ["2026-09-29", "iauto", "com.lottemembers.android", 6890, 2],
+            ["2026-09-29", "iauto", "com.nbt.moves", 20146, 1],
+            ["2026-09-29", "iauto", "com.read.goodnovel", 10127, 9],
+            ["2026-09-29", "iauto", "com.skplanet.ocb.locker", 8040, 15],
+            ["2026-09-29", "iauto", "damoang.net", 6638, 1],
+            ["2026-09-29", "iauto", "daum.net", 94167, 8],
+            ["2026-09-29", "iauto", "dmitory.com", 4385, 0],
+            ["2026-09-29", "iauto", "dogdrip.net", 14730, 7],
+            ["2026-09-29", "iauto", "donga.com", 4771, 0],
+            ["2026-09-29", "iauto", "droom.sleepIfUCan", 12307, 0],
+            ["2026-09-29", "iauto", "dvdprime.com", 6281, 2],
+            ["2026-09-29", "iauto", "edaily.co.kr", 3689, 0],
+            ["2026-09-29", "iauto", "humoruniv.com", 3840, 1],
+            ["2026-09-29", "iauto", "imbc.com", 28331, 0],
+            ["2026-09-29", "iauto", "instiz.net", 4183, 1],
+            ["2026-09-29", "iauto", "inven.co.kr", 98677, 2],
+            ["2026-09-29", "iauto", "itssa.co.kr", 4972, 0],
+            ["2026-09-29", "iauto", "jeomsinpf1.co.kr", 24077, 9],
+            ["2026-09-29", "iauto", "khan.co.kr", 8078, 0],
+            ["2026-09-29", "iauto", "lol.ps", 10352, 1],
+            ["2026-09-29", "iauto", "luckieverse.com", 12525, 9],
+            ["2026-09-29", "iauto", "maplescouter.com", 18465, 1],
+            ["2026-09-29", "iauto", "meaegi.com", 8311, 0],
+            ["2026-09-29", "iauto", "munhwa.com", 5399, 0],
+            ["2026-09-29", "iauto", "namu.wiki", 3673, 1],
+            ["2026-09-29", "iauto", "nate.com", 15925, 5],
+            ["2026-09-29", "iauto", "ppomppu.co.kr", 45779, 14],
+            ["2026-09-29", "iauto", "quasarzone.com", 25955, 0],
+            ["2026-09-29", "iauto", "sbs.co.kr", 8278, 0],
+            ["2026-09-29", "iauto", "seoul.co.kr", 3750, 0],
+            ["2026-09-29", "iauto", "slrclub.com", 12495, 2],
+            ["2026-09-29", "iauto", "snulife.com", 4554, 0],
+            ["2026-09-29", "iauto", "teamblind.com", 4848, 0],
+            ["2026-09-29", "iauto", "theqoo.net", 87716, 19],
+            ["2026-09-29", "iauto", "v.daum.net", 34297, 13],
+            ["2026-09-29", "iauto", "wisetoto.com", 20329, 1],
+            ["2026-09-30", "iauto", "cafe.daum.net", 15167, 1],
+            ["2026-09-30", "iauto", "co.luckies.app", 6866, 0],
+            ["2026-09-30", "iauto", "coinpan.com", 3560, 0],
+            ["2026-09-30", "iauto", "com.cashslide", 10049, 0],
+            ["2026-09-30", "iauto", "com.cashwalk.cashwalk", 6763, 1],
+            ["2026-09-30", "iauto", "com.find.spot.photo.hunt.differences.free.hidden", 5785, 2],
+            ["2026-09-30", "iauto", "com.heroines.heroines", 4786, 1],
+            ["2026-09-30", "iauto", "com.lottemembers.android", 8275, 1],
+            ["2026-09-30", "iauto", "com.nbt.moves", 24243, 1],
+            ["2026-09-30", "iauto", "com.read.goodnovel", 43709, 19],
+            ["2026-09-30", "iauto", "com.skplanet.ocb.locker", 14230, 30],
+            ["2026-09-30", "iauto", "damoang.net", 4993, 1],
+            ["2026-09-30", "iauto", "daum.net", 67633, 8],
+            ["2026-09-30", "iauto", "dmitory.com", 4917, 0],
+            ["2026-09-30", "iauto", "dogdrip.net", 16101, 8],
+            ["2026-09-30", "iauto", "donga.com", 3335, 0],
+            ["2026-09-30", "iauto", "droom.sleepIfUCan", 14076, 3],
+            ["2026-09-30", "iauto", "humoruniv.com", 4082, 6],
+            ["2026-09-30", "iauto", "imbc.com", 25614, 0],
+            ["2026-09-30", "iauto", "instiz.net", 5379, 1],
+            ["2026-09-30", "iauto", "inven.co.kr", 68063, 4],
+            ["2026-09-30", "iauto", "itssa.co.kr", 5998, 0],
+            ["2026-09-30", "iauto", "jeomsinpf1.co.kr", 22919, 4],
+            ["2026-09-30", "iauto", "khan.co.kr", 6297, 1],
+            ["2026-09-30", "iauto", "lol.ps", 7480, 4],
+            ["2026-09-30", "iauto", "luckieverse.com", 11996, 9],
+            ["2026-09-30", "iauto", "maplescouter.com", 15524, 3],
+            ["2026-09-30", "iauto", "meaegi.com", 7944, 0],
+            ["2026-09-30", "iauto", "munhwa.com", 4896, 0],
+            ["2026-09-30", "iauto", "nate.com", 13547, 7],
+            ["2026-09-30", "iauto", "ppomppu.co.kr", 46428, 6],
+            ["2026-09-30", "iauto", "quasarzone.com", 24458, 0],
+            ["2026-09-30", "iauto", "sbs.co.kr", 7830, 0],
+            ["2026-09-30", "iauto", "semaphore.stockclient", 4870, 4],
+            ["2026-09-30", "iauto", "slrclub.com", 9641, 1],
+            ["2026-09-30", "iauto", "snulife.com", 4909, 0],
+            ["2026-09-30", "iauto", "teamblind.com", 3803, 0],
+            ["2026-09-30", "iauto", "theqoo.net", 86171, 22],
+            ["2026-09-30", "iauto", "v.daum.net", 31396, 8],
+            ["2026-09-30", "iauto", "wisetoto.com", 21096, 0],
+        ];
+        /* APDDATA:END */
+
+        /* 사이즈별 누적 [프레임, 사이즈, 노출, 클릭] */
+        /* ASDATA:START */
+        const ASDATA = [
+            ["iauto", "320_50", 4207004, 1654],
+            ["iauto", "200_200", 2921925, 418],
+            ["iauto", "250_250", 2802299, 980],
+            ["iauto", "728_90", 2711316, 739],
+            ["iauto", "160_600", 1508772, 398],
+            ["iauto", "120_600", 1085213, 173],
+            ["iauto", "300_250", 925662, 350],
+            ["iauto", "320_100", 818055, 261],
+            ["iauto", "240_133", 651680, 81],
+            ["iauto", "600_62", 628524, 95],
+            ["iauto", "300_100", 601472, 53],
+            ["iauto", "240_120", 483609, 23],
+            ["iauto", "220_90", 455069, 26],
+            ["isize", "320_50", 413983, 230],
+            ["iauto", "336_280", 403716, 223],
+            ["isize", "300_250", 317310, 111],
+            ["iauto", "655_120", 306638, 144],
+            ["iauto", "970_250", 297055, 45],
+            ["iauto", "584_60", 292245, 44],
+            ["iauto", "300_50", 270323, 60],
+            ["isize", "728_90", 263043, 90],
+            ["isize", "200_200", 250898, 32],
+            ["isize", "250_250", 241035, 45],
+            ["iauto", "120_60", 211692, 3],
+            ["iauto", "176_62", 200896, 3],
+            ["iauto", "468_60", 198098, 34],
+            ["iauto", "970_90", 194825, 62],
+            ["iauto", "970_280", 168204, 87],
+            ["iauto", "300_600", 144595, 52],
+            ["isize", "160_600", 122938, 38],
+            ["iauto", "234_60", 117028, 12],
+            ["isize", "320_100", 112405, 24],
+            ["isize", "120_600", 111115, 19],
+            ["iauto", "1180_250", 94979, 1],
+            ["iauto", "200_600", 93158, 51],
+            ["iauto", "360_50", 78483, 59],
+            ["iauto", "750_100", 72727, 21],
+            ["iauto", "360_100", 66860, 52],
+            ["iauto", "384_50", 59861, 43],
+            ["iauto", "384_100", 56286, 45],
+            ["iauto", "120_400", 55196, 4],
+            ["iauto", "320_80", 52745, 19],
+            ["iauto", "300_57", 51154, 1],
+            ["iauto", "320_150", 48570, 21],
+            ["iauto", "950_90", 46313, 20],
+            ["iauto", "960_90", 45816, 18],
+            ["iauto", "411_50", 45565, 24],
+            ["iauto", "930_280", 42467, 36],
+            ["iauto", "120_240", 41121, 7],
+            ["iauto", "411_100", 39923, 38],
+            ["iauto", "800_100", 37831, 9],
+            ["iauto", "125_125", 30225, 0],
+            ["iauto", "980_90", 29550, 17],
+            ["iauto", "960_64", 29254, 18],
+            ["iauto", "180_150", 29010, 3],
+            ["iauto", "970_66", 28862, 12],
+            ["iauto", "640_100", 27130, 9],
+            ["iauto", "1200_90", 25998, 22],
+            ["iauto", "150_150", 22650, 7],
+            ["iauto", "375_50", 21423, 4],
+            ["iauto", "204_250", 15981, 0],
+            ["iauto", "1005_124", 15889, 23],
+            ["iauto", "1200_280", 14120, 13],
+            ["iauto", "412_100", 13888, 2],
+            ["iauto", "980_120", 13833, 0],
+            ["iauto", "990_90", 13823, 14],
+            ["iauto", "1024_90", 13643, 1],
+            ["isize", "970_250", 12591, 4],
+            ["iauto", "650_90", 11291, 2],
+            ["isize", "300_600", 4387, 5],
+        ];
+        /* ASDATA:END */
+
+        /* 사이즈별 일별 [날짜, 프레임, 사이즈, 노출, 클릭] */
+        /* ASDDATA:START */
+        const ASDDATA = [
+            ["2026-09-01", "isize", "120_600", 63520, 12],
+            ["2026-09-01", "isize", "160_600", 71212, 31],
+            ["2026-09-01", "isize", "200_200", 136120, 16],
+            ["2026-09-01", "isize", "250_250", 129190, 31],
+            ["2026-09-01", "isize", "300_250", 176188, 78],
+            ["2026-09-01", "isize", "300_600", 4387, 5],
+            ["2026-09-01", "isize", "320_100", 64415, 16],
+            ["2026-09-01", "isize", "320_50", 277355, 177],
+            ["2026-09-01", "isize", "728_90", 140618, 70],
+            ["2026-09-01", "isize", "970_250", 6951, 4],
+            ["2026-09-02", "iauto", "1180_250", 593, 0],
+            ["2026-09-02", "iauto", "120_240", 477, 0],
+            ["2026-09-02", "iauto", "120_400", 1168, 0],
+            ["2026-09-02", "iauto", "120_60", 1164, 0],
+            ["2026-09-02", "iauto", "120_600", 16644, 4],
+            ["2026-09-02", "iauto", "160_600", 18959, 5],
+            ["2026-09-02", "iauto", "176_62", 1153, 0],
+            ["2026-09-02", "iauto", "200_200", 35815, 7],
+            ["2026-09-02", "iauto", "200_600", 982, 0],
+            ["2026-09-02", "iauto", "220_90", 15509, 0],
+            ["2026-09-02", "iauto", "234_60", 2402, 0],
+            ["2026-09-02", "iauto", "240_120", 15398, 0],
+            ["2026-09-02", "iauto", "240_133", 7692, 6],
+            ["2026-09-02", "iauto", "250_250", 39439, 8],
+            ["2026-09-02", "iauto", "300_100", 16702, 1],
+            ["2026-09-02", "iauto", "300_250", 15843, 7],
+            ["2026-09-02", "iauto", "300_50", 3137, 0],
+            ["2026-09-02", "iauto", "300_57", 1018, 0],
+            ["2026-09-02", "iauto", "300_600", 1054, 0],
+            ["2026-09-02", "iauto", "320_100", 14539, 4],
+            ["2026-09-02", "iauto", "320_150", 664, 0],
+            ["2026-09-02", "iauto", "320_50", 77199, 38],
+            ["2026-09-02", "iauto", "320_80", 791, 1],
+            ["2026-09-02", "iauto", "336_280", 8670, 5],
+            ["2026-09-02", "iauto", "360_100", 1363, 0],
+            ["2026-09-02", "iauto", "360_50", 1024, 0],
+            ["2026-09-02", "iauto", "384_100", 1307, 1],
+            ["2026-09-02", "iauto", "384_50", 667, 0],
+            ["2026-09-02", "iauto", "411_100", 847, 1],
+            ["2026-09-02", "iauto", "411_50", 572, 0],
+            ["2026-09-02", "iauto", "468_60", 1871, 0],
+            ["2026-09-02", "iauto", "584_60", 6518, 0],
+            ["2026-09-02", "iauto", "600_62", 14846, 1],
+            ["2026-09-02", "iauto", "640_100", 524, 0],
+            ["2026-09-02", "iauto", "655_120", 466, 0],
+            ["2026-09-02", "iauto", "728_90", 24960, 6],
+            ["2026-09-02", "iauto", "750_100", 915, 1],
+            ["2026-09-02", "iauto", "970_250", 1963, 1],
+            ["2026-09-02", "iauto", "970_280", 2166, 2],
+            ["2026-09-02", "iauto", "970_90", 1658, 0],
+            ["2026-09-02", "isize", "120_600", 47595, 7],
+            ["2026-09-02", "isize", "160_600", 51726, 7],
+            ["2026-09-02", "isize", "200_200", 114778, 16],
+            ["2026-09-02", "isize", "250_250", 111845, 14],
+            ["2026-09-02", "isize", "300_250", 141122, 33],
+            ["2026-09-02", "isize", "320_100", 47990, 8],
+            ["2026-09-02", "isize", "320_50", 136628, 53],
+            ["2026-09-02", "isize", "728_90", 122425, 20],
+            ["2026-09-02", "isize", "970_250", 5640, 0],
+            ["2026-09-03", "iauto", "120_240", 1811, 0],
+            ["2026-09-03", "iauto", "120_400", 1983, 0],
+            ["2026-09-03", "iauto", "120_60", 4254, 0],
+            ["2026-09-03", "iauto", "120_600", 54216, 4],
+            ["2026-09-03", "iauto", "125_125", 1552, 0],
+            ["2026-09-03", "iauto", "160_600", 71974, 19],
+            ["2026-09-03", "iauto", "176_62", 4037, 0],
+            ["2026-09-03", "iauto", "200_200", 123076, 25],
+            ["2026-09-03", "iauto", "200_600", 2869, 2],
+            ["2026-09-03", "iauto", "220_90", 37374, 2],
+            ["2026-09-03", "iauto", "234_60", 7605, 1],
+            ["2026-09-03", "iauto", "240_120", 38003, 2],
+            ["2026-09-03", "iauto", "240_133", 25666, 1],
+            ["2026-09-03", "iauto", "250_250", 138629, 35],
+            ["2026-09-03", "iauto", "300_100", 43808, 4],
+            ["2026-09-03", "iauto", "300_250", 56486, 24],
+            ["2026-09-03", "iauto", "300_50", 13055, 2],
+            ["2026-09-03", "iauto", "300_57", 3593, 0],
+            ["2026-09-03", "iauto", "300_600", 2953, 6],
+            ["2026-09-03", "iauto", "320_100", 54330, 18],
+            ["2026-09-03", "iauto", "320_150", 2313, 0],
+            ["2026-09-03", "iauto", "320_50", 249862, 116],
+            ["2026-09-03", "iauto", "320_80", 3729, 0],
+            ["2026-09-03", "iauto", "336_280", 26843, 14],
+            ["2026-09-03", "iauto", "360_100", 4338, 5],
+            ["2026-09-03", "iauto", "360_50", 3471, 6],
+            ["2026-09-03", "iauto", "384_100", 3814, 2],
+            ["2026-09-03", "iauto", "384_50", 2783, 1],
+            ["2026-09-03", "iauto", "411_100", 2612, 3],
+            ["2026-09-03", "iauto", "411_50", 2029, 3],
+            ["2026-09-03", "iauto", "468_60", 6034, 1],
+            ["2026-09-03", "iauto", "584_60", 16268, 7],
+            ["2026-09-03", "iauto", "600_62", 36429, 10],
+            ["2026-09-03", "iauto", "640_100", 2114, 1],
+            ["2026-09-03", "iauto", "655_120", 1515, 1],
+            ["2026-09-03", "iauto", "728_90", 126440, 48],
+            ["2026-09-03", "iauto", "750_100", 2884, 0],
+            ["2026-09-03", "iauto", "970_250", 5970, 3],
+            ["2026-09-03", "iauto", "970_280", 7939, 2],
+            ["2026-09-03", "iauto", "970_90", 9658, 6],
+            ["2026-09-04", "iauto", "120_240", 2774, 1],
+            ["2026-09-04", "iauto", "120_400", 2193, 0],
+            ["2026-09-04", "iauto", "120_60", 3900, 0],
+            ["2026-09-04", "iauto", "120_600", 54526, 9],
+            ["2026-09-04", "iauto", "125_125", 2411, 0],
+            ["2026-09-04", "iauto", "160_600", 64256, 13],
+            ["2026-09-04", "iauto", "176_62", 3839, 0],
+            ["2026-09-04", "iauto", "180_150", 2388, 0],
+            ["2026-09-04", "iauto", "200_200", 140233, 35],
+            ["2026-09-04", "iauto", "200_600", 3607, 2],
+            ["2026-09-04", "iauto", "220_90", 35121, 1],
+            ["2026-09-04", "iauto", "234_60", 7200, 2],
+            ["2026-09-04", "iauto", "240_120", 35315, 1],
+            ["2026-09-04", "iauto", "240_133", 26861, 5],
+            ["2026-09-04", "iauto", "250_250", 154961, 51],
+            ["2026-09-04", "iauto", "300_100", 39769, 4],
+            ["2026-09-04", "iauto", "300_250", 50871, 17],
+            ["2026-09-04", "iauto", "300_50", 12785, 3],
+            ["2026-09-04", "iauto", "300_57", 4065, 0],
+            ["2026-09-04", "iauto", "300_600", 3032, 1],
+            ["2026-09-04", "iauto", "320_100", 51389, 20],
+            ["2026-09-04", "iauto", "320_50", 230845, 135],
+            ["2026-09-04", "iauto", "320_80", 2418, 0],
+            ["2026-09-04", "iauto", "336_280", 19817, 6],
+            ["2026-09-04", "iauto", "360_100", 3985, 2],
+            ["2026-09-04", "iauto", "360_50", 3191, 3],
+            ["2026-09-04", "iauto", "375_50", 1966, 0],
+            ["2026-09-04", "iauto", "384_100", 3049, 1],
+            ["2026-09-04", "iauto", "384_50", 2589, 2],
+            ["2026-09-04", "iauto", "411_50", 1955, 1],
+            ["2026-09-04", "iauto", "468_60", 5961, 1],
+            ["2026-09-04", "iauto", "584_60", 15641, 6],
+            ["2026-09-04", "iauto", "600_62", 34110, 9],
+            ["2026-09-04", "iauto", "640_100", 2181, 0],
+            ["2026-09-04", "iauto", "728_90", 139304, 45],
+            ["2026-09-04", "iauto", "750_100", 3084, 0],
+            ["2026-09-04", "iauto", "970_250", 5786, 3],
+            ["2026-09-04", "iauto", "970_280", 6380, 6],
+            ["2026-09-04", "iauto", "970_90", 9380, 1],
+            ["2026-09-04", "iauto", "980_90", 2541, 3],
+            ["2026-09-05", "iauto", "1200_90", 1399, 1],
+            ["2026-09-05", "iauto", "120_240", 1411, 0],
+            ["2026-09-05", "iauto", "120_60", 2020, 0],
+            ["2026-09-05", "iauto", "120_600", 30425, 4],
+            ["2026-09-05", "iauto", "160_600", 50651, 10],
+            ["2026-09-05", "iauto", "176_62", 1887, 0],
+            ["2026-09-05", "iauto", "180_150", 1168, 0],
+            ["2026-09-05", "iauto", "200_200", 92070, 19],
+            ["2026-09-05", "iauto", "200_600", 1793, 0],
+            ["2026-09-05", "iauto", "220_90", 13725, 0],
+            ["2026-09-05", "iauto", "234_60", 4128, 0],
+            ["2026-09-05", "iauto", "240_120", 12816, 1],
+            ["2026-09-05", "iauto", "240_133", 11384, 3],
+            ["2026-09-05", "iauto", "250_250", 99422, 42],
+            ["2026-09-05", "iauto", "300_100", 16141, 2],
+            ["2026-09-05", "iauto", "300_250", 31109, 5],
+            ["2026-09-05", "iauto", "300_50", 8182, 1],
+            ["2026-09-05", "iauto", "300_57", 1941, 0],
+            ["2026-09-05", "iauto", "300_600", 1629, 0],
+            ["2026-09-05", "iauto", "320_100", 31287, 11],
+            ["2026-09-05", "iauto", "320_150", 1972, 0],
+            ["2026-09-05", "iauto", "320_50", 217095, 105],
+            ["2026-09-05", "iauto", "320_80", 2682, 0],
+            ["2026-09-05", "iauto", "336_280", 19465, 12],
+            ["2026-09-05", "iauto", "360_100", 3531, 2],
+            ["2026-09-05", "iauto", "360_50", 2828, 1],
+            ["2026-09-05", "iauto", "384_100", 3014, 2],
+            ["2026-09-05", "iauto", "384_50", 2174, 1],
+            ["2026-09-05", "iauto", "411_100", 1972, 1],
+            ["2026-09-05", "iauto", "411_50", 1820, 0],
+            ["2026-09-05", "iauto", "468_60", 5436, 0],
+            ["2026-09-05", "iauto", "584_60", 9348, 3],
+            ["2026-09-05", "iauto", "600_62", 18502, 3],
+            ["2026-09-05", "iauto", "728_90", 78427, 25],
+            ["2026-09-05", "iauto", "750_100", 1859, 0],
+            ["2026-09-05", "iauto", "950_90", 1584, 1],
+            ["2026-09-05", "iauto", "960_90", 1629, 0],
+            ["2026-09-05", "iauto", "970_250", 4915, 3],
+            ["2026-09-05", "iauto", "970_280", 3585, 3],
+            ["2026-09-05", "iauto", "970_90", 4716, 0],
+            ["2026-09-06", "iauto", "1200_90", 1919, 3],
+            ["2026-09-06", "iauto", "120_400", 1763, 0],
+            ["2026-09-06", "iauto", "120_60", 1259, 0],
+            ["2026-09-06", "iauto", "120_600", 33224, 6],
+            ["2026-09-06", "iauto", "160_600", 45586, 9],
+            ["2026-09-06", "iauto", "176_62", 1256, 0],
+            ["2026-09-06", "iauto", "200_200", 90529, 14],
+            ["2026-09-06", "iauto", "200_600", 1370, 0],
+            ["2026-09-06", "iauto", "220_90", 12831, 1],
+            ["2026-09-06", "iauto", "234_60", 3868, 0],
+            ["2026-09-06", "iauto", "240_120", 12294, 1],
+            ["2026-09-06", "iauto", "240_133", 10354, 2],
+            ["2026-09-06", "iauto", "250_250", 106465, 46],
+            ["2026-09-06", "iauto", "300_100", 15780, 2],
+            ["2026-09-06", "iauto", "300_250", 31019, 9],
+            ["2026-09-06", "iauto", "300_50", 9001, 1],
+            ["2026-09-06", "iauto", "300_57", 1587, 0],
+            ["2026-09-06", "iauto", "300_600", 2092, 0],
+            ["2026-09-06", "iauto", "320_100", 36362, 11],
+            ["2026-09-06", "iauto", "320_150", 2034, 0],
+            ["2026-09-06", "iauto", "320_50", 258639, 125],
+            ["2026-09-06", "iauto", "320_80", 3332, 0],
+            ["2026-09-06", "iauto", "336_280", 17259, 2],
+            ["2026-09-06", "iauto", "360_100", 3461, 4],
+            ["2026-09-06", "iauto", "360_50", 3037, 1],
+            ["2026-09-06", "iauto", "384_100", 3017, 1],
+            ["2026-09-06", "iauto", "384_50", 2136, 1],
+            ["2026-09-06", "iauto", "411_100", 1953, 3],
+            ["2026-09-06", "iauto", "411_50", 1664, 1],
+            ["2026-09-06", "iauto", "468_60", 7184, 1],
+            ["2026-09-06", "iauto", "584_60", 9583, 1],
+            ["2026-09-06", "iauto", "600_62", 16631, 2],
+            ["2026-09-06", "iauto", "728_90", 71600, 29],
+            ["2026-09-06", "iauto", "750_100", 2123, 0],
+            ["2026-09-06", "iauto", "950_90", 2143, 1],
+            ["2026-09-06", "iauto", "960_64", 1288, 0],
+            ["2026-09-06", "iauto", "960_90", 2082, 1],
+            ["2026-09-06", "iauto", "970_250", 6676, 1],
+            ["2026-09-06", "iauto", "970_280", 3307, 2],
+            ["2026-09-06", "iauto", "970_90", 5494, 2],
+            ["2026-09-07", "iauto", "120_240", 2717, 1],
+            ["2026-09-07", "iauto", "120_60", 3971, 0],
+            ["2026-09-07", "iauto", "120_600", 56906, 9],
+            ["2026-09-07", "iauto", "125_125", 2231, 0],
+            ["2026-09-07", "iauto", "160_600", 51833, 11],
+            ["2026-09-07", "iauto", "176_62", 4083, 0],
+            ["2026-09-07", "iauto", "180_150", 2231, 0],
+            ["2026-09-07", "iauto", "200_200", 136021, 19],
+            ["2026-09-07", "iauto", "200_600", 2724, 1],
+            ["2026-09-07", "iauto", "220_90", 25130, 0],
+            ["2026-09-07", "iauto", "234_60", 7146, 1],
+            ["2026-09-07", "iauto", "240_120", 24731, 0],
+            ["2026-09-07", "iauto", "240_133", 30651, 5],
+            ["2026-09-07", "iauto", "250_250", 146997, 60],
+            ["2026-09-07", "iauto", "300_100", 27484, 3],
+            ["2026-09-07", "iauto", "300_250", 33008, 17],
+            ["2026-09-07", "iauto", "300_50", 9527, 2],
+            ["2026-09-07", "iauto", "300_57", 4133, 0],
+            ["2026-09-07", "iauto", "300_600", 3132, 1],
+            ["2026-09-07", "iauto", "320_100", 29604, 5],
+            ["2026-09-07", "iauto", "320_50", 189366, 106],
+            ["2026-09-07", "iauto", "320_80", 2460, 1],
+            ["2026-09-07", "iauto", "336_280", 11938, 8],
+            ["2026-09-07", "iauto", "360_100", 2043, 2],
+            ["2026-09-07", "iauto", "360_50", 2636, 4],
+            ["2026-09-07", "iauto", "375_50", 2269, 0],
+            ["2026-09-07", "iauto", "384_100", 1712, 0],
+            ["2026-09-07", "iauto", "384_50", 2031, 0],
+            ["2026-09-07", "iauto", "411_50", 1597, 1],
+            ["2026-09-07", "iauto", "468_60", 6631, 3],
+            ["2026-09-07", "iauto", "584_60", 31812, 4],
+            ["2026-09-07", "iauto", "600_62", 73960, 9],
+            ["2026-09-07", "iauto", "640_100", 1617, 2],
+            ["2026-09-07", "iauto", "728_90", 106387, 39],
+            ["2026-09-07", "iauto", "750_100", 2006, 2],
+            ["2026-09-07", "iauto", "930_280", 1604, 0],
+            ["2026-09-07", "iauto", "970_250", 6870, 0],
+            ["2026-09-07", "iauto", "970_280", 8758, 3],
+            ["2026-09-07", "iauto", "970_90", 5524, 4],
+            ["2026-09-07", "iauto", "980_90", 1876, 1],
+            ["2026-09-08", "iauto", "1024_90", 1491, 0],
+            ["2026-09-08", "iauto", "120_240", 2897, 0],
+            ["2026-09-08", "iauto", "120_60", 2853, 0],
+            ["2026-09-08", "iauto", "120_600", 47129, 10],
+            ["2026-09-08", "iauto", "125_125", 2142, 0],
+            ["2026-09-08", "iauto", "160_600", 46509, 20],
+            ["2026-09-08", "iauto", "176_62", 2716, 0],
+            ["2026-09-08", "iauto", "180_150", 2171, 0],
+            ["2026-09-08", "iauto", "200_200", 138251, 26],
+            ["2026-09-08", "iauto", "200_600", 2152, 1],
+            ["2026-09-08", "iauto", "220_90", 22214, 3],
+            ["2026-09-08", "iauto", "234_60", 5934, 2],
+            ["2026-09-08", "iauto", "240_120", 21860, 2],
+            ["2026-09-08", "iauto", "240_133", 31222, 1],
+            ["2026-09-08", "iauto", "250_250", 143351, 53],
+            ["2026-09-08", "iauto", "300_100", 24127, 2],
+            ["2026-09-08", "iauto", "300_250", 30063, 10],
+            ["2026-09-08", "iauto", "300_50", 9372, 3],
+            ["2026-09-08", "iauto", "300_57", 3165, 0],
+            ["2026-09-08", "iauto", "300_600", 2834, 4],
+            ["2026-09-08", "iauto", "320_100", 34021, 12],
+            ["2026-09-08", "iauto", "320_50", 199355, 98],
+            ["2026-09-08", "iauto", "320_80", 6035, 0],
+            ["2026-09-08", "iauto", "336_280", 9339, 15],
+            ["2026-09-08", "iauto", "360_100", 1744, 1],
+            ["2026-09-08", "iauto", "360_50", 2795, 2],
+            ["2026-09-08", "iauto", "375_50", 1627, 1],
+            ["2026-09-08", "iauto", "384_50", 1976, 1],
+            ["2026-09-08", "iauto", "411_50", 1663, 0],
+            ["2026-09-08", "iauto", "468_60", 5304, 2],
+            ["2026-09-08", "iauto", "584_60", 12849, 2],
+            ["2026-09-08", "iauto", "600_62", 28459, 13],
+            ["2026-09-08", "iauto", "655_120", 8954, 7],
+            ["2026-09-08", "iauto", "728_90", 87170, 41],
+            ["2026-09-08", "iauto", "750_100", 2079, 1],
+            ["2026-09-08", "iauto", "970_250", 5810, 1],
+            ["2026-09-08", "iauto", "970_280", 6055, 3],
+            ["2026-09-08", "iauto", "970_90", 6372, 3],
+            ["2026-09-08", "iauto", "980_120", 1529, 0],
+            ["2026-09-08", "iauto", "980_90", 2861, 2],
+            ["2026-09-09", "iauto", "120_240", 2076, 0],
+            ["2026-09-09", "iauto", "120_400", 1359, 0],
+            ["2026-09-09", "iauto", "120_60", 1714, 0],
+            ["2026-09-09", "iauto", "120_600", 39303, 4],
+            ["2026-09-09", "iauto", "125_125", 1568, 0],
+            ["2026-09-09", "iauto", "160_600", 46984, 15],
+            ["2026-09-09", "iauto", "176_62", 1717, 0],
+            ["2026-09-09", "iauto", "180_150", 1640, 1],
+            ["2026-09-09", "iauto", "200_200", 109678, 28],
+            ["2026-09-09", "iauto", "200_600", 2676, 2],
+            ["2026-09-09", "iauto", "220_90", 17638, 1],
+            ["2026-09-09", "iauto", "234_60", 4842, 0],
+            ["2026-09-09", "iauto", "240_120", 16977, 2],
+            ["2026-09-09", "iauto", "240_133", 26023, 3],
+            ["2026-09-09", "iauto", "250_250", 110574, 55],
+            ["2026-09-09", "iauto", "300_100", 19924, 1],
+            ["2026-09-09", "iauto", "300_250", 32311, 20],
+            ["2026-09-09", "iauto", "300_50", 10121, 4],
+            ["2026-09-09", "iauto", "300_57", 2025, 0],
+            ["2026-09-09", "iauto", "300_600", 2705, 1],
+            ["2026-09-09", "iauto", "320_100", 32442, 12],
+            ["2026-09-09", "iauto", "320_50", 217201, 111],
+            ["2026-09-09", "iauto", "320_80", 7671, 2],
+            ["2026-09-09", "iauto", "336_280", 12412, 8],
+            ["2026-09-09", "iauto", "360_100", 2085, 1],
+            ["2026-09-09", "iauto", "360_50", 3111, 2],
+            ["2026-09-09", "iauto", "375_50", 1348, 1],
+            ["2026-09-09", "iauto", "384_100", 1554, 1],
+            ["2026-09-09", "iauto", "384_50", 2089, 3],
+            ["2026-09-09", "iauto", "411_50", 1876, 3],
+            ["2026-09-09", "iauto", "468_60", 4700, 1],
+            ["2026-09-09", "iauto", "584_60", 9612, 1],
+            ["2026-09-09", "iauto", "600_62", 20481, 4],
+            ["2026-09-09", "iauto", "655_120", 17055, 14],
+            ["2026-09-09", "iauto", "728_90", 84348, 32],
+            ["2026-09-09", "iauto", "750_100", 2124, 0],
+            ["2026-09-09", "iauto", "930_280", 1332, 1],
+            ["2026-09-09", "iauto", "970_250", 7531, 4],
+            ["2026-09-09", "iauto", "970_280", 7324, 4],
+            ["2026-09-09", "iauto", "970_90", 5519, 4],
+            ["2026-09-10", "iauto", "120_240", 1778, 1],
+            ["2026-09-10", "iauto", "120_400", 2132, 0],
+            ["2026-09-10", "iauto", "120_60", 1328, 0],
+            ["2026-09-10", "iauto", "120_600", 43244, 11],
+            ["2026-09-10", "iauto", "125_125", 1252, 0],
+            ["2026-09-10", "iauto", "160_600", 56614, 20],
+            ["2026-09-10", "iauto", "176_62", 1295, 1],
+            ["2026-09-10", "iauto", "200_200", 97737, 17],
+            ["2026-09-10", "iauto", "200_600", 2933, 4],
+            ["2026-09-10", "iauto", "220_90", 20786, 1],
+            ["2026-09-10", "iauto", "234_60", 4294, 0],
+            ["2026-09-10", "iauto", "240_120", 19865, 0],
+            ["2026-09-10", "iauto", "240_133", 28781, 7],
+            ["2026-09-10", "iauto", "250_250", 111652, 67],
+            ["2026-09-10", "iauto", "300_100", 23367, 4],
+            ["2026-09-10", "iauto", "300_250", 36233, 12],
+            ["2026-09-10", "iauto", "300_50", 11212, 6],
+            ["2026-09-10", "iauto", "300_57", 1540, 0],
+            ["2026-09-10", "iauto", "300_600", 3290, 0],
+            ["2026-09-10", "iauto", "320_100", 36389, 15],
+            ["2026-09-10", "iauto", "320_50", 192611, 99],
+            ["2026-09-10", "iauto", "320_80", 5445, 1],
+            ["2026-09-10", "iauto", "336_280", 13581, 6],
+            ["2026-09-10", "iauto", "360_100", 2826, 1],
+            ["2026-09-10", "iauto", "360_50", 2914, 3],
+            ["2026-09-10", "iauto", "384_100", 2227, 1],
+            ["2026-09-10", "iauto", "384_50", 2124, 4],
+            ["2026-09-10", "iauto", "411_100", 1561, 1],
+            ["2026-09-10", "iauto", "411_50", 1503, 0],
+            ["2026-09-10", "iauto", "468_60", 5792, 0],
+            ["2026-09-10", "iauto", "580_100", 1432, 0],
+            ["2026-09-10", "iauto", "584_60", 12156, 4],
+            ["2026-09-10", "iauto", "600_62", 26683, 5],
+            ["2026-09-10", "iauto", "655_120", 23329, 12],
+            ["2026-09-10", "iauto", "728_90", 107060, 57],
+            ["2026-09-10", "iauto", "750_100", 2672, 5],
+            ["2026-09-10", "iauto", "970_250", 7818, 0],
+            ["2026-09-10", "iauto", "970_280", 6418, 2],
+            ["2026-09-10", "iauto", "970_90", 6541, 3],
+            ["2026-09-10", "iauto", "980_90", 1618, 1],
+            ["2026-09-11", "iauto", "120_240", 1983, 0],
+            ["2026-09-11", "iauto", "120_400", 3051, 0],
+            ["2026-09-11", "iauto", "120_60", 2101, 0],
+            ["2026-09-11", "iauto", "120_600", 56785, 11],
+            ["2026-09-11", "iauto", "125_125", 1697, 0],
+            ["2026-09-11", "iauto", "160_600", 70841, 10],
+            ["2026-09-11", "iauto", "176_62", 2050, 0],
+            ["2026-09-11", "iauto", "180_150", 1522, 0],
+            ["2026-09-11", "iauto", "200_200", 128594, 20],
+            ["2026-09-11", "iauto", "200_600", 3756, 2],
+            ["2026-09-11", "iauto", "220_90", 32345, 3],
+            ["2026-09-11", "iauto", "234_60", 6304, 0],
+            ["2026-09-11", "iauto", "240_120", 31945, 0],
+            ["2026-09-11", "iauto", "240_133", 33872, 7],
+            ["2026-09-11", "iauto", "250_250", 141361, 54],
+            ["2026-09-11", "iauto", "300_100", 35708, 2],
+            ["2026-09-11", "iauto", "300_250", 42300, 24],
+            ["2026-09-11", "iauto", "300_50", 11583, 2],
+            ["2026-09-11", "iauto", "300_57", 2285, 0],
+            ["2026-09-11", "iauto", "300_600", 2755, 0],
+            ["2026-09-11", "iauto", "320_100", 39780, 11],
+            ["2026-09-11", "iauto", "320_50", 137986, 48],
+            ["2026-09-11", "iauto", "320_80", 1465, 1],
+            ["2026-09-11", "iauto", "336_280", 15405, 17],
+            ["2026-09-11", "iauto", "360_100", 2565, 3],
+            ["2026-09-11", "iauto", "360_50", 2318, 0],
+            ["2026-09-11", "iauto", "384_100", 1927, 1],
+            ["2026-09-11", "iauto", "384_50", 1657, 1],
+            ["2026-09-11", "iauto", "411_100", 1511, 1],
+            ["2026-09-11", "iauto", "468_60", 7741, 2],
+            ["2026-09-11", "iauto", "584_60", 13322, 2],
+            ["2026-09-11", "iauto", "600_62", 27432, 2],
+            ["2026-09-11", "iauto", "655_120", 34683, 14],
+            ["2026-09-11", "iauto", "728_90", 152576, 35],
+            ["2026-09-11", "iauto", "750_100", 4129, 0],
+            ["2026-09-11", "iauto", "800_100", 1898, 1],
+            ["2026-09-11", "iauto", "970_250", 7428, 2],
+            ["2026-09-11", "iauto", "970_280", 7195, 8],
+            ["2026-09-11", "iauto", "970_90", 8427, 4],
+            ["2026-09-11", "iauto", "980_90", 1882, 1],
+            ["2026-09-14", "iauto", "1180_250", 1189, 0],
+            ["2026-09-14", "iauto", "120_240", 1909, 0],
+            ["2026-09-14", "iauto", "120_60", 1908, 0],
+            ["2026-09-14", "iauto", "120_600", 34259, 7],
+            ["2026-09-14", "iauto", "125_125", 1578, 0],
+            ["2026-09-14", "iauto", "150_150", 1015, 1],
+            ["2026-09-14", "iauto", "160_600", 35831, 14],
+            ["2026-09-14", "iauto", "176_62", 1894, 0],
+            ["2026-09-14", "iauto", "180_150", 1335, 0],
+            ["2026-09-14", "iauto", "200_200", 112624, 32],
+            ["2026-09-14", "iauto", "200_600", 2172, 0],
+            ["2026-09-14", "iauto", "220_90", 15399, 2],
+            ["2026-09-14", "iauto", "234_60", 5190, 1],
+            ["2026-09-14", "iauto", "240_120", 14846, 2],
+            ["2026-09-14", "iauto", "240_133", 32692, 7],
+            ["2026-09-14", "iauto", "250_250", 114006, 39],
+            ["2026-09-14", "iauto", "300_100", 17208, 0],
+            ["2026-09-14", "iauto", "300_250", 26785, 11],
+            ["2026-09-14", "iauto", "300_50", 6738, 4],
+            ["2026-09-14", "iauto", "300_57", 2018, 0],
+            ["2026-09-14", "iauto", "300_600", 2727, 2],
+            ["2026-09-14", "iauto", "320_100", 22042, 9],
+            ["2026-09-14", "iauto", "320_150", 1252, 1],
+            ["2026-09-14", "iauto", "320_50", 124220, 48],
+            ["2026-09-14", "iauto", "320_80", 1389, 0],
+            ["2026-09-14", "iauto", "336_280", 10659, 6],
+            ["2026-09-14", "iauto", "360_100", 1496, 2],
+            ["2026-09-14", "iauto", "360_50", 2194, 1],
+            ["2026-09-14", "iauto", "384_100", 1134, 0],
+            ["2026-09-14", "iauto", "384_50", 1752, 0],
+            ["2026-09-14", "iauto", "411_50", 1276, 0],
+            ["2026-09-14", "iauto", "468_60", 6290, 3],
+            ["2026-09-14", "iauto", "584_60", 21347, 1],
+            ["2026-09-14", "iauto", "600_62", 49722, 1],
+            ["2026-09-14", "iauto", "655_120", 15636, 17],
+            ["2026-09-14", "iauto", "728_90", 85071, 36],
+            ["2026-09-14", "iauto", "750_100", 1773, 1],
+            ["2026-09-14", "iauto", "970_250", 7011, 2],
+            ["2026-09-14", "iauto", "970_280", 7830, 5],
+            ["2026-09-14", "iauto", "970_90", 2996, 2],
+            ["2026-09-15", "iauto", "1180_250", 1212, 0],
+            ["2026-09-15", "iauto", "120_240", 2211, 2],
+            ["2026-09-15", "iauto", "120_400", 1286, 1],
+            ["2026-09-15", "iauto", "120_60", 2352, 0],
+            ["2026-09-15", "iauto", "120_600", 29957, 10],
+            ["2026-09-15", "iauto", "125_125", 1722, 0],
+            ["2026-09-15", "iauto", "160_600", 40849, 15],
+            ["2026-09-15", "iauto", "176_62", 2232, 0],
+            ["2026-09-15", "iauto", "180_150", 1470, 0],
+            ["2026-09-15", "iauto", "200_200", 104634, 18],
+            ["2026-09-15", "iauto", "200_600", 3120, 3],
+            ["2026-09-15", "iauto", "220_90", 20408, 3],
+            ["2026-09-15", "iauto", "234_60", 5167, 0],
+            ["2026-09-15", "iauto", "240_120", 18861, 4],
+            ["2026-09-15", "iauto", "240_133", 41124, 2],
+            ["2026-09-15", "iauto", "250_250", 108796, 37],
+            ["2026-09-15", "iauto", "300_100", 22214, 4],
+            ["2026-09-15", "iauto", "300_250", 30686, 23],
+            ["2026-09-15", "iauto", "300_50", 7526, 2],
+            ["2026-09-15", "iauto", "300_57", 2325, 0],
+            ["2026-09-15", "iauto", "300_600", 3485, 3],
+            ["2026-09-15", "iauto", "320_100", 24287, 11],
+            ["2026-09-15", "iauto", "320_150", 1423, 5],
+            ["2026-09-15", "iauto", "320_50", 117086, 40],
+            ["2026-09-15", "iauto", "320_80", 1351, 0],
+            ["2026-09-15", "iauto", "336_280", 10491, 6],
+            ["2026-09-15", "iauto", "360_100", 1748, 0],
+            ["2026-09-15", "iauto", "360_50", 2297, 3],
+            ["2026-09-15", "iauto", "384_100", 1251, 0],
+            ["2026-09-15", "iauto", "384_50", 2218, 0],
+            ["2026-09-15", "iauto", "411_50", 1448, 0],
+            ["2026-09-15", "iauto", "468_60", 4575, 0],
+            ["2026-09-15", "iauto", "584_60", 15734, 2],
+            ["2026-09-15", "iauto", "600_62", 37337, 6],
+            ["2026-09-15", "iauto", "655_120", 13001, 4],
+            ["2026-09-15", "iauto", "728_90", 96374, 40],
+            ["2026-09-15", "iauto", "750_100", 2342, 1],
+            ["2026-09-15", "iauto", "970_250", 6739, 1],
+            ["2026-09-15", "iauto", "970_280", 7494, 5],
+            ["2026-09-15", "iauto", "970_90", 3564, 1],
+            ["2026-09-16", "iauto", "1180_250", 6070, 0],
+            ["2026-09-16", "iauto", "120_240", 2449, 0],
+            ["2026-09-16", "iauto", "120_400", 2189, 0],
+            ["2026-09-16", "iauto", "120_60", 2975, 0],
+            ["2026-09-16", "iauto", "120_600", 51430, 11],
+            ["2026-09-16", "iauto", "125_125", 1816, 0],
+            ["2026-09-16", "iauto", "160_600", 70888, 19],
+            ["2026-09-16", "iauto", "176_62", 2800, 1],
+            ["2026-09-16", "iauto", "200_200", 121344, 22],
+            ["2026-09-16", "iauto", "200_600", 5283, 2],
+            ["2026-09-16", "iauto", "220_90", 25726, 3],
+            ["2026-09-16", "iauto", "234_60", 6499, 0],
+            ["2026-09-16", "iauto", "240_120", 20636, 4],
+            ["2026-09-16", "iauto", "240_133", 46152, 10],
+            ["2026-09-16", "iauto", "250_250", 127609, 39],
+            ["2026-09-16", "iauto", "300_100", 27633, 5],
+            ["2026-09-16", "iauto", "300_250", 43096, 23],
+            ["2026-09-16", "iauto", "300_50", 10214, 4],
+            ["2026-09-16", "iauto", "300_57", 2860, 0],
+            ["2026-09-16", "iauto", "300_600", 7196, 3],
+            ["2026-09-16", "iauto", "320_100", 39426, 16],
+            ["2026-09-16", "iauto", "320_150", 2051, 5],
+            ["2026-09-16", "iauto", "320_50", 195831, 63],
+            ["2026-09-16", "iauto", "320_80", 2146, 1],
+            ["2026-09-16", "iauto", "336_280", 17173, 11],
+            ["2026-09-16", "iauto", "360_100", 2625, 1],
+            ["2026-09-16", "iauto", "360_50", 3992, 3],
+            ["2026-09-16", "iauto", "384_100", 2010, 2],
+            ["2026-09-16", "iauto", "384_50", 2946, 1],
+            ["2026-09-16", "iauto", "411_50", 2273, 2],
+            ["2026-09-16", "iauto", "468_60", 7090, 3],
+            ["2026-09-16", "iauto", "584_60", 11551, 0],
+            ["2026-09-16", "iauto", "600_62", 24354, 4],
+            ["2026-09-16", "iauto", "655_120", 16871, 10],
+            ["2026-09-16", "iauto", "728_90", 141763, 55],
+            ["2026-09-16", "iauto", "750_100", 3753, 2],
+            ["2026-09-16", "iauto", "800_100", 1963, 0],
+            ["2026-09-16", "iauto", "970_250", 15269, 4],
+            ["2026-09-16", "iauto", "970_280", 11222, 5],
+            ["2026-09-16", "iauto", "970_90", 6093, 1],
+            ["2026-09-17", "iauto", "1180_250", 5784, 0],
+            ["2026-09-17", "iauto", "120_60", 3158, 0],
+            ["2026-09-17", "iauto", "120_600", 61195, 11],
+            ["2026-09-17", "iauto", "160_600", 104757, 37],
+            ["2026-09-17", "iauto", "176_62", 2883, 0],
+            ["2026-09-17", "iauto", "200_200", 124676, 25],
+            ["2026-09-17", "iauto", "200_600", 4479, 5],
+            ["2026-09-17", "iauto", "220_90", 29554, 3],
+            ["2026-09-17", "iauto", "234_60", 6539, 2],
+            ["2026-09-17", "iauto", "240_120", 20086, 2],
+            ["2026-09-17", "iauto", "240_133", 48591, 4],
+            ["2026-09-17", "iauto", "250_250", 178042, 53],
+            ["2026-09-17", "iauto", "300_100", 30798, 3],
+            ["2026-09-17", "iauto", "300_250", 45070, 29],
+            ["2026-09-17", "iauto", "300_50", 11820, 5],
+            ["2026-09-17", "iauto", "300_57", 3139, 1],
+            ["2026-09-17", "iauto", "300_600", 10791, 4],
+            ["2026-09-17", "iauto", "320_100", 42863, 15],
+            ["2026-09-17", "iauto", "320_150", 2426, 2],
+            ["2026-09-17", "iauto", "320_50", 210155, 79],
+            ["2026-09-17", "iauto", "320_80", 2418, 5],
+            ["2026-09-17", "iauto", "336_280", 20400, 16],
+            ["2026-09-17", "iauto", "360_100", 2716, 1],
+            ["2026-09-17", "iauto", "360_50", 5153, 2],
+            ["2026-09-17", "iauto", "384_50", 3728, 2],
+            ["2026-09-17", "iauto", "411_50", 2495, 1],
+            ["2026-09-17", "iauto", "468_60", 22123, 3],
+            ["2026-09-17", "iauto", "584_60", 25326, 4],
+            ["2026-09-17", "iauto", "600_62", 39475, 13],
+            ["2026-09-17", "iauto", "655_120", 10246, 4],
+            ["2026-09-17", "iauto", "728_90", 119020, 45],
+            ["2026-09-17", "iauto", "750_100", 2688, 1],
+            ["2026-09-17", "iauto", "930_280", 2920, 6],
+            ["2026-09-17", "iauto", "950_90", 13439, 5],
+            ["2026-09-17", "iauto", "960_64", 10256, 8],
+            ["2026-09-17", "iauto", "960_90", 13394, 4],
+            ["2026-09-17", "iauto", "970_250", 67823, 3],
+            ["2026-09-17", "iauto", "970_280", 11099, 6],
+            ["2026-09-17", "iauto", "970_66", 10577, 3],
+            ["2026-09-17", "iauto", "970_90", 18686, 3],
+            ["2026-09-18", "iauto", "1180_250", 17342, 0],
+            ["2026-09-18", "iauto", "120_400", 2616, 1],
+            ["2026-09-18", "iauto", "120_60", 8041, 0],
+            ["2026-09-18", "iauto", "120_600", 69484, 8],
+            ["2026-09-18", "iauto", "160_600", 120020, 30],
+            ["2026-09-18", "iauto", "176_62", 7744, 0],
+            ["2026-09-18", "iauto", "200_200", 251133, 22],
+            ["2026-09-18", "iauto", "200_600", 5764, 8],
+            ["2026-09-18", "iauto", "220_90", 35162, 0],
+            ["2026-09-18", "iauto", "234_60", 4598, 0],
+            ["2026-09-18", "iauto", "240_120", 23983, 0],
+            ["2026-09-18", "iauto", "240_133", 67404, 7],
+            ["2026-09-18", "iauto", "250_250", 195343, 60],
+            ["2026-09-18", "iauto", "300_100", 37969, 2],
+            ["2026-09-18", "iauto", "300_250", 59369, 24],
+            ["2026-09-18", "iauto", "300_50", 12477, 2],
+            ["2026-09-18", "iauto", "300_57", 3421, 0],
+            ["2026-09-18", "iauto", "300_600", 13460, 7],
+            ["2026-09-18", "iauto", "320_100", 47422, 16],
+            ["2026-09-18", "iauto", "320_150", 3960, 3],
+            ["2026-09-18", "iauto", "320_50", 218837, 74],
+            ["2026-09-18", "iauto", "336_280", 26043, 15],
+            ["2026-09-18", "iauto", "360_100", 2518, 2],
+            ["2026-09-18", "iauto", "360_50", 5115, 5],
+            ["2026-09-18", "iauto", "384_50", 3979, 3],
+            ["2026-09-18", "iauto", "411_50", 2759, 1],
+            ["2026-09-18", "iauto", "468_60", 16435, 1],
+            ["2026-09-18", "iauto", "584_60", 24152, 2],
+            ["2026-09-18", "iauto", "600_62", 42551, 6],
+            ["2026-09-18", "iauto", "655_120", 17203, 6],
+            ["2026-09-18", "iauto", "728_90", 151744, 48],
+            ["2026-09-18", "iauto", "750_100", 4323, 1],
+            ["2026-09-18", "iauto", "930_280", 3593, 1],
+            ["2026-09-18", "iauto", "950_90", 9832, 3],
+            ["2026-09-18", "iauto", "960_64", 8189, 5],
+            ["2026-09-18", "iauto", "960_90", 9782, 4],
+            ["2026-09-18", "iauto", "970_250", 43825, 6],
+            ["2026-09-18", "iauto", "970_280", 15155, 11],
+            ["2026-09-18", "iauto", "970_66", 8213, 4],
+            ["2026-09-18", "iauto", "970_90", 17244, 12],
+            ["2026-09-21", "iauto", "1180_250", 10714, 0],
+            ["2026-09-21", "iauto", "120_240", 2311, 1],
+            ["2026-09-21", "iauto", "120_400", 5412, 0],
+            ["2026-09-21", "iauto", "120_60", 7863, 1],
+            ["2026-09-21", "iauto", "120_600", 66974, 12],
+            ["2026-09-21", "iauto", "160_600", 89897, 28],
+            ["2026-09-21", "iauto", "176_62", 6910, 0],
+            ["2026-09-21", "iauto", "200_200", 180448, 16],
+            ["2026-09-21", "iauto", "200_600", 4675, 5],
+            ["2026-09-21", "iauto", "220_90", 31901, 1],
+            ["2026-09-21", "iauto", "234_60", 4440, 2],
+            ["2026-09-21", "iauto", "240_120", 30988, 2],
+            ["2026-09-21", "iauto", "240_133", 51682, 2],
+            ["2026-09-21", "iauto", "250_250", 135138, 34],
+            ["2026-09-21", "iauto", "300_100", 36329, 4],
+            ["2026-09-21", "iauto", "300_250", 65335, 23],
+            ["2026-09-21", "iauto", "300_50", 12146, 3],
+            ["2026-09-21", "iauto", "300_57", 2828, 0],
+            ["2026-09-21", "iauto", "300_600", 11719, 1],
+            ["2026-09-21", "iauto", "320_100", 43023, 17],
+            ["2026-09-21", "iauto", "320_150", 2559, 1],
+            ["2026-09-21", "iauto", "320_50", 164776, 50],
+            ["2026-09-21", "iauto", "336_280", 24410, 10],
+            ["2026-09-21", "iauto", "360_100", 4088, 3],
+            ["2026-09-21", "iauto", "360_50", 2929, 3],
+            ["2026-09-21", "iauto", "384_100", 3783, 1],
+            ["2026-09-21", "iauto", "384_50", 2291, 1],
+            ["2026-09-21", "iauto", "411_100", 2441, 1],
+            ["2026-09-21", "iauto", "468_60", 5667, 3],
+            ["2026-09-21", "iauto", "584_60", 11910, 1],
+            ["2026-09-21", "iauto", "600_62", 26759, 0],
+            ["2026-09-21", "iauto", "655_120", 26946, 5],
+            ["2026-09-21", "iauto", "728_90", 223718, 37],
+            ["2026-09-21", "iauto", "750_100", 4732, 2],
+            ["2026-09-21", "iauto", "800_100", 2566, 0],
+            ["2026-09-21", "iauto", "930_280", 2183, 1],
+            ["2026-09-21", "iauto", "970_250", 16061, 1],
+            ["2026-09-21", "iauto", "970_280", 7964, 2],
+            ["2026-09-21", "iauto", "970_90", 10785, 1],
+            ["2026-09-21", "iauto", "980_90", 2765, 0],
+            ["2026-09-22", "iauto", "1180_250", 9419, 0],
+            ["2026-09-22", "iauto", "120_240", 2716, 0],
+            ["2026-09-22", "iauto", "120_400", 5265, 0],
+            ["2026-09-22", "iauto", "120_60", 12558, 1],
+            ["2026-09-22", "iauto", "120_600", 79139, 17],
+            ["2026-09-22", "iauto", "160_600", 105034, 34],
+            ["2026-09-22", "iauto", "176_62", 12252, 0],
+            ["2026-09-22", "iauto", "180_150", 2192, 0],
+            ["2026-09-22", "iauto", "200_200", 122511, 14],
+            ["2026-09-22", "iauto", "200_600", 5283, 2],
+            ["2026-09-22", "iauto", "220_90", 36365, 0],
+            ["2026-09-22", "iauto", "234_60", 4921, 0],
+            ["2026-09-22", "iauto", "240_120", 35650, 0],
+            ["2026-09-22", "iauto", "240_133", 55323, 2],
+            ["2026-09-22", "iauto", "250_250", 140873, 21],
+            ["2026-09-22", "iauto", "300_100", 42304, 3],
+            ["2026-09-22", "iauto", "300_250", 64816, 10],
+            ["2026-09-22", "iauto", "300_50", 14724, 1],
+            ["2026-09-22", "iauto", "300_57", 3554, 0],
+            ["2026-09-22", "iauto", "300_600", 13144, 3],
+            ["2026-09-22", "iauto", "320_100", 45568, 4],
+            ["2026-09-22", "iauto", "320_50", 134872, 46],
+            ["2026-09-22", "iauto", "336_280", 22736, 9],
+            ["2026-09-22", "iauto", "360_100", 3156, 2],
+            ["2026-09-22", "iauto", "360_50", 2977, 2],
+            ["2026-09-22", "iauto", "384_100", 3598, 4],
+            ["2026-09-22", "iauto", "384_50", 2441, 2],
+            ["2026-09-22", "iauto", "411_100", 2310, 5],
+            ["2026-09-22", "iauto", "468_60", 5513, 1],
+            ["2026-09-22", "iauto", "584_60", 11019, 3],
+            ["2026-09-22", "iauto", "600_62", 25017, 3],
+            ["2026-09-22", "iauto", "655_120", 33306, 11],
+            ["2026-09-22", "iauto", "728_90", 262498, 32],
+            ["2026-09-22", "iauto", "750_100", 6191, 1],
+            ["2026-09-22", "iauto", "800_100", 3340, 0],
+            ["2026-09-22", "iauto", "930_280", 2576, 2],
+            ["2026-09-22", "iauto", "970_250", 15968, 3],
+            ["2026-09-22", "iauto", "970_280", 9334, 4],
+            ["2026-09-22", "iauto", "970_90", 13848, 1],
+            ["2026-09-22", "iauto", "980_90", 2339, 0],
+            ["2026-09-23", "iauto", "1180_250", 7457, 0],
+            ["2026-09-23", "iauto", "120_240", 2695, 0],
+            ["2026-09-23", "iauto", "120_400", 4127, 1],
+            ["2026-09-23", "iauto", "120_60", 14468, 1],
+            ["2026-09-23", "iauto", "120_600", 46344, 7],
+            ["2026-09-23", "iauto", "125_125", 2371, 0],
+            ["2026-09-23", "iauto", "160_600", 66158, 10],
+            ["2026-09-23", "iauto", "176_62", 14015, 0],
+            ["2026-09-23", "iauto", "180_150", 2324, 0],
+            ["2026-09-23", "iauto", "200_200", 152358, 7],
+            ["2026-09-23", "iauto", "200_600", 5141, 0],
+            ["2026-09-23", "iauto", "220_90", 25838, 1],
+            ["2026-09-23", "iauto", "234_60", 5392, 0],
+            ["2026-09-23", "iauto", "240_120", 27061, 0],
+            ["2026-09-23", "iauto", "240_133", 48896, 2],
+            ["2026-09-23", "iauto", "250_250", 116908, 22],
+            ["2026-09-23", "iauto", "300_100", 31665, 0],
+            ["2026-09-23", "iauto", "300_250", 47030, 8],
+            ["2026-09-23", "iauto", "300_50", 14122, 0],
+            ["2026-09-23", "iauto", "300_57", 4394, 0],
+            ["2026-09-23", "iauto", "300_600", 9917, 5],
+            ["2026-09-23", "iauto", "320_100", 27645, 9],
+            ["2026-09-23", "iauto", "320_150", 2208, 0],
+            ["2026-09-23", "iauto", "320_50", 111435, 24],
+            ["2026-09-23", "iauto", "336_280", 16443, 8],
+            ["2026-09-23", "iauto", "360_100", 2564, 4],
+            ["2026-09-23", "iauto", "360_50", 2569, 1],
+            ["2026-09-23", "iauto", "384_100", 2265, 3],
+            ["2026-09-23", "iauto", "384_50", 2166, 1],
+            ["2026-09-23", "iauto", "468_60", 3470, 0],
+            ["2026-09-23", "iauto", "584_60", 9220, 0],
+            ["2026-09-23", "iauto", "600_62", 21505, 1],
+            ["2026-09-23", "iauto", "655_120", 20493, 7],
+            ["2026-09-23", "iauto", "728_90", 137666, 23],
+            ["2026-09-23", "iauto", "750_100", 4229, 1],
+            ["2026-09-23", "iauto", "800_100", 2309, 1],
+            ["2026-09-23", "iauto", "930_280", 3037, 1],
+            ["2026-09-23", "iauto", "970_250", 13232, 0],
+            ["2026-09-23", "iauto", "970_280", 7716, 1],
+            ["2026-09-23", "iauto", "970_90", 9743, 2],
+            ["2026-09-24", "iauto", "1180_250", 3609, 0],
+            ["2026-09-24", "iauto", "120_400", 1077, 0],
+            ["2026-09-24", "iauto", "120_60", 27089, 0],
+            ["2026-09-24", "iauto", "120_600", 17463, 2],
+            ["2026-09-24", "iauto", "160_600", 39810, 11],
+            ["2026-09-24", "iauto", "176_62", 25788, 0],
+            ["2026-09-24", "iauto", "200_200", 87728, 8],
+            ["2026-09-24", "iauto", "200_600", 3278, 1],
+            ["2026-09-24", "iauto", "234_60", 2349, 0],
+            ["2026-09-24", "iauto", "240_120", 3135, 0],
+            ["2026-09-24", "iauto", "240_133", 2012, 1],
+            ["2026-09-24", "iauto", "250_250", 60496, 33],
+            ["2026-09-24", "iauto", "300_100", 6233, 1],
+            ["2026-09-24", "iauto", "300_250", 18291, 3],
+            ["2026-09-24", "iauto", "300_50", 10675, 3],
+            ["2026-09-24", "iauto", "300_600", 6510, 1],
+            ["2026-09-24", "iauto", "320_100", 18114, 5],
+            ["2026-09-24", "iauto", "320_150", 2396, 1],
+            ["2026-09-24", "iauto", "320_50", 109167, 27],
+            ["2026-09-24", "iauto", "336_280", 13003, 9],
+            ["2026-09-24", "iauto", "360_100", 2150, 3],
+            ["2026-09-24", "iauto", "360_50", 2501, 3],
+            ["2026-09-24", "iauto", "384_100", 1998, 1],
+            ["2026-09-24", "iauto", "384_50", 1951, 6],
+            ["2026-09-24", "iauto", "411_100", 1327, 0],
+            ["2026-09-24", "iauto", "411_50", 1408, 0],
+            ["2026-09-24", "iauto", "468_60", 13489, 2],
+            ["2026-09-24", "iauto", "584_60", 2488, 0],
+            ["2026-09-24", "iauto", "600_62", 5613, 0],
+            ["2026-09-24", "iauto", "640_100", 744, 0],
+            ["2026-09-24", "iauto", "655_120", 3064, 0],
+            ["2026-09-24", "iauto", "728_90", 51380, 7],
+            ["2026-09-24", "iauto", "750_100", 1341, 0],
+            ["2026-09-24", "iauto", "800_100", 958, 1],
+            ["2026-09-24", "iauto", "930_280", 1631, 2],
+            ["2026-09-24", "iauto", "950_90", 1015, 0],
+            ["2026-09-24", "iauto", "960_90", 1248, 1],
+            ["2026-09-24", "iauto", "970_250", 5569, 2],
+            ["2026-09-24", "iauto", "970_280", 2284, 2],
+            ["2026-09-24", "iauto", "970_90", 8130, 5],
+            ["2026-09-25", "iauto", "1180_250", 3662, 0],
+            ["2026-09-25", "iauto", "1200_90", 806, 0],
+            ["2026-09-25", "iauto", "120_400", 1013, 0],
+            ["2026-09-25", "iauto", "120_60", 19693, 0],
+            ["2026-09-25", "iauto", "120_600", 15514, 1],
+            ["2026-09-25", "iauto", "160_600", 31938, 3],
+            ["2026-09-25", "iauto", "176_62", 19067, 0],
+            ["2026-09-25", "iauto", "200_200", 95849, 4],
+            ["2026-09-25", "iauto", "200_600", 2442, 0],
+            ["2026-09-25", "iauto", "234_60", 2471, 0],
+            ["2026-09-25", "iauto", "240_120", 2481, 0],
+            ["2026-09-25", "iauto", "240_133", 1415, 0],
+            ["2026-09-25", "iauto", "250_250", 58185, 25],
+            ["2026-09-25", "iauto", "300_100", 6614, 0],
+            ["2026-09-25", "iauto", "300_250", 17292, 4],
+            ["2026-09-25", "iauto", "300_50", 11246, 1],
+            ["2026-09-25", "iauto", "300_600", 5401, 2],
+            ["2026-09-25", "iauto", "320_100", 16813, 6],
+            ["2026-09-25", "iauto", "320_150", 2491, 0],
+            ["2026-09-25", "iauto", "320_50", 107645, 27],
+            ["2026-09-25", "iauto", "336_280", 11820, 2],
+            ["2026-09-25", "iauto", "360_100", 2735, 1],
+            ["2026-09-25", "iauto", "360_50", 2457, 1],
+            ["2026-09-25", "iauto", "384_100", 2104, 2],
+            ["2026-09-25", "iauto", "384_50", 2024, 5],
+            ["2026-09-25", "iauto", "411_100", 1607, 1],
+            ["2026-09-25", "iauto", "411_50", 1650, 1],
+            ["2026-09-25", "iauto", "468_60", 9467, 1],
+            ["2026-09-25", "iauto", "584_60", 1508, 0],
+            ["2026-09-25", "iauto", "600_62", 4064, 0],
+            ["2026-09-25", "iauto", "655_120", 2066, 0],
+            ["2026-09-25", "iauto", "728_90", 47446, 4],
+            ["2026-09-25", "iauto", "750_100", 1248, 0],
+            ["2026-09-25", "iauto", "800_100", 1076, 0],
+            ["2026-09-25", "iauto", "930_280", 1351, 1],
+            ["2026-09-25", "iauto", "950_90", 1097, 0],
+            ["2026-09-25", "iauto", "960_90", 1127, 0],
+            ["2026-09-25", "iauto", "970_250", 5126, 1],
+            ["2026-09-25", "iauto", "970_280", 2215, 3],
+            ["2026-09-25", "iauto", "970_90", 4458, 0],
+            ["2026-09-26", "iauto", "1180_250", 3602, 1],
+            ["2026-09-26", "iauto", "120_400", 1266, 0],
+            ["2026-09-26", "iauto", "120_60", 21806, 0],
+            ["2026-09-26", "iauto", "120_600", 23894, 2],
+            ["2026-09-26", "iauto", "160_600", 36470, 7],
+            ["2026-09-26", "iauto", "176_62", 20452, 0],
+            ["2026-09-26", "iauto", "200_200", 104941, 12],
+            ["2026-09-26", "iauto", "200_600", 2515, 2],
+            ["2026-09-26", "iauto", "234_60", 2782, 0],
+            ["2026-09-26", "iauto", "240_120", 3028, 0],
+            ["2026-09-26", "iauto", "240_133", 1330, 0],
+            ["2026-09-26", "iauto", "250_250", 62462, 31],
+            ["2026-09-26", "iauto", "300_100", 6930, 0],
+            ["2026-09-26", "iauto", "300_250", 18172, 9],
+            ["2026-09-26", "iauto", "300_50", 10095, 4],
+            ["2026-09-26", "iauto", "300_600", 6434, 0],
+            ["2026-09-26", "iauto", "320_100", 17628, 7],
+            ["2026-09-26", "iauto", "320_150", 2239, 0],
+            ["2026-09-26", "iauto", "320_50", 121255, 29],
+            ["2026-09-26", "iauto", "336_280", 14900, 4],
+            ["2026-09-26", "iauto", "360_100", 2713, 4],
+            ["2026-09-26", "iauto", "360_50", 3561, 1],
+            ["2026-09-26", "iauto", "384_100", 2204, 1],
+            ["2026-09-26", "iauto", "384_50", 2999, 1],
+            ["2026-09-26", "iauto", "411_100", 1829, 3],
+            ["2026-09-26", "iauto", "411_50", 2078, 0],
+            ["2026-09-26", "iauto", "468_60", 10057, 1],
+            ["2026-09-26", "iauto", "584_60", 2984, 1],
+            ["2026-09-26", "iauto", "600_62", 7654, 0],
+            ["2026-09-26", "iauto", "640_100", 825, 0],
+            ["2026-09-26", "iauto", "655_120", 2756, 2],
+            ["2026-09-26", "iauto", "728_90", 46074, 10],
+            ["2026-09-26", "iauto", "750_100", 1260, 0],
+            ["2026-09-26", "iauto", "800_100", 902, 0],
+            ["2026-09-26", "iauto", "930_280", 1301, 3],
+            ["2026-09-26", "iauto", "950_90", 1047, 1],
+            ["2026-09-26", "iauto", "960_90", 815, 0],
+            ["2026-09-26", "iauto", "970_250", 5082, 1],
+            ["2026-09-26", "iauto", "970_280", 1978, 2],
+            ["2026-09-26", "iauto", "970_90", 4077, 3],
+            ["2026-09-27", "iauto", "1180_250", 5030, 0],
+            ["2026-09-27", "iauto", "1200_90", 936, 0],
+            ["2026-09-27", "iauto", "120_400", 1013, 0],
+            ["2026-09-27", "iauto", "120_60", 24021, 0],
+            ["2026-09-27", "iauto", "120_600", 25454, 0],
+            ["2026-09-27", "iauto", "160_600", 42311, 11],
+            ["2026-09-27", "iauto", "176_62", 22406, 0],
+            ["2026-09-27", "iauto", "200_200", 100106, 8],
+            ["2026-09-27", "iauto", "200_600", 3509, 2],
+            ["2026-09-27", "iauto", "234_60", 3767, 0],
+            ["2026-09-27", "iauto", "240_120", 3913, 0],
+            ["2026-09-27", "iauto", "240_133", 1793, 0],
+            ["2026-09-27", "iauto", "250_250", 68778, 25],
+            ["2026-09-27", "iauto", "300_100", 8645, 0],
+            ["2026-09-27", "iauto", "300_250", 20773, 6],
+            ["2026-09-27", "iauto", "300_50", 14970, 4],
+            ["2026-09-27", "iauto", "300_600", 7004, 0],
+            ["2026-09-27", "iauto", "320_100", 21695, 5],
+            ["2026-09-27", "iauto", "320_150", 2296, 0],
+            ["2026-09-27", "iauto", "320_50", 148530, 31],
+            ["2026-09-27", "iauto", "336_280", 13580, 9],
+            ["2026-09-27", "iauto", "360_100", 2744, 1],
+            ["2026-09-27", "iauto", "360_50", 3634, 1],
+            ["2026-09-27", "iauto", "384_100", 2670, 2],
+            ["2026-09-27", "iauto", "384_50", 2837, 0],
+            ["2026-09-27", "iauto", "411_100", 2212, 3],
+            ["2026-09-27", "iauto", "411_50", 2130, 0],
+            ["2026-09-27", "iauto", "468_60", 14896, 2],
+            ["2026-09-27", "iauto", "584_60", 2494, 0],
+            ["2026-09-27", "iauto", "600_62", 6624, 0],
+            ["2026-09-27", "iauto", "655_120", 3038, 1],
+            ["2026-09-27", "iauto", "728_90", 60984, 5],
+            ["2026-09-27", "iauto", "750_100", 2026, 0],
+            ["2026-09-27", "iauto", "800_100", 1096, 0],
+            ["2026-09-27", "iauto", "930_280", 1572, 0],
+            ["2026-09-27", "iauto", "950_90", 1031, 1],
+            ["2026-09-27", "iauto", "960_90", 1064, 0],
+            ["2026-09-27", "iauto", "970_250", 6049, 1],
+            ["2026-09-27", "iauto", "970_280", 2502, 1],
+            ["2026-09-27", "iauto", "970_90", 6757, 0],
+            ["2026-09-28", "iauto", "1180_250", 4377, 0],
+            ["2026-09-28", "iauto", "120_400", 3079, 0],
+            ["2026-09-28", "iauto", "120_60", 12201, 0],
+            ["2026-09-28", "iauto", "120_600", 43779, 6],
+            ["2026-09-28", "iauto", "150_150", 1262, 0],
+            ["2026-09-28", "iauto", "160_600", 62525, 9],
+            ["2026-09-28", "iauto", "176_62", 11645, 0],
+            ["2026-09-28", "iauto", "200_200", 90886, 7],
+            ["2026-09-28", "iauto", "200_600", 5642, 1],
+            ["2026-09-28", "iauto", "204_250", 1077, 0],
+            ["2026-09-28", "iauto", "234_60", 2799, 1],
+            ["2026-09-28", "iauto", "240_120", 14365, 0],
+            ["2026-09-28", "iauto", "240_133", 8300, 2],
+            ["2026-09-28", "iauto", "250_250", 78081, 26],
+            ["2026-09-28", "iauto", "300_100", 18959, 2],
+            ["2026-09-28", "iauto", "300_250", 38007, 13],
+            ["2026-09-28", "iauto", "300_50", 12967, 1],
+            ["2026-09-28", "iauto", "300_600", 8135, 3],
+            ["2026-09-28", "iauto", "320_100", 25570, 7],
+            ["2026-09-28", "iauto", "320_150", 2605, 1],
+            ["2026-09-28", "iauto", "320_50", 133223, 33],
+            ["2026-09-28", "iauto", "336_280", 15578, 7],
+            ["2026-09-28", "iauto", "360_100", 2859, 2],
+            ["2026-09-28", "iauto", "360_50", 3796, 2],
+            ["2026-09-28", "iauto", "384_100", 2203, 5],
+            ["2026-09-28", "iauto", "384_50", 2651, 1],
+            ["2026-09-28", "iauto", "411_100", 1589, 3],
+            ["2026-09-28", "iauto", "411_50", 2315, 3],
+            ["2026-09-28", "iauto", "468_60", 6854, 3],
+            ["2026-09-28", "iauto", "584_60", 6591, 0],
+            ["2026-09-28", "iauto", "600_62", 17217, 1],
+            ["2026-09-28", "iauto", "640_100", 1109, 0],
+            ["2026-09-28", "iauto", "655_120", 14479, 7],
+            ["2026-09-28", "iauto", "728_90", 103004, 10],
+            ["2026-09-28", "iauto", "750_100", 4352, 2],
+            ["2026-09-28", "iauto", "800_100", 2130, 0],
+            ["2026-09-28", "iauto", "930_280", 2014, 0],
+            ["2026-09-28", "iauto", "970_250", 9506, 2],
+            ["2026-09-28", "iauto", "970_280", 7137, 4],
+            ["2026-09-28", "iauto", "970_90", 7178, 0],
+            ["2026-09-29", "iauto", "1180_250", 3923, 0],
+            ["2026-09-29", "iauto", "1200_90", 1781, 2],
+            ["2026-09-29", "iauto", "120_400", 3744, 0],
+            ["2026-09-29", "iauto", "120_60", 18922, 0],
+            ["2026-09-29", "iauto", "120_600", 44695, 4],
+            ["2026-09-29", "iauto", "150_150", 1464, 0],
+            ["2026-09-29", "iauto", "160_600", 71944, 19],
+            ["2026-09-29", "iauto", "176_62", 17381, 1],
+            ["2026-09-29", "iauto", "200_200", 91740, 7],
+            ["2026-09-29", "iauto", "200_600", 7454, 4],
+            ["2026-09-29", "iauto", "234_60", 3376, 0],
+            ["2026-09-29", "iauto", "240_120", 19433, 0],
+            ["2026-09-29", "iauto", "240_133", 6782, 0],
+            ["2026-09-29", "iauto", "250_250", 79854, 28],
+            ["2026-09-29", "iauto", "300_100", 25110, 1],
+            ["2026-09-29", "iauto", "300_250", 39099, 9],
+            ["2026-09-29", "iauto", "300_50", 12983, 1],
+            ["2026-09-29", "iauto", "300_600", 8861, 3],
+            ["2026-09-29", "iauto", "320_100", 31901, 8],
+            ["2026-09-29", "iauto", "320_150", 2455, 1],
+            ["2026-09-29", "iauto", "320_50", 149831, 47],
+            ["2026-09-29", "iauto", "336_280", 17503, 9],
+            ["2026-09-29", "iauto", "360_100", 2454, 1],
+            ["2026-09-29", "iauto", "360_50", 4068, 5],
+            ["2026-09-29", "iauto", "384_100", 2054, 3],
+            ["2026-09-29", "iauto", "384_50", 2827, 3],
+            ["2026-09-29", "iauto", "411_100", 1371, 1],
+            ["2026-09-29", "iauto", "411_50", 2326, 1],
+            ["2026-09-29", "iauto", "468_60", 8653, 0],
+            ["2026-09-29", "iauto", "584_60", 5382, 0],
+            ["2026-09-29", "iauto", "600_62", 14264, 1],
+            ["2026-09-29", "iauto", "640_100", 1317, 0],
+            ["2026-09-29", "iauto", "655_120", 20354, 11],
+            ["2026-09-29", "iauto", "728_90", 109541, 14],
+            ["2026-09-29", "iauto", "750_100", 4480, 0],
+            ["2026-09-29", "iauto", "800_100", 3100, 0],
+            ["2026-09-29", "iauto", "930_280", 2333, 5],
+            ["2026-09-29", "iauto", "970_250", 9216, 0],
+            ["2026-09-29", "iauto", "970_280", 7845, 0],
+            ["2026-09-29", "iauto", "970_90", 9758, 1],
+            ["2026-09-30", "iauto", "1180_250", 4377, 0],
+            ["2026-09-30", "iauto", "120_400", 2717, 0],
+            ["2026-09-30", "iauto", "120_60", 10073, 0],
+            ["2026-09-30", "iauto", "120_600", 43230, 3],
+            ["2026-09-30", "iauto", "160_600", 66133, 19],
+            ["2026-09-30", "iauto", "176_62", 9394, 0],
+            ["2026-09-30", "iauto", "200_200", 88943, 6],
+            ["2026-09-30", "iauto", "200_600", 7539, 2],
+            ["2026-09-30", "iauto", "204_250", 1145, 0],
+            ["2026-09-30", "iauto", "234_60", 3015, 0],
+            ["2026-09-30", "iauto", "240_120", 15939, 0],
+            ["2026-09-30", "iauto", "240_133", 5678, 2],
+            ["2026-09-30", "iauto", "250_250", 84877, 36],
+            ["2026-09-30", "iauto", "300_100", 20051, 3],
+            ["2026-09-30", "iauto", "300_250", 32598, 10],
+            ["2026-09-30", "iauto", "300_50", 9645, 1],
+            ["2026-09-30", "iauto", "300_600", 4335, 2],
+            ["2026-09-30", "iauto", "320_100", 33915, 7],
+            ["2026-09-30", "iauto", "320_150", 1968, 0],
+            ["2026-09-30", "iauto", "320_50", 189982, 55],
+            ["2026-09-30", "iauto", "320_80", 1415, 0],
+            ["2026-09-30", "iauto", "336_280", 14248, 9],
+            ["2026-09-30", "iauto", "360_100", 2353, 4],
+            ["2026-09-30", "iauto", "360_50", 3915, 4],
+            ["2026-09-30", "iauto", "384_100", 1661, 3],
+            ["2026-09-30", "iauto", "384_50", 2825, 3],
+            ["2026-09-30", "iauto", "411_100", 1532, 0],
+            ["2026-09-30", "iauto", "411_50", 2195, 3],
+            ["2026-09-30", "iauto", "468_60", 6865, 0],
+            ["2026-09-30", "iauto", "584_60", 3430, 0],
+            ["2026-09-30", "iauto", "600_62", 8835, 1],
+            ["2026-09-30", "iauto", "640_100", 1181, 0],
+            ["2026-09-30", "iauto", "655_120", 17169, 6],
+            ["2026-09-30", "iauto", "728_90", 96761, 16],
+            ["2026-09-30", "iauto", "750_100", 4114, 0],
+            ["2026-09-30", "iauto", "800_100", 2327, 0],
+            ["2026-09-30", "iauto", "930_280", 3834, 2],
+            ["2026-09-30", "iauto", "970_250", 9812, 0],
+            ["2026-09-30", "iauto", "970_280", 7302, 1],
+            ["2026-09-30", "iauto", "970_90", 8219, 3],
+        ];
+        /* ASDDATA:END */
+
+        const pad = n => String(n).padStart(2, '0');
+        const ymd = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+        const md = s => s.slice(5).replace('-', '/');
+
+        const ROWS = ADATA.map(([d, t, imp, clk]) => ({ d, t, imp, clk }));
+        const DATES = [...new Set(ROWS.map(r => r.d))].sort();
+        const TODAY = DATES[DATES.length - 1] || ymd(new Date());
+        const PERIOD_FROM = TODAY.slice(0, 8) + '01';
+        THEMES.forEach(T => { const ds = ROWS.filter(r => r.t === T.id && r.imp >= MIN_IMP).map(r => r.d).sort(); T.from = ds[0]; T.to = ds[ds.length - 1]; });
+
+        /* 공통 */
+        const sum = rows => { const o = { imp: 0, clk: 0 }; for (const r of rows) { o.imp += r.imp; o.clk += r.clk; } o.ctr = o.imp >= MIN_IMP ? o.clk / o.imp * 100 : 0; return o; };
+        const pick = (fn) => ROWS.filter(fn);
+        const f = n => Math.round(n).toLocaleString('ko-KR');
+        const pct = v => v.toFixed(3) + '%';
+        const M3 = [
+            { k: 'imp', label: '노출수', fmt: f },
+            { k: 'clk', label: '클릭수', fmt: f },
+            { k: 'ctr', label: '클릭률 (CTR)', fmt: pct },
+        ];
+        const theme = id => THEMES.find(t => t.id === id);
+        // 프레임 이름, 호버 시 배너 툴팁
+        const nm = (T, short = false) => `<span class="fname" data-frame-tip="${T.id}">${short ? T.name.replace(' 프레임', '') : T.name}</span>`;
+        function frameArt(id, o = {}) {
+            const T = theme(id), src = o.src || T.src || '';
+            const attr = T.tpl ? `data-tpl="${src}"` : `src="${src}"`;
+            return `<div class="ad ad-slot" data-frame="${id}">${T.img ? `<img src="${T.img}" alt="${T.name}" loading="lazy">` : src ? `<iframe ${attr} title="${T.name}" loading="lazy" scrolling="no"></iframe>` : `<div class="ad-empty">${T.desc}</div>`}</div>`;
+        }
+
+        // 배너 iframe 을 칸 폭에 맞게 축소
+        const BANNER_PX = 250;
+        const fitBannerSlots = () => document.querySelectorAll('.ad.ad-slot iframe').forEach(f => {
+            const w = f.parentElement.clientWidth;
+            if (w) f.style.transform = `scale(${w / BANNER_PX})`;
+        });
+        // 오토 프레임 템플릿용 목 데이터
+        const TPL_MOCK = {
+            '{{w}}': BANNER_PX, '{{h}}': BANNER_PX,
+            '{{productList}}': `{ pcode: "test-pcode1", pnm: "오토프레임 카라넥 원피스", price: "49,900", prdt_prmct: "39,900", dc_rate: "32",
+                img: "https://www.dabagirl.co.kr/web/product/big/202105/04ff60dbb9fa51e3c47fc8e4bdc27c08.jpg", purl: "javascript:void(0)", advrtsReplcCode: "01", advrtsReplcNm: "" }`,
+            '{{HTTP}}': 'https://img.mobon.net', '{{HTTP_DR}}': 'https://img.mobon.net',
+            '{{wp_imgtag}}': '', '{{UUID}}': 'test-uuid', '{{USER}}': 'test-user', '{{ITL_TP_CODE}}': 'test-code',
+        };
+        const tplCache = {};
+        const fillTemplateBanners = () => document.querySelectorAll('.ad.ad-slot iframe[data-tpl]:not([data-filled])').forEach(f => {
+            f.dataset.filled = '1';
+            const url = f.dataset.tpl;
+            tplCache[url] ??= fetch(url).then(r => r.text()).then(t => Object.entries(TPL_MOCK).reduce((c, [k, v]) => c.split(k).join(v), t));
+            tplCache[url].then(html => { f.srcdoc = html; }).catch(err => console.warn('오토 배너 템플릿을 불러오지 못했습니다', err));
+        });
+        (function () {
+            let queued = false;
+            const schedule = () => { if (queued) return; queued = true; requestAnimationFrame(() => { queued = false; fitBannerSlots(); fillTemplateBanners(); }); };
+            new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
+            window.addEventListener('resize', schedule);
+            document.getElementById('tlModal')?.addEventListener('toggle', schedule);   // 닫힌 모달은 폭이 0
+            schedule();
+        })();
+
+        /* 프레임 이름 호버 툴팁 */
+        (function () {
+            const tip = document.createElement('div');
+            tip.id = 'frameTip';
+            tip.setAttribute('aria-hidden', 'true');
+            tip.innerHTML = THEMES.filter(T => T.src || T.img).map(T => `<div class="ft-item" data-frame-tip-for="${T.id}">${frameArt(T.id)}<div class="ft-name"><span class="dot" style="${sw(T)}"></span>${T.name}</div></div>`).join('');
+            document.body.appendChild(tip);
+            const W = 216, GAP = 14;
+            let cur = null;
+            const place = (x, y) => {
+                const h = tip.offsetHeight || 260;
+                let left = x + GAP, top = y + GAP;
+                if (left + W > innerWidth - 8) left = x - W - GAP;
+                if (top + h > innerHeight - 8) top = Math.max(8, y - h - GAP);
+                tip.style.left = left + 'px'; tip.style.top = top + 'px';
+            };
+            const show = (el, e) => {
+                const id = el.dataset.frameTip;
+                if (!theme(id)?.src && !theme(id)?.img) return;
+                cur = el;
+                const host = el.closest('dialog') || document.body;
+                if (tip.parentElement !== host) host.appendChild(tip);
+                tip.querySelectorAll('.ft-item').forEach(it => it.classList.toggle('on', it.dataset.frameTipFor === id));
+                tip.classList.add('show');
+                fitBannerSlots();
+                place(e.clientX, e.clientY);
+            };
+            const hide = () => { cur = null; tip.classList.remove('show'); };
+            document.addEventListener('mouseover', e => { const el = e.target.closest('[data-frame-tip]'); if (el && el !== cur) show(el, e); });
+            document.addEventListener('mouseout', e => { const el = e.target.closest('[data-frame-tip]'); if (el && el === cur && !el.contains(e.relatedTarget)) hide(); });
+            document.addEventListener('mousemove', e => { if (cur) place(e.clientX, e.clientY); });
+            document.addEventListener('scroll', hide, true);
+        })();
+
+        initTimeline();   // frame_timeline.js 공용
+
+        /* 프레임별 성과 */
+        function renderThemes(from, to) {
+            const inR = r => r.d >= from && r.d <= to;
+            const TS = Object.fromEntries(THEMES.map(T => [T.id, sum(pick(r => inR(r) && r.t === T.id))]));
+            const themeRank = (id, k) => { const n = TS[id][k] > 0 ? 1 + THEMES.filter(T => TS[T.id][k] > TS[id][k]).length : 0; return n ? `<em class="rk-badge rk${Math.min(n, 3)}">${n}위</em>` : ''; };
+            document.getElementById('themes').innerHTML = THEMES.map(T => {
+                const s = TS[T.id], ds = [...new Set(pick(r => inR(r) && r.t === T.id && r.imp >= MIN_IMP).map(r => r.d))].sort();
+                const period = !ds.length ? '데이터 없음' : from === to ? `데이터: <b>${md(from)}</b>` : `데이터: <b>${md(ds[0])} ~ ${md(ds[ds.length - 1])}</b>`;
+                const view = T.view ? `<a class="theme-view" href="${T.view}" target="_blank" rel="noopener" title="${T.name} 전체 사이즈 미리보기 (새 탭)">프레임 미리보기<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></a>` : '';
+                return `<article class="card theme">
+                    ${T.view ? `<a class="theme-art" href="${T.view}" target="_blank" rel="noopener" aria-label="${T.name} 미리보기 (새 탭)">${frameArt(T.id)}</a>` : `<div class="theme-art">${frameArt(T.id)}</div>`}
+                    <div class="theme-body">
+                        <div class="theme-name"><span class="dot" style="${sw(T)}"></span>${T.ab ? `<span class="ab-chip ${T.ab}">${AB_LABEL[T.ab]}</span>` : ''}${T.kind ? `<span class="kind-chip">${T.kind}</span>` : ''}${T.name}${view}</div>
+                        <div class="theme-period">${period}</div>
+                        <dl class="theme-stats">
+                            <dt>노출수 ${themeRank(T.id, 'imp')}</dt><dd>${s.imp ? f(s.imp) : '−'}</dd>
+                            <dt>클릭수 ${themeRank(T.id, 'clk')}</dt><dd>${s.imp ? f(s.clk) : '−'}</dd>
+                            <dt>클릭률 (CTR) ${themeRank(T.id, 'ctr')}</dt><dd>${s.imp ? pct(s.ctr) : '−'}</dd>
+                        </dl>
+                    </div>
+                </article>`;
+            }).join('');
+        }
+        (function () {
+            const ctrl = document.getElementById('themePeriod'), dateEl = document.getElementById('themeDate');
+            dateEl.min = PERIOD_FROM; dateEl.max = TODAY; dateEl.value = TODAY;
+            ctrl.querySelector('[data-mode="month"]').textContent = `${+TODAY.slice(5, 7)}월 전체`;
+            const run = () => {
+                const mode = ctrl.querySelector('[aria-pressed="true"]').dataset.mode;
+                dateEl.hidden = mode !== 'day';
+                const d = dateEl.value || TODAY;
+                if (mode === 'day') renderThemes(d, d); else renderThemes(PERIOD_FROM, TODAY);
+            };
+            ctrl.addEventListener('click', e => {
+                const b = e.target.closest('button[data-mode]'); if (!b) return;
+                ctrl.querySelectorAll('button[data-mode]').forEach(x => x.setAttribute('aria-pressed', x === b));
+                run();
+            });
+            dateEl.addEventListener('change', run);
+            run();
+        })();
+
+        const CROWN = `<svg class="crown" viewBox="0 0 24 28" aria-hidden="true"><path d="M6 1h5l3 8H9z" fill="#3f7ee8"/><path d="M18 1h-5l-3 8h5z" fill="#d7262f"/><circle cx="12" cy="17.5" r="9" fill="#f2b705" stroke="#c98f00" stroke-width="1.5"/><circle cx="12" cy="17.5" r="6.3" fill="none" stroke="#fff3c4" stroke-width="1"/><text x="12" y="21.6" text-anchor="middle" font-size="11" font-weight="800" font-family="Arial, sans-serif" fill="#7a5200">1</text></svg>`;
+        /* 전전일 vs 전일 카드 */
+        (function () {
+            const Y = DATES[DATES.length - 1], B = DATES[DATES.length - 2];
+            const Ys = Object.fromEntries(THEMES.map(T => [T.id, sum(pick(r => r.t === T.id && r.d === Y))]));
+            const Bs = Object.fromEntries(THEMES.map(T => [T.id, sum(pick(r => r.t === T.id && r.d === B))]));
+            const best = Object.fromEntries(M3.map(m => [m.k, Math.max(...THEMES.map(T => Ys[T.id][m.k]))]));
+            const short = (k, v) => k === 'ctr' ? v.toFixed(3) + '%' : v >= 1e4 ? f(v / 1e4) + '만' : f(v);
+            const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+            const nameOf = T => T.name.replace(' 프레임', '');
+            const change = (T, k) => {
+                const y = Ys[T.id], b = Bs[T.id], yv = y[k], bv = b[k];
+                if (!y.imp && !b.imp) return { cls: 'none', txt: '데이터 없음' };
+                if (!y.imp) return { cls: 'none', txt: '전일 데이터 없음' };
+                if (!b.imp || !bv) return { cls: 'none', txt: '전전일 데이터 없음' };
+                const diff = k === 'ctr' ? yv - bv : (yv / bv - 1) * 100;
+                const flat = k === 'ctr' ? Math.abs(diff) <= 0.001 : Math.abs(diff) <= 1;   // 유지 기준: CTR 0.001%p, 그 외 1%
+                const cls = Math.abs(diff) < 0.0005 ? 'flat' : diff > 0 ? 'rise' : 'fall';
+                return { cls, flat, diff, txt: `${cls === 'flat' ? '−' : diff > 0 ? '▲' : '▼'} ${Math.abs(diff).toFixed(k === 'ctr' ? 3 : 1)}%` };
+            };
+            // 카드 오른쪽 한 줄 요약
+            const note = (k) => {
+                const cs = THEMES.map(T => ({ T, c: change(T, k) })).filter(x => x.c.cls !== 'none');
+                if (!cs.length) return '';
+                const dir = x => x.c.flat ? '유지' : x.c.diff > 0 ? '증가' : '감소';
+                const fmtAvg = () => { const avg = cs.reduce((a, x) => a + x.c.diff, 0) / cs.length; return k === 'ctr' ? `${avg > 0 ? '+' : '−'}${Math.abs(avg).toFixed(3)}%p` : `${avg > 0 ? '+' : '−'}${Math.abs(avg).toFixed(0)}%`; };
+                if (cs.length === 1) return `${nameOf(cs[0].T)}만 데이터 있음`;
+                const groups = {}; cs.forEach(x => (groups[dir(x)] = groups[dir(x)] || []).push(x));
+                const kinds = Object.keys(groups);
+                const all = cs.length === THEMES.length ? (THEMES.length === 2 ? '두 프레임 모두' : `${['', '', '두', '세', '네', '다섯'][THEMES.length] || THEMES.length + '개'} 테마 모두`) : '모두';
+                if (kinds.length === 1) {
+                    const d = kinds[0];
+                    if (d === '유지') return `${all} 유지`;
+                    const spread = Math.max(...cs.map(x => x.c.diff)) - Math.min(...cs.map(x => x.c.diff));
+                    return (k === 'ctr' ? spread <= 0.005 : spread <= 5) ? `${all} 약 ${fmtAvg()}` : `${all} ${d}`;
+                }
+                const solo = kinds.find(d => groups[d].length === 1);
+                if (solo && kinds.length === 2) return `${nameOf(groups[solo][0].T)}만 ${solo}`;
+                return cs.map(x => `${nameOf(x.T)} ${dir(x)}`).join(' · ');
+            };
+            const wrap = document.getElementById('yd');
+            // 범례
+            wrap.innerHTML = `<div class="legend yd-legend"><span class="yd-legend-note">연한 색 = 전전일 ${md(B)} · 진한 색 = 전일 ${md(Y)}</span></div>`
+                + `<div class="yd-cards">${M3.map(m => `<div class="yd-card">
+                    <div class="yd-card-head"><h3>${m.label}</h3><span class="yd-note">${esc(note(m.k))}</span></div>
+                    <div class="yd-chart" data-k="${m.k}"><svg></svg><div class="tip" hidden></div></div>
+                    <div class="yd-labels" style="grid-template-columns:repeat(${THEMES.length},1fr)">${THEMES.map(T => {
+                        const c = change(T, m.k), win = Ys[T.id][m.k] > 0 && Ys[T.id][m.k] === best[m.k];
+                        return `<div><div class="yd-name">${nm(T, true)}${win ? '<em class="rk-badge rk1">1위</em>' : ''}</div><span class="yd-chg ${c.cls}">${c.txt}</span></div>`;
+                    }).join('')}</div>
+                </div>`).join('')}</div>`;
+            function draw() {
+                wrap.querySelectorAll('.yd-chart').forEach(box => {
+                    const k = box.dataset.k, m = M3.find(x => x.k === k), svg = box.querySelector('svg'), tip = box.querySelector('.tip');
+                    svg.setAttribute('width', 0);   // 새 폭을 읽기 위해 먼저 0으로
+                    const W = box.clientWidth, H = box.clientHeight, T = 20, ih = H - T - 2;
+                    const max = Math.max(...THEMES.flatMap(t => [Ys[t.id][k], Bs[t.id][k]])) || 1;
+                    svg.setAttribute('width', W); svg.setAttribute('height', H);
+                    let out = `<line x1="0" x2="${W}" y1="${H - 1}" y2="${H - 1}" stroke="#e6e8ec"/>`;
+                    const gw = W / THEMES.length, bw = Math.max(10, Math.min(30, (gw - 28) / 2 - 3)), gap = 6;
+                    THEMES.forEach((t, i) => {
+                        const cx = gw * i + gw / 2, y = Ys[t.id], b = Bs[t.id];
+                        [[b[k], b.imp, cx - gap / 2 - bw, .3], [y[k], y.imp, cx + gap / 2, 1]].forEach(([v, has, x, op]) => {
+                            const h = v / max * ih;
+                            if (h > 0) out += `<rect class="yd-bar" data-day="${op === 1 ? `전일 ${md(Y)}` : `전전일 ${md(B)}`}" data-t="${i}" data-v="${v}" x="${x}" y="${T + ih - h}" width="${bw}" height="${h}" rx="3" fill="${t.color}" opacity="${op}"/>`;
+                            // 숫자 라벨이 막대보다 길면 바깥쪽 정렬
+                            const label = has ? short(k, v) : '−', wide = label.length * 6.4 > bw + gap - 2;
+                            const [lx, anchor] = !wide ? [x + bw / 2, 'middle'] : op === 1 ? [x, 'start'] : [x + bw, 'end'];
+                            out += `<text x="${lx}" y="${T + ih - h - 5}" font-size="${op === 1 ? 11.5 : 10.5}" font-weight="${op === 1 ? 700 : 400}" fill="${op === 1 ? '#202124' : '#858a92'}" text-anchor="${anchor}">${label}</text>`;
+                        });
+                    });
+                    svg.innerHTML = out;
+                    // 막대 호버 툴팁
+                    svg.querySelectorAll('.yd-bar').forEach(r => {
+                        r.addEventListener('mouseenter', () => {
+                            const t = THEMES[+r.dataset.t];
+                            tip.innerHTML = `<b>${r.dataset.day}</b><span><em style="font-style:normal"><i style="${sw(t)}"></i>${t.name}</em>${m.fmt(+r.dataset.v)}</span>`;
+                            tip.hidden = false;
+                            const x = +r.getAttribute('x'), y = +r.getAttribute('y'), tw = tip.offsetWidth, th = tip.offsetHeight;
+                            tip.style.left = Math.max(0, Math.min(W - tw, x + bw / 2 - tw / 2)) + 'px';
+                            tip.style.top = Math.max(0, y - th - 26) + 'px';
+                        });
+                        r.addEventListener('mouseleave', () => { tip.hidden = true; });
+                    });
+                });
+            }
+            window.addEventListener('resize', draw);
+            draw();
+        })();
+
+        /* 최근 7일 차트 */
+        (function () {
+            const D7 = DATES.slice(-7);   // 데이터가 있는 최근 7일
+            const data = D7.map(d => Object.fromEntries(THEMES.map(T => [T.id, sum(pick(r => r.t === T.id && r.d === d))])));
+            document.getElementById('w7Legend').innerHTML = THEMES.map(T => `<span><i style="${sw(T)}"></i>${nm(T)}${T.ch === '카카오' ? ' (카카오)' : ''}</span>`).join('');
+            const wrap = document.getElementById('w7');
+            wrap.innerHTML = M3.map(m => `<div class="w7-box"><h3>${m.label}</h3><div class="w7-chart" data-k="${m.k}"><svg></svg><div class="tip" hidden></div></div></div>`).join('');
+            const nice = v => { const p = Math.pow(10, Math.floor(Math.log10(v))); for (const k of [1, 2, 2.5, 5, 10]) if (k * p >= v) return k * p; return v; };
+            const short = (k, v) => k === 'ctr' ? v.toFixed(3) + '%' : v >= 1e4 ? f(v / 1e4) + '만' : f(v);
+
+            function draw() {
+                wrap.querySelectorAll('.w7-chart').forEach(box => {
+                    const k = box.dataset.k, m = M3.find(x => x.k === k), svg = box.querySelector('svg'), tip = box.querySelector('.tip');
+                    svg.setAttribute('width', 0);   // 새 폭을 읽기 위해 먼저 0으로
+                    const W = box.clientWidth, H = box.clientHeight, L = 46, R = 6, T = 8, B = 26, iw = W - L - R, ih = H - T - B;
+                    const max = nice(Math.max(...data.flatMap(o => THEMES.map(t => o[t.id][k]))) || 1);
+                    svg.setAttribute('width', W); svg.setAttribute('height', H);
+                    let out = '';
+                    for (let g = 0; g <= 4; g++) {
+                        const y = T + ih - ih * g / 4;
+                        out += `<line x1="${L}" x2="${W - R}" y1="${y}" y2="${y}" stroke="${g ? '#f2f3f5' : '#e6e8ec'}"/><text x="${L - 6}" y="${y + 4}" font-size="10" fill="#b3b8bf" text-anchor="end">${short(k, max * g / 4)}</text>`;
+                    }
+                    const gw = iw / D7.length, bw = Math.min(12, (gw - 10) / THEMES.length - 2);
+                    const tops = THEMES.map(() => []);   // 호버 선그래프용 막대 꼭대기 좌표
+                    D7.forEach((d, i) => {
+                        const gx = L + gw * i, x0 = gx + (gw - (bw + 2) * THEMES.length + 2) / 2;
+                        THEMES.forEach((t, j) => {
+                            const v = data[i][t.id][k], h = v / max * ih;
+                            if (h > 0) tops[j].push([x0 + j * (bw + 2) + bw / 2, T + ih - h]);
+                            if (h > 0) out += `<rect class="bar" data-t="${j}" x="${x0 + j * (bw + 2)}" y="${T + ih - h}" width="${bw}" height="${h}" rx="2" fill="${t.color}"${t.ring ? ` stroke="${t.ring}" stroke-width="1.5"` : ''}/>`;
+                        });
+                        out += `<rect class="hit" data-i="${i}" x="${gx}" y="${T}" width="${gw}" height="${ih}" fill="transparent"/>`;
+                        out += `<text x="${gx + gw / 2}" y="${H - 8}" font-size="10.5" fill="#888" text-anchor="middle">${md(d)}</text>`;
+                    });
+                    out += `<g class="hl-line" pointer-events="none"></g>`;
+                    svg.innerHTML = out;
+                    svg.querySelectorAll('.hit').forEach(h => {
+                        h.addEventListener('mouseenter', () => {
+                            const i = +h.dataset.i;
+                            tip.innerHTML = `<b>${md(D7[i])} · ${m.label}</b>` + THEMES.map(t => `<span><em style="font-style:normal"><i style="${sw(t)}"></i>${t.name}</em>${data[i][t.id][k] ? m.fmt(data[i][t.id][k]) : '−'}</span>`).join('');
+                            tip.hidden = false;
+                            const gx = L + gw * i, tw = tip.offsetWidth;
+                            tip.style.left = (gx + gw + tw > W ? gx - tw - 4 : gx + gw + 4) + 'px'; tip.style.top = '0px';
+                            h.setAttribute('fill', 'rgba(52,70,184,.06)');
+                        });
+                        h.addEventListener('mouseleave', () => { tip.hidden = true; h.setAttribute('fill', 'transparent'); });
+                    });
+                    // 막대 호버 시 같은 테마 선그래프
+                    const hl = svg.querySelector('.hl-line');
+                    let cur = -1;
+                    svg.onmousemove = e => {
+                        const x = e.clientX - svg.getBoundingClientRect().left, i = Math.floor((x - L) / gw);
+                        if (i < 0 || i >= D7.length) return;
+                        const x0 = L + gw * i + (gw - (bw + 2) * THEMES.length + 2) / 2;
+                        const j = Math.max(0, Math.min(THEMES.length - 1, Math.floor((x - x0 + 1) / (bw + 2))));
+                        if (j === cur) return;
+                        cur = j;
+                        const c = THEMES[j].color, p = tops[j];
+                        hl.innerHTML = `<polyline fill="none" stroke="${c}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" points="${p.map(q => q.join(',')).join(' ')}"/>` + p.map(([cx, cy]) => `<circle cx="${cx}" cy="${cy}" r="3.5" fill="#fff" stroke="${c}" stroke-width="2"/>`).join('');
+                        box.classList.add('hl');
+                        svg.querySelectorAll('.bar').forEach(b => b.classList.toggle('on', +b.dataset.t === j));
+                    };
+                    svg.onmouseleave = () => { cur = -1; hl.innerHTML = ''; box.classList.remove('hl'); };
+                });
+            }
+            window.addEventListener('resize', draw);
+            draw();
+        })();
+
+        /* 표 정렬, 합계 행 */
+        function makeSortable(table) {
+            const ths = [...table.querySelectorAll('th[data-col]')];
+            ths.forEach(th => {
+                th.innerHTML = `<button type="button" class="sort-btn" title="▲ 큰 순 · ▼ 작은 순 (이름을 누르면 번갈아 정렬)">${th.innerHTML}<span class="arw" aria-hidden="true"><span class="arw-up">▲</span><span class="arw-dn">▼</span></span></button>`;
+                th.querySelector('button').addEventListener('click', e => {
+                    const b = e.currentTarget, hit = e.target.closest('.arw-up, .arw-dn'), dir = hit ? (hit.classList.contains('arw-up') ? 'desc' : 'asc') : (b.dataset.dir === 'desc' ? 'asc' : 'desc'), col = +th.dataset.col;
+                    ths.forEach(t => { delete t.querySelector('button').dataset.dir; t.removeAttribute('aria-sort'); });
+                    b.dataset.dir = dir; th.setAttribute('aria-sort', dir === 'desc' ? 'descending' : 'ascending');
+                    const key = r => { const c = r.cells[col]; return c.dataset.v !== undefined ? +c.dataset.v : c.textContent.trim(); };
+                    [...table.tBodies].forEach(tb => [...tb.rows].filter(r => !r.classList.contains('type-row')).sort((a, c) => { const x = key(a), y = key(c); return (x > y ? 1 : x < y ? -1 : 0) * (dir === 'desc' ? -1 : 1); }).forEach(r => tb.appendChild(r)));
+                });
+            });
+        }
+        // 프레임별 1위 비중 막대
+        function stackSummary(FR, items, label, unit) {
+            const total = items.filter(r => r.win >= 0).length;
+            const cnt = FR.map((T, i) => items.filter(r => r.win === i));
+            const seg = FR.map((T, i) => {
+                const n = cnt[i].length, pct = total ? n / total * 100 : 0;
+                return n ? `<span style="width:${pct}%;${sw(T)}" data-tip="${T.name}|${label} 1위 ${n}개 (${Math.round(pct)}%)">${pct >= 12 ? `${T.name.replace(' 프레임', '')} ${Math.round(pct)}%` : ''}</span>` : '';
+            }).join('');
+            return `<div class="ss-stack"><div class="ss-stack-title">${label} 1위 비중</div><div class="ss-stack-bar">${seg}</div></div>`;
+        }
+        // 비중 막대 호버 툴팁
+        document.addEventListener('mouseover', e => {
+            const seg = e.target.closest('.ss-stack-bar span[data-tip]'); if (!seg) return;
+            const box = seg.closest('.ss-stack'); let tip = box.querySelector('.tip');
+            if (!tip) { tip = document.createElement('div'); tip.className = 'tip'; box.appendChild(tip); }
+            const [name, txt] = seg.dataset.tip.split('|');
+            tip.innerHTML = `<b>${name}</b><span>${txt}</span>`; tip.hidden = false;
+            const b = box.getBoundingClientRect(), r = seg.getBoundingClientRect();
+            tip.style.left = Math.max(0, Math.min(b.width - tip.offsetWidth, r.left - b.left + r.width / 2 - tip.offsetWidth / 2)) + 'px';
+            tip.style.top = (r.top - b.top - tip.offsetHeight - 8) + 'px';
+            seg.addEventListener('mouseleave', () => { tip.hidden = true; }, { once: true });
+        });
+        const numTd = (v, fmt, cls = '', c = '', tip = '') => `<td class="${cls}" data-v="${v}"${c ? ` style="${cv(c)}"` : ''}>${cls.includes('top') ? `<span class="crown-wrap" data-tip="${tip}">${CROWN}${fmt(v)}</span>` : fmt(v)}</td>`;
+
+
+        /* 일별 추이 표 */
+        (function () {
+            const day = (t, d) => sum(pick(r => r.t === t && r.d === d));
+            const active = vals => THEMES.filter((T, i) => vals[i].imp >= MINV);
+            const seg = on => {
+                if (!on.length) return `<span class="seg-chip none">−</span>`;
+                if (on.length === 1) return `<span class="seg-chip one" style="${cv(on[0])}">${on[0].name.replace(' 프레임', '')} 단독</span>`;
+                const n = on.length, bg = on.map((T, i) => `color-mix(in srgb, ${T.color} 22%, #fff) ${i / n * 100}% ${(i + 1) / n * 100}%`).join(', ');
+                return `<span class="seg-chip" style="background:linear-gradient(90deg, ${bg})">${on.map(T => T.name.replace(' 프레임', '')).join(' · ')} 병행</span>`;
+            };
+            const cell = (o, k, m) => `<td class="sep" data-v="${o.imp ? o[k] : -1}">${o.imp ? m.fmt(o[k]) : '−'}</td>`;
+            const group = o => M3.map(m => cell(o, m.k, m)).join('');
+            const MINV = typeof MIN_IMP === 'number' ? MIN_IMP : 1;
+            // 병행인 날만 CTR 1위 표시
+            const winGroup = (o, T, list, d) => M3.map(m => {
+                const on = list.filter(x => x.imp >= MINV);
+                const win = m.k === 'ctr' && on.length >= 2 && o.imp >= MINV && o[m.k] > 0 && o[m.k] === Math.max(...on.map(x => x[m.k]));
+                return win ? numTd(o[m.k], m.fmt, 'sep top', T, `${md(d)} · ${m.label} 1위
+${T.name} ${m.fmt(o[m.k])}`) : cell(o, m.k, m);
+            }).join('');
+            let prevKey = null;
+            const rows = [...DATES].map(d => {   // 과거순으로 구간 변화 판단 뒤 최신순 표시
+                const v = THEMES.map(T => day(T.id, d)), on = active(v), key = on.map(T => T.id).join('+');
+                const pivot = prevKey !== null && key !== prevKey;
+                prevKey = key;
+                return { d, v, on, pivot, all: sum(pick(r => r.d === d)) };
+            }).reverse().map(({ d, v, on, pivot, all }) =>
+                `<tr class="${pivot ? 'pivot' : ''}"><td class="${dayCls(d)}"><b>${md(d)}</b></td><td class="left">${seg(on)}</td>${v.map((o, i) => winGroup(o, THEMES[i], v, d)).join('')}${group(all)}</tr>`).join('');
+            const tot = THEMES.map(T => sum(pick(r => r.t === T.id))), totAll = sum(ROWS);
+            document.getElementById('transTable').innerHTML = `<thead>
+                <tr><th rowspan="2">일자</th><th rowspan="2" style="text-align:left">구간</th>
+                    ${THEMES.map(T => `<th colspan="3" class="grp sep" style="${cv(T)}"><span class="dot" style="${sw(T)}"></span>${nm(T)}</th>`).join('')}
+                    <th colspan="3" class="grp sep">합산</th></tr>
+                <tr>${[...THEMES, { name: '합산' }].map(() => M3.map(m => `<th class="sep">${m.label.replace(' (CTR)', '')}</th>`).join('')).join('')}</tr>
+                <tr class="total-row"><td>합계</td><td class="left">${DATES.length}일</td>${tot.map(group).join('')}${group(totAll)}</tr>
+            </thead><tbody>${rows}</tbody>`;
+        })();
+
+        /* 요청 사이즈별 표 */
+        const RSROWS = ASDATA.map(([t, p, imp, clk]) => ({ t, p, imp, clk }));   // 누적
+        const RSDROWS = ASDDATA.map(([d, t, p, imp, clk]) => ({ d, t, p, imp, clk }));   // 일별
+        if (!RSROWS.length) document.getElementById('sizeSection').hidden = true;
+        const RSIZE_N = 10;
+        const rsizeLabel = p => { const m = p.match(/^(\d+)_(\d+)$/); return m ? `<b>${m[1]}×${m[2]}</b><small>요청 사이즈</small>` : `<b>${p}</b>`; };
+        function renderRSize(from, to, mk) {
+            const whole = from === PERIOD_FROM && to !== from;
+            const src = whole ? RSROWS : RSDROWS.filter(r => r.d >= from && r.d <= to);
+            const m = M3.find(x => x.k === mk);
+            const FR = THEMES;
+            const psum = fn => sum(src.filter(fn));
+            const argmax = list => { let w = -1; list.forEach((o, i) => { if (o.imp && (w < 0 || o[mk] > list[w][mk])) w = i; }); return w; };
+            const sizes = [...new Set(src.map(r => r.p))]
+                .map(p => ({ p, all: psum(r => r.p === p) }))
+                .sort((a, b) => b.all.imp - a.all.imp).slice(0, RSIZE_N);
+            const rows = sizes.map(({ p }) => ({ p, v: FR.map(T => psum(r => r.t === T.id && r.p === p)) }));
+            rows.forEach(r => r.win = argmax(r.v));
+            const shown = new Set(rows.map(r => r.p));
+            const tot = FR.map(T => psum(r => r.t === T.id && shown.has(r.p)));   // 합계는 표시된 사이즈만
+            const head = `<thead>
+                <tr><th>사이즈</th>${FR.map((T, i) => `<th data-col="${i + 1}" class="grp sep" style="${cv(T)}"><span class="dot" style="${sw(T)}"></span>${nm(T)}</th>`).join('')}</tr>
+                <tr class="total-row"><td>합계</td>${tot.map((o, i) => !o.imp ? `<td class="sep na" data-v="-1">−</td>` : numTd(o[mk], m.fmt, 'sep' + (i === argmax(tot) ? ' top' : ''), i === argmax(tot) ? FR[i] : '', `합계 · ${m.label} 1위\n${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>
+            </thead>`;
+            const row = ({ p, v, win }) => `<tr><td class="place-cell">${rsizeLabel(p)}</td>${v.map((o, i) => !o.imp
+                ? `<td class="sep na" data-v="-1">−</td>`
+                : numTd(o[mk], m.fmt, 'sep' + (i === win ? ' top' : ''), i === win ? FR[i] : '', `${p} · ${m.label} 1위\n${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>`;
+            const t = document.getElementById('sizeTable');
+            t.innerHTML = head + `<tbody>${rows.length ? rows.map(row).join('') : `<tr><td colspan="${FR.length + 1}" class="na" style="text-align:center">이 날짜에는 데이터가 없습니다</td></tr>`}</tbody>`;
+            makeSortable(t);
+            document.getElementById('sizeSummary').innerHTML = stackSummary(FR, rows.map(r => ({ win: r.win, name: r.p.replace(/^(\d+)_(\d+)$/, '$1×$2') })), m.label, '사이즈');
+        }
+        (function () {
+            const ctrl = document.getElementById('sizePeriod'), dateEl = document.getElementById('sizeDate'), tabs = document.getElementById('sizeMetric');
+            const PD = [...new Set(RSDROWS.map(r => r.d))].sort(), PTODAY = PD[PD.length - 1] || TODAY;
+            dateEl.min = PERIOD_FROM; dateEl.max = PTODAY; dateEl.value = PTODAY;
+            ctrl.querySelector('[data-mode="month"]').textContent = `${+PTODAY.slice(5, 7)}월 전체`;
+            if (!RSDROWS.length) ctrl.querySelector('[data-mode="day"]').hidden = true;
+            const run = () => {
+                const mode = ctrl.querySelector('[aria-pressed="true"]').dataset.mode;
+                const mk = tabs.querySelector('[aria-selected="true"]').dataset.metric;
+                dateEl.hidden = mode !== 'day';
+                const d = dateEl.value || PTODAY;
+                if (mode === 'day') renderRSize(d, d, mk); else renderRSize(PERIOD_FROM, PTODAY, mk);
+            };
+            ctrl.addEventListener('click', e => {
+                const b = e.target.closest('button[data-mode]'); if (!b) return;
+                ctrl.querySelectorAll('button[data-mode]').forEach(x => x.setAttribute('aria-pressed', x === b));
+                run();
+            });
+            tabs.addEventListener('click', e => {
+                const b = e.target.closest('button[data-metric]'); if (!b) return;
+                tabs.querySelectorAll('button[data-metric]').forEach(x => x.setAttribute('aria-selected', x === b));
+                run();
+            });
+            dateEl.addEventListener('change', run);
+            run();
+        })();
+
+        /* 지면별 표 */
+        // 지면은 사이트 이름 기준으로 합산
+        const siteOf = p => { const m = p.replace(/_N_v2$/, '').match(/^(web|app|mob)_(.+?)_([a-z]+)_(\d+)$/); return m ? m[2] : p; };
+        const PROWS = APDATA.map(([t, p, imp, clk]) => ({ t, p: siteOf(p), imp, clk }));   // 누적
+        const PDROWS = APDDATA.map(([d, t, p, imp, clk]) => ({ d, t, p: siteOf(p), imp, clk }));   // 일별
+        if (!PROWS.length) document.getElementById('placeSection').hidden = true;
+        const PLACE_N = 10;   // 노출 상위 지면 수
+        const placeLabel = p => { const m = p.match(/^(\d+)_(\d+)$/); return m ? `<b>${m[1]}×${m[2]}</b><small>요청 사이즈</small>` : `<b>${p}</b>`; };
+        const placeShort = p => p.replace(/^(\d+)_(\d+)$/, '$1×$2');
+        function renderPlace(from, to, mk) {
+            const whole = from === PERIOD_FROM && to !== from;
+            const src = whole ? PROWS : PDROWS.filter(r => r.d >= from && r.d <= to);
+            const m = M3.find(x => x.k === mk);
+            const FR = THEMES;
+            const psum = fn => sum(src.filter(fn));
+            const argmax = list => { let w = -1; list.forEach((o, i) => { if (o.imp && (w < 0 || o[mk] > list[w][mk])) w = i; }); return w; };
+            const places = [...new Set(src.map(r => r.p))]
+                .map(p => ({ p, all: psum(r => r.p === p) }))
+                .sort((a, b) => b.all.imp - a.all.imp).slice(0, PLACE_N);
+            const rows = places.map(({ p }) => ({ p, v: FR.map(T => psum(r => r.t === T.id && r.p === p)) }));
+            rows.forEach(r => r.win = argmax(r.v));
+            const shown = new Set(rows.map(r => r.p));
+            const tot = FR.map(T => psum(r => r.t === T.id && shown.has(r.p)));   // 합계는 표시된 지면만
+            const head = `<thead>
+                <tr><th>지면</th>${FR.map((T, i) => `<th data-col="${i + 1}" class="grp sep" style="${cv(T)}"><span class="dot" style="${sw(T)}"></span>${nm(T)}${T.ch === '카카오' ? '<br><small>(카카오)</small>' : ''}</th>`).join('')}</tr>
+                <tr class="total-row"><td>합계</td>${tot.map((o, i) => !o.imp ? `<td class="sep na" data-v="-1">−</td>` : numTd(o[mk], m.fmt, 'sep' + (i === argmax(tot) ? ' top' : ''), i === argmax(tot) ? FR[i] : '', `합계 · ${m.label} 1위
+${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>
+            </thead>`;
+            const placeRow = ({ p, v, win }) => `<tr><td class="place-cell">${placeLabel(p)}</td>${v.map((o, i) => !o.imp
+                ? `<td class="sep na" data-v="-1">−</td>`
+                : numTd(o[mk], m.fmt, 'sep' + (i === win ? ' top' : ''), i === win ? FR[i] : '', `${p} · ${m.label} 1위\n${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>`;
+            const t = document.getElementById('placeTable');
+            t.innerHTML = head + `<tbody>${rows.length ? rows.map(placeRow).join('') : `<tr><td colspan="${FR.length + 1}" class="na" style="text-align:center">이 날짜에는 데이터가 없습니다</td></tr>`}</tbody>`;
+            makeSortable(t);
+            document.getElementById('placeSummary').innerHTML = stackSummary(FR, rows.map(r => ({ win: r.win, name: placeShort(r.p) })), m.label, '지면');
+        }
+        (function () {
+            const ctrl = document.getElementById('placePeriod'), dateEl = document.getElementById('placeDate'), tabs = document.getElementById('placeMetric');
+            const PD = [...new Set(PDROWS.map(r => r.d))].sort(), PTODAY = PD[PD.length - 1] || TODAY;
+            dateEl.min = PERIOD_FROM; dateEl.max = PTODAY; dateEl.value = PTODAY;
+            ctrl.querySelector('[data-mode="month"]').textContent = `${+PTODAY.slice(5, 7)}월 전체`;
+            if (!PDROWS.length) ctrl.querySelector('[data-mode="day"]').hidden = true;
+            const run = () => {
+                const mode = ctrl.querySelector('[aria-pressed="true"]').dataset.mode;
+                const mk = tabs.querySelector('[aria-selected="true"]').dataset.metric;
+                dateEl.hidden = mode !== 'day';
+                const d = dateEl.value || PTODAY;
+                if (mode === 'day') renderPlace(d, d, mk); else renderPlace(PERIOD_FROM, PTODAY, mk);
+            };
+            ctrl.addEventListener('click', e => {
+                const b = e.target.closest('button[data-mode]'); if (!b) return;
+                ctrl.querySelectorAll('button[data-mode]').forEach(x => x.setAttribute('aria-pressed', x === b));
+                run();
+            });
+            tabs.addEventListener('click', e => {
+                const b = e.target.closest('button[data-metric]'); if (!b) return;
+                tabs.querySelectorAll('button[data-metric]').forEach(x => x.setAttribute('aria-selected', x === b));
+                run();
+            });
+            dateEl.addEventListener('change', run);
+            run();
+        })();
+
+        // 날짜 칸 클릭 시 달력만 띄움
+        document.querySelectorAll('.date-in').forEach(el => {
+            el.addEventListener('mousedown', e => { e.preventDefault(); try { el.showPicker(); } catch (err) { } });
+            el.addEventListener('keydown', e => { if (e.key !== 'Tab') e.preventDefault(); });
+        });
+    </script>
+    <script>
+        /* 맨 위로 버튼 */
+        (function () {
+            const b = document.getElementById('toTop');
+            const on = () => b.classList.toggle('show', window.scrollY > 300);
+            window.addEventListener('scroll', on, { passive: true });
+            b.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+            on();
+        })();
+    </script>
+</body>
+
+</html>

@@ -3,22 +3,15 @@ RTB 대시보드 데이터 갱신
 
 사용법
   1. 이 폴더에 새로 받은 통계 파일을 넣는다
-       - google_openRTB_일자별통계.xls  (이름 뒤에 날짜가 붙어 있어도 됨)      → Google RTB 페이지
-       - kakao_rtb_day_report.xls                                              → Kakao RTB 페이지
-       - rtb_theme_ab_result_YYYYMMDD_HHMM.xlsx  (테마 AB 결과 xlsx)            → 프레임 AB 테스트 4개 페이지 전부
-             1_테마_일별 · 2_사이즈테마_일별      → 상품 고정 1~6번
-             3_autoRED_vs_autoETC                → 오토 (웹, 모바일) 1~4번
-             4_app_coupang_RED_ETC               → 오토 (앱) 1~4번
-             5_비상품화_일별                      → 비상품 1~4번
-             A_지면일별                           → 상품 고정 7번 · 비상품 6번 (9월 전체 + 일별)
-             B_오토요청사이즈일별                  → 오토 (웹, 모바일 · 앱) 5번 (9월 전체 + 일별)
-             C_비상품요청사이즈일별                → 비상품 5번 (9월 전체 + 일별)
-             (A·B·C 가 없는 예전 파일이면 6·6b 시트(상위 15 지면)와 5b 시트로 채우고, 그것도 없으면 rtb_frame_analysis xlsx · CSV 로 돌아갑니다)
-  2. update_data.bat 더블클릭 (또는 python update_data.py · 프레임 페이지만: python update_data.py --frames)
+       google_openRTB_일자별통계.xls        -> Google RTB 페이지
+       kakao_rtb_day_report.xls             -> Kakao RTB 페이지
+       rtb_theme_ab_result_YYYYMMDD_HHMM.xlsx -> 프레임 AB 테스트 페이지 4개
+  2. update_data.bat 더블클릭 (또는 python update_data.py)
+     프레임 페이지만 갱신하려면 python update_data.py --frames
 
 - 파일이 여러 개면 가장 최근에 받은 파일을 사용합니다.
-- Google · Kakao 는 파일을 받은 날(이름의 날짜, 없으면 파일 수정 날짜)이 집계 중이라 제외합니다.
-- 지면별 · 사이즈별 표는 페이지 용량 때문에 누적 상위 60개, 날짜별 상위 40개 항목만 넣습니다 (표는 그중 10~12개만 보여 줍니다).
+- Google, Kakao 는 파일을 받은 날이 집계 중이라 제외합니다.
+- 지면별, 사이즈별 표는 누적 상위 60개, 날짜별 상위 40개 항목만 넣습니다.
 """
 import csv
 import glob
@@ -32,10 +25,11 @@ import sys
 from datetime import datetime
 
 DIR = os.path.dirname(os.path.abspath(__file__))
+HTML_DIR = os.path.join(DIR, 'html')   # 대시보드 페이지 폴더
 
 try:
     import xlrd
-except ImportError:  # 구글 파일(.xls) 읽기용 — 처음 한 번만 설치
+except ImportError:
     subprocess.check_call([sys.executable, '-m', 'pip', 'install', '--user', '--quiet', 'xlrd'])
     import site
     sys.path.append(site.getusersitepackages())
@@ -54,7 +48,7 @@ def latest(pattern):
 
 
 def file_day(path):
-    """파일을 받은 날 'MM/DD' — 이름에 날짜(YYYYMMDD)가 있으면 그 날짜, 없으면 파일 수정 날짜"""
+    """파일을 받은 날 'MM/DD'"""
     m = re.search(r'20\d\d(\d\d)(\d\d)', os.path.basename(path))
     if m:
         return f'{m.group(1)}/{m.group(2)}'
@@ -82,7 +76,7 @@ def read_kakao(path):
     for tr in re.findall(r'<tr[^>]*>(.*?)</tr>', t, re.S):
         c = [html.unescape(re.sub(r'<[^>]+>', ' ', x)).strip() for x in re.findall(r'<t[hd][^>]*>(.*?)</t[hd]>', tr, re.S)]
         if len(c) > 27 and re.fullmatch(r'\d\d-\d\d', c[1]):
-            # 13 모비온노출수 · 15 클릭수 · 19 지출금액 · 26 세션매출 (괄호 안 쇼핑 값은 사용 안 함)
+            # 13 모비온노출수, 15 클릭수, 19 지출금액, 26 세션매출
             rows.append(dict(d=c[1].replace('-', '/'), imp=num(c[13]), clk=num(c[15]), spend=num(c[19]), srev=num(c[26])))
     return rows
 
@@ -92,19 +86,19 @@ def roas(d):
 
 
 def update_page(page, rows, skip_day):
-    days = sorted((d for d in rows if d['d'] != skip_day), key=lambda d: d['d'], reverse=True)   # 최신 → 과거
+    days = sorted((d for d in rows if d['d'] != skip_day), key=lambda d: d['d'], reverse=True)
     if len(days) < 2:
         sys.exit(f'{page}: 데이터가 부족합니다')
     f = lambda x: f'{round(x):,}'
     T = {k: sum(d[k] for d in days) for k in ('imp', 'clk', 'spend', 'srev')}
-    path = os.path.join(DIR, page)
+    path = os.path.join(HTML_DIR, page)
     src = open(path, encoding='utf-8').read()
 
-    # ① 당월 핵심 성과
+    # 핵심 성과
     kpi = iter([f(T['imp']), f(T['clk']), f"{T['clk'] / T['imp'] * 100:.3f}%", f"{roas(T)}%", f(T['spend']) + '원'])
     src = re.sub(r'(<div class="value">)[^<]*(</div>)', lambda m: m.group(1) + next(kpi) + m.group(2), src, count=5)
 
-    # ⑤ 일별 성과 테이블 (④ 그래프는 이 표를 읽어서 그림)
+    # 일별 성과 표
     tr = ''.join(f'''
                             <tr>
                                 <td>{d['d']}</td>
@@ -116,7 +110,7 @@ def update_page(page, rows, skip_day):
                             </tr>''' for d in days)
     src, n1 = re.subn(r'(<tbody>)[\s\S]*?(\n\s*</tbody>)', lambda m: m.group(1) + tr + m.group(2), src, count=1)
 
-    # ②③ 최근 7일
+    # 최근 7일
     wk = ''.join(f"\n            {{ d: '{d['d']}', imp: {int(d['imp'])}, clk: {int(d['clk'])}, ctr: {d['clk'] / d['imp'] * 100:.4f}, "
                  f"roas: {roas(d)}, spend: {int(d['spend'])} }}," for d in reversed(days[:7]))
     src, n2 = re.subn(r'(const WEEK = \[)[\s\S]*?(\n        \];)', lambda m: m.group(1) + wk + m.group(2), src, count=1)
@@ -129,7 +123,7 @@ def update_page(page, rows, skip_day):
 
 # ---------------------------------------------------------------- 프레임 AB 테스트 페이지 (CSV)
 def read_csv(path):
-    """탭(또는 쉼표) 구분 CSV → dict 목록. date는 YYYYMMDD → YYYY-MM-DD"""
+    """탭 또는 쉼표 구분 CSV → dict 목록, date 는 YYYY-MM-DD"""
     text = io.open(path, encoding='utf-8-sig').read()
     delim = '\t' if '\t' in text.split('\n', 1)[0] else ','
     rows = []
@@ -157,8 +151,8 @@ def dump_rows(rows):
 
 
 def read_places(frame_map, skip_day):
-    """지면별.csv (date, frame, request_size, views, clicks) → 누적 [프레임 id, 요청 사이즈, 노출, 클릭] (없으면 빈 목록)"""
-    files = [f for f in glob.glob(os.path.join(DIR, '지면별*.csv')) if '(' not in os.path.basename(f)]   # 지면별(고정)·지면별(비상품).csv는 별도
+    """지면별.csv → 누적 [프레임 id, 요청 사이즈, 노출, 클릭]"""
+    files = [f for f in glob.glob(os.path.join(DIR, '지면별*.csv')) if '(' not in os.path.basename(f)]   # 지면별(고정).csv 등은 제외
     if not files:
         return []
     agg = {}
@@ -176,11 +170,11 @@ def read_places(frame_map, skip_day):
 
 def write_auto(page, rows, places, unknown=(), extra=None):
     """[날짜, 프레임 id, 노출, 클릭] 행 → 오토·비상품 페이지의 ADATA · APDATA"""
-    p = os.path.join(DIR, page)
+    p = os.path.join(HTML_DIR, page)
     src = open(p, encoding='utf-8').read()
     src = set_block(src, 'ADATA', 'ADATA', dump_rows(rows), page)
     src = set_block(src, 'APDATA', 'APDATA', dump_rows(places), page)
-    for name, data in (extra or {}).items():   # 페이지별 추가 블록 (비상품: ASDATA 요청 사이즈별)
+    for name, data in (extra or {}).items():
         src = set_block(src, name, name, dump_rows(data), page)
     dates = sorted({r[0] for r in rows})
     open(p, 'w', encoding='utf-8', newline='').write(src)
@@ -196,12 +190,12 @@ def write_auto(page, rows, places, unknown=(), extra=None):
           + (f'  ※ 매핑에 없는 frame 무시: {sorted(unknown)}' if unknown else ''))
 
 
-# ---------------------------------------------------------------- 프레임 AB 테스트 페이지 (xlsx: rtb_frame_analysis_YYYYMMDD_YYYYMMDD.xlsx)
+# ---------------------------------------------------------------- 프레임 AB 테스트 페이지 (xlsx)
 def load_xlsx(path):
     """시트 이름 → 행 목록 (값만)"""
     try:
         import openpyxl
-    except ImportError:  # xlsx 읽기용 — 처음 한 번만 설치
+    except ImportError:
         subprocess.check_call([sys.executable, '-m', 'pip', 'install', '--user', '--quiet', 'openpyxl'])
         import site
         sys.path.append(site.getusersitepackages())
@@ -211,7 +205,7 @@ def load_xlsx(path):
 
 
 def xl_table(rows, first, *needed):
-    """시트 안에서 첫 칸이 first 이고 needed 열을 모두 가진 머리글 줄을 찾아 그 표를 dict 목록으로 (빈 줄까지)"""
+    """첫 칸이 first 이고 needed 열이 있는 머리글 아래 표 → dict 목록"""
     for i, r in enumerate(rows):
         keys = [str(c).strip() if c is not None else '' for c in r]
         if keys and keys[0] == first and all(n in keys for n in needed):
@@ -234,26 +228,26 @@ def xl_date(v):
 
 
 def xl_size(frame_value):
-    """frame_value → 사이즈 (04_728_90_blackGold_ETC → 728x90, autoETC_verygoodtour → 비규격)"""
+    """frame_value → 사이즈, 04_728_90_blackGold_ETC → 728x90"""
     m = re.match(r'(\d+)_(\d+)', re.sub(r'^04_', '', frame_value))
     return f'{m.group(1)}x{m.group(2)}' if m else '비규격'
 
 
-XL_FIXED = {'blackGold': 'blackgold', 'blackGoldNo': 'blackgold', 'whiteRed': 'whitered', 'whiteRedNo': 'whitered', 'magazine': 'magazine'}   # xlsx 테마 → 페이지 테마 id (No 변형은 같은 테마로 합산 · verygoodtour 는 제외)
-XL_AUTO = [   # (시트, 페이지, {페이지 프레임 id: xlsx 열 접두어}, 지면별.csv frame 매핑)
-    # auto_origin = 기존 프레임의 새 이름 (웹: autoETC → auto_origin · 앱: coupangETC → auto_origin) → 기존 프레임 id 에 합산
+XL_FIXED = {'blackGold': 'blackgold', 'blackGoldNo': 'blackgold', 'whiteRed': 'whitered', 'whiteRedNo': 'whitered', 'magazine': 'magazine'}   # xlsx 테마 → 페이지 테마 id
+XL_AUTO = [   # (시트, 페이지, {프레임 id: 열 접두어}, 지면별.csv frame 매핑)
+    # auto_origin 은 기존 프레임의 새 이름
     ('02_autoETC_vs_autoRed_webmob', 'frame_auto_web_page.html', {'redauto': ['autoRedETC(web+mob)'], 'autoetc': ['autoETC(전체)', 'auto_origin(web+mob)']}, {'autoRedETC': 'redauto', 'autoETC': 'autoetc', 'auto_origin': 'autoetc'}),
     ('03_coupangETC_vs_autoRed_app', 'frame_auto_app_page.html', {'redauto': ['autoRedETC(app)'], 'coupangetc': ['coupangETC(전체)', 'auto_origin(app)']}, {'autoRedETC': 'redauto', 'coupangETC': 'coupangetc', 'auto_origin': 'coupangetc'}),
     ('04_i사이즈그룹_vs_iauto', 'frame_nonproduct_page.html', {'iauto': ['iauto'], 'isize': ['옛i사이즈그룹']}, None),
 ]
 
 
-AB_FIXED = {'blackGold': 'blackgold', 'blackGoldNo': 'blackgold', 'whiteRed': 'whitered', 'whiteRedNo': 'whitered', 'magazine': 'magazine'}   # theme_ab 테마 → 페이지 테마 id (기본 · verygoodtour 제외)
+AB_FIXED = {'blackGold': 'blackgold', 'blackGoldNo': 'blackgold', 'whiteRed': 'whitered', 'whiteRedNo': 'whitered', 'magazine': 'magazine'}   # theme_ab 테마 → 페이지 테마 id
 AB_DATE = re.compile(r'^\d{4}-\d\d-\d\d')
 
 
 def ab_table(rows, dates_only=True):
-    """theme_ab 시트(첫 줄이 머리글) → dict 목록. dates_only 면 첫 칸이 날짜인 행만 (아래쪽 '공존일 합계' 같은 요약 행 제외)"""
+    """theme_ab 시트 → dict 목록, dates_only 면 첫 칸이 날짜인 행만"""
     keys = [str(c).strip() if c is not None else '' for c in rows[0]]
     out = []
     for r in rows[1:]:
@@ -270,7 +264,7 @@ def ab_date(v):
 
 
 def update_fixed_ab(ab):
-    """rtb_theme_ab_result: 1_테마_일별 → DATA · 2_사이즈테마_일별 → DDATA(일별 사이즈·이름) · NDATA/SDATA 는 DDATA 누적"""
+    """1_테마_일별, 2_사이즈테마_일별 → (DATA, DDATA, NDATA, SDATA) 행 목록"""
     daily = {}
     for r in ab_table(ab['1_테마_일별']):
         d = ab_date(r['날짜'])
@@ -298,7 +292,7 @@ def update_fixed_ab(ab):
 
 
 def ab_top_rows(rows):
-    """'(a) 노출수 TOP15' 같은 소제목 + 머리글이 여러 번 나오는 시트 → dict 목록 (소제목·빈 줄 건너뜀)"""
+    """소제목과 머리글이 반복되는 TOP15 시트 → dict 목록"""
     hdr, out = None, []
     for r in rows:
         if not r or r[0] is None or str(r[0]).startswith('('):
@@ -312,12 +306,12 @@ def ab_top_rows(rows):
 
 
 def ab_theme_of(size_theme):
-    """'728_90_whiteRed' → 페이지 테마 id (기본 · verygoodtour 는 None)"""
+    """'728_90_whiteRed' → 페이지 테마 id"""
     return AB_FIXED.get(str(size_theme).rsplit('_', 1)[-1])
 
 
 def ab_places(ab):
-    """6_tagid_TOP15: 노출·클릭·CTR 상위 15 목록을 합쳐(같은 tagid·사이즈_테마는 한 번) → XPDATA [테마, 지면, 노출, 클릭] (9월 누적)"""
+    """6_tagid_TOP15 → XPDATA [테마, 지면, 노출, 클릭]"""
     agg, seen = {}, set()
     for r in ab_top_rows(ab['6_tagid_TOP15']):
         key = (r['tagid'], r['사이즈_테마'])
@@ -330,7 +324,7 @@ def ab_places(ab):
 
 
 def ab_places_daily(ab):
-    """6b_tagid_TOP15_일별: 날짜마다 노출·클릭·CTR 상위 15 목록을 합쳐 → PDATA [날짜, 테마, 지면, 노출, 클릭]"""
+    """6b_tagid_TOP15_일별 → PDATA [날짜, 테마, 지면, 노출, 클릭]"""
     agg, seen = {}, set()
     for r in ab_top_rows(ab['6b_tagid_TOP15_일별']):
         d = ab_date(r['날짜'])
@@ -344,24 +338,24 @@ def ab_places_daily(ab):
 
 
 AB_SITE = re.compile(r'^(web|app|mob)_(.+?)_([a-z]+)_(\d+)$')
-AB_DAY_N, AB_CUM_N = 40, 60   # 페이지에 넣을 일별(날짜마다) · 누적 상위 항목 수 — 표는 그중 10~12개만 보여 줍니다
+AB_DAY_N, AB_CUM_N = 40, 60   # 페이지에 넣을 일별, 누적 상위 항목 수
 
 
 def ab_site(tagid):
-    """web_daum.net_banner_3_N_v2 → daum.net (규칙 밖 tagid 는 그대로)"""
+    """web_daum.net_banner_3_N_v2 → daum.net"""
     m = AB_SITE.match(str(tagid).replace('_N_v2', ''))
     return m.group(2) if m else str(tagid)
 
 
 def ab_full_rows(ab, sheet):
-    """A·B·C 전체 시트(첫 줄 머리글) → dict 목록 (이상치 Y 제외)"""
+    """A, B, C 전체 시트 → dict 목록"""
     rows = ab[sheet]
     keys = [str(c).strip() if c is not None else '' for c in rows[0]]
     return [r for r in ({k: v for k, v in zip(keys, row) if k} for row in rows[1:] if row and row[0] is not None) if r.get('이상치') != 'Y']
 
 
 def ab_daily_cum(items):
-    """(날짜, 프레임 id, 항목, 노출, 클릭) 반복 → 일별 [날짜, 프레임, 항목, 노출, 클릭](날짜마다 노출 상위 AB_DAY_N 항목) · 누적 [프레임, 항목, 노출, 클릭](상위 AB_CUM_N 항목)"""
+    """(날짜, 프레임 id, 항목, 노출, 클릭) 반복 → 일별 [날짜, 프레임, 항목, 노출, 클릭], 누적 [프레임, 항목, 노출, 클릭]"""
     daily, cum, by_day, by_all = {}, {}, {}, {}
     for d, t, k, v, c in items:
         if not t or not v:
@@ -381,30 +375,29 @@ def ab_daily_cum(items):
 
 
 def ab_full_places(ab, group, frame_of):
-    """A_지면일별(비교군 group) → 사이트 기준 일별 · 누적 (같은 사이트의 여러 광고 자리는 합산)"""
+    """A_지면일별 → 사이트 기준 일별, 누적"""
     return ab_daily_cum((ab_date(r['날짜']), frame_of(str(r['테마또는프레임'])), ab_site(r['tagid']), xl_int(r['노출']), xl_int(r['클릭']))
                         for r in ab_full_rows(ab, 'A_지면일별') if r['비교군'] == group)
 
 
 def ab_full_auto_sizes(ab, media, frame_map):
-    """B_오토요청사이즈일별(매체 media) → 요청 사이즈 기준 일별 · 누적 (unknown 사이즈 제외)"""
+    """B_오토요청사이즈일별 → 요청 사이즈 기준 일별, 누적"""
     return ab_daily_cum((ab_date(r['날짜']), frame_map.get(str(r['프레임'])), str(r['요청사이즈']), xl_int(r['노출']), xl_int(r['클릭']))
                         for r in ab_full_rows(ab, 'B_오토요청사이즈일별') if r['매체'] == media and re.fullmatch(r'\d+_\d+', str(r['요청사이즈'])))
 
 
 def ab_full_np_sizes(ab):
-    """C_비상품요청사이즈일별 → 요청 사이즈 기준 일별 · 누적 (auto형 → iauto · 사이즈형 → isize)"""
+    """C_비상품요청사이즈일별 → 요청 사이즈 기준 일별, 누적"""
     kind = {'auto형': 'iauto', '사이즈형': 'isize'}
     return ab_daily_cum((ab_date(r['날짜']), kind.get(str(r['구분'])), str(r['요청사이즈']), xl_int(r['노출']), xl_int(r['클릭']))
                         for r in ab_full_rows(ab, 'C_비상품요청사이즈일별') if re.fullmatch(r'\d+_\d+', str(r['요청사이즈'])))
 
 
 def update_fixed_xlsx(sheets, ab=None):
-    """01 시트(날짜 × 테마) → DATA [날짜, 테마, '', '', 노출, 클릭] (일별 사이즈·이름 없음 · No 변형은 같은 테마로 합산)
-       01 시트 '테마별 포함 frame_value' → NDATA [테마, 이름, 사이즈, 노출, 클릭] (기간 누적) · SDATA [테마, 사이즈, 노출, 클릭] 는 NDATA 를 사이즈별로 합산"""
-    if ab:   # rtb_theme_ab_result 가 있으면 테마별 일별 · 일별 사이즈 · 이름별 · 사이즈별 누적을 모두 그 파일로 (가장 정확한 집계)
+    """상품 고정 페이지 갱신, DATA [날짜, 테마, '', '', 노출, 클릭], NDATA [테마, 이름, 사이즈, 노출, 클릭], SDATA [테마, 사이즈, 노출, 클릭]"""
+    if ab:
         rows, daily, ndata, sdata = update_fixed_ab(ab)
-    else:    # 예전 방식: rtb_frame_analysis 01 시트 + CSV
+    else:
         daily = {}
         for r in xl_table(sheets['01_테마별_추이'], 'date', 'blackGold_views'):
             d = xl_date(r['date'])
@@ -428,13 +421,13 @@ def update_fixed_xlsx(sheets, ab=None):
         daily = read_fixed_daily()
         daily += derive_missing_daily(rows, ndata, daily)
     page = 'frame_test_history_page.html'
-    p = os.path.join(DIR, page)
+    p = os.path.join(HTML_DIR, page)
     src = open(p, encoding='utf-8').read()
     src = set_block(src, 'DATA', 'DATA', dump_rows(rows), page)
     src = set_block(src, 'SDATA', 'SDATA', dump_rows(sdata), page)
     src = set_block(src, 'NDATA', 'NDATA', dump_rows(ndata), page)
     src = set_block(src, 'DDATA', 'DDATA', dump_rows(daily), page)
-    if ab and 'A_지면일별' in ab:   # 지면별: A 시트(전체 지면 일별)가 있으면 그것으로, 없으면 6·6b(상위 15) → 없으면 CSV·rtb_frame_analysis
+    if ab and 'A_지면일별' in ab:
         places, xplaces = ab_full_places(ab, 'theme', lambda v: AB_FIXED.get(v))
     elif ab and '6b_tagid_TOP15_일별' in ab:
         places, xplaces = ab_places_daily(ab), ab_places(ab)
@@ -459,11 +452,11 @@ def update_fixed_xlsx(sheets, ab=None):
 
 ETC_PLACE = '기타 지면'
 PLACE_N = 12
-FIXED_KEYWORD = {'blackgold': 'blackgold', 'whitered': 'whitered', 'magazine': 'magazine'}   # frame_value 소문자에 들어 있는 키워드 → 테마 id
+FIXED_KEYWORD = {'blackgold': 'blackgold', 'whitered': 'whitered', 'magazine': 'magazine'}   # frame_value 키워드 → 테마 id
 
 
 def nonproduct_frame(fv):
-    """frame_value → 비상품 프레임 id: iauto → iauto · i{가로}_{세로}(변형 포함) → isize · 그 외 None (iinstl 등 제외)"""
+    """frame_value → 비상품 프레임 id, iauto 또는 isize"""
     if fv == 'iauto':
         return 'iauto'
     if re.match(r'^i\d+_\d+', fv):
@@ -472,11 +465,7 @@ def nonproduct_frame(fv):
 
 
 def build_places(folder):
-    """tag_stats_MMDD.csv(구글 · 카카오 파일 제외)들 → 지면별(고정).csv · 지면별(비상품).csv  [date, theme, place, views, clicks]
-       xlsx와 같은 이상치 기준(views<100 · clicks>views · ctr_percent>=1)으로 거릅니다.
-         고정   : frame_value에 테마 키워드(blackGold · whiteRed · magazine)가 든 프레임 → 상품 고정 프레임 6번
-         비상품 : iauto · i{가로}_{세로} 프레임 → 비상품 프레임 5번
-       지면(tag_descriptor)은 파일별로 기간 전체 노출 상위 12개만 이름을 남기고 나머지는 '기타 지면'으로 묶습니다."""
+    """tag_stats_MMDD.csv 들 → 지면별(고정).csv, 지면별(비상품).csv [date, theme, place, views, clicks]"""
     files = sorted(f for f in glob.glob(os.path.join(folder, 'tag_stats_*.csv')) if '카카오' not in os.path.basename(f))
     if not files:
         sys.exit(f'tag_stats_*.csv 파일이 없습니다: {folder}')
@@ -498,7 +487,7 @@ def build_places(folder):
             if not t:
                 continue
             v, c, ctr = num(r.get('views')), num(r.get('clicks')), num(r.get('ctr_percent'))
-            if v < 100 or c > v or ctr >= 1:
+            if v < 100 or c > v or ctr >= 1:   # xlsx 와 같은 이상치 기준
                 continue
             a = agg[kind].setdefault((d, t, r['tag_descriptor'].strip()), [0, 0])
             a[0] += int(v)
@@ -526,8 +515,7 @@ def build_places(folder):
 
 
 def build_fixed_daily(folder):
-    """frame_value_stats_MMDD.csv(구글 · 카카오 파일 제외)들 → 상품 고정 프레임(일별).csv  [date, theme, name, size, views, clicks]
-       테마 키워드 프레임만, xlsx와 같은 이상치 기준으로 걸러 날짜 × 프레임 이름(사이즈)로 모읍니다 → 고정 페이지 ⑤ 사이즈별 · ⑥ 이름별의 '일별' 선택용"""
+    """frame_value_stats_MMDD.csv 들 → 상품 고정 프레임(일별).csv [date, theme, name, size, views, clicks]"""
     files = sorted(f for f in glob.glob(os.path.join(folder, 'frame_value_stats_*.csv')) if '카카오' not in os.path.basename(f))
     if not files:
         print('  frame_value_stats_*.csv 가 없어 상품 고정 프레임(일별).csv 는 만들지 않습니다')
@@ -561,7 +549,7 @@ def build_fixed_daily(folder):
 
 
 def read_fixed_daily():
-    """상품 고정 프레임(일별).csv → [date, theme, name, size, views, clicks] (없으면 빈 목록)"""
+    """상품 고정 프레임(일별).csv → [date, theme, name, size, views, clicks]"""
     files = glob.glob(os.path.join(DIR, '상품 고정 프레임(일별)*.csv'))
     if not files:
         return []
@@ -570,7 +558,7 @@ def read_fixed_daily():
 
 
 def read_place_csv(kind):
-    """지면별(고정).csv / 지면별(비상품).csv → [date, theme, place, views, clicks] (없으면 빈 목록)"""
+    """지면별(kind).csv → [date, theme, place, views, clicks]"""
     files = glob.glob(os.path.join(DIR, f'지면별({kind})*.csv'))
     if not files:
         return []
@@ -586,8 +574,7 @@ def read_fixed_places():
 
 
 def xl_places(sheets, frame_of):
-    """05(노출 상위 10) · 06(CTR 상위 10) 시트의 'Top 10 frame_value별 세부' → 기간 누적 [프레임 id, 지면, 노출, 클릭]
-       frame_of(frame_value) 가 페이지 프레임 id 를 돌려주는 것만 모읍니다 (두 시트에 겹치는 지면은 한 번만)"""
+    """05, 06 시트의 Top 10 세부 → 누적 [프레임 id, 지면, 노출, 클릭]"""
     agg, seen = {}, set()
     for sh in ('05_매체Top10_노출기준', '06_매체Top10_CTR기준'):
         if sh not in sheets:
@@ -612,7 +599,7 @@ def fixed_frame_of(fv):
 
 
 def read_nonproduct_places():
-    """지면별(비상품).csv → 기간 누적 [프레임 id, 지면, 노출, 클릭] ('기타 지면' 제외 · 오토 페이지 APDATA와 같은 꼴)"""
+    """지면별(비상품).csv → 누적 [프레임 id, 지면, 노출, 클릭]"""
     agg = {}
     for d, t, pl, v, c in read_place_csv('비상품'):
         if pl == ETC_PLACE:
@@ -624,8 +611,7 @@ def read_nonproduct_places():
 
 
 def derive_missing_daily(theme_rows, ndata, daily):
-    """원본 일별 파일이 없는 날이 xlsx 기간 안에 하루뿐이면(보통 마지막 날) 그날의 프레임 이름별 값을 계산으로 채웁니다:
-       xlsx 기간 누적(NDATA) − 원본 일별 합 = 빠진 날. 테마별 합이 xlsx 그날 테마 합과 정확히 맞을 때만 씁니다."""
+    """일별 파일이 없는 날이 하루뿐이면 NDATA 누적에서 일별 합을 빼서 그날 행을 계산"""
     xl_dates = sorted({r[0] for r in theme_rows})
     have = {r[0] for r in daily}
     missing = [d for d in xl_dates if d not in have]
@@ -659,7 +645,7 @@ def derive_missing_daily(theme_rows, ndata, daily):
     return out
 
 
-AB_AUTO = {   # rtb_theme_ab_result: 페이지 → (시트, {프레임 id: [열 접두어 …]})  · 3번 시트 = 웹·모바일, 4번 = 앱, 5번 = 비상품
+AB_AUTO = {   # 페이지 → (시트, {프레임 id: [열 접두어]})
     'frame_auto_web_page.html': ('3_autoRED_vs_autoETC', {'redauto': ['RED'], 'autoetc': ['ETC']}),
     'frame_auto_app_page.html': ('4_app_coupang_RED_ETC', {'redauto': ['RED'], 'coupangetc': ['COUPANG', 'ETC']}),
     'frame_nonproduct_page.html': ('5_비상품화_일별', {'iauto': ['auto형(iauto+auto_i)'], 'isize': ['사이즈형(i{size})']}),
@@ -667,7 +653,7 @@ AB_AUTO = {   # rtb_theme_ab_result: 페이지 → (시트, {프레임 id: [열 
 
 
 def ab_sizes(ab):
-    """5b_비상품화_요청사이즈별 → [프레임 id, 요청 사이즈, 노출, 클릭] (사이즈형은 같은 사이즈의 프레임을 합산, auto형은 사이즈당 한 번)"""
+    """5b_비상품화_요청사이즈별 → [프레임 id, 요청 사이즈, 노출, 클릭]"""
     agg, seen = {}, set()
     for r in ab_table(ab['5b_비상품화_요청사이즈별'], dates_only=False):
         size = str(r['요청사이즈'])
@@ -681,7 +667,7 @@ def ab_sizes(ab):
 
 
 def update_frames_xlsx(path, ab_path=None):
-    """path = rtb_frame_analysis xlsx (없으면 None) · ab_path = rtb_theme_ab_result xlsx (있으면 이 파일이 우선)"""
+    """path 는 rtb_frame_analysis xlsx, ab_path 는 rtb_theme_ab_result xlsx"""
     sheets = load_xlsx(path) if path else {}
     ab = load_xlsx(ab_path) if ab_path else None
     print('[프레임 xlsx] ' + ' + '.join(os.path.basename(x) for x in (ab_path, path) if x))
@@ -697,30 +683,30 @@ def update_frames_xlsx(path, ab_path=None):
                     if v:
                         rows.append([d, t, v, sum(xl_int(r.get(f'{c}_클릭')) for c in names)])
         else:
-            for r in xl_table(sheets[sheet], 'date', *[c[0] + '_views' for c in cols.values()]):   # 프레임의 첫 열은 필수, 나머지 열(auto_origin 등)은 없으면 0
+            for r in xl_table(sheets[sheet], 'date', *[c[0] + '_views' for c in cols.values()]):   # 첫 열만 필수, 나머지는 없으면 0
                 d = xl_date(r['date'])
                 for t, names in cols.items():
                     v = sum(xl_int(r.get(f'{c}_views')) for c in names)
                     if v:
                         rows.append([d, t, v, sum(xl_int(r.get(f'{c}_clicks')) for c in names)])
         rows.sort()
-        if ab and frame_map and 'B_오토요청사이즈일별' in ab:   # 오토 요청 사이즈: B 시트 (일별 + 누적)
+        if ab and frame_map and 'B_오토요청사이즈일별' in ab:
             media = 'app' if 'app' in page else 'web'
             fm = {'RED': 'redauto', 'ETC': 'autoetc'} if media == 'web' else {'RED': 'redauto', 'COUPANG': 'coupangetc', 'ETC': 'coupangetc'}
             daily, places = ab_full_auto_sizes(ab, media, fm)
             extra = {'APDDATA': daily}
-        elif ab and not frame_map and 'C_비상품요청사이즈일별' in ab:   # 비상품: C 시트(요청 사이즈) + A 시트(지면), 일별 + 누적
+        elif ab and not frame_map and 'C_비상품요청사이즈일별' in ab:
             sdaily, scum = ab_full_np_sizes(ab)
             pdaily, places = ab_full_places(ab, 'nonprod', {'iauto': 'iauto', 'i사이즈': 'isize'}.get)
             extra = {'ASDATA': scum, 'ASDDATA': sdaily, 'APDDATA': pdaily}
         else:
-            places = read_places(frame_map, None) if frame_map else (xl_places(sheets, nonproduct_frame) or read_nonproduct_places())   # 비상품 지면은 xlsx 05·06 시트 누적 (없으면 CSV)
-            extra = {'ASDATA': ab_sizes(ab)} if (ab and not frame_map) else None   # 비상품 요청 사이즈별 (theme_ab 5b)
+            places = read_places(frame_map, None) if frame_map else (xl_places(sheets, nonproduct_frame) or read_nonproduct_places())
+            extra = {'ASDATA': ab_sizes(ab)} if (ab and not frame_map) else None
         write_auto(page, rows, places, extra=extra)
 
 
 if __name__ == '__main__':
-    if '--places' in sys.argv:   # tag_stats 폴더 → 지면별(고정).csv 만 만들고 끝
+    if '--places' in sys.argv:   # tag_stats 폴더 → 지면별 csv 만 생성
         build_places(sys.argv[sys.argv.index('--places') + 1])
         sys.exit()
     if '--frames' not in sys.argv:

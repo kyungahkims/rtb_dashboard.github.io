@@ -1,0 +1,78 @@
+/* 프레임 변경 Timeline, 프레임 AB 테스트 네 페이지가 공유
+   ch: 채널, type: deploy | ratio | copy | fix, theme: 프레임 id */
+const TIMELINE = [
+    { d: '2026-09-22', ch: '구글', type: 'ratio', theme: 'autoorigin', title: '상품 오토 배너를 기존 디자인(auto_origin)으로 되돌림', desc: '레드오토 디자인 대신 기존 오토 배너(auto_origin 프레임)를 다시 내보내기 시작했습니다.' },
+    { d: '2026-09-15', ch: '구글', type: 'deploy', theme: 'magazine', title: '매거진 디자인 추가 · 상품 개수 자동 조절', desc: '상품 고정 배너에 세 번째 디자인인 매거진을 추가했습니다. 배너 크기에 따라 보여 주는 상품 개수도 자동으로 맞추도록 바꿨습니다.' },
+    { d: '2026-09-09', ch: '구글', type: 'deploy', theme: 'redauto', title: '상품 오토 배너를 레드오토 디자인으로 교체', desc: '웹·모바일과 앱의 오토 배너(광고 자리 크기에 따라 알아서 바뀌는 배너)를 기존 디자인(auto_origin 프레임)에서 새 레드오토 디자인으로 바꿨습니다. 새 디자인과 기존 디자인의 성과 비교(AB 테스트)가 이날부터 시작됐습니다.' },
+    { d: '2026-09-02', ch: '구글', type: 'deploy', theme: 'whitered', title: '화이트레드 디자인 추가 · 비상품 배너를 오토 배너 하나로 통합', desc: '상품 고정 배너에 화이트레드 디자인을 추가했습니다. 비상품 배너는 크기별로 따로 만들던 14개를 광고 자리 크기에 따라 알아서 바뀌는 오토 배너(iauto) 하나로 합쳤습니다.' },
+    { d: '2026-08-26', ch: '구글', type: 'deploy', theme: 'blackgold', title: '블랙골드 디자인 배너 출시', desc: '새 블랙골드 디자인을 상품 고정 배너 14개 크기 전부에 적용했습니다.' },
+    { d: '2026-08-19', ch: '구글', type: 'fix', theme: 'common', title: '배너 노출 조건 정리', desc: '네이티브 광고 자리를 정해진 비율대로 받도록 고쳤고, 너무 작은 자리(50 미만)에는 입찰하지 않게 했습니다. 고정 배너가 먼저 나가도록 우선순위도 조정했습니다.' },
+    { d: '2026-08-11', ch: '구글', type: 'fix', theme: 'common', title: '네이티브 광고 로고 오류 수정', desc: '네이티브 광고에서 로고가 잘못 나오던 문제를 고쳤습니다.' },
+];
+const TYPE_LABEL = { deploy: '배포', ratio: '노출 비중 조정', copy: '문구·네이밍 변경', fix: '수정' };
+// 페이지 THEMES에 없는 대상
+const TL_TARGET = {
+    blackgold: { id: 'blackgold', name: '블랙골드 프레임', color: '#2b2d31', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/blackGold/ui/openRtb_blackGold_250x250_ui.html' },
+    whitered: { id: 'whitered', name: '화이트레드 프레임', color: '#e0262f', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/whiteRed/ui/openRtb_whiteRed_250x250_ui.html' },
+    magazine: { id: 'magazine', name: '매거진 프레임', color: '#8b5cf6', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/simpleMagazine/ui/openRtb_simple_magazine_250x250_ui.html' },
+    redauto: { id: 'redauto', name: '레드오토 프레임', color: '#e0262f', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/auto/dev/openRtbAuto_red.html', tpl: true },
+    autoorigin: { id: 'autoorigin', name: 'auto_origin 프레임 (기존 오토 배너)', color: '#22c55e' },
+    common: { id: 'common', name: '공통 (전체 프레임)', color: '#9aa0a8' },
+    iseries: { id: 'iseries', name: 'i 시리즈', color: '#9aa0a8' },
+    coupang: { id: 'coupang', name: '쿠팡 프레임', color: '#9aa0a8' },
+    sel: { id: 'sel', name: 'SEL · A/B/C/D 변형', color: '#9aa0a8' },
+};
+
+// 배너 썸네일, tpl은 페이지가 채움
+const tlArt = T => !T.src ? '' : `<div class="ad ad-slot" data-frame="${T.id}"><iframe ${T.tpl ? `data-tpl="${T.src}"` : `src="${T.src}"`} title="${T.name}" loading="lazy" scrolling="no"></iframe></div>`;
+
+// 배너 축소 코드가 없는 페이지용
+function tlBannerFallback() {
+    if (typeof fitBannerSlots === 'function') return;
+    const PX = 250, MOCK = {
+        '{{w}}': PX, '{{h}}': PX,
+        '{{productList}}': `{ pcode: "test-pcode1", pnm: "오토프레임 카라넥 원피스", price: "49,900", prdt_prmct: "39,900", dc_rate: "32",
+            img: "https://www.dabagirl.co.kr/web/product/big/202105/04ff60dbb9fa51e3c47fc8e4bdc27c08.jpg", purl: "javascript:void(0)", advrtsReplcCode: "01", advrtsReplcNm: "" }`,
+        '{{HTTP}}': 'https://img.mobon.net', '{{HTTP_DR}}': 'https://img.mobon.net', '{{wp_imgtag}}': '', '{{UUID}}': 'test-uuid', '{{USER}}': 'test-user', '{{ITL_TP_CODE}}': 'test-code',
+    };
+    const cache = {};
+    const fit = () => document.querySelectorAll('.ad.ad-slot iframe').forEach(f => {
+        const w = f.parentElement.clientWidth;
+        if (w) f.style.transform = `scale(${w / PX})`;
+        if (f.dataset.tpl && !f.dataset.filled) {
+            f.dataset.filled = '1';
+            const url = f.dataset.tpl;
+            cache[url] ??= fetch(url).then(r => r.text()).then(t => Object.entries(MOCK).reduce((c, [k, v]) => c.split(k).join(v), t));
+            cache[url].then(html => { f.srcdoc = html; }).catch(() => { });
+        }
+    });
+    window.__tlFit = fit;
+    window.addEventListener('resize', fit);
+    fit();
+}
+
+// 모달이 열린 뒤 배너 축소 다시 계산
+const tlRefit = () => requestAnimationFrame(() => { if (typeof fitBannerSlots === 'function') fitBannerSlots(); if (window.__tlFit) window.__tlFit(); });
+
+/* 페이지의 theme, md, cv, sw, nm 정의 뒤에 호출 */
+function initTimeline() {
+    const ol = document.getElementById('timeline'), modal = document.getElementById('tlModal');
+    if (!ol || !modal) return;
+    ol.innerHTML = [...TIMELINE].sort((a, b) => b.d.localeCompare(a.d)).map((e, i) => {
+        const T = theme(e.theme) || TL_TARGET[e.theme] || { id: e.theme, name: e.theme, color: '#9aa0a8' };
+        return `<li>
+            <div class="tl-date">${md(e.d)}<small>${e.d.slice(0, 4)}</small></div>
+            <div class="tl-dot" style="${cv(T)}"></div>
+            <div class="tl-body">
+                <div class="tl-top"><span class="chip ch ${e.ch === '카카오' ? 'kakao' : 'google'}">${e.ch}</span><span class="chip ${e.type}">${TYPE_LABEL[e.type]}</span><b>${e.title}</b>${i === 0 ? '<span class="chip live">최신</span>' : ''}</div>
+                <div class="tl-target"><span class="dot" style="${sw(T)}"></span>${nm(T)}</div>
+                <p>${e.desc}</p>
+            </div>
+            <div class="tl-art">${tlArt(T)}</div>
+        </li>`;
+    }).join('');
+    tlBannerFallback();
+    document.getElementById('tlOpen').addEventListener('click', () => { modal.showModal(); tlRefit(); });
+    document.getElementById('tlClose').addEventListener('click', () => modal.close());
+    modal.addEventListener('click', e => { if (e.target === modal) modal.close(); });   // 바깥 클릭 시 닫기
+}
