@@ -6,1126 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>상품 오토 프레임 (웹, 모바일)</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-    <style>
-        * {
-            box-sizing: border-box
-        }
-
-        body {
-            margin: 0;
-            background: #f5f6f8;
-            color: #202124;
-            font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif
-        }
-
-        .wrap {
-            margin: auto;
-            padding: 28px 32px
-        }
-
-        .head {
-            display: flex;
-            justify-content: space-between;
-            align-items: end;
-            margin-bottom: 22px;
-            gap: 12px
-        }
-
-        .head h1 {
-            margin: 0;
-            font-size: 27px
-        }
-
-        .date {
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 9px;
-            padding: 10px 14px;
-            font-size: 13px
-        }
-
-        .card {
-            background: #fff;
-            border: 1px solid #e6e8ec;
-            border-radius: 12px;
-            padding: 26px 24px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 4px 14px rgba(0, 0, 0, .07);
-            min-width: 0
-        }
-
-        section {
-            margin-bottom: 48px
-        }
-
-        section:last-of-type {
-            margin-bottom: 24px
-        }
-
-        .title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 12px
-        }
-
-        .title h2 {
-            font-size: 17px;
-            font-weight: 800;
-            color: #1a1d23;
-            letter-spacing: -.01em;
-            margin: 0
-        }
-
-        .title span {
-            font-size: 12px;
-            color: #858a92
-        }
-
-        .note {
-            font-size: 11px;
-            color: #858a92;
-            margin-top: 10px
-        }
-
-        .dot {
-            display: inline-block;
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            margin-right: 6px;
-            vertical-align: 0;
-            flex: none
-        }
-
-        /* ① 테마별 성과 박스 */
-        .themes {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 14px
-        }
-
-        .theme {
-            padding: 0;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column
-        }
-
-        .theme-art {
-            background: #f8f9fb;
-            padding: 16px;
-            border-bottom: 1px solid #eceef1
-        }
-
-        .theme-art .ad {
-            max-width: 280px;
-            margin: auto
-        }
-
-        .theme-body {
-            padding: 14px 16px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px
-        }
-
-        .theme-name {
-            font-size: 15px;
-            font-weight: 700;
-            display: flex;
-            align-items: center
-        }
-
-        /* 프레임 이름 호버 툴팁 */
-        .fname { cursor: default; border-bottom: 1px dotted transparent }
-        .fname:hover { border-bottom-color: currentColor }
-        #frameTip { position: fixed; left: -9999px; top: -9999px; z-index: 2000; width: 216px; padding: 8px; background: #fff; border: 1px solid #e3e6ea; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, .16); pointer-events: none; visibility: hidden }
-        #frameTip.show { visibility: visible }
-        #frameTip .ft-item { display: none }
-        #frameTip .ft-item.on { display: block }
-        #frameTip .ad.ad-slot { width: 200px; margin: 0 auto }
-        #frameTip .ft-name { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; font-size: 12px; font-weight: 700; color: #20242a }
-
-        /* ① 프레임 미리보기 링크 (뷰어 페이지 새 탭) */
-        a.theme-art { display: block; text-decoration: none; color: inherit }
-        .theme-view { margin-left: auto; display: inline-flex; align-items: center; gap: 3px; font-size: 11.5px; font-weight: 600; color: #3446b8; text-decoration: none; white-space: nowrap; padding: 2px 7px; border-radius: 999px; background: #eef0f9 }
-        .theme-view:hover { background: #3446b8; color: #fff }
-
-        .theme-period {
-            font-size: 12px;
-            color: #6b7078
-        }
-
-        .theme-period b {
-            color: #3446b8
-        }
-
-        .theme-stats {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 7px 10px;
-            font-size: 13px;
-            border-top: 1px dashed #e1e4e9;
-            padding-top: 10px;
-            margin: 0
-        }
-
-        .theme-stats dt {
-            color: #7b8088
-        }
-
-        .theme-stats dd {
-            margin: 0;
-            text-align: right;
-            font-weight: 700;
-            font-variant-numeric: tabular-nums
-        }
-
-        /* ② 타임라인 */
-        .tl {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            position: relative
-        }
-
-        .tl::before {
-            content: "";
-            position: absolute;
-            left: 82px;
-            top: 8px;
-            bottom: 8px;
-            width: 2px;
-            background: #e6e8ec
-        }
-
-        .tl li {
-            display: grid;
-            grid-template-columns: 70px 26px 1fr 150px;
-            gap: 0 12px;
-            align-items: start;
-            padding: 10px 0
-        }
-
-        .tl li+li {
-            border-top: 1px solid #f1f2f4
-        }
-
-        .tl-date {
-            font-size: 13px;
-            font-weight: 700;
-            text-align: right;
-            padding-top: 2px;
-            font-variant-numeric: tabular-nums
-        }
-
-        .tl-date small {
-            display: block;
-            font-size: 11px;
-            color: #9aa0a8;
-            font-weight: 400
-        }
-
-        .tl-dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            border: 3px solid #fff;
-            box-shadow: 0 0 0 2px var(--c);
-            background: var(--c);
-            margin: 3px auto 0;
-            position: relative;
-            z-index: 1
-        }
-
-        .tl-body {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            min-width: 0
-        }
-
-        .tl-top {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            flex-wrap: wrap
-        }
-
-        .tl-top b {
-            font-size: 14px
-        }
-
-        .tl-body p {
-            margin: 0;
-            font-size: 12.5px;
-            color: #6b7078;
-            line-height: 1.5
-        }
-
-        .chip {
-            display: inline-block;
-            font-size: 11px;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 999px;
-            white-space: nowrap
-        }
-
-        .chip.deploy {
-            background: #e8ecff;
-            color: #3446b8
-        }
-
-        .chip.copy {
-            background: #fff3dc;
-            color: #a86b00
-        }
-
-        .chip.ratio {
-            background: #fbe9ea;
-            color: #c9444d
-        }
-
-        .chip.fix {
-            background: #eceef1;
-            color: #4b5260
-        }
-
-        .chip.ch.google {
-            background: #eef0f3;
-            color: #4b5260
-        }
-
-        .chip.ch.kakao {
-            background: #fff4c2;
-            color: #6b5300
-        }
-
-        .tl-target {
-            font-size: 12px;
-            font-weight: 700;
-            color: #444;
-            display: flex;
-            align-items: center
-        }
-
-        .chip.live {
-            background: #e6f4ec;
-            color: #198754
-        }
-
-        .tl-art .ad {
-            width: 150px
-        }
-        /* ② 전전일 vs 전일 — 지표별 카드 (제목 + 한 줄 요약 · 막대 · 이름/1위 배지 · 증감 칩) */
-        .yd-legend { margin-bottom: 14px }
-        .yd-legend-note { color: #858a92 }
-        .yd-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px }
-        .yd-card { background: #fff; border: 1px solid #e6e8ec; border-radius: 12px; box-shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 4px 14px rgba(0, 0, 0, .06); padding: 16px 18px 14px; min-width: 0 }
-        .yd-card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 10px }
-        .yd-card-head h3 { margin: 0; font-size: 14px; font-weight: 800; color: #202124; white-space: nowrap }
-        .yd-note { font-size: 11.5px; font-weight: 600; color: #858a92; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
-        .yd-chart { position: relative; height: 170px }
-        .yd-chart svg { display: block; overflow: visible }
-        .yd-chart .yd-bar { cursor: default }
-        .yd-labels { display: grid; margin-top: 8px; text-align: center }
-        .yd-labels > div { display: flex; flex-direction: column; align-items: center; gap: 5px; min-width: 0 }
-        .yd-name { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: #202124; white-space: nowrap }
-        .yd-chg { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap }
-        .yd-chg.rise { background: #e6f4ec; color: #198754 }
-        .yd-chg.fall { background: #fbe9ea; color: #c9444d }
-        .yd-chg.flat { background: #eceef1; color: #666 }
-        .yd-chg.none { background: #eceef1; color: #858a92 }
-        @media(max-width:1100px) { .yd-cards { grid-template-columns: 1fr } }
-
-        /* ③ 최근 7일 */
-        .legend {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px 16px;
-            font-size: 12px;
-            color: #555;
-            margin-bottom: 8px
-        }
-
-        .legend i {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 2px;
-            margin-right: 6px;
-            vertical-align: -1px
-        }
-
-        .w7 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px
-        }
-
-        .w7-box h3 {
-            margin: 0 0 6px;
-            font-size: 13px;
-            color: #444
-        }
-
-        .w7-chart {
-            height: 230px;
-            position: relative
-        }
-
-        .w7-chart svg {
-            display: block;
-            overflow: visible
-        }
-
-        .tip {
-            position: absolute;
-            pointer-events: none;
-            background: #20242a;
-            color: #fff;
-            border-radius: 8px;
-            padding: 8px 10px;
-            font-size: 12px;
-            line-height: 1.6;
-            white-space: nowrap;
-            z-index: 3;
-            box-shadow: 0 4px 14px #0003
-        }
-
-        .tip b {
-            display: block
-        }
-
-        .tip i {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin-right: 6px
-        }
-
-        .tip span {
-            display: flex;
-            justify-content: space-between;
-            gap: 14px;
-            font-variant-numeric: tabular-nums
-        }
-
-        /* 표 */
-        .scroll {
-            overflow: auto
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12px
-        }
-
-        th,
-        td {
-            padding: 10px 10px;
-            border-bottom: 1px solid #e9ebef;
-            text-align: right;
-            white-space: nowrap;
-            font-variant-numeric: tabular-nums
-        }
-
-        th:first-child,
-        td:first-child {
-            text-align: left
-        }
-
-        th {
-            color: #777;
-            background: #fafbfc;
-            font-size: 11px;
-            font-weight: 700
-        }
-
-        th.grp {
-            text-align: center;
-            color: #202124;
-            font-size: 12px;
-            border-bottom: 2px solid var(--c)
-        }
-
-        th.sep,
-        td.sep {
-            border-left: 1px solid #e6e8ec
-        }
-
-        td.best {
-            color: #3446b8;
-            font-weight: 700
-        }
-
-        .crown-wrap {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            position: relative;
-            cursor: default
-        }
-
-        .crown-wrap::after {
-            content: attr(data-tip);
-            position: absolute;
-            bottom: calc(100% + 8px);
-            right: -6px;
-            background: #20242a;
-            color: #fff;
-            font-size: 12px;
-            font-weight: 600;
-            line-height: 1.5;
-            text-align: left;
-            white-space: pre;
-            padding: 7px 10px;
-            border-radius: 7px;
-            box-shadow: 0 4px 14px #0003;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity .12s;
-            z-index: 5
-        }
-
-        .crown-wrap::before {
-            content: "";
-            position: absolute;
-            bottom: calc(100% + 2px);
-            right: 10px;
-            border: 6px solid transparent;
-            border-top-color: #20242a;
-            border-bottom: 0;
-            opacity: 0;
-            transition: opacity .12s;
-            z-index: 5
-        }
-
-        td.top:hover .crown-wrap::after,
-        td.top:hover .crown-wrap::before {
-            opacity: 1
-        }
-
-        .crown {
-            width: 17px;
-            height: 20px;
-            flex: none;
-            margin: -3px 0
-        }
-
-        td.top {
-            background: color-mix(in srgb, var(--c) 16%, #fff);
-            font-weight: 700;
-            box-shadow: inset 3px 0 0 var(--c)
-        }
-
-        .win {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: 700;
-            font-size: 12px
-        }
-
-        .win::before {
-            content: "";
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            background: var(--c)
-        }
-
-        .ss {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 14px
-        }
-
-        .ss-item {
-            background: #f8f9fb;
-            border-radius: 10px;
-            padding: 12px 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-            min-width: 0
-        }
-
-        .ss-top {
-            display: flex;
-            align-items: center;
-            font-size: 13px;
-            font-weight: 700
-        }
-
-        .ss-top b {
-            margin-left: auto;
-            font-size: 13px
-        }
-
-        .ss-bar {
-            height: 6px;
-            background: #e6e8ec;
-            border-radius: 3px;
-            overflow: hidden
-        }
-
-        .ss-bar span {
-            display: block;
-            height: 100%;
-            background: var(--c);
-            border-radius: 3px
-        }
-
-        .ss-list {
-            font-size: 11.5px;
-            color: #6b7078;
-            line-height: 1.5
-        }
-
-        @media(max-width:700px) {
-            .ss {
-                grid-template-columns: 1fr
-            }
-        }
-
-        td.left {
-            text-align: left
-        }
-
-        .cell-name .ad {
-            width: 56px;
-            flex: none;
-            box-shadow: none
-        }
-
-        .total-row td {
-            background: #f3f5ff;
-            font-weight: 700;
-            color: #202124;
-            border-bottom: 2px solid #d9ddf5;
-            font-size: 12.5px
-        }
-
-        /* 표 날짜 칸: 토요일 파랑 · 일요일/공휴일 빨강 (holidays.js) */
-        td.day-sat { color: #2a6fdb }
-        td.day-sun { color: #d7262f }
-
-        .total-row td:first-child {
-            color: #3446b8
-        }
-
-        .sort-btn {
-            all: unset;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 3px 6px;
-            margin: -3px -6px;
-            border-radius: 6px;
-            font: inherit;
-            color: inherit
-        }
-
-        .sort-btn:hover {
-            background: #eef0f3
-        }
-
-        .sort-btn:focus-visible {
-            outline: 2px solid #3446b8
-        }
-
-        .sort-btn .arw {
-            display: inline-flex;
-            flex-direction: column;
-            font-size: 7px;
-            line-height: 7px;
-            color: #d3d7dd
-        }
-
-        .sort-btn .arw span {
-            padding: 1px 4px;
-            margin: 0 -4px;
-            cursor: pointer
-        }
-
-        .sort-btn .arw span:hover {
-            color: #6b7078
-        }
-
-        .sort-btn[data-dir="desc"] .arw .arw-up,
-        .sort-btn[data-dir="asc"] .arw .arw-dn {
-            color: #3446b8
-        }
-
-        .sort-btn[data-dir] {
-            color: #3446b8;
-            font-weight: 700
-        }
-
-        /* ---------- 프레임 예시 이미지 (HTML 목업 · 실제 소재 이미지로 교체 가능) ---------- */
-        .ad {
-            container-type: inline-size;
-            aspect-ratio: 6/5;
-            width: 100%;
-            max-width: 100%;
-            position: relative;
-            overflow: hidden;
-            border-radius: 4px;
-            line-height: 1.25;
-            letter-spacing: -.01em;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, .12)
-        }
-
-        .ad svg {
-            display: block;
-            width: 100%;
-            height: 100%
-        }
-
-        .ad-blackgold .img {
-            width: 36cqw;
-            height: 32cqw
-        }
-
-        .ad-blackgold .price {
-            font-size: 6.4cqw;
-            font-weight: 700;
-            color: #e2c270
-        }
-
-        .ad-whitered .img {
-            padding: 5cqw 4cqw
-        }
-
-        .ad-whitered .body {
-            padding: 3cqw 5cqw 3cqw 1cqw;
-            display: flex;
-            flex-direction: column;
-            gap: 2cqw
-        }
-
-        .ad-whitered .price {
-            font-size: 8cqw;
-            font-weight: 800;
-            color: #d7262f
-        }
-
-        .ad-whitered .price s {
-            display: block;
-            font-size: 3.8cqw;
-            color: #999;
-            font-weight: 400
-        }
-
-        .ad-redauto .auto {
-            font-size: 3cqw;
-            background: rgba(255, 255, 255, .18);
-            border-radius: 10cqw;
-            padding: .8cqw 2.4cqw;
-            font-weight: 700
-        }
-
-        .ad-redauto .tile .img {
-            height: 17cqw
-        }
-
-        .ad-magazine .col {
-            display: flex;
-            flex-direction: column;
-            gap: 2cqw;
-            min-width: 0
-        }
-
-        .ad-magazine .hl {
-            font-family: Georgia, "Noto Serif KR", serif;
-            font-size: 7.2cqw;
-            line-height: 1.18;
-            font-weight: 700;
-            letter-spacing: -.03em
-        }
-
-        .ad-magazine .price {
-            font-size: 4.6cqw;
-            font-weight: 700;
-            margin-top: auto
-        }
-
-        .ad-magazine .link {
-            font-size: 3.6cqw;
-            font-weight: 700;
-            border-bottom: 1px solid;
-            align-self: flex-start
-        }
-
-        .ad-magazine .img {
-            background: #e2d9c8;
-            display: flex;
-            align-items: center;
-            padding: 4cqw
-        }
-
-        @media(max-width:1100px) {
-
-            .themes {
-                grid-template-columns: repeat(2, 1fr)
-            }
-
-            .w7 {
-                grid-template-columns: 1fr
-            }
-        }
-
-        @media(max-width:700px) {
-            .wrap {
-                padding: 18px
-            }
-
-            .head {
-                display: block
-            }
-
-            .date {
-                display: inline-block;
-                margin-top: 12px
-            }
-
-            .themes {
-                grid-template-columns: 1fr
-            }
-
-            .tl::before {
-                left: 64px
-            }
-
-            .tl li {
-                grid-template-columns: 52px 26px 1fr
-            }
-
-            .tl-art {
-                grid-column: 3;
-                margin-top: 8px
-            }
-        }
-
-        .ad.ad-slot {
-            background: #fff;
-            border: 1px solid #d6d9de;
-            box-shadow: none;
-            border-radius: 6px
-        }
-
-        .ad.ad-slot:has(iframe) {
-            aspect-ratio: 1;            /* 250x250 배너 */
-            border-color: #e3e6ea
-        }
-
-        .ad.ad-slot iframe {
-            display: block;
-            width: 250px;               /* 배너 원본 크기로 그린 뒤 */
-            height: 250px;
-            border: 0;
-            transform-origin: 0 0;      /* 칸 폭에 맞게 축소 (fitBannerSlots) */
-            pointer-events: none;       /* 대시보드에서 실수로 광고 클릭 방지 */
-        }
-
-        .tl-open {
-            position: fixed;
-            right: 24px;
-            bottom: calc(24px + env(safe-area-inset-bottom, 0px));
-            z-index: 20;
-            width: 58px;
-            height: 58px;
-            border-radius: 50%;
-            border: 0;
-            background: #3446b8;
-            color: #fff;
-            display: grid;
-            place-items: center;
-            cursor: pointer;
-            box-shadow: 0 6px 18px rgba(52, 70, 184, .38);
-            transition: transform .15s, background .15s
-        }
-
-        .tl-open:hover {
-            background: #28389a;
-            transform: translateY(-2px)
-        }
-
-        .tl-open-label {
-            position: absolute;
-            right: calc(100% + 10px);
-            top: 50%;
-            transform: translateY(-50%);
-            background: #20242a;
-            color: #fff;
-            font-size: 12.5px;
-            font-weight: 700;
-            white-space: nowrap;
-            padding: 7px 11px;
-            border-radius: 7px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity .15s
-        }
-
-        .tl-open:hover .tl-open-label,
-        .tl-open:focus-visible .tl-open-label {
-            opacity: 1
-        }
-
-        .tl-open:focus-visible,
-        .tl-close:focus-visible {
-            outline: 2px solid #3446b8;
-            outline-offset: 2px
-        }
-
-        .tl-modal {
-            width: min(920px, calc(100vw - 32px));
-            max-height: calc(100vh - 48px);
-            padding: 0;
-            border: 0;
-            border-radius: 14px;
-            box-shadow: 0 20px 60px #0004;
-            color: #202124
-        }
-
-        .tl-modal::backdrop {
-            background: rgba(20, 24, 30, .45)
-        }
-
-        .tl-modal[open] {
-            display: flex;
-            flex-direction: column;
-            animation: tlIn .16s ease-out
-        }
-
-        @keyframes tlIn {
-            from {
-                opacity: 0;
-                transform: translateY(8px)
-            }
-
-            to {
-                opacity: 1;
-                transform: none
-            }
-        }
-
-        .tl-modal-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            padding: 18px 22px;
-            border-bottom: 1px solid #eceef1
-        }
-
-        .tl-modal-head h2 {
-            margin: 0;
-            font-size: 17px
-        }
-
-        .tl-modal-head span {
-            font-size: 12px;
-            color: #858a92
-        }
-
-        .tl-close {
-            all: unset;
-            cursor: pointer;
-            width: 34px;
-            height: 34px;
-            display: grid;
-            place-items: center;
-            border-radius: 8px;
-            color: #6b7078
-        }
-
-        .tl-close:hover {
-            background: #f1f2f4;
-            color: #202124
-        }
-
-        .tl-modal-body {
-            overflow: auto;
-            padding: 8px 22px 18px
-        }
-
-        @media (max-width:700px) {
-            .head-right {
-                align-items: flex-start;
-                margin-top: 12px
-            }
-
-            .head-right .date {
-                margin-top: 0
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .tl-modal[open] {
-                animation: none
-            }
-        }
-
-        /* ③ 최근 7일 — 위아래 여백 */
-        .legend {
-            margin: 4px 0 20px
-        }
-
-        .w7 {
-            gap: 32px 24px;
-            padding-bottom: 6px
-        }
-
-        .w7-box h3 {
-            margin: 0 0 14px;
-            font-size: 13px;
-            font-weight: 800;
-            color: #202124;
-            display: flex;
-            align-items: center;
-            gap: 7px
-        }
-
-        .w7-box h3::before {
-            content: "";
-            width: 3px;
-            height: 13px;
-            border-radius: 2px;
-            background: #3446b8
-        }
-
-        .w7-chart {
-            height: 240px
-        }
-
-        .legend i {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            margin-right: 6px;
-            vertical-align: 0
-        }
-        /* ④ 사이즈별 — 요약 박스 여백 */
-        .ss { gap: 16px; margin: 6px 0 24px }
-        .ss-item { padding: 28px 22px 26px; gap: 16px; min-height: 160px; justify-content: center }
-        .ss-top { font-size: 14px }
-        .ss-list { line-height: 1.7 }
-        /* ④ 기간 선택 */
-        .period-ctrl { display: flex; align-items: center; gap: 8px; flex-wrap: wrap }
-        .seg { display: inline-flex; background: #f1f2f4; border-radius: 9px; padding: 3px }
-        .seg button { border: 0; background: transparent; padding: 6px 14px; border-radius: 7px; font: inherit; font-size: 12.5px; font-weight: 600; color: #6b7078; cursor: pointer }
-        .seg button[aria-pressed="true"] { background: #fff; color: #3446b8; font-weight: 800; box-shadow: 0 1px 3px #0002 }
-        .seg button:focus-visible, .date-in:focus-visible { outline: 2px solid #3446b8; outline-offset: 1px }
-        .date-in { border: 1px solid #d6d9de; border-radius: 8px; padding: 6px 10px; font: inherit; font-size: 12.5px; color: #202124; background: #fff }
-        td.na { color: #c3c7ce }
-        /* ④ 지표 탭 */
-        .m-tabs { display: flex; gap: 4px; border-bottom: 1px solid #e6e8ec; margin: 2px 0 18px }
-        .m-tabs button { border: 0; background: none; font: inherit; font-size: 13.5px; font-weight: 700; color: #858a92; padding: 10px 16px 11px; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px }
-        .m-tabs button:hover { color: #202124 }
-        .m-tabs button[aria-selected="true"] { color: #3446b8; border-bottom-color: #3446b8 }
-        .m-tabs button:focus-visible { outline: 2px solid #3446b8; outline-offset: -2px; border-radius: 6px }
-        #sizeTable th.grp { text-align: right }
-        /* ⑥ 지면별 — 요약 박스 4개 한 줄 */
-        #placeSummary { grid-template-columns: repeat(4, 1fr) }
-        /* 박스 안 제목·막대·목록 줄을 4개 박스가 공유 (서브그리드) → 라인 높이 일치 */
-        #placeSummary .ss-item { padding: 22px 18px 20px; display: grid; grid-template-rows: subgrid; grid-row: span 3; align-content: start; justify-content: normal }
-        #placeSummary .ss-list { align-self: start }
-        /* 제목 줄: 테마 이름 / 1위 · n개 지면 을 두 줄로 (좁은 칸에서 단어가 끊기지 않게) */
-        #placeSummary .ss-top { flex-wrap: wrap; row-gap: 4px; white-space: nowrap }
-        #placeSummary .ss-top b { flex-basis: 100%; margin-left: 0; font-weight: 600; color: #6b7078 }
-        #placeSummary .ss-list { overflow-wrap: anywhere }
-        @media(max-width:1100px) { #placeSummary { grid-template-columns: repeat(2, 1fr) } }
-        @media(max-width:700px) { #placeSummary { grid-template-columns: 1fr } }
-        #placeTable th, #placeTable td { padding: 6px 8px }
-        #placeTable th.grp { text-align: right }
-        #placeTable td.place-cell { padding-left: 18px; white-space: nowrap }
-        #placeTable td.place-cell small { display: block; font-weight: 400; color: #858a92; font-size: 11px; margin-top: 1px }
-        /* 카드 안쪽 여백 — 표 카드는 기존대로 */
-        .card:has(> .scroll) { padding: 18px }
-
-        /* 블랙골드처럼 테두리색(--r)이 있는 프레임 */
-        .tl-dot { box-shadow: 0 0 0 2px var(--r, var(--c)) }
-        .win::before, .ss-bar span { box-shadow: inset 0 0 0 2px var(--r, transparent) }
-        td.top { background: color-mix(in srgb, var(--r, var(--c)) 16%, #fff); box-shadow: inset 3px 0 0 var(--r, var(--c)) }
-        /* ③ 최근 7일 — 막대 호버 시 선그래프 */
-        .w7-chart .bar { transition: opacity .15s }
-        .w7-chart.hl .bar:not(.on) { opacity: .2 }
-        .date-in { cursor: pointer }
-        /* 날짜 칸 — 눌러도 파랗게 선택·복사되지 않게 */
-        .date-in { -webkit-user-select: none; user-select: none; caret-color: transparent }
-        .date-in:focus, .date-in:focus-visible { outline: none }
-        .date-in::-webkit-datetime-edit-year-field:focus,
-        .date-in::-webkit-datetime-edit-month-field:focus,
-        .date-in::-webkit-datetime-edit-day-field:focus { background: transparent; color: inherit }
-        .h2-note { margin-left: 8px; font-size: 12px; font-weight: 400; color: #858a92 }
-        /* 요약 막대 하나 — 프레임별 1위 비중 */
-        .ss-stack { grid-column: 1 / -1; background: #f8f9fb; border-radius: 10px; padding: 16px 18px 14px; position: relative }
-        .ss-stack-title { font-size: 13px; font-weight: 800; color: #202124; margin-bottom: 10px }
-        .ss-stack-title small { margin-left: 6px; font-size: 12px; font-weight: 600; color: #858a92 }
-        .ss-stack-bar { display: flex; height: 26px; border-radius: 7px; overflow: hidden; background: #e6e8ec }
-        .ss-stack-bar span { display: flex; align-items: center; justify-content: center; color: #fff; font-size: 11.5px; font-weight: 800; white-space: nowrap; overflow: hidden; box-shadow: inset 0 0 0 2px var(--r, transparent) }
-        /* 제목 옆 ? 아이콘 — 마우스를 올리면 설명 툴팁 */
-        .h2-help { display: inline-grid; place-items: center; width: 17px; height: 17px; margin-left: 8px; border-radius: 50%; background: #eceef1; color: #6b7078; font-size: 11px; font-weight: 800; vertical-align: 2px; position: relative; cursor: help }
-        .h2-help:hover, .h2-help:focus-visible { background: #3446b8; color: #fff }
-        .h2-help::after { content: attr(data-tip); position: absolute; left: 0; top: calc(100% + 10px); width: max-content; max-width: 460px; padding: 14px 16px; border-radius: 10px; background: #fff; color: #3b4048; border: 1px solid #e6e8ec; font-size: 12.5px; font-weight: 500; line-height: 1.75; white-space: pre-line; word-break: keep-all; text-align: left; box-shadow: 0 6px 20px rgba(0, 0, 0, .10); opacity: 0; pointer-events: none; transition: opacity .12s; z-index: 6 }
-        .h2-help:hover::after, .h2-help:focus-visible::after { opacity: 1 }
-        /* ⑤ 1·2·3위 표시 */
-        .rk-slot .rk-badge { margin-right: 8px }
-        .rk-badge { display: inline-block; min-width: 34px; text-align: center; padding: 2px 7px; border-radius: 999px; font-size: 11px; font-weight: 800; line-height: 1.4 }
-        .rk-badge.rk1 { background: #ffe9a8; color: #9a6a00 }
-        .rk-badge.rk2 { background: #e9ecf1; color: #5b6270 }
-        .rk-badge.rk3 { background: #f6e0cf; color: #9a5a2a }
-        .theme-stats .rk-badge, .yd-name .rk-badge { font-style: normal; min-width: 30px; padding: 1px 6px; font-size: 10.5px; margin-left: 2px; vertical-align: 1px }   /* ①② 1·2·3위 */
-
-        /* ===== 상품 오토 프레임 페이지 전용 ===== */
-        .themes { grid-template-columns: repeat(2, 1fr) }
-        #placeSummary { grid-template-columns: repeat(2, 1fr) }
-        @media(max-width:800px) { .themes, #placeSummary { grid-template-columns: 1fr } }
-        .theme-name { flex-wrap: wrap; row-gap: 6px; white-space: nowrap }
-        .ab-chip { display: inline-block; margin-right: 6px; padding: 1px 8px; border-radius: 999px; font-size: 10.5px; font-weight: 800; letter-spacing: .2px; line-height: 1.5 }
-        .ab-chip.after { background: #3446b8; color: #fff }
-        .ab-chip.before { background: #e6e8ec; color: #5b6270 }
-        .ab-chip + .kind-chip { margin-left: 0 }
-        .kind-chip { display: inline-block; margin-right: 6px; padding: 1px 7px; border-radius: 5px; background: #eceef1; color: #4b5563; font-size: 11px; font-weight: 700; line-height: 1.5 }   /* ① 상품 / 비상품 */
-        .theme-name .chip.ch { margin-left: 6px; font-size: 10.5px; padding: 1px 7px }
-        .theme-view { margin-left: auto }
-        /* ④ 일별 추이 표 */
-        #transTable th, #transTable td { padding: 6px 8px; white-space: nowrap }
-        #transTable th.grp { text-align: center }
-        #transTable tr.pivot td { background: #fff7e0 }
-        #transTable tr.pivot td.top { background: color-mix(in srgb, var(--r, var(--c)) 16%, #fff) }   /* 강조 행에서도 1위 칸은 프레임 색 */
-        .seg-chip { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; line-height: 1.5; color: #202124 }
-        .seg-chip.one { background: color-mix(in srgb, var(--c) 14%, #fff); color: color-mix(in srgb, var(--c) 78%, #000) }   /* 테마 하나 — 그 테마 색 */
-        .seg-chip.none { background: #eceef1; color: #6b7078 }
-        /* ⑤ 지면 표 */
-        #placeTable th, #placeTable td { padding: 6px 8px }
-        #placeTable th.grp { text-align: right }
-        #placeTable td.place-cell { padding-left: 18px; white-space: nowrap }
-        #placeTable td.place-cell small { display: block; font-weight: 400; color: #858a92; font-size: 11px; margin-top: 1px }
-        #placeTable td.place-cell .chip.ch { margin-left: 6px; font-size: 10px; padding: 0 6px; vertical-align: 1px }
-        .ad-empty { display: grid; place-items: center; height: 100%; padding: 12px; text-align: center; font-size: 12px; color: #858a92; line-height: 1.5 }
-        .ad.ad-slot:has(.ad-empty) { aspect-ratio: 1; background: #fafbfc }
-        /* 맨 위로 버튼 */
-        .to-top { position: fixed; right: 24px; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 20; width: 44px; height: 44px; border-radius: 50%; border: 1px solid #e6e8ec; background: #fff; color: #3446b8; display: grid; place-items: center; cursor: pointer; box-shadow: 0 6px 18px rgba(0, 0, 0, .14); opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .18s, transform .18s, visibility .18s }
-        .to-top.show { opacity: 1; visibility: visible; transform: none }
-        .to-top:hover { background: #3446b8; color: #fff; border-color: #3446b8 }
-        .to-top:focus-visible { outline: 2px solid #3446b8; outline-offset: 2px }
-        body:has(.tl-open) .to-top { bottom: calc(24px + 58px + 12px + env(safe-area-inset-bottom, 0px)); right: 31px }   /* Timeline 버튼 위 */
-        /* 표 행 호버 — 배경 연하게 */
-        tbody tr:hover td { background: #f3f5fa }
-        tbody tr:hover td.top { background: color-mix(in srgb, var(--r, var(--c)) 24%, #fff) }
-        tbody td { transition: background .12s }
-    </style>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/frame_auto_web_page.css">
 </head>
 <body>
     <div class="wrap">
@@ -1166,6 +48,11 @@
         <section>
             <div class="title">
                 <h2>4. 프레임별 일별 추이 <span class="h2-help" data-tip="구간: 그날 어떤 배너가 나갔는지 보여 줍니다.&#10;&#160;&#160;• 단독 = 배너 하나만 나간 날&#10;&#160;&#160;• 병행 = 여러 배너가 같이 나간 날&#10;&#10;노란색 줄: 나가는 배너 조합이 전날과 달라진 날&#10;1위 메달: 여러 배너가 같이 나간 날 중 클릭률이 가장 높았던 배너" aria-label="구간 설명" tabindex="0">?</span></h2>
+                <div class="period-ctrl" id="transPeriod" role="group" aria-label="기간 선택">
+                    <div class="seg">
+                        <button type="button" data-mode="month" aria-pressed="true">9월 전체</button>
+                    </div>
+                </div>
             </div>
             <div class="card">
                 <div class="scroll">
@@ -1228,24 +115,22 @@
     <button type="button" class="to-top" id="toTop" aria-label="맨 위로">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
     </button>
-    <script src="holidays.js"></script>
-    <script src="frame_timeline.js"></script>
+    <script src="../js/holidays.js"></script>
+    <script src="../js/frame_timeline.js"></script>
     <script>
-        /* =====================================================================
-           설정 — 숫자는 상품 오토 프레임 (웹, 모바일).csv에서 update_data.bat이 채웁니다
-           ===================================================================== */
+        /* 설정 */
         const sw = T => `background:${T.color}${T.ring ? `;box-shadow:inset 0 0 0 2px ${T.ring}` : ''}`;
         const cv = T => `--c:${T.color}${T.ring ? `;--r:${T.ring}` : ''}`;
-        // 오토 프레임 2개: 레드오토 (autoRedETC, 상품 auto · 신규) · auto_origin (기존, 09-22부터 다시 노출). 레드오토만 배너 미리보기(src/view)가 있습니다.
+        // 배너 미리보기는 레드오토만
         const THEMES = [
             { id: 'redauto', name: '레드오토 프레임', ab: 'after', ch: '구글', code: 'autoRedETC', desc: '상품 auto · 09-09 투입', color: '#e0262f',
               src: 'https://kyungahkims.github.io/openRtb_banners.github.io/auto/dev/openRtbAuto_red.html', tpl: true, view: 'https://kyungahkims.github.io/openRtb_banners.github.io/dev_openRtbAuto_view.html' },
-            { id: 'autoetc', name: 'auto_origin 프레임', ab: 'before', ch: '구글', code: 'auto_origin', desc: 'auto_origin 프레임 (기존)', color: '#22c55e', src: '' },   // 데이터: update_data.py (rtb_frame_analysis xlsx)
+            { id: 'autoetc', name: 'auto_origin 프레임', ab: 'before', ch: '구글', code: 'auto_origin', desc: 'auto_origin 프레임 (기존)', color: '#22c55e', src: '' },
         ];
-        const AB_LABEL = { after: 'After · 신규', before: 'Before · 기존' };   // 비포/애프터 비교 표시 (ab: 'after' = 새로 만든 프레임)
-        const MIN_IMP = 1000;   // 이보다 노출이 적으면 CTR을 0(집계 제외)으로 — 노출 수십에 클릭만 잡힌 값 방지
+        const AB_LABEL = { after: 'After · 신규', before: 'Before · 기존' };
+        const MIN_IMP = 1000;   // 노출이 이보다 적으면 CTR 집계 제외
 
-        /* 데이터 [날짜, 프레임 id, 노출수, 클릭수] — update_data.bat이 자동으로 바꿉니다 */
+        /* 데이터 [날짜, 프레임, 노출, 클릭] */
         /* ADATA:START */
         const ADATA = [
             ["2026-09-01", "autoetc", 820662, 425],
@@ -1276,135 +161,142 @@
             ["2026-09-28", "autoetc", 307848, 167],
             ["2026-09-28", "redauto", 166313, 94],
             ["2026-09-29", "redauto", 473512, 286],
+            ["2026-09-30", "autoetc", 13680, 12],
+            ["2026-09-30", "redauto", 448946, 300],
+            ["2026-10-01", "redauto", 473002, 272],
+            ["2026-10-02", "redauto", 486748, 226],
+            ["2026-10-03", "redauto", 293803, 154],
+            ["2026-10-04", "redauto", 313405, 148],
+            ["2026-10-05", "redauto", 338035, 148],
         ];
         /* ADATA:END */
-        /* 지면별 누적 [프레임 id, 요청 사이즈, 노출수, 클릭수] — 지면별.csv에서 update_data.bat이 자동으로 바꿉니다 */
+        /* 요청 사이즈별 누적 [프레임, 요청 사이즈, 노출, 클릭] */
         /* APDATA:START */
         const APDATA = [
-            ["redauto", "655_120", 799190, 1426],
-            ["redauto", "970_280", 703033, 309],
-            ["autoetc", "970_280", 607591, 534],
-            ["redauto", "180_150", 511020, 70],
-            ["redauto", "125_125", 479140, 48],
-            ["redauto", "240_133", 463751, 127],
-            ["redauto", "120_60", 453006, 61],
+            ["redauto", "655_120", 1037755, 1722],
+            ["redauto", "970_280", 979637, 427],
+            ["autoetc", "970_280", 608852, 536],
+            ["redauto", "180_150", 522678, 71],
+            ["redauto", "125_125", 479735, 48],
+            ["redauto", "970_90", 474521, 195],
+            ["redauto", "240_133", 463754, 127],
+            ["redauto", "120_60", 453128, 61],
+            ["redauto", "200_600", 451288, 158],
             ["redauto", "176_62", 442019, 60],
-            ["redauto", "120_240", 402441, 88],
+            ["redauto", "120_240", 419485, 97],
             ["redauto", "220_90", 385799, 81],
             ["redauto", "240_120", 378647, 72],
-            ["autoetc", "970_90", 365916, 192],
-            ["autoetc", "180_150", 365100, 63],
-            ["redauto", "300_57", 360958, 50],
-            ["redauto", "970_90", 346688, 160],
-            ["autoetc", "125_125", 327038, 19],
+            ["redauto", "1180_250", 372835, 8],
+            ["autoetc", "970_90", 366877, 192],
+            ["autoetc", "180_150", 365147, 63],
+            ["redauto", "300_57", 364017, 52],
+            ["autoetc", "125_125", 327050, 19],
+            ["autoetc", "655_120", 326207, 438],
             ["autoetc", "120_60", 324896, 5],
-            ["autoetc", "655_120", 324052, 436],
             ["autoetc", "176_62", 315724, 11],
+            ["redauto", "800_100", 313499, 108],
             ["autoetc", "240_133", 308098, 38],
-            ["autoetc", "120_240", 296479, 66],
+            ["autoetc", "120_240", 296583, 66],
             ["autoetc", "220_90", 287199, 17],
             ["autoetc", "240_120", 285093, 25],
-            ["autoetc", "300_57", 276804, 39],
-            ["autoetc", "1180_250", 263296, 4],
-            ["autoetc", "200_600", 252228, 128],
-            ["redauto", "200_600", 209042, 89],
-            ["autoetc", "930_280", 202353, 157],
-            ["autoetc", "800_100", 190462, 60],
-            ["redauto", "930_280", 180077, 119],
-            ["redauto", "1180_250", 150019, 8],
+            ["autoetc", "300_57", 276827, 39],
+            ["redauto", "930_280", 265640, 180],
+            ["autoetc", "1180_250", 264142, 4],
+            ["autoetc", "200_600", 253575, 131],
+            ["autoetc", "930_280", 202816, 158],
+            ["autoetc", "800_100", 191379, 62],
+            ["redauto", "1005_124", 146518, 241],
             ["redauto", "468_60", 141669, 19],
             ["autoetc", "468_60", 140487, 45],
-            ["redauto", "800_100", 130740, 54],
-            ["redauto", "750_100", 124631, 56],
-            ["autoetc", "400_400", 117911, 154],
-            ["autoetc", "384_384", 112821, 142],
-            ["redauto", "980_90", 112355, 60],
-            ["autoetc", "360_100", 105155, 56],
-            ["autoetc", "750_100", 101921, 52],
-            ["redauto", "384_384", 99263, 113],
-            ["autoetc", "1005_124", 98484, 165],
-            ["autoetc", "360_360", 97224, 116],
-            ["redauto", "360_100", 96064, 65],
-            ["redauto", "240_400", 95093, 44],
-            ["autoetc", "384_100", 92294, 77],
-            ["redauto", "400_400", 91303, 105],
-            ["autoetc", "980_90", 91216, 67],
-            ["redauto", "384_100", 85420, 68],
-            ["redauto", "120_400", 77856, 19],
-            ["redauto", "360_360", 76953, 78],
-            ["autoetc", "360_50", 76602, 35],
-            ["autoetc", "240_400", 76045, 15],
-            ["autoetc", "411_411", 74630, 96],
-            ["redauto", "1005_124", 73021, 135],
-            ["autoetc", "1200_280", 72051, 17],
-            ["autoetc", "300_200", 69526, 28],
-            ["autoetc", "120_400", 68785, 20],
+            ["redauto", "360_100", 138185, 97],
+            ["redauto", "384_384", 132872, 131],
+            ["redauto", "750_100", 131758, 59],
+            ["redauto", "400_400", 126231, 130],
+            ["redauto", "120_400", 126149, 34],
+            ["redauto", "384_100", 121674, 104],
+            ["redauto", "240_400", 120743, 52],
+            ["redauto", "980_90", 118552, 61],
+            ["autoetc", "400_400", 118042, 154],
+            ["autoetc", "384_384", 112936, 142],
+            ["autoetc", "360_100", 105403, 56],
+            ["redauto", "360_360", 104090, 90],
+            ["autoetc", "750_100", 101938, 52],
+            ["autoetc", "1005_124", 99388, 165],
+            ["autoetc", "360_360", 97306, 116],
+            ["autoetc", "384_100", 92457, 77],
+            ["redauto", "411_100", 92199, 99],
+            ["autoetc", "980_90", 91227, 67],
+            ["redauto", "411_411", 88704, 82],
+            ["redauto", "300_200", 87832, 28],
+            ["redauto", "900_150", 86058, 72],
+            ["redauto", "360_50", 79982, 39],
+            ["autoetc", "360_50", 76726, 36],
+            ["autoetc", "240_400", 76250, 15],
+            ["autoetc", "411_411", 74692, 96],
+            ["autoetc", "1200_280", 72098, 17],
+            ["autoetc", "300_200", 69635, 28],
+            ["autoetc", "120_400", 69138, 20],
+            ["redauto", "930_300", 67992, 79],
+            ["autoetc", "411_100", 65190, 58],
             ["redauto", "200_446", 65098, 22],
-            ["autoetc", "411_100", 65066, 58],
-            ["redauto", "411_100", 64672, 78],
-            ["redauto", "411_411", 62160, 68],
-            ["redauto", "980_120", 61533, 0],
-            ["redauto", "300_200", 61404, 17],
-            ["redauto", "1024_90", 60543, 2],
-            ["autoetc", "384_50", 54556, 23],
-            ["redauto", "360_50", 54411, 30],
-            ["autoetc", "640_100", 54088, 28],
-            ["redauto", "640_100", 53451, 16],
-            ["autoetc", "900_150", 52789, 41],
-            ["autoetc", "930_300", 49174, 55],
-            ["redauto", "930_300", 47103, 56],
+            ["redauto", "1200_280", 64157, 19],
+            ["redauto", "1024_90", 61764, 2],
+            ["redauto", "980_120", 61581, 0],
+            ["redauto", "384_50", 60127, 23],
+            ["redauto", "640_100", 56081, 16],
+            ["autoetc", "384_50", 54645, 23],
+            ["autoetc", "640_100", 54103, 28],
+            ["redauto", "240_600", 53995, 27],
+            ["autoetc", "900_150", 53060, 41],
+            ["redauto", "1200_90", 51854, 12],
+            ["autoetc", "930_300", 49225, 55],
+            ["redauto", "704_200", 48837, 16],
             ["autoetc", "200_446", 46810, 6],
-            ["redauto", "1200_280", 41900, 15],
-            ["redauto", "990_90", 41392, 54],
-            ["redauto", "384_50", 40800, 9],
-            ["autoetc", "990_90", 40744, 55],
-            ["redauto", "900_150", 40558, 48],
-            ["autoetc", "412_412", 38695, 55],
-            ["autoetc", "1200_90", 38524, 14],
-            ["autoetc", "704_200", 38137, 11],
+            ["redauto", "411_50", 42147, 14],
+            ["redauto", "990_90", 41598, 54],
+            ["redauto", "150_150", 40921, 9],
+            ["autoetc", "990_90", 40753, 55],
+            ["autoetc", "412_412", 38723, 55],
+            ["autoetc", "1200_90", 38588, 14],
+            ["autoetc", "704_200", 38222, 11],
             ["autoetc", "980_120", 38024, 1],
-            ["redauto", "704_200", 37737, 15],
             ["autoetc", "1024_90", 37681, 0],
-            ["autoetc", "411_50", 36662, 13],
-            ["redauto", "1200_90", 35912, 10],
-            ["redauto", "150_150", 32742, 6],
-            ["redauto", "600_62", 32513, 9],
-            ["redauto", "240_600", 32292, 17],
+            ["autoetc", "411_50", 36737, 13],
+            ["redauto", "600_62", 32514, 9],
+            ["redauto", "650_90", 31888, 7],
             ["autoetc", "600_62", 31356, 14],
-            ["autoetc", "950_90", 29172, 15],
-            ["redauto", "320_150", 28578, 16],
-            ["autoetc", "240_600", 27915, 15],
-            ["redauto", "411_50", 27594, 11],
+            ["autoetc", "950_90", 29182, 15],
+            ["redauto", "820_250", 29109, 0],
+            ["redauto", "412_412", 29050, 36],
+            ["redauto", "320_150", 29025, 16],
+            ["redauto", "950_90", 28400, 13],
+            ["autoetc", "240_600", 28127, 15],
             ["redauto", "584_60", 27360, 6],
             ["autoetc", "584_60", 27119, 14],
-            ["autoetc", "150_150", 25528, 2],
-            ["redauto", "650_90", 25008, 6],
-            ["redauto", "412_412", 24487, 29],
-            ["autoetc", "960_90", 23193, 14],
-            ["autoetc", "412_100", 22992, 13],
-            ["autoetc", "375_50", 22514, 10],
-            ["redauto", "340_250", 21829, 13],
-            ["redauto", "412_100", 21542, 14],
-            ["redauto", "250_360", 21468, 7],
-            ["redauto", "820_250", 21234, 0],
+            ["autoetc", "150_150", 25623, 2],
+            ["redauto", "412_100", 25513, 16],
+            ["redauto", "320_320", 24134, 8],
+            ["redauto", "340_250", 23926, 13],
+            ["autoetc", "960_90", 23195, 14],
+            ["autoetc", "412_100", 23036, 13],
+            ["redauto", "960_90", 22605, 7],
+            ["autoetc", "375_50", 22533, 10],
+            ["redauto", "580_400", 22345, 7],
+            ["redauto", "250_360", 21477, 7],
             ["autoetc", "320_150", 20584, 9],
-            ["autoetc", "650_90", 20079, 2],
-            ["autoetc", "320_320", 20039, 9],
-            ["redauto", "320_320", 19554, 5],
-            ["autoetc", "820_250", 18275, 2],
-            ["autoetc", "384_250", 18079, 3],
-            ["redauto", "580_400", 18053, 5],
-            ["redauto", "950_90", 17747, 10],
-            ["autoetc", "580_400", 17475, 3],
-            ["redauto", "960_90", 17156, 6],
-            ["redauto", "375_50", 15043, 3],
-            ["redauto", "384_250", 14228, 1],
+            ["autoetc", "650_90", 20150, 2],
+            ["redauto", "384_250", 20064, 4],
+            ["autoetc", "320_320", 20048, 9],
+            ["redauto", "375_50", 19567, 14],
+            ["autoetc", "820_250", 18301, 2],
+            ["autoetc", "384_250", 18112, 3],
+            ["autoetc", "580_400", 17502, 3],
             ["autoetc", "250_360", 13674, 6],
-            ["autoetc", "340_250", 13304, 9],
+            ["autoetc", "340_250", 13317, 9],
         ];
         /* APDATA:END */
 
-        /* ⑤ 요청 사이즈별 일별 [날짜, 프레임 id, 요청 사이즈, 노출수, 클릭수] — rtb_theme_ab_result xlsx(B 시트)에서 update_data.bat이 채움 */
+        /* 요청 사이즈별 일별 [날짜, 프레임, 요청 사이즈, 노출, 클릭] */
         /* APDDATA:START */
         const APDDATA = [
             ["2026-09-02", "autoetc", "1024_90", 1763, 0],
@@ -2481,6 +1373,285 @@
             ["2026-09-29", "redauto", "970_280", 42645, 8],
             ["2026-09-29", "redauto", "970_90", 26929, 11],
             ["2026-09-29", "redauto", "980_90", 1290, 1],
+            ["2026-09-30", "autoetc", "1005_124", 904, 0],
+            ["2026-09-30", "autoetc", "1180_250", 846, 0],
+            ["2026-09-30", "autoetc", "1200_280", 47, 0],
+            ["2026-09-30", "autoetc", "1200_90", 64, 0],
+            ["2026-09-30", "autoetc", "120_240", 104, 0],
+            ["2026-09-30", "autoetc", "120_400", 353, 0],
+            ["2026-09-30", "autoetc", "150_150", 95, 0],
+            ["2026-09-30", "autoetc", "180_150", 47, 0],
+            ["2026-09-30", "autoetc", "200_600", 1347, 3],
+            ["2026-09-30", "autoetc", "204_250", 39, 0],
+            ["2026-09-30", "autoetc", "240_400", 205, 0],
+            ["2026-09-30", "autoetc", "240_600", 212, 0],
+            ["2026-09-30", "autoetc", "300_200", 109, 0],
+            ["2026-09-30", "autoetc", "360_100", 248, 0],
+            ["2026-09-30", "autoetc", "360_360", 82, 0],
+            ["2026-09-30", "autoetc", "360_50", 124, 1],
+            ["2026-09-30", "autoetc", "384_100", 163, 0],
+            ["2026-09-30", "autoetc", "384_384", 115, 0],
+            ["2026-09-30", "autoetc", "384_50", 89, 0],
+            ["2026-09-30", "autoetc", "400_400", 131, 0],
+            ["2026-09-30", "autoetc", "411_100", 124, 0],
+            ["2026-09-30", "autoetc", "411_411", 62, 0],
+            ["2026-09-30", "autoetc", "411_50", 75, 0],
+            ["2026-09-30", "autoetc", "412_100", 44, 0],
+            ["2026-09-30", "autoetc", "412_412", 28, 0],
+            ["2026-09-30", "autoetc", "650_90", 71, 0],
+            ["2026-09-30", "autoetc", "655_120", 2155, 2],
+            ["2026-09-30", "autoetc", "704_200", 85, 0],
+            ["2026-09-30", "autoetc", "728_280", 47, 0],
+            ["2026-09-30", "autoetc", "750_100", 17, 0],
+            ["2026-09-30", "autoetc", "800_100", 917, 2],
+            ["2026-09-30", "autoetc", "820_250", 26, 0],
+            ["2026-09-30", "autoetc", "884_250", 89, 0],
+            ["2026-09-30", "autoetc", "900_150", 271, 0],
+            ["2026-09-30", "autoetc", "930_280", 463, 1],
+            ["2026-09-30", "autoetc", "930_300", 51, 0],
+            ["2026-09-30", "autoetc", "950_90", 10, 0],
+            ["2026-09-30", "autoetc", "970_280", 1261, 2],
+            ["2026-09-30", "autoetc", "970_90", 961, 0],
+            ["2026-09-30", "redauto", "1005_124", 19803, 38],
+            ["2026-09-30", "redauto", "1180_250", 41634, 0],
+            ["2026-09-30", "redauto", "1200_280", 2987, 2],
+            ["2026-09-30", "redauto", "1200_90", 2383, 1],
+            ["2026-09-30", "redauto", "120_240", 3388, 2],
+            ["2026-09-30", "redauto", "120_400", 8501, 5],
+            ["2026-09-30", "redauto", "150_150", 2339, 0],
+            ["2026-09-30", "redauto", "180_150", 2512, 0],
+            ["2026-09-30", "redauto", "200_600", 43554, 19],
+            ["2026-09-30", "redauto", "204_250", 1374, 0],
+            ["2026-09-30", "redauto", "240_400", 5391, 3],
+            ["2026-09-30", "redauto", "240_600", 4537, 4],
+            ["2026-09-30", "redauto", "300_200", 4697, 2],
+            ["2026-09-30", "redauto", "360_100", 7261, 6],
+            ["2026-09-30", "redauto", "360_360", 4423, 6],
+            ["2026-09-30", "redauto", "360_50", 3647, 1],
+            ["2026-09-30", "redauto", "384_100", 5988, 7],
+            ["2026-09-30", "redauto", "384_384", 6158, 4],
+            ["2026-09-30", "redauto", "384_50", 2940, 4],
+            ["2026-09-30", "redauto", "400_400", 6480, 5],
+            ["2026-09-30", "redauto", "411_100", 4709, 1],
+            ["2026-09-30", "redauto", "411_411", 4019, 4],
+            ["2026-09-30", "redauto", "411_50", 2300, 0],
+            ["2026-09-30", "redauto", "412_100", 1291, 0],
+            ["2026-09-30", "redauto", "412_412", 1893, 2],
+            ["2026-09-30", "redauto", "650_90", 1850, 0],
+            ["2026-09-30", "redauto", "655_120", 61151, 80],
+            ["2026-09-30", "redauto", "704_200", 2324, 0],
+            ["2026-09-30", "redauto", "728_280", 1489, 2],
+            ["2026-09-30", "redauto", "750_100", 1317, 1],
+            ["2026-09-30", "redauto", "800_100", 29655, 11],
+            ["2026-09-30", "redauto", "820_250", 1391, 0],
+            ["2026-09-30", "redauto", "884_250", 1747, 2],
+            ["2026-09-30", "redauto", "900_150", 8328, 5],
+            ["2026-09-30", "redauto", "900_200", 2715, 3],
+            ["2026-09-30", "redauto", "930_280", 15875, 15],
+            ["2026-09-30", "redauto", "930_300", 3627, 5],
+            ["2026-09-30", "redauto", "950_90", 2476, 1],
+            ["2026-09-30", "redauto", "970_280", 40869, 18],
+            ["2026-09-30", "redauto", "970_90", 30739, 11],
+            ["2026-10-01", "redauto", "1005_124", 21102, 31],
+            ["2026-10-01", "redauto", "1180_250", 46220, 0],
+            ["2026-10-01", "redauto", "1200_280", 4049, 1],
+            ["2026-10-01", "redauto", "1200_90", 2866, 1],
+            ["2026-10-01", "redauto", "120_240", 3932, 1],
+            ["2026-10-01", "redauto", "120_400", 10352, 3],
+            ["2026-10-01", "redauto", "150_150", 1761, 1],
+            ["2026-10-01", "redauto", "180_150", 2260, 0],
+            ["2026-10-01", "redauto", "200_600", 42220, 15],
+            ["2026-10-01", "redauto", "204_250", 2123, 2],
+            ["2026-10-01", "redauto", "204_600", 1683, 0],
+            ["2026-10-01", "redauto", "240_400", 5467, 2],
+            ["2026-10-01", "redauto", "240_600", 4490, 1],
+            ["2026-10-01", "redauto", "300_200", 4011, 1],
+            ["2026-10-01", "redauto", "360_100", 6508, 8],
+            ["2026-10-01", "redauto", "360_360", 3730, 1],
+            ["2026-10-01", "redauto", "360_50", 3793, 2],
+            ["2026-10-01", "redauto", "369_280", 1175, 0],
+            ["2026-10-01", "redauto", "384_100", 6472, 7],
+            ["2026-10-01", "redauto", "384_384", 4429, 4],
+            ["2026-10-01", "redauto", "384_50", 2733, 1],
+            ["2026-10-01", "redauto", "400_400", 4934, 5],
+            ["2026-10-01", "redauto", "411_100", 4875, 4],
+            ["2026-10-01", "redauto", "411_411", 2985, 1],
+            ["2026-10-01", "redauto", "411_50", 1920, 1],
+            ["2026-10-01", "redauto", "412_412", 1202, 4],
+            ["2026-10-01", "redauto", "650_90", 2047, 0],
+            ["2026-10-01", "redauto", "655_120", 61064, 75],
+            ["2026-10-01", "redauto", "704_200", 3060, 0],
+            ["2026-10-01", "redauto", "800_100", 33729, 9],
+            ["2026-10-01", "redauto", "810_280", 1300, 1],
+            ["2026-10-01", "redauto", "820_250", 1289, 0],
+            ["2026-10-01", "redauto", "884_250", 2327, 1],
+            ["2026-10-01", "redauto", "900_150", 9520, 4],
+            ["2026-10-01", "redauto", "900_200", 3877, 4],
+            ["2026-10-01", "redauto", "930_280", 18504, 9],
+            ["2026-10-01", "redauto", "930_300", 4142, 3],
+            ["2026-10-01", "redauto", "950_90", 1242, 0],
+            ["2026-10-01", "redauto", "970_280", 57029, 23],
+            ["2026-10-01", "redauto", "970_90", 28374, 6],
+            ["2026-10-02", "redauto", "1005_124", 16701, 15],
+            ["2026-10-02", "redauto", "1180_250", 39323, 0],
+            ["2026-10-02", "redauto", "1200_280", 7219, 0],
+            ["2026-10-02", "redauto", "1200_90", 1834, 0],
+            ["2026-10-02", "redauto", "120_240", 4121, 4],
+            ["2026-10-02", "redauto", "120_400", 10522, 0],
+            ["2026-10-02", "redauto", "150_150", 1951, 2],
+            ["2026-10-02", "redauto", "180_150", 2549, 1],
+            ["2026-10-02", "redauto", "200_600", 58114, 17],
+            ["2026-10-02", "redauto", "204_250", 2004, 0],
+            ["2026-10-02", "redauto", "204_600", 1446, 0],
+            ["2026-10-02", "redauto", "240_400", 5417, 1],
+            ["2026-10-02", "redauto", "240_600", 4707, 2],
+            ["2026-10-02", "redauto", "300_200", 4163, 2],
+            ["2026-10-02", "redauto", "360_100", 7681, 3],
+            ["2026-10-02", "redauto", "360_360", 4420, 2],
+            ["2026-10-02", "redauto", "360_50", 4330, 2],
+            ["2026-10-02", "redauto", "369_280", 1278, 0],
+            ["2026-10-02", "redauto", "384_100", 6472, 7],
+            ["2026-10-02", "redauto", "384_384", 5433, 2],
+            ["2026-10-02", "redauto", "384_50", 3364, 2],
+            ["2026-10-02", "redauto", "390_100", 1714, 0],
+            ["2026-10-02", "redauto", "400_400", 5826, 4],
+            ["2026-10-02", "redauto", "411_100", 4564, 3],
+            ["2026-10-02", "redauto", "411_411", 4243, 0],
+            ["2026-10-02", "redauto", "411_50", 2526, 0],
+            ["2026-10-02", "redauto", "650_90", 1779, 1],
+            ["2026-10-02", "redauto", "655_120", 63891, 75],
+            ["2026-10-02", "redauto", "704_200", 2765, 0],
+            ["2026-10-02", "redauto", "728_280", 1449, 0],
+            ["2026-10-02", "redauto", "750_100", 1425, 0],
+            ["2026-10-02", "redauto", "800_100", 42756, 10],
+            ["2026-10-02", "redauto", "884_250", 1917, 0],
+            ["2026-10-02", "redauto", "900_150", 11460, 2],
+            ["2026-10-02", "redauto", "900_200", 4847, 2],
+            ["2026-10-02", "redauto", "930_280", 13463, 11],
+            ["2026-10-02", "redauto", "930_300", 3125, 6],
+            ["2026-10-02", "redauto", "950_90", 1966, 1],
+            ["2026-10-02", "redauto", "970_280", 52910, 14],
+            ["2026-10-02", "redauto", "970_90", 23247, 5],
+            ["2026-10-03", "redauto", "1005_124", 4458, 6],
+            ["2026-10-03", "redauto", "1180_250", 31951, 0],
+            ["2026-10-03", "redauto", "1200_280", 3493, 1],
+            ["2026-10-03", "redauto", "1200_90", 2874, 0],
+            ["2026-10-03", "redauto", "120_240", 1811, 1],
+            ["2026-10-03", "redauto", "120_400", 6036, 5],
+            ["2026-10-03", "redauto", "180_150", 1353, 0],
+            ["2026-10-03", "redauto", "200_600", 34488, 5],
+            ["2026-10-03", "redauto", "204_250", 1044, 0],
+            ["2026-10-03", "redauto", "240_400", 2707, 1],
+            ["2026-10-03", "redauto", "240_600", 2287, 2],
+            ["2026-10-03", "redauto", "300_200", 4563, 1],
+            ["2026-10-03", "redauto", "339_50", 919, 0],
+            ["2026-10-03", "redauto", "360_100", 6450, 3],
+            ["2026-10-03", "redauto", "360_360", 3816, 1],
+            ["2026-10-03", "redauto", "360_50", 4402, 1],
+            ["2026-10-03", "redauto", "369_280", 1106, 0],
+            ["2026-10-03", "redauto", "384_100", 5325, 6],
+            ["2026-10-03", "redauto", "384_250", 1025, 1],
+            ["2026-10-03", "redauto", "384_384", 5140, 1],
+            ["2026-10-03", "redauto", "384_50", 3364, 4],
+            ["2026-10-03", "redauto", "390_100", 1079, 0],
+            ["2026-10-03", "redauto", "400_400", 5501, 3],
+            ["2026-10-03", "redauto", "411_100", 3671, 4],
+            ["2026-10-03", "redauto", "411_411", 4700, 6],
+            ["2026-10-03", "redauto", "411_50", 2396, 1],
+            ["2026-10-03", "redauto", "655_120", 16756, 24],
+            ["2026-10-03", "redauto", "728_280", 1227, 3],
+            ["2026-10-03", "redauto", "750_100", 1315, 1],
+            ["2026-10-03", "redauto", "800_100", 23517, 5],
+            ["2026-10-03", "redauto", "820_250", 932, 0],
+            ["2026-10-03", "redauto", "900_150", 5583, 4],
+            ["2026-10-03", "redauto", "900_200", 2648, 2],
+            ["2026-10-03", "redauto", "930_280", 10634, 4],
+            ["2026-10-03", "redauto", "930_300", 2252, 6],
+            ["2026-10-03", "redauto", "950_90", 963, 1],
+            ["2026-10-03", "redauto", "960_90", 902, 0],
+            ["2026-10-03", "redauto", "970_280", 33546, 22],
+            ["2026-10-03", "redauto", "970_90", 15322, 6],
+            ["2026-10-03", "redauto", "980_90", 887, 0],
+            ["2026-10-04", "redauto", "1005_124", 4387, 8],
+            ["2026-10-04", "redauto", "1180_250", 31022, 0],
+            ["2026-10-04", "redauto", "1200_280", 1747, 0],
+            ["2026-10-04", "redauto", "1200_90", 2665, 0],
+            ["2026-10-04", "redauto", "120_240", 1590, 1],
+            ["2026-10-04", "redauto", "120_400", 6348, 1],
+            ["2026-10-04", "redauto", "180_150", 1140, 0],
+            ["2026-10-04", "redauto", "200_600", 33540, 9],
+            ["2026-10-04", "redauto", "204_250", 863, 1],
+            ["2026-10-04", "redauto", "240_400", 3579, 1],
+            ["2026-10-04", "redauto", "240_600", 2959, 1],
+            ["2026-10-04", "redauto", "300_200", 4347, 2],
+            ["2026-10-04", "redauto", "339_50", 860, 2],
+            ["2026-10-04", "redauto", "360_100", 7675, 7],
+            ["2026-10-04", "redauto", "360_360", 4461, 2],
+            ["2026-10-04", "redauto", "360_50", 4564, 1],
+            ["2026-10-04", "redauto", "384_100", 5815, 3],
+            ["2026-10-04", "redauto", "384_250", 954, 1],
+            ["2026-10-04", "redauto", "384_384", 5561, 4],
+            ["2026-10-04", "redauto", "384_50", 3408, 2],
+            ["2026-10-04", "redauto", "390_100", 941, 1],
+            ["2026-10-04", "redauto", "400_400", 5598, 4],
+            ["2026-10-04", "redauto", "411_100", 4550, 2],
+            ["2026-10-04", "redauto", "411_411", 4819, 1],
+            ["2026-10-04", "redauto", "411_50", 2591, 0],
+            ["2026-10-04", "redauto", "655_120", 16268, 17],
+            ["2026-10-04", "redauto", "704_200", 959, 0],
+            ["2026-10-04", "redauto", "728_280", 1454, 4],
+            ["2026-10-04", "redauto", "750_100", 1151, 1],
+            ["2026-10-04", "redauto", "800_100", 26660, 8],
+            ["2026-10-04", "redauto", "820_250", 1236, 0],
+            ["2026-10-04", "redauto", "900_150", 5831, 6],
+            ["2026-10-04", "redauto", "900_200", 3141, 2],
+            ["2026-10-04", "redauto", "930_280", 12977, 8],
+            ["2026-10-04", "redauto", "930_300", 3483, 2],
+            ["2026-10-04", "redauto", "950_90", 1961, 0],
+            ["2026-10-04", "redauto", "960_90", 1290, 0],
+            ["2026-10-04", "redauto", "970_280", 43642, 20],
+            ["2026-10-04", "redauto", "970_90", 14553, 5],
+            ["2026-10-04", "redauto", "980_90", 1401, 1],
+            ["2026-10-05", "redauto", "1005_124", 7046, 8],
+            ["2026-10-05", "redauto", "1180_250", 32666, 0],
+            ["2026-10-05", "redauto", "1200_120", 1299, 1],
+            ["2026-10-05", "redauto", "1200_280", 2762, 0],
+            ["2026-10-05", "redauto", "1200_90", 3320, 0],
+            ["2026-10-05", "redauto", "120_240", 2202, 0],
+            ["2026-10-05", "redauto", "120_400", 6534, 1],
+            ["2026-10-05", "redauto", "180_150", 1844, 0],
+            ["2026-10-05", "redauto", "200_600", 30330, 4],
+            ["2026-10-05", "redauto", "204_250", 1319, 1],
+            ["2026-10-05", "redauto", "204_600", 1001, 0],
+            ["2026-10-05", "redauto", "240_400", 3089, 0],
+            ["2026-10-05", "redauto", "240_600", 2723, 0],
+            ["2026-10-05", "redauto", "300_200", 4647, 3],
+            ["2026-10-05", "redauto", "339_50", 1045, 0],
+            ["2026-10-05", "redauto", "360_100", 6546, 5],
+            ["2026-10-05", "redauto", "360_360", 6287, 0],
+            ["2026-10-05", "redauto", "360_50", 4835, 2],
+            ["2026-10-05", "redauto", "384_100", 6182, 6],
+            ["2026-10-05", "redauto", "384_250", 1096, 1],
+            ["2026-10-05", "redauto", "384_384", 6888, 3],
+            ["2026-10-05", "redauto", "384_50", 3518, 1],
+            ["2026-10-05", "redauto", "400_400", 6589, 4],
+            ["2026-10-05", "redauto", "411_100", 5158, 7],
+            ["2026-10-05", "redauto", "411_411", 5778, 2],
+            ["2026-10-05", "redauto", "411_50", 2820, 1],
+            ["2026-10-05", "redauto", "655_120", 19435, 25],
+            ["2026-10-05", "redauto", "704_200", 1179, 0],
+            ["2026-10-05", "redauto", "728_280", 1196, 1],
+            ["2026-10-05", "redauto", "750_100", 1075, 0],
+            ["2026-10-05", "redauto", "800_100", 26442, 11],
+            ["2026-10-05", "redauto", "820_250", 1839, 0],
+            ["2026-10-05", "redauto", "900_150", 4778, 3],
+            ["2026-10-05", "redauto", "900_200", 3337, 0],
+            ["2026-10-05", "redauto", "930_280", 14110, 14],
+            ["2026-10-05", "redauto", "930_300", 4260, 1],
+            ["2026-10-05", "redauto", "950_90", 2045, 0],
+            ["2026-10-05", "redauto", "970_280", 48608, 21],
+            ["2026-10-05", "redauto", "970_90", 15598, 2],
+            ["2026-10-05", "redauto", "980_90", 976, 0],
         ];
         /* APDDATA:END */
 
@@ -2491,10 +1662,9 @@
         const ROWS = ADATA.map(([d, t, imp, clk]) => ({ d, t, imp, clk }));
         const DATES = [...new Set(ROWS.map(r => r.d))].sort();
         const TODAY = DATES[DATES.length - 1] || ymd(new Date());
-        const PERIOD_FROM = TODAY.slice(0, 8) + '01';
         THEMES.forEach(T => { const ds = ROWS.filter(r => r.t === T.id && r.imp >= MIN_IMP).map(r => r.d).sort(); T.from = ds[0]; T.to = ds[ds.length - 1]; });
 
-        /* ---------- 공통 ---------- */
+        /* 공통 */
         const sum = rows => { const o = { imp: 0, clk: 0 }; for (const r of rows) { o.imp += r.imp; o.clk += r.clk; } o.ctr = o.imp >= MIN_IMP ? o.clk / o.imp * 100 : 0; return o; };
         const pick = (fn) => ROWS.filter(fn);
         const f = n => Math.round(n).toLocaleString('ko-KR');
@@ -2505,7 +1675,7 @@
             { k: 'ctr', label: '클릭률 (CTR)', fmt: pct },
         ];
         const theme = id => THEMES.find(t => t.id === id);
-        // 프레임 이름 — 마우스를 올리면 배너 툴팁 (frameTip · 배너가 있는 프레임만)
+        // 프레임 이름, 호버 시 배너 툴팁
         const nm = (T, short = false) => `<span class="fname" data-frame-tip="${T.id}">${short ? T.name.replace(' 프레임', '') : T.name}</span>`;
         function frameArt(id, o = {}) {
             const T = theme(id), src = o.src || T.src || '';
@@ -2513,13 +1683,13 @@
             return `<div class="ad ad-slot" data-frame="${id}">${src ? `<iframe ${attr} title="${T.name}" loading="lazy" scrolling="no"></iframe>` : `<div class="ad-empty">${T.desc}</div>`}</div>`;
         }
 
-        // 배너 iframe(250px)을 칸 폭에 맞게 축소 — 표가 다시 그려지거나 창 크기가 바뀌면 다시 계산
+        // 배너 iframe을 칸 폭에 맞게 축소
         const BANNER_PX = 250;
         const fitBannerSlots = () => document.querySelectorAll('.ad.ad-slot iframe').forEach(f => {
             const w = f.parentElement.clientWidth;
             if (w) f.style.transform = `scale(${w / BANNER_PX})`;
         });
-        // 레드오토(오토 프레임) 템플릿: 뷰어 페이지(dev_openRtbAuto_view.html)와 같은 목 상품 데이터로 채워서 표시
+        // 템플릿 배너용 목 상품 데이터
         const TPL_MOCK = {
             '{{w}}': BANNER_PX, '{{h}}': BANNER_PX,
             '{{productList}}': `{ pcode: "test-pcode1", pnm: "오토프레임 카라넥 원피스", price: "49,900", prdt_prmct: "39,900", dc_rate: "32",
@@ -2539,11 +1709,11 @@
             const schedule = () => { if (queued) return; queued = true; requestAnimationFrame(() => { queued = false; fitBannerSlots(); fillTemplateBanners(); }); };
             new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
             window.addEventListener('resize', schedule);
-            document.getElementById('tlModal')?.addEventListener('toggle', schedule);   // 모달이 열릴 때 (닫혀 있으면 폭이 0)
+            document.getElementById('tlModal')?.addEventListener('toggle', schedule);   // 모달 열릴 때 다시 계산
             schedule();
         })();
 
-        /* 프레임 이름 호버 → 배너 툴팁 (테마별 배너를 미리 한 번만 만들어 두고 보여줌) */
+        /* 프레임 이름 호버 배너 툴팁 */
         (function () {
             const tip = document.createElement('div');
             tip.id = 'frameTip';
@@ -2555,15 +1725,15 @@
             const place = (x, y) => {
                 const h = tip.offsetHeight || 260;
                 let left = x + GAP, top = y + GAP;
-                if (left + W > innerWidth - 8) left = x - W - GAP;          // 오른쪽 공간이 없으면 왼쪽에
-                if (top + h > innerHeight - 8) top = Math.max(8, y - h - GAP); // 아래 공간이 없으면 위에
+                if (left + W > innerWidth - 8) left = x - W - GAP;
+                if (top + h > innerHeight - 8) top = Math.max(8, y - h - GAP);
                 tip.style.left = left + 'px'; tip.style.top = top + 'px';
             };
             const show = (el, e) => {
                 const id = el.dataset.frameTip;
                 if (!theme(id)?.src) return;
                 cur = el;
-                // 모달(dialog) 안에서는 모달 위에 떠야 하므로 모달 안으로 옮김
+                // 모달 안에서는 모달에 붙임
                 const host = el.closest('dialog') || document.body;
                 if (tip.parentElement !== host) host.appendChild(tip);
                 tip.querySelectorAll('.ft-item').forEach(it => it.classList.toggle('on', it.dataset.frameTipFor === id));
@@ -2578,16 +1748,15 @@
             document.addEventListener('scroll', hide, true);
         })();
 
-        initTimeline();   // 프레임 변경 Timeline (frame_timeline.js 공용)
+        initTimeline();   // frame_timeline.js
 
-        /* ① 프레임 테마별 성과 */
+        /* 프레임 테마별 성과 */
         function renderThemes(from, to) {
             const inR = r => r.d >= from && r.d <= to;
             const TS = Object.fromEntries(THEMES.map(T => [T.id, sum(pick(r => inR(r) && r.t === T.id))]));
-            // 프레임 중 순위 (② 와 같은 표시)
             const themeRank = (id, k) => { const n = TS[id][k] > 0 ? 1 + THEMES.filter(T => TS[T.id][k] > TS[id][k]).length : 0; return n ? `<em class="rk-badge rk${Math.min(n, 3)}">${n}위</em>` : ''; };
             document.getElementById('themes').innerHTML = THEMES.map(T => {
-                const s = TS[T.id], ds = [...new Set(pick(r => inR(r) && r.t === T.id && r.imp >= MIN_IMP).map(r => r.d))].sort();   // 데이터 기간: 집계 제외(노출 MIN_IMP 미만)인 날은 뺌
+                const s = TS[T.id], ds = [...new Set(pick(r => inR(r) && r.t === T.id && r.imp >= MIN_IMP).map(r => r.d))].sort();
                 const period = !ds.length ? '데이터 없음' : from === to ? `데이터: <b>${md(from)}</b>` : `데이터: <b>${md(ds[0])} ~ ${md(ds[ds.length - 1])}</b>`;
                 const view = T.view ? `<a class="theme-view" href="${T.view}" target="_blank" rel="noopener" title="${T.name} 전체 사이즈 미리보기 (새 탭)">프레임 미리보기<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></a>` : '';
                 return `<article class="card theme">
@@ -2606,13 +1775,13 @@
         }
         (function () {
             const ctrl = document.getElementById('themePeriod'), dateEl = document.getElementById('themeDate');
-            dateEl.min = PERIOD_FROM; dateEl.max = TODAY; dateEl.value = TODAY;
-            ctrl.querySelector('[data-mode="month"]').textContent = `${+TODAY.slice(5, 7)}월 전체`;
+            dateEl.min = DATES[0]; dateEl.max = TODAY; dateEl.value = TODAY;
+            monthButtons(ctrl, DATES);
             const run = () => {
                 const mode = ctrl.querySelector('[aria-pressed="true"]').dataset.mode;
                 dateEl.hidden = mode !== 'day';
                 const d = dateEl.value || TODAY;
-                if (mode === 'day') renderThemes(d, d); else renderThemes(PERIOD_FROM, TODAY);
+                if (mode === 'day') renderThemes(d, d); else renderThemes(...monthRange(ctrl, DATES));
             };
             ctrl.addEventListener('click', e => {
                 const b = e.target.closest('button[data-mode]'); if (!b) return;
@@ -2624,7 +1793,7 @@
         })();
 
         const CROWN = `<svg class="crown" viewBox="0 0 24 28" aria-hidden="true"><path d="M6 1h5l3 8H9z" fill="#3f7ee8"/><path d="M18 1h-5l-3 8h5z" fill="#d7262f"/><circle cx="12" cy="17.5" r="9" fill="#f2b705" stroke="#c98f00" stroke-width="1.5"/><circle cx="12" cy="17.5" r="6.3" fill="none" stroke="#fff3c4" stroke-width="1"/><text x="12" y="21.6" text-anchor="middle" font-size="11" font-weight="800" font-family="Arial, sans-serif" fill="#7a5200">1</text></svg>`;
-        /* ② 전전일 vs 전일 — 지표별 카드: 제목 + 한 줄 요약, 프레임마다 전전일(연한 색)·전일(진한 색) 막대와 숫자, 이름 옆 1위 배지, 아래 증감 칩 */
+        /* 전전일 vs 전일 카드 */
         (function () {
             const Y = DATES[DATES.length - 1], B = DATES[DATES.length - 2];
             const Ys = Object.fromEntries(THEMES.map(T => [T.id, sum(pick(r => r.t === T.id && r.d === Y))]));
@@ -2633,18 +1802,18 @@
             const short = (k, v) => k === 'ctr' ? v.toFixed(3) + '%' : v >= 1e4 ? f(v / 1e4) + '만' : f(v);
             const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
             const nameOf = T => T.name.replace(' 프레임', '');
-            // 프레임별 증감: { cls: rise·fall·flat·none, txt, diff, flat(요약용 '유지') }
+            // 프레임별 증감
             const change = (T, k) => {
                 const y = Ys[T.id], b = Bs[T.id], yv = y[k], bv = b[k];
                 if (!y.imp && !b.imp) return { cls: 'none', txt: '데이터 없음' };
                 if (!y.imp) return { cls: 'none', txt: '전일 데이터 없음' };
                 if (!b.imp || !bv) return { cls: 'none', txt: '전전일 데이터 없음' };
                 const diff = k === 'ctr' ? yv - bv : (yv / bv - 1) * 100;
-                const flat = k === 'ctr' ? Math.abs(diff) <= 0.001 : Math.abs(diff) <= 1;   // 요약용 '유지' 기준: CTR ±0.001%p · 노출/클릭 ±1%
+                const flat = k === 'ctr' ? Math.abs(diff) <= 0.001 : Math.abs(diff) <= 1;   // 요약용 유지 판정
                 const cls = Math.abs(diff) < 0.0005 ? 'flat' : diff > 0 ? 'rise' : 'fall';
                 return { cls, flat, diff, txt: `${cls === 'flat' ? '−' : diff > 0 ? '▲' : '▼'} ${Math.abs(diff).toFixed(k === 'ctr' ? 3 : 1)}%` };
             };
-            // 카드 오른쪽 한 줄 요약 (예: 세 테마 모두 약 +21% · 화이트레드만 증가 · 화이트레드만 유지)
+            // 카드 오른쪽 한 줄 요약
             const note = (k) => {
                 const cs = THEMES.map(T => ({ T, c: change(T, k) })).filter(x => x.c.cls !== 'none');
                 if (!cs.length) return '';
@@ -2665,7 +1834,6 @@
                 return cs.map(x => `${nameOf(x.T)} ${dir(x)}`).join(' · ');
             };
             const wrap = document.getElementById('yd');
-            // 범례: 막대 색은 프레임 색이고, 진한 색이 전일 · 연한 색이 전전일라는 것만 표시
             wrap.innerHTML = `<div class="legend yd-legend"><span class="yd-legend-note">연한 색 = 전전일 ${md(B)} · 진한 색 = 전일 ${md(Y)}</span></div>`
                 + `<div class="yd-cards">${M3.map(m => `<div class="yd-card">
                     <div class="yd-card-head"><h3>${m.label}</h3><span class="yd-note">${esc(note(m.k))}</span></div>
@@ -2689,14 +1857,14 @@
                         [[b[k], b.imp, cx - gap / 2 - bw, .3], [y[k], y.imp, cx + gap / 2, 1]].forEach(([v, has, x, op]) => {
                             const h = v / max * ih;
                             if (h > 0) out += `<rect class="yd-bar" data-day="${op === 1 ? `전일 ${md(Y)}` : `전전일 ${md(B)}`}" data-t="${i}" data-v="${v}" x="${x}" y="${T + ih - h}" width="${bw}" height="${h}" rx="3" fill="${t.color}" opacity="${op}"/>`;
-                            // 숫자 라벨: 막대보다 글자가 길면(CTR 등) 전전일는 왼쪽 막대 오른끝에 맞춰 오른정렬, 전일는 오른쪽 막대 왼끝에 맞춰 왼정렬해서 겹치지 않게
+                            // 숫자 라벨 겹침 방지
                             const label = has ? short(k, v) : '−', wide = label.length * 6.4 > bw + gap - 2;
                             const [lx, anchor] = !wide ? [x + bw / 2, 'middle'] : op === 1 ? [x, 'start'] : [x + bw, 'end'];
                             out += `<text x="${lx}" y="${T + ih - h - 5}" font-size="${op === 1 ? 11.5 : 10.5}" font-weight="${op === 1 ? 700 : 400}" fill="${op === 1 ? '#202124' : '#858a92'}" text-anchor="${anchor}">${label}</text>`;
                         });
                     });
                     svg.innerHTML = out;
-                    // 막대에 마우스를 올리면 전일/전전일 · 프레임 · 값 툴팁
+                    // 막대 호버 툴팁
                     svg.querySelectorAll('.yd-bar').forEach(r => {
                         r.addEventListener('mouseenter', () => {
                             const t = THEMES[+r.dataset.t];
@@ -2714,9 +1882,9 @@
             draw();
         })();
 
-        /* ③ 최근 7일 — 지표별 차트, 날짜마다 프레임별 막대 */
+        /* 최근 7일 차트 */
         (function () {
-            const D7 = DATES.slice(-7);   // 데이터가 있는 최근 7일
+            const D7 = DATES.slice(-7);
             const data = D7.map(d => Object.fromEntries(THEMES.map(T => [T.id, sum(pick(r => r.t === T.id && r.d === d))])));
             document.getElementById('w7Legend').innerHTML = THEMES.map(T => `<span><i style="${sw(T)}"></i>${nm(T)}${T.ch === '카카오' ? ' (카카오)' : ''}</span>`).join('');
             const wrap = document.getElementById('w7');
@@ -2737,7 +1905,7 @@
                         out += `<line x1="${L}" x2="${W - R}" y1="${y}" y2="${y}" stroke="${g ? '#f2f3f5' : '#e6e8ec'}"/><text x="${L - 6}" y="${y + 4}" font-size="10" fill="#b3b8bf" text-anchor="end">${short(k, max * g / 4)}</text>`;
                     }
                     const gw = iw / D7.length, bw = Math.min(12, (gw - 10) / THEMES.length - 2);
-                    const tops = THEMES.map(() => []);   // 테마별 막대 꼭대기 좌표 (호버 선그래프용)
+                    const tops = THEMES.map(() => []);   // 호버 선그래프용 꼭대기 좌표
                     D7.forEach((d, i) => {
                         const gx = L + gw * i, x0 = gx + (gw - (bw + 2) * THEMES.length + 2) / 2;
                         THEMES.forEach((t, j) => {
@@ -2761,7 +1929,7 @@
                         });
                         h.addEventListener('mouseleave', () => { tip.hidden = true; h.setAttribute('fill', 'transparent'); });
                     });
-                    // 막대에 마우스를 올리면 같은 테마의 7일 추이를 선으로 연결
+                    // 막대 호버 시 테마 추이 선
                     const hl = svg.querySelector('.hl-line');
                     let cur = -1;
                     svg.onmousemove = e => {
@@ -2783,7 +1951,7 @@
             draw();
         })();
 
-        /* ---------- 표 정렬 + 합계 행 ---------- */
+        /* 표 정렬 */
         function makeSortable(table) {
             const ths = [...table.querySelectorAll('th[data-col]')];
             ths.forEach(th => {
@@ -2797,7 +1965,7 @@
                 });
             });
         }
-        // 요약: 지표 1위를 차지한 항목 수를 프레임별 비중으로 막대 하나에 (사이즈별 · 지면별 표 위)
+        // 1위 비중 막대
         function stackSummary(FR, items, label, unit) {
             const total = items.filter(r => r.win >= 0).length;
             const cnt = FR.map((T, i) => items.filter(r => r.win === i));
@@ -2807,7 +1975,7 @@
             }).join('');
             return `<div class="ss-stack"><div class="ss-stack-title">${label} 1위 비중</div><div class="ss-stack-bar">${seg}</div></div>`;
         }
-        // 비중 막대 구간에 마우스를 올리면 검은 툴팁 (프레임 · 1위 개수)
+        // 비중 막대 호버 툴팁
         document.addEventListener('mouseover', e => {
             const seg = e.target.closest('.ss-stack-bar span[data-tip]'); if (!seg) return;
             const box = seg.closest('.ss-stack'); let tip = box.querySelector('.tip');
@@ -2822,21 +1990,22 @@
         const numTd = (v, fmt, cls = '', c = '', tip = '') => `<td class="${cls}" data-v="${v}"${c ? ` style="${cv(c)}"` : ''}>${cls.includes('top') ? `<span class="crown-wrap" data-tip="${tip}">${CROWN}${fmt(v)}</span>` : fmt(v)}</td>`;
 
 
-        /* ④ 일별 추이 — 날짜마다 프레임별 노출·클릭·CTR + 합산. 구간 = 그날 노출된 프레임(단독 / 병행), 구간이 바뀐 날은 강조 */
-        (function () {
+        /* 일별 추이 표, 선택한 월 */
+        function renderTrans(from, to) {
+            const inR = r => r.d >= from && r.d <= to;
             const day = (t, d) => sum(pick(r => r.t === t && r.d === d));
             const active = vals => THEMES.filter((T, i) => vals[i].imp >= MINV);
             const seg = on => {
                 if (!on.length) return `<span class="seg-chip none">−</span>`;
                 if (on.length === 1) return `<span class="seg-chip one" style="${cv(on[0])}">${on[0].name.replace(' 프레임', '')} 단독</span>`;
-                // 병행 — 노출된 프레임 색을 칸으로 나눠 표시
+                // 병행 칩
                 const n = on.length, bg = on.map((T, i) => `color-mix(in srgb, ${T.color} 22%, #fff) ${i / n * 100}% ${(i + 1) / n * 100}%`).join(', ');
                 return `<span class="seg-chip" style="background:linear-gradient(90deg, ${bg})">${on.map(T => T.name.replace(' 프레임', '')).join(' · ')} 병행</span>`;
             };
             const cell = (o, k, m) => `<td class="sep" data-v="${o.imp ? o[k] : -1}">${o.imp ? m.fmt(o[k]) : '−'}</td>`;
             const group = o => M3.map(m => cell(o, m.k, m)).join('');
             const MINV = typeof MIN_IMP === 'number' ? MIN_IMP : 1;
-            // 병행(2개 이상 노출)인 날은 클릭률 1위 프레임 칸에만 1위 메달 + 색 강조
+            // 병행인 날만 CTR 1위 강조
             const winGroup = (o, T, list, d) => M3.map(m => {
                 const on = list.filter(x => x.imp >= MINV);
                 const win = m.k === 'ctr' && on.length >= 2 && o.imp >= MINV && o[m.k] > 0 && o[m.k] === Math.max(...on.map(x => x[m.k]));
@@ -2844,40 +2013,51 @@
 ${T.name} ${m.fmt(o[m.k])}`) : cell(o, m.k, m);
             }).join('');
             let prevKey = null;
-            const rows = [...DATES].map(d => {   // 과거 → 최신 순으로 구간 변화를 판단한 뒤 최신순으로 표시
+            const rows = [...DATES].map(d => {   // 구간 변화는 과거순으로 판단
                 const v = THEMES.map(T => day(T.id, d)), on = active(v), key = on.map(T => T.id).join('+');
                 const pivot = prevKey !== null && key !== prevKey;
                 prevKey = key;
                 return { d, v, on, pivot, all: sum(pick(r => r.d === d)) };
-            }).reverse().map(({ d, v, on, pivot, all }) =>
+            }).filter(inR).reverse().map(({ d, v, on, pivot, all }) =>
                 `<tr class="${pivot ? 'pivot' : ''}"><td class="${dayCls(d)}"><b>${md(d)}</b></td><td class="left">${seg(on)}</td>${v.map((o, i) => winGroup(o, THEMES[i], v, d)).join('')}${group(all)}</tr>`).join('');
-            const tot = THEMES.map(T => sum(pick(r => r.t === T.id))), totAll = sum(ROWS);
+            const tot = THEMES.map(T => sum(pick(r => r.t === T.id && inR(r)))), totAll = sum(pick(inR)), nDays = DATES.filter(d => d >= from && d <= to).length;
             document.getElementById('transTable').innerHTML = `<thead>
                 <tr><th rowspan="2">일자</th><th rowspan="2" style="text-align:left">구간</th>
                     ${THEMES.map(T => `<th colspan="3" class="grp sep" style="${cv(T)}"><span class="dot" style="${sw(T)}"></span>${nm(T)}</th>`).join('')}
                     <th colspan="3" class="grp sep">합산</th></tr>
                 <tr>${[...THEMES, { name: '합산' }].map(() => M3.map(m => `<th class="sep">${m.label.replace(' (CTR)', '')}</th>`).join('')).join('')}</tr>
-                <tr class="total-row"><td>합계</td><td class="left">${DATES.length}일</td>${tot.map(group).join('')}${group(totAll)}</tr>
+                <tr class="total-row"><td>합계</td><td class="left">${nDays}일</td>${tot.map(group).join('')}${group(totAll)}</tr>
             </thead><tbody>${rows}</tbody>`;
+        }
+        (function () {
+            const ctrl = document.getElementById('transPeriod');
+            monthButtons(ctrl, DATES);
+            const run = () => renderTrans(...monthRange(ctrl, DATES));
+            ctrl.addEventListener('click', e => {
+                const b = e.target.closest('button[data-mode]'); if (!b) return;
+                ctrl.querySelectorAll('button[data-mode]').forEach(x => x.setAttribute('aria-pressed', x === b));
+                run();
+            });
+            run();
         })();
 
-        /* ⑤ 사이즈별 — 9월 전체(누적) / 일별, 노출 상위 12개 요청 사이즈 × 오토 프레임 (지표 탭) */
-        const PROWS = APDATA.map(([t, p, imp, clk]) => ({ t, p, imp, clk }));   // 9월 누적
+        /* 사이즈별 표 */
+        const PROWS = APDATA.map(([t, p, imp, clk]) => ({ t, p, imp, clk }));   // 월 누적
         const PDROWS = APDDATA.map(([d, t, p, imp, clk]) => ({ d, t, p, imp, clk }));   // 일별
         const PLACE_N = 12;
-        // 지면 표시: 요청 사이즈 970_280 → 970×280
+        // 970_280은 970×280로 표시
         const placeLabel = p => {
             const m = p.match(/^(\d+)_(\d+)$/);
             if (m) return `<b>${m[1]}×${m[2]}</b><small>요청 사이즈</small>`;
             return `<b>${p}</b>`;
         };
         function renderPlace(from, to, mk) {
-            const whole = from === PERIOD_FROM && to !== from;   // 월 전체: 누적 · 일별: 그날
+            const whole = wholeRange(from, to, DATES) && to !== from;   // 월 전체면 누적 데이터
             const src = whole ? PROWS : PDROWS.filter(r => r.d >= from && r.d <= to);
             const m = M3.find(x => x.k === mk);
             const FR = THEMES;
             const psum = fn => sum(src.filter(fn));
-            const argmax = list => { let w = -1; list.forEach((o, i) => { if (o.imp && (w < 0 || o[mk] > list[w][mk])) w = i; }); return w; };
+            const argmax = list => { let w = -1; list.forEach((o, i) => { if (o.imp && o[mk] > 0 && (w < 0 || o[mk] > list[w][mk])) w = i; }); return w; };   // 값이 0이면 1위 없음
             const places = [...new Set(src.map(r => r.p))]
                 .map(p => ({ p, all: psum(r => r.p === p) }))
                 .sort((a, b) => b.all.imp - a.all.imp).slice(0, PLACE_N);
@@ -2901,15 +2081,15 @@ ${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>
         (function () {
             const ctrl = document.getElementById('placePeriod'), dateEl = document.getElementById('placeDate'), tabs = document.getElementById('placeMetric');
             const PD = [...new Set(PDROWS.map(r => r.d))].sort(), PTODAY = PD[PD.length - 1] || TODAY;
-            dateEl.min = PERIOD_FROM; dateEl.max = PTODAY; dateEl.value = PTODAY;
-            ctrl.querySelector('[data-mode="month"]').textContent = `${+PTODAY.slice(5, 7)}월 전체`;
-            if (!PDROWS.length) ctrl.querySelector('[data-mode="day"]').hidden = true;   // 일별 데이터가 없으면 월 전체만
+            dateEl.min = DATES[0]; dateEl.max = PTODAY; dateEl.value = PTODAY;
+            monthButtons(ctrl, PD);
+            if (!PDROWS.length) ctrl.querySelector('[data-mode="day"]').hidden = true;
             const run = () => {
                 const mode = ctrl.querySelector('[aria-pressed="true"]').dataset.mode;
                 const mk = tabs.querySelector('[aria-selected="true"]').dataset.metric;
                 dateEl.hidden = mode !== 'day';
                 const d = dateEl.value || PTODAY;
-                if (mode === 'day') renderPlace(d, d, mk); else renderPlace(PERIOD_FROM, PTODAY, mk);
+                if (mode === 'day') renderPlace(d, d, mk); else renderPlace(...monthRange(ctrl, PD), mk);
             };
             ctrl.addEventListener('click', e => {
                 const b = e.target.closest('button[data-mode]'); if (!b) return;
@@ -2925,15 +2105,14 @@ ${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>
             run();
         })();
 
-        // 날짜 칸 어디를 눌러도 달력이 뜨게
-        // 날짜 칸(①④⑤⑥)은 눌러도 칸 안의 글자가 선택(파랗게)·복사되지 않게 — 포커스 없이 달력만 띄움
+        // 날짜 칸 클릭 시 달력만 띄움
         document.querySelectorAll('.date-in').forEach(el => {
             el.addEventListener('mousedown', e => { e.preventDefault(); try { el.showPicker(); } catch (err) { } });
-            el.addEventListener('keydown', e => { if (e.key !== 'Tab') e.preventDefault(); });   // 키보드 복사·선택 막기 (Tab 이동은 허용)
+            el.addEventListener('keydown', e => { if (e.key !== 'Tab') e.preventDefault(); });
         });
     </script>
     <script>
-        /* 맨 위로 버튼 — 300px 이상 내려가면 표시 */
+        /* 맨 위로 버튼 */
         (function () {
             const b = document.getElementById('toTop');
             const on = () => b.classList.toggle('show', window.scrollY > 300);

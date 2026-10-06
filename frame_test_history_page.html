@@ -6,1138 +6,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>상품 고정 프레임</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-    <style>
-        * {
-            box-sizing: border-box
-        }
-
-        body {
-            margin: 0;
-            background: #f5f6f8;
-            color: #202124;
-            font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif
-        }
-
-        .wrap {
-            margin: auto;
-            padding: 28px 32px
-        }
-
-        .head {
-            display: flex;
-            justify-content: space-between;
-            align-items: end;
-            margin-bottom: 22px;
-            gap: 12px
-        }
-
-        .head h1 {
-            margin: 0;
-            font-size: 27px
-        }
-
-        .date {
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 9px;
-            padding: 10px 14px;
-            font-size: 13px
-        }
-
-        .card {
-            background: #fff;
-            border: 1px solid #e6e8ec;
-            border-radius: 12px;
-            padding: 26px 24px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 4px 14px rgba(0, 0, 0, .07);
-            min-width: 0
-        }
-
-        section {
-            margin-bottom: 48px
-        }
-
-        section:last-of-type {
-            margin-bottom: 24px
-        }
-
-        .title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 12px
-        }
-
-        .title h2 {
-            font-size: 17px;
-            font-weight: 800;
-            color: #1a1d23;
-            letter-spacing: -.01em;
-            margin: 0
-        }
-
-        .title span {
-            font-size: 12px;
-            color: #858a92
-        }
-
-        .note {
-            font-size: 11px;
-            color: #858a92;
-            margin-top: 10px
-        }
-
-        .dot {
-            display: inline-block;
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            margin-right: 6px;
-            vertical-align: 0;
-            flex: none
-        }
-
-        /* ① 테마별 성과 박스 */
-        .themes {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 14px
-        }
-
-        .theme {
-            padding: 0;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column
-        }
-
-        .theme-art {
-            background: #f8f9fb;
-            padding: 16px;
-            border-bottom: 1px solid #eceef1
-        }
-
-        .theme-art .ad {
-            max-width: 280px;
-            margin: auto
-        }
-
-        .theme-body {
-            padding: 14px 16px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px
-        }
-
-        .theme-name {
-            font-size: 15px;
-            font-weight: 700;
-            display: flex;
-            align-items: center
-        }
-
-        /* 프레임 이름 호버 툴팁 */
-        .fname { cursor: default; border-bottom: 1px dotted transparent }
-        .fname:hover { border-bottom-color: currentColor }
-        #frameTip { position: fixed; left: -9999px; top: -9999px; z-index: 2000; width: 216px; padding: 8px; background: #fff; border: 1px solid #e3e6ea; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, .16); pointer-events: none; visibility: hidden }
-        #frameTip.show { visibility: visible }
-        #frameTip .ft-item { display: none }
-        #frameTip .ft-item.on { display: block }
-        #frameTip .ad.ad-slot { width: 200px; margin: 0 auto }
-        #frameTip .ft-name { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; font-size: 12px; font-weight: 700; color: #20242a }
-
-        /* ① 신규 표시 */
-        .tag-chip { display: inline-block; margin-right: 6px; padding: 1px 8px; border-radius: 999px; background: #3446b8; color: #fff; font-size: 10.5px; font-weight: 800; letter-spacing: .2px; line-height: 1.5 }
-        /* ① 프레임 미리보기 링크 (뷰어 페이지 새 탭) */
-        a.theme-art { display: block; text-decoration: none; color: inherit }
-        .theme-view { margin-left: auto; display: inline-flex; align-items: center; gap: 3px; font-size: 11.5px; font-weight: 600; color: #3446b8; text-decoration: none; white-space: nowrap; padding: 2px 7px; border-radius: 999px; background: #eef0f9 }
-        .theme-view:hover { background: #3446b8; color: #fff }
-
-        .theme-period {
-            font-size: 12px;
-            color: #6b7078
-        }
-
-        .theme-period b {
-            color: #3446b8
-        }
-
-        .theme-stats {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 7px 10px;
-            font-size: 13px;
-            border-top: 1px dashed #e1e4e9;
-            padding-top: 10px;
-            margin: 0
-        }
-
-        .theme-stats dt {
-            color: #7b8088
-        }
-
-        .theme-stats dd {
-            margin: 0;
-            text-align: right;
-            font-weight: 700;
-            font-variant-numeric: tabular-nums
-        }
-
-        /* ② 타임라인 */
-        .tl {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            position: relative
-        }
-
-        .tl::before {
-            content: "";
-            position: absolute;
-            left: 82px;
-            top: 8px;
-            bottom: 8px;
-            width: 2px;
-            background: #e6e8ec
-        }
-
-        .tl li {
-            display: grid;
-            grid-template-columns: 70px 26px 1fr 150px;
-            gap: 0 12px;
-            align-items: start;
-            padding: 10px 0
-        }
-
-        .tl li+li {
-            border-top: 1px solid #f1f2f4
-        }
-
-        .tl-date {
-            font-size: 13px;
-            font-weight: 700;
-            text-align: right;
-            padding-top: 2px;
-            font-variant-numeric: tabular-nums
-        }
-
-        .tl-date small {
-            display: block;
-            font-size: 11px;
-            color: #9aa0a8;
-            font-weight: 400
-        }
-
-        .tl-dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            border: 3px solid #fff;
-            box-shadow: 0 0 0 2px var(--c);
-            background: var(--c);
-            margin: 3px auto 0;
-            position: relative;
-            z-index: 1
-        }
-
-        .tl-body {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            min-width: 0
-        }
-
-        .tl-top {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            flex-wrap: wrap
-        }
-
-        .tl-top b {
-            font-size: 14px
-        }
-
-        .tl-body p {
-            margin: 0;
-            font-size: 12.5px;
-            color: #6b7078;
-            line-height: 1.5
-        }
-
-        .chip {
-            display: inline-block;
-            font-size: 11px;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 999px;
-            white-space: nowrap
-        }
-
-        .chip.deploy {
-            background: #e8ecff;
-            color: #3446b8
-        }
-
-        .chip.copy {
-            background: #fff3dc;
-            color: #a86b00
-        }
-
-        .chip.ratio {
-            background: #fbe9ea;
-            color: #c9444d
-        }
-
-        .chip.fix {
-            background: #eceef1;
-            color: #4b5260
-        }
-
-        .chip.ch.google {
-            background: #eef0f3;
-            color: #4b5260
-        }
-
-        .chip.ch.kakao {
-            background: #fff4c2;
-            color: #6b5300
-        }
-
-        .tl-target {
-            font-size: 12px;
-            font-weight: 700;
-            color: #444;
-            display: flex;
-            align-items: center
-        }
-
-        .chip.live {
-            background: #e6f4ec;
-            color: #198754
-        }
-
-        .tl-art .ad {
-            width: 150px
-        }
-        /* ② 전전일 vs 전일 — 지표별 카드 (제목 + 한 줄 요약 · 막대 · 이름/1위 배지 · 증감 칩) */
-        .yd-legend { margin-bottom: 14px }
-        .yd-legend-note { color: #858a92 }
-        .yd-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px }
-        .yd-card { background: #fff; border: 1px solid #e6e8ec; border-radius: 12px; box-shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 4px 14px rgba(0, 0, 0, .06); padding: 16px 18px 14px; min-width: 0 }
-        .yd-card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 10px }
-        .yd-card-head h3 { margin: 0; font-size: 14px; font-weight: 800; color: #202124; white-space: nowrap }
-        .yd-note { font-size: 11.5px; font-weight: 600; color: #858a92; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
-        .yd-chart { position: relative; height: 170px }
-        .yd-chart svg { display: block; overflow: visible }
-        .yd-chart .yd-bar { cursor: default }
-        .yd-labels { display: grid; margin-top: 8px; text-align: center }
-        .yd-labels > div { display: flex; flex-direction: column; align-items: center; gap: 5px; min-width: 0 }
-        .yd-name { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: #202124; white-space: nowrap }
-        .yd-chg { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap }
-        .yd-chg.rise { background: #e6f4ec; color: #198754 }
-        .yd-chg.fall { background: #fbe9ea; color: #c9444d }
-        .yd-chg.flat { background: #eceef1; color: #666 }
-        .yd-chg.none { background: #eceef1; color: #858a92 }
-        @media(max-width:1100px) { .yd-cards { grid-template-columns: 1fr } }
-
-        /* ③ 최근 7일 */
-        .legend {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px 16px;
-            font-size: 12px;
-            color: #555;
-            margin-bottom: 8px
-        }
-
-        .legend i {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 2px;
-            margin-right: 6px;
-            vertical-align: -1px
-        }
-
-        .w7 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px
-        }
-
-        .w7-box h3 {
-            margin: 0 0 6px;
-            font-size: 13px;
-            color: #444
-        }
-
-        .w7-chart {
-            height: 230px;
-            position: relative
-        }
-
-        .w7-chart svg {
-            display: block;
-            overflow: visible
-        }
-
-        .tip {
-            position: absolute;
-            pointer-events: none;
-            background: #20242a;
-            color: #fff;
-            border-radius: 8px;
-            padding: 8px 10px;
-            font-size: 12px;
-            line-height: 1.6;
-            white-space: nowrap;
-            z-index: 3;
-            box-shadow: 0 4px 14px #0003
-        }
-
-        .tip b {
-            display: block
-        }
-
-        .tip i {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin-right: 6px
-        }
-
-        .tip span {
-            display: flex;
-            justify-content: space-between;
-            gap: 14px;
-            font-variant-numeric: tabular-nums
-        }
-
-        /* 표 */
-        .scroll {
-            overflow: auto
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12px
-        }
-
-        th,
-        td {
-            padding: 10px 10px;
-            border-bottom: 1px solid #e9ebef;
-            text-align: right;
-            white-space: nowrap;
-            font-variant-numeric: tabular-nums
-        }
-
-        th:first-child,
-        td:first-child {
-            text-align: left
-        }
-
-        th {
-            color: #777;
-            background: #fafbfc;
-            font-size: 11px;
-            font-weight: 700
-        }
-
-        th.grp {
-            text-align: center;
-            color: #202124;
-            font-size: 12px;
-            border-bottom: 2px solid var(--c)
-        }
-
-        th.sep,
-        td.sep {
-            border-left: 1px solid #e6e8ec
-        }
-
-        td.best {
-            color: #3446b8;
-            font-weight: 700
-        }
-
-        .crown-wrap {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            position: relative;
-            cursor: default
-        }
-
-        .crown-wrap::after {
-            content: attr(data-tip);
-            position: absolute;
-            bottom: calc(100% + 8px);
-            right: -6px;
-            background: #20242a;
-            color: #fff;
-            font-size: 12px;
-            font-weight: 600;
-            line-height: 1.5;
-            text-align: left;
-            white-space: pre;
-            padding: 7px 10px;
-            border-radius: 7px;
-            box-shadow: 0 4px 14px #0003;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity .12s;
-            z-index: 5
-        }
-
-        .crown-wrap::before {
-            content: "";
-            position: absolute;
-            bottom: calc(100% + 2px);
-            right: 10px;
-            border: 6px solid transparent;
-            border-top-color: #20242a;
-            border-bottom: 0;
-            opacity: 0;
-            transition: opacity .12s;
-            z-index: 5
-        }
-
-        td.top:hover .crown-wrap::after,
-        td.top:hover .crown-wrap::before {
-            opacity: 1
-        }
-
-        .crown {
-            width: 17px;
-            height: 20px;
-            flex: none;
-            margin: -3px 0
-        }
-
-        td.top {
-            background: color-mix(in srgb, var(--c) 16%, #fff);
-            font-weight: 700;
-            box-shadow: inset 3px 0 0 var(--c)
-        }
-
-        td.size-cell {
-            padding-left: 22px
-        }
-
-        .win {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: 700;
-            font-size: 12px
-        }
-
-        .win::before {
-            content: "";
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            background: var(--c)
-        }
-
-        .ss {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 14px
-        }
-
-        .ss-item {
-            background: #f8f9fb;
-            border-radius: 10px;
-            padding: 12px 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-            min-width: 0
-        }
-
-        .ss-top {
-            display: flex;
-            align-items: center;
-            font-size: 13px;
-            font-weight: 700
-        }
-
-        .ss-top b {
-            margin-left: auto;
-            font-size: 13px
-        }
-
-        .ss-bar {
-            height: 6px;
-            background: #e6e8ec;
-            border-radius: 3px;
-            overflow: hidden
-        }
-
-        .ss-bar span {
-            display: block;
-            height: 100%;
-            background: var(--c);
-            border-radius: 3px
-        }
-
-        .ss-list {
-            font-size: 11.5px;
-            color: #6b7078;
-            line-height: 1.5
-        }
-
-        @media(max-width:700px) {
-            .ss {
-                grid-template-columns: 1fr
-            }
-        }
-
-        td.left {
-            text-align: left
-        }
-
-        .cell-name .ad {
-            width: 56px;
-            flex: none;
-            box-shadow: none
-        }
-
-        .total-row td {
-            background: #f3f5ff;
-            font-weight: 700;
-            color: #202124;
-            border-bottom: 2px solid #d9ddf5;
-            font-size: 12.5px
-        }
-
-        /* 표 날짜 칸: 토요일 파랑 · 일요일/공휴일 빨강 (holidays.js) */
-        td.day-sat { color: #2a6fdb }
-        td.day-sun { color: #d7262f }
-
-        .total-row td:first-child {
-            color: #3446b8
-        }
-
-        .sort-btn {
-            all: unset;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 3px 6px;
-            margin: -3px -6px;
-            border-radius: 6px;
-            font: inherit;
-            color: inherit
-        }
-
-        .sort-btn:hover {
-            background: #eef0f3
-        }
-
-        .sort-btn:focus-visible {
-            outline: 2px solid #3446b8
-        }
-
-        .sort-btn .arw {
-            display: inline-flex;
-            flex-direction: column;
-            font-size: 7px;
-            line-height: 7px;
-            color: #d3d7dd
-        }
-
-        .sort-btn .arw span {
-            padding: 1px 4px;
-            margin: 0 -4px;
-            cursor: pointer
-        }
-
-        .sort-btn .arw span:hover {
-            color: #6b7078
-        }
-
-        .sort-btn[data-dir="desc"] .arw .arw-up,
-        .sort-btn[data-dir="asc"] .arw .arw-dn {
-            color: #3446b8
-        }
-
-        .sort-btn[data-dir] {
-            color: #3446b8;
-            font-weight: 700
-        }
-
-        /* ---------- 프레임 예시 이미지 (HTML 목업 · 실제 소재 이미지로 교체 가능) ---------- */
-        .ad {
-            container-type: inline-size;
-            aspect-ratio: 6/5;
-            width: 100%;
-            max-width: 100%;
-            position: relative;
-            overflow: hidden;
-            border-radius: 4px;
-            line-height: 1.25;
-            letter-spacing: -.01em;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, .12)
-        }
-
-        .ad svg {
-            display: block;
-            width: 100%;
-            height: 100%
-        }
-
-        .ad-blackgold .img {
-            width: 36cqw;
-            height: 32cqw
-        }
-
-        .ad-blackgold .price {
-            font-size: 6.4cqw;
-            font-weight: 700;
-            color: #e2c270
-        }
-
-        .ad-whitered .img {
-            padding: 5cqw 4cqw
-        }
-
-        .ad-whitered .body {
-            padding: 3cqw 5cqw 3cqw 1cqw;
-            display: flex;
-            flex-direction: column;
-            gap: 2cqw
-        }
-
-        .ad-whitered .price {
-            font-size: 8cqw;
-            font-weight: 800;
-            color: #d7262f
-        }
-
-        .ad-whitered .price s {
-            display: block;
-            font-size: 3.8cqw;
-            color: #999;
-            font-weight: 400
-        }
-
-        .ad-redauto .auto {
-            font-size: 3cqw;
-            background: rgba(255, 255, 255, .18);
-            border-radius: 10cqw;
-            padding: .8cqw 2.4cqw;
-            font-weight: 700
-        }
-
-        .ad-redauto .tile .img {
-            height: 17cqw
-        }
-
-        .ad-magazine .col {
-            display: flex;
-            flex-direction: column;
-            gap: 2cqw;
-            min-width: 0
-        }
-
-        .ad-magazine .hl {
-            font-family: Georgia, "Noto Serif KR", serif;
-            font-size: 7.2cqw;
-            line-height: 1.18;
-            font-weight: 700;
-            letter-spacing: -.03em
-        }
-
-        .ad-magazine .price {
-            font-size: 4.6cqw;
-            font-weight: 700;
-            margin-top: auto
-        }
-
-        .ad-magazine .link {
-            font-size: 3.6cqw;
-            font-weight: 700;
-            border-bottom: 1px solid;
-            align-self: flex-start
-        }
-
-        .ad-magazine .img {
-            background: #e2d9c8;
-            display: flex;
-            align-items: center;
-            padding: 4cqw
-        }
-
-        @media(max-width:1100px) {
-
-            .themes {
-                grid-template-columns: repeat(2, 1fr)
-            }
-
-            .w7 {
-                grid-template-columns: 1fr
-            }
-        }
-
-        @media(max-width:700px) {
-            .wrap {
-                padding: 18px
-            }
-
-            .head {
-                display: block
-            }
-
-            .date {
-                display: inline-block;
-                margin-top: 12px
-            }
-
-            .themes {
-                grid-template-columns: 1fr
-            }
-
-            .tl::before {
-                left: 64px
-            }
-
-            .tl li {
-                grid-template-columns: 52px 26px 1fr
-            }
-
-            .tl-art {
-                grid-column: 3;
-                margin-top: 8px
-            }
-        }
-
-        .ad.ad-slot {
-            background: #fff;
-            border: 1px solid #d6d9de;
-            box-shadow: none;
-            border-radius: 6px
-        }
-
-        .ad.ad-slot:has(iframe) {
-            aspect-ratio: 1;            /* 250x250 배너 */
-            border-color: #e3e6ea
-        }
-
-        .ad.ad-slot iframe {
-            display: block;
-            width: 250px;               /* 배너 원본 크기로 그린 뒤 */
-            height: 250px;
-            border: 0;
-            transform-origin: 0 0;      /* 칸 폭에 맞게 축소 (fitBannerSlots) */
-            pointer-events: none;       /* 대시보드에서 실수로 광고 클릭 방지 */
-        }
-
-        .tl-open {
-            position: fixed;
-            right: 24px;
-            bottom: calc(24px + env(safe-area-inset-bottom, 0px));
-            z-index: 20;
-            width: 58px;
-            height: 58px;
-            border-radius: 50%;
-            border: 0;
-            background: #3446b8;
-            color: #fff;
-            display: grid;
-            place-items: center;
-            cursor: pointer;
-            box-shadow: 0 6px 18px rgba(52, 70, 184, .38);
-            transition: transform .15s, background .15s
-        }
-
-        .tl-open:hover {
-            background: #28389a;
-            transform: translateY(-2px)
-        }
-
-        .tl-open-label {
-            position: absolute;
-            right: calc(100% + 10px);
-            top: 50%;
-            transform: translateY(-50%);
-            background: #20242a;
-            color: #fff;
-            font-size: 12.5px;
-            font-weight: 700;
-            white-space: nowrap;
-            padding: 7px 11px;
-            border-radius: 7px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity .15s
-        }
-
-        .tl-open:hover .tl-open-label,
-        .tl-open:focus-visible .tl-open-label {
-            opacity: 1
-        }
-
-        .tl-open:focus-visible,
-        .tl-close:focus-visible {
-            outline: 2px solid #3446b8;
-            outline-offset: 2px
-        }
-
-        .tl-modal {
-            width: min(920px, calc(100vw - 32px));
-            max-height: calc(100vh - 48px);
-            padding: 0;
-            border: 0;
-            border-radius: 14px;
-            box-shadow: 0 20px 60px #0004;
-            color: #202124
-        }
-
-        .tl-modal::backdrop {
-            background: rgba(20, 24, 30, .45)
-        }
-
-        .tl-modal[open] {
-            display: flex;
-            flex-direction: column;
-            animation: tlIn .16s ease-out
-        }
-
-        @keyframes tlIn {
-            from {
-                opacity: 0;
-                transform: translateY(8px)
-            }
-
-            to {
-                opacity: 1;
-                transform: none
-            }
-        }
-
-        .tl-modal-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            padding: 18px 22px;
-            border-bottom: 1px solid #eceef1
-        }
-
-        .tl-modal-head h2 {
-            margin: 0;
-            font-size: 17px
-        }
-
-        .tl-modal-head span {
-            font-size: 12px;
-            color: #858a92
-        }
-
-        .tl-close {
-            all: unset;
-            cursor: pointer;
-            width: 34px;
-            height: 34px;
-            display: grid;
-            place-items: center;
-            border-radius: 8px;
-            color: #6b7078
-        }
-
-        .tl-close:hover {
-            background: #f1f2f4;
-            color: #202124
-        }
-
-        .tl-modal-body {
-            overflow: auto;
-            padding: 8px 22px 18px
-        }
-
-        @media (max-width:700px) {
-            .head-right {
-                align-items: flex-start;
-                margin-top: 12px
-            }
-
-            .head-right .date {
-                margin-top: 0
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .tl-modal[open] {
-                animation: none
-            }
-        }
-
-        /* ③ 최근 7일 — 위아래 여백 */
-        .legend {
-            margin: 4px 0 20px
-        }
-
-        .w7 {
-            gap: 32px 24px;
-            padding-bottom: 6px
-        }
-
-        .w7-box h3 {
-            margin: 0 0 14px;
-            font-size: 13px;
-            font-weight: 800;
-            color: #202124;
-            display: flex;
-            align-items: center;
-            gap: 7px
-        }
-
-        .w7-box h3::before {
-            content: "";
-            width: 3px;
-            height: 13px;
-            border-radius: 2px;
-            background: #3446b8
-        }
-
-        .w7-chart {
-            height: 240px
-        }
-
-        .legend i {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            margin-right: 6px;
-            vertical-align: 0
-        }
-        /* ④ 사이즈별 — 요약 박스 여백 */
-        .ss { gap: 16px; margin: 6px 0 24px }
-        .ss-item { padding: 28px 22px 26px; gap: 16px; min-height: 160px; justify-content: center }
-        .ss-top { font-size: 14px }
-        .ss-list { line-height: 1.7 }
-        /* ④ 기간 선택 */
-        .period-ctrl { display: flex; align-items: center; gap: 8px; flex-wrap: wrap }
-        .seg { display: inline-flex; background: #f1f2f4; border-radius: 9px; padding: 3px }
-        .seg button { border: 0; background: transparent; padding: 6px 14px; border-radius: 7px; font: inherit; font-size: 12.5px; font-weight: 600; color: #6b7078; cursor: pointer }
-        .seg button[aria-pressed="true"] { background: #fff; color: #3446b8; font-weight: 800; box-shadow: 0 1px 3px #0002 }
-        .seg button:focus-visible, .date-in:focus-visible { outline: 2px solid #3446b8; outline-offset: 1px }
-        .date-in { border: 1px solid #d6d9de; border-radius: 8px; padding: 6px 10px; font: inherit; font-size: 12.5px; color: #202124; background: #fff }
-        td.na { color: #c3c7ce }
-        /* ④ 사이즈별 표 — 촘촘하게 */
-        #sizeTable th, #sizeTable td { padding: 6px 8px }
-        #sizeTable td.size-cell { padding-left: 18px }
-        #sizeTable th.all, #sizeTable td.all { background: #f7f8fa; font-weight: 700; color: #1a1d23 }   /* 3종 합계 · 평균 열 */
-        /* ⑧ 추가 사이즈 배너 영향 */
-        .ns-kpi { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 14px }
-        .ns-kpi .ss-item { gap: 4px; padding: 14px 16px }
-        .ns-kpi .k-label { font-size: 12px; color: #6b7078; font-weight: 700 }
-        .ns-kpi .k-val { font-size: 22px; font-weight: 800; color: #1a1d23; letter-spacing: -.01em; font-variant-numeric: tabular-nums }
-        .ns-kpi .k-val.up { color: #1a7f4b }
-        .ns-kpi .k-val.down { color: #d7262f }
-        .ns-kpi .k-sub { font-size: 11.5px; color: #858a92 }
-        .ns-verdict { margin: 0 0 16px; padding: 12px 16px; border-radius: 10px; background: #eef0fb; color: #1a1d23; font-size: 13px; line-height: 1.65 }
-        .ns-verdict b { color: #3446b8 }
-        #newSizeTable th, #newSizeTable td { padding: 6px 8px; white-space: nowrap }
-        #newSizeTable tbody.grp td { background: #f7f8fa; font-weight: 700 }
-        #newSizeTable td.pp-up { color: #1a7f4b; font-weight: 700 }
-        #newSizeTable td.pp-down { color: #d7262f; font-weight: 700 }
-        .ns-legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 12px; color: #6b7078; margin: 20px 0 6px }
-        .ns-legend i { display: inline-block; width: 16px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 6px }
-        .ns-legend i.bar { width: 10px; height: 10px; border-radius: 2px; background: #dfe3ea }
-        .ns-chart { position: relative; height: 240px }
-        .ns-chart svg { display: block; overflow: visible }
-        @media(max-width:700px) { .ns-kpi { grid-template-columns: 1fr } }
-        /* ④ 일별 추이 표 */
-        #transTable th, #transTable td { padding: 6px 8px; white-space: nowrap }
-        #transTable th.grp { text-align: center }
-        #transTable tr.pivot td { background: #fff7e0 }
-        #transTable tr.pivot td.top { background: color-mix(in srgb, var(--r, var(--c)) 16%, #fff) }   /* 강조 행에서도 1위 칸은 프레임 색 */
-        .seg-chip { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; line-height: 1.5; color: #202124 }
-        .seg-chip.one { background: color-mix(in srgb, var(--c) 14%, #fff); color: color-mix(in srgb, var(--c) 78%, #000) }   /* 테마 하나 — 그 테마 색 */
-        .seg-chip.none { background: #eceef1; color: #6b7078 }
-        /* ⑤ 지표 탭 */
-        .m-tabs { display: flex; gap: 4px; border-bottom: 1px solid #e6e8ec; margin: 2px 0 18px }
-        .m-tabs button { border: 0; background: none; font: inherit; font-size: 13.5px; font-weight: 700; color: #858a92; padding: 10px 16px 11px; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px }
-        .m-tabs button:hover { color: #202124 }
-        .m-tabs button[aria-selected="true"] { color: #3446b8; border-bottom-color: #3446b8 }
-        .m-tabs button:focus-visible { outline: 2px solid #3446b8; outline-offset: -2px; border-radius: 6px }
-        #sizeTable th.grp { text-align: right }
-        /* ⑥ 지면별 — 요약 박스 한 줄 */
-        #placeSummary { grid-template-columns: repeat(3, 1fr) }
-        /* 박스 안 제목·막대·목록 줄을 4개 박스가 공유 (서브그리드) → 라인 높이 일치 */
-        #placeSummary .ss-item { padding: 22px 18px 20px; display: grid; grid-template-rows: subgrid; grid-row: span 3; align-content: start; justify-content: normal }
-        #placeSummary .ss-list { align-self: start }
-        /* 제목 줄: 테마 이름 / 1위 · n개 지면 을 두 줄로 (좁은 칸에서 단어가 끊기지 않게) */
-        #placeSummary .ss-top { flex-wrap: wrap; row-gap: 4px; white-space: nowrap }
-        #placeSummary .ss-top b { flex-basis: 100%; margin-left: 0; font-weight: 600; color: #6b7078 }
-        #placeSummary .ss-list { overflow-wrap: anywhere }
-        @media(max-width:1100px) { #placeSummary { grid-template-columns: repeat(2, 1fr) } }
-        @media(max-width:700px) { #placeSummary { grid-template-columns: 1fr } }
-        #placeTable th, #placeTable td { padding: 6px 8px }
-        #placeTable th.grp { text-align: right }
-        #placeTable td.place-cell { padding-left: 18px; white-space: nowrap }
-        #placeTable td.place-cell small { display: block; font-weight: 400; color: #858a92; font-size: 11px; margin-top: 1px }
-        /* 카드 안쪽 여백 — 표 카드는 기존대로 */
-        .card:has(> .scroll) { padding: 18px }
-
-        /* 블랙골드처럼 테두리색(--r)이 있는 프레임 */
-        .tl-dot { box-shadow: 0 0 0 2px var(--r, var(--c)) }
-        .win::before, .ss-bar span { box-shadow: inset 0 0 0 2px var(--r, transparent) }
-        td.top { background: color-mix(in srgb, var(--r, var(--c)) 16%, #fff); box-shadow: inset 3px 0 0 var(--r, var(--c)) }
-        /* ③ 최근 7일 — 막대 호버 시 선그래프 */
-        .w7-chart .bar { transition: opacity .15s }
-        .w7-chart.hl .bar:not(.on) { opacity: .2 }
-        /* ⑤ 프레임 이름별 — 높이 고정 + 스크롤 (헤더는 위에 고정) */
-        .name-scroll { max-height: 520px; overflow-y: auto }
-        .name-scroll thead th { position: sticky; top: 0; z-index: 1 }
-        .date-in { cursor: pointer }
-        /* 날짜 칸 — 눌러도 파랗게 선택·복사되지 않게 */
-        .date-in { -webkit-user-select: none; user-select: none; caret-color: transparent }
-        .date-in:focus, .date-in:focus-visible { outline: none }
-        .date-in::-webkit-datetime-edit-year-field:focus,
-        .date-in::-webkit-datetime-edit-month-field:focus,
-        .date-in::-webkit-datetime-edit-day-field:focus { background: transparent; color: inherit }
-        .h2-note { margin-left: 8px; font-size: 12px; font-weight: 400; color: #858a92 }
-        /* 요약 막대 하나 — 프레임별 1위 비중 */
-        .ss-stack { grid-column: 1 / -1; background: #f8f9fb; border-radius: 10px; padding: 16px 18px 14px; position: relative }
-        .ss-stack-title { font-size: 13px; font-weight: 800; color: #202124; margin-bottom: 10px }
-        .ss-stack-title small { margin-left: 6px; font-size: 12px; font-weight: 600; color: #858a92 }
-        .ss-stack-bar { display: flex; height: 26px; border-radius: 7px; overflow: hidden; background: #e6e8ec }
-        .ss-stack-bar span { display: flex; align-items: center; justify-content: center; color: #fff; font-size: 11.5px; font-weight: 800; white-space: nowrap; overflow: hidden; box-shadow: inset 0 0 0 2px var(--r, transparent) }
-        /* 제목 옆 ? 아이콘 — 마우스를 올리면 설명 툴팁 */
-        .h2-help { display: inline-grid; place-items: center; width: 17px; height: 17px; margin-left: 8px; border-radius: 50%; background: #eceef1; color: #6b7078; font-size: 11px; font-weight: 800; vertical-align: 2px; position: relative; cursor: help }
-        .h2-help:hover, .h2-help:focus-visible { background: #3446b8; color: #fff }
-        .h2-help::after { content: attr(data-tip); position: absolute; left: 0; top: calc(100% + 10px); width: max-content; max-width: 460px; padding: 14px 16px; border-radius: 10px; background: #fff; color: #3b4048; border: 1px solid #e6e8ec; font-size: 12.5px; font-weight: 500; line-height: 1.75; white-space: pre-line; word-break: keep-all; text-align: left; box-shadow: 0 6px 20px rgba(0, 0, 0, .10); opacity: 0; pointer-events: none; transition: opacity .12s; z-index: 6 }
-        .h2-help:hover::after, .h2-help:focus-visible::after { opacity: 1 }
-        /* ⑤ 1·2·3위 표시 */
-        .rk-slot .rk-badge { margin-right: 8px }
-        .rk-badge { display: inline-block; min-width: 34px; text-align: center; padding: 2px 7px; border-radius: 999px; font-size: 11px; font-weight: 800; line-height: 1.4 }
-        .rk-badge.rk1 { background: #ffe9a8; color: #9a6a00 }
-        .rk-badge.rk2 { background: #e9ecf1; color: #5b6270 }
-        .rk-badge.rk3 { background: #f6e0cf; color: #9a5a2a }
-        .theme-stats .rk-badge, .yd-name .rk-badge { font-style: normal; min-width: 30px; padding: 1px 6px; font-size: 10.5px; margin-left: 2px; vertical-align: 1px }   /* ①② 1·2·3위 */
-        /* 맨 위로 버튼 */
-        .to-top { position: fixed; right: 24px; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 20; width: 44px; height: 44px; border-radius: 50%; border: 1px solid #e6e8ec; background: #fff; color: #3446b8; display: grid; place-items: center; cursor: pointer; box-shadow: 0 6px 18px rgba(0, 0, 0, .14); opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .18s, transform .18s, visibility .18s }
-        .to-top.show { opacity: 1; visibility: visible; transform: none }
-        .to-top:hover { background: #3446b8; color: #fff; border-color: #3446b8 }
-        .to-top:focus-visible { outline: 2px solid #3446b8; outline-offset: 2px }
-        body:has(.tl-open) .to-top { bottom: calc(24px + 58px + 12px + env(safe-area-inset-bottom, 0px)); right: 31px }   /* Timeline 버튼 위 */
-        /* 표 행 호버 — 배경 연하게 */
-        tbody tr:hover td { background: #f3f5fa }
-        tbody tr:hover td.top { background: color-mix(in srgb, var(--r, var(--c)) 24%, #fff) }
-        tbody td { transition: background .12s }
-    </style>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/frame_test_history_page.css">
 </head>
 
 <body>
@@ -1179,6 +49,11 @@
         <section>
             <div class="title">
                 <h2>4. 프레임 테마별 일별 추이 <span class="h2-help" data-tip="구간: 그날 어떤 배너가 나갔는지 보여 줍니다.&#10;&#160;&#160;• 단독 = 배너 하나만 나간 날&#10;&#160;&#160;• 병행 = 여러 배너가 같이 나간 날&#10;&#10;노란색 줄: 나가는 배너 조합이 전날과 달라진 날&#10;1위 메달: 여러 배너가 같이 나간 날 중 클릭률이 가장 높았던 배너" aria-label="구간 설명" tabindex="0">?</span></h2>
+                <div class="period-ctrl" id="transPeriod" role="group" aria-label="기간 선택">
+                    <div class="seg">
+                        <button type="button" data-mode="month" aria-pressed="true">9월 전체</button>
+                    </div>
+                </div>
             </div>
             <div class="card">
                 <div class="scroll">
@@ -1253,24 +128,7 @@
             </div>
         </section>
 
-        <section>
-            <div class="title">
-                <h2>8. 추가 사이즈 배너 영향 (5개 사이즈) <span class="h2-help" data-tip="이전 배너에 없던 사이즈 5개(234×60 · 300×50 · 300×100 · 336×280 · 468×60)가&#10;전체 평균 클릭률을 끌어내렸는지 확인합니다.&#10;&#10;보는 법&#10;&#160;&#160;• 추가 5종 CTR vs 기존 9종 CTR — 추가 사이즈가 기존보다 낮으면 평균을 끌어내림&#10;&#160;&#160;• 결론 — 추가 사이즈를 뺀 CTR과 전체 CTR의 차이 (%p)가 곧 영향&#10;&#160;&#160;• 일별 그래프 — 두 CTR 선이 같이 움직이면 사이즈가 아닌 다른 원인&#10;&#10;블랙골드 · 화이트레드 · 매거진 3종을 합산한 값입니다" aria-label="표 설명" tabindex="0">?</span></h2>
-                <span id="newSizeRange"></span>
-            </div>
-            <div class="card">
-                <div class="ns-kpi" id="newSizeKpi"></div>
-                <p class="ns-verdict" id="newSizeVerdict"></p>
-                <div class="scroll">
-                    <table id="newSizeTable"></table>
-                </div>
-                <div class="ns-legend" id="newSizeLegend"></div>
-                <div class="ns-chart" id="newSizeChart"><svg></svg><div class="tip" hidden></div></div>
-            </div>
-        </section>
-
     </div>
-
 
     <button type="button" class="tl-open" id="tlOpen" aria-haspopup="dialog" aria-label="프레임 변경 Timeline 보기">
         <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"
@@ -1301,25 +159,22 @@
     <button type="button" class="to-top" id="toTop" aria-label="맨 위로">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
     </button>
-    <script src="holidays.js"></script>
-    <script src="frame_timeline.js"></script>
+    <script src="../js/holidays.js"></script>
+    <script src="../js/frame_timeline.js"></script>
     <script>
-        /* =====================================================================
-           설정 — 숫자는 상품 고정 프레임.csv에서 update_data.bat이 채웁니다
-           ===================================================================== */
-        // 프레임 표시색 (ring이 있으면 테두리색)
+        /* 설정 */
+        // 프레임 색, ring은 테두리색
         const sw = T => `background:${T.color}${T.ring ? `;box-shadow:inset 0 0 0 2px ${T.ring}` : ''}`;
         const cv = T => `--c:${T.color}${T.ring ? `;--r:${T.ring}` : ''}`;
-        // 테마 id: blackgold · whitered · magazine (레드오토는 상품 오토 프레임 페이지)
         const THEMES = [
-            // src: 250x250 배너 페이지 (iframe 250px로 그린 뒤 칸 크기에 맞게 축소) · view: 전체 사이즈 미리보기 페이지 (① 카드의 '프레임 미리보기' 링크)
+            // src: 250x250 배너, view: 미리보기 페이지
             { id: 'blackgold', name: '블랙골드 프레임', tag: 'After · 신규', color: '#2b2d31', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/blackGold/ui/openRtb_blackGold_250x250_ui.html', view: 'https://kyungahkims.github.io/openRtb_banners.github.io/total_banners_view.html#section-black-gold' },
             { id: 'whitered', name: '화이트레드 프레임', tag: 'After · 신규', color: '#e0262f', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/whiteRed/ui/openRtb_whiteRed_250x250_ui.html', view: 'https://kyungahkims.github.io/openRtb_banners.github.io/total_banners_view.html#section-white-red' },
             { id: 'magazine', name: '매거진 프레임', tag: 'After · 신규', color: '#8b5cf6', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/simpleMagazine/ui/openRtb_simple_magazine_250x250_ui.html', view: 'https://kyungahkims.github.io/openRtb_banners.github.io/simpleMagazine_banners_view.html' },
         ];
         const SIZES = ['300x250', '336x280', '250x250', '200x200', '728x90', '970x250', '234x60', '160x600', '300x600', '120x600', '320x50', '320x100', '300x50', '300x100'].map(name => ({ name }));
 
-        /* 데이터 [날짜, 테마, 프레임 이름, 사이즈, 노출수, 클릭수] — update_data.bat이 rtb_frame_analysis xlsx(01 시트)로 채웁니다 — 테마별 일별 합계이며 프레임 이름·사이즈 칸은 비어 있음 */
+        /* [날짜, 테마, 프레임 이름, 사이즈, 노출수, 클릭수] */
         /* DATA:START */
         const DATA = [
             ["2026-09-02", "blackgold", "", "", 329323, 107],
@@ -1378,10 +233,28 @@
             ["2026-09-29", "blackgold", "", "", 571533, 141],
             ["2026-09-29", "magazine", "", "", 576998, 193],
             ["2026-09-29", "whitered", "", "", 571815, 175],
+            ["2026-09-30", "blackgold", "", "", 534934, 163],
+            ["2026-09-30", "magazine", "", "", 538440, 166],
+            ["2026-09-30", "whitered", "", "", 534046, 149],
+            ["2026-10-01", "blackgold", "", "", 517335, 133],
+            ["2026-10-01", "magazine", "", "", 521389, 160],
+            ["2026-10-01", "whitered", "", "", 517425, 134],
+            ["2026-10-02", "blackgold", "", "", 561600, 125],
+            ["2026-10-02", "magazine", "", "", 562487, 152],
+            ["2026-10-02", "whitered", "", "", 559913, 127],
+            ["2026-10-03", "blackgold", "", "", 360394, 93],
+            ["2026-10-03", "magazine", "", "", 362288, 91],
+            ["2026-10-03", "whitered", "", "", 360019, 84],
+            ["2026-10-04", "blackgold", "", "", 392079, 99],
+            ["2026-10-04", "magazine", "", "", 394270, 94],
+            ["2026-10-04", "whitered", "", "", 391257, 101],
+            ["2026-10-05", "blackgold", "", "", 386916, 86],
+            ["2026-10-05", "magazine", "", "", 388390, 98],
+            ["2026-10-05", "whitered", "", "", 387802, 73],
         ];
         /* DATA:END */
 
-        /* ⑥ 지면별 데이터 [날짜, 테마, 지면, 노출수, 클릭수] — 지면 데이터 파일이 없어 비어 있음 (update_data.py가 비움) */
+        /* 지면별 일별 [날짜, 테마, 지면, 노출수, 클릭수] */
         /* PDATA:START */
         const PDATA = [
             ["2026-09-02", "blackgold", "biz.chosun.com", 1351, 1],
@@ -3624,319 +2497,1038 @@
             ["2026-09-29", "whitered", "theqoo.net", 113040, 33],
             ["2026-09-29", "whitered", "v.daum.net", 18833, 31],
             ["2026-09-29", "whitered", "wisetoto.com", 18436, 0],
+            ["2026-09-30", "blackgold", "82cook.com", 789, 1],
+            ["2026-09-30", "blackgold", "cafe.daum.net", 32069, 12],
+            ["2026-09-30", "blackgold", "coinpan.com", 1204, 0],
+            ["2026-09-30", "blackgold", "damoang.net", 16130, 4],
+            ["2026-09-30", "blackgold", "daum.net", 72416, 14],
+            ["2026-09-30", "blackgold", "ddanzi.com", 2904, 4],
+            ["2026-09-30", "blackgold", "dmitory.com", 10730, 0],
+            ["2026-09-30", "blackgold", "dogdrip.net", 13726, 9],
+            ["2026-09-30", "blackgold", "donga.com", 2768, 0],
+            ["2026-09-30", "blackgold", "dvdprime.com", 6327, 2],
+            ["2026-09-30", "blackgold", "edaily.co.kr", 2190, 0],
+            ["2026-09-30", "blackgold", "hangloo.co.kr", 1251, 0],
+            ["2026-09-30", "blackgold", "hankyung.com", 2221, 0],
+            ["2026-09-30", "blackgold", "imbc.com", 33917, 0],
+            ["2026-09-30", "blackgold", "instiz.net", 2004, 0],
+            ["2026-09-30", "blackgold", "inven.co.kr", 29406, 10],
+            ["2026-09-30", "blackgold", "itssa.co.kr", 3459, 1],
+            ["2026-09-30", "blackgold", "jeomsinpf1.co.kr", 7465, 1],
+            ["2026-09-30", "blackgold", "khan.co.kr", 4888, 2],
+            ["2026-09-30", "blackgold", "luckieverse.com", 1780, 2],
+            ["2026-09-30", "blackgold", "maplescouter.com", 1501, 0],
+            ["2026-09-30", "blackgold", "meaegi.com", 2205, 0],
+            ["2026-09-30", "blackgold", "munhwa.com", 3801, 1],
+            ["2026-09-30", "blackgold", "namu.wiki", 1314, 8],
+            ["2026-09-30", "blackgold", "nate.com", 20835, 7],
+            ["2026-09-30", "blackgold", "news1.kr", 1521, 0],
+            ["2026-09-30", "blackgold", "onlinealarmkur.com", 2152, 0],
+            ["2026-09-30", "blackgold", "ppomppu.co.kr", 11511, 5],
+            ["2026-09-30", "blackgold", "prod.danawa.com", 1858, 0],
+            ["2026-09-30", "blackgold", "quasarzone.com", 15899, 0],
+            ["2026-09-30", "blackgold", "sbs.co.kr", 9063, 0],
+            ["2026-09-30", "blackgold", "seoul.co.kr", 1521, 0],
+            ["2026-09-30", "blackgold", "slrclub.com", 9397, 1],
+            ["2026-09-30", "blackgold", "smartbill.co.kr", 3737, 0],
+            ["2026-09-30", "blackgold", "snulife.com", 5447, 1],
+            ["2026-09-30", "blackgold", "sportsseoul.com", 1868, 0],
+            ["2026-09-30", "blackgold", "teamblind.com", 3509, 2],
+            ["2026-09-30", "blackgold", "theqoo.net", 113570, 34],
+            ["2026-09-30", "blackgold", "v.daum.net", 18418, 18],
+            ["2026-09-30", "blackgold", "wisetoto.com", 14218, 1],
+            ["2026-09-30", "magazine", "82cook.com", 2945, 0],
+            ["2026-09-30", "magazine", "cafe.daum.net", 32024, 13],
+            ["2026-09-30", "magazine", "coinpan.com", 1389, 0],
+            ["2026-09-30", "magazine", "damoang.net", 15942, 0],
+            ["2026-09-30", "magazine", "daum.net", 72556, 8],
+            ["2026-09-30", "magazine", "ddanzi.com", 2828, 3],
+            ["2026-09-30", "magazine", "dmitory.com", 10625, 4],
+            ["2026-09-30", "magazine", "dogdrip.net", 13938, 5],
+            ["2026-09-30", "magazine", "donga.com", 2841, 1],
+            ["2026-09-30", "magazine", "dvdprime.com", 6622, 8],
+            ["2026-09-30", "magazine", "edaily.co.kr", 2188, 1],
+            ["2026-09-30", "magazine", "hangloo.co.kr", 1166, 0],
+            ["2026-09-30", "magazine", "hankyung.com", 2223, 0],
+            ["2026-09-30", "magazine", "imbc.com", 33547, 0],
+            ["2026-09-30", "magazine", "instiz.net", 1844, 1],
+            ["2026-09-30", "magazine", "inven.co.kr", 29367, 4],
+            ["2026-09-30", "magazine", "itssa.co.kr", 3503, 1],
+            ["2026-09-30", "magazine", "jeomsinpf1.co.kr", 7507, 1],
+            ["2026-09-30", "magazine", "khan.co.kr", 4761, 1],
+            ["2026-09-30", "magazine", "luckieverse.com", 1775, 2],
+            ["2026-09-30", "magazine", "maplescouter.com", 1813, 0],
+            ["2026-09-30", "magazine", "meaegi.com", 2407, 0],
+            ["2026-09-30", "magazine", "munhwa.com", 3732, 1],
+            ["2026-09-30", "magazine", "namu.wiki", 1267, 1],
+            ["2026-09-30", "magazine", "nate.com", 20957, 8],
+            ["2026-09-30", "magazine", "news1.kr", 1532, 0],
+            ["2026-09-30", "magazine", "onlinealarmkur.com", 2264, 0],
+            ["2026-09-30", "magazine", "ppomppu.co.kr", 11447, 4],
+            ["2026-09-30", "magazine", "prod.danawa.com", 1967, 0],
+            ["2026-09-30", "magazine", "quasarzone.com", 15816, 0],
+            ["2026-09-30", "magazine", "sbs.co.kr", 9085, 0],
+            ["2026-09-30", "magazine", "seoul.co.kr", 1438, 0],
+            ["2026-09-30", "magazine", "slrclub.com", 9195, 4],
+            ["2026-09-30", "magazine", "smartbill.co.kr", 3601, 0],
+            ["2026-09-30", "magazine", "snulife.com", 5375, 0],
+            ["2026-09-30", "magazine", "sportsseoul.com", 1912, 2],
+            ["2026-09-30", "magazine", "teamblind.com", 3592, 0],
+            ["2026-09-30", "magazine", "theqoo.net", 113320, 48],
+            ["2026-09-30", "magazine", "v.daum.net", 18533, 26],
+            ["2026-09-30", "magazine", "wisetoto.com", 14563, 3],
+            ["2026-09-30", "whitered", "82cook.com", 805, 0],
+            ["2026-09-30", "whitered", "cafe.daum.net", 31779, 6],
+            ["2026-09-30", "whitered", "coinpan.com", 1269, 1],
+            ["2026-09-30", "whitered", "damoang.net", 16122, 3],
+            ["2026-09-30", "whitered", "daum.net", 72487, 16],
+            ["2026-09-30", "whitered", "ddanzi.com", 2884, 3],
+            ["2026-09-30", "whitered", "dmitory.com", 10703, 1],
+            ["2026-09-30", "whitered", "dogdrip.net", 13853, 6],
+            ["2026-09-30", "whitered", "donga.com", 2827, 0],
+            ["2026-09-30", "whitered", "dvdprime.com", 6542, 10],
+            ["2026-09-30", "whitered", "edaily.co.kr", 2110, 0],
+            ["2026-09-30", "whitered", "hangloo.co.kr", 1272, 1],
+            ["2026-09-30", "whitered", "hankyung.com", 2188, 0],
+            ["2026-09-30", "whitered", "imbc.com", 33950, 1],
+            ["2026-09-30", "whitered", "instiz.net", 1928, 0],
+            ["2026-09-30", "whitered", "inven.co.kr", 29205, 7],
+            ["2026-09-30", "whitered", "itssa.co.kr", 3504, 1],
+            ["2026-09-30", "whitered", "jeomsinpf1.co.kr", 7440, 2],
+            ["2026-09-30", "whitered", "khan.co.kr", 4927, 2],
+            ["2026-09-30", "whitered", "luckieverse.com", 1716, 1],
+            ["2026-09-30", "whitered", "maplescouter.com", 1524, 0],
+            ["2026-09-30", "whitered", "meaegi.com", 2353, 0],
+            ["2026-09-30", "whitered", "munhwa.com", 3868, 0],
+            ["2026-09-30", "whitered", "namu.wiki", 1315, 1],
+            ["2026-09-30", "whitered", "nate.com", 20770, 5],
+            ["2026-09-30", "whitered", "news1.kr", 1509, 0],
+            ["2026-09-30", "whitered", "onlinealarmkur.com", 2195, 0],
+            ["2026-09-30", "whitered", "ppomppu.co.kr", 11422, 1],
+            ["2026-09-30", "whitered", "prod.danawa.com", 1986, 0],
+            ["2026-09-30", "whitered", "quasarzone.com", 15724, 0],
+            ["2026-09-30", "whitered", "sbs.co.kr", 8848, 0],
+            ["2026-09-30", "whitered", "seoul.co.kr", 1483, 0],
+            ["2026-09-30", "whitered", "slrclub.com", 9215, 2],
+            ["2026-09-30", "whitered", "smartbill.co.kr", 3763, 1],
+            ["2026-09-30", "whitered", "snulife.com", 5347, 0],
+            ["2026-09-30", "whitered", "sportsseoul.com", 1817, 0],
+            ["2026-09-30", "whitered", "teamblind.com", 3536, 0],
+            ["2026-09-30", "whitered", "theqoo.net", 113198, 33],
+            ["2026-09-30", "whitered", "v.daum.net", 18034, 14],
+            ["2026-09-30", "whitered", "wisetoto.com", 14366, 1],
+            ["2026-10-01", "blackgold", "82cook.com", 889, 1],
+            ["2026-10-01", "blackgold", "cafe.daum.net", 31633, 9],
+            ["2026-10-01", "blackgold", "damoang.net", 20089, 9],
+            ["2026-10-01", "blackgold", "daum.net", 54740, 3],
+            ["2026-10-01", "blackgold", "ddanzi.com", 4127, 1],
+            ["2026-10-01", "blackgold", "dmitory.com", 3582, 1],
+            ["2026-10-01", "blackgold", "dogdrip.net", 16114, 8],
+            ["2026-10-01", "blackgold", "donga.com", 3400, 0],
+            ["2026-10-01", "blackgold", "dvdprime.com", 5364, 4],
+            ["2026-10-01", "blackgold", "edaily.co.kr", 1970, 0],
+            ["2026-10-01", "blackgold", "fc-info.com", 1621, 1],
+            ["2026-10-01", "blackgold", "hangloo.co.kr", 1410, 0],
+            ["2026-10-01", "blackgold", "hankookilbo.com", 1400, 0],
+            ["2026-10-01", "blackgold", "hankyung.com", 1894, 0],
+            ["2026-10-01", "blackgold", "imbc.com", 31099, 0],
+            ["2026-10-01", "blackgold", "instiz.net", 1491, 0],
+            ["2026-10-01", "blackgold", "inven.co.kr", 24818, 9],
+            ["2026-10-01", "blackgold", "itssa.co.kr", 4808, 0],
+            ["2026-10-01", "blackgold", "jeomsinpf1.co.kr", 6565, 5],
+            ["2026-10-01", "blackgold", "khan.co.kr", 5646, 4],
+            ["2026-10-01", "blackgold", "luckieverse.com", 1364, 1],
+            ["2026-10-01", "blackgold", "mania.kr", 1303, 0],
+            ["2026-10-01", "blackgold", "maplescouter.com", 2406, 0],
+            ["2026-10-01", "blackgold", "meaegi.com", 1243, 0],
+            ["2026-10-01", "blackgold", "munhwa.com", 4118, 0],
+            ["2026-10-01", "blackgold", "nate.com", 18071, 3],
+            ["2026-10-01", "blackgold", "news1.kr", 1518, 3],
+            ["2026-10-01", "blackgold", "ppomppu.co.kr", 7904, 3],
+            ["2026-10-01", "blackgold", "prod.danawa.com", 2148, 0],
+            ["2026-10-01", "blackgold", "quasarzone.com", 14893, 0],
+            ["2026-10-01", "blackgold", "sbs.co.kr", 10066, 0],
+            ["2026-10-01", "blackgold", "seoul.co.kr", 1977, 0],
+            ["2026-10-01", "blackgold", "slrclub.com", 11335, 3],
+            ["2026-10-01", "blackgold", "smartbill.co.kr", 3015, 3],
+            ["2026-10-01", "blackgold", "snulife.com", 6141, 1],
+            ["2026-10-01", "blackgold", "sportsseoul.com", 1168, 0],
+            ["2026-10-01", "blackgold", "teamblind.com", 4116, 1],
+            ["2026-10-01", "blackgold", "theqoo.net", 122573, 22],
+            ["2026-10-01", "blackgold", "v.daum.net", 19232, 19],
+            ["2026-10-01", "blackgold", "wisetoto.com", 17119, 0],
+            ["2026-10-01", "magazine", "82cook.com", 3324, 1],
+            ["2026-10-01", "magazine", "cafe.daum.net", 31815, 10],
+            ["2026-10-01", "magazine", "damoang.net", 19963, 4],
+            ["2026-10-01", "magazine", "daum.net", 54543, 5],
+            ["2026-10-01", "magazine", "ddanzi.com", 4083, 3],
+            ["2026-10-01", "magazine", "dmitory.com", 3584, 2],
+            ["2026-10-01", "magazine", "dogdrip.net", 16116, 6],
+            ["2026-10-01", "magazine", "donga.com", 3441, 0],
+            ["2026-10-01", "magazine", "dvdprime.com", 5454, 3],
+            ["2026-10-01", "magazine", "edaily.co.kr", 1866, 0],
+            ["2026-10-01", "magazine", "fc-info.com", 1784, 3],
+            ["2026-10-01", "magazine", "hangloo.co.kr", 1408, 0],
+            ["2026-10-01", "magazine", "hankookilbo.com", 1376, 0],
+            ["2026-10-01", "magazine", "hankyung.com", 1907, 2],
+            ["2026-10-01", "magazine", "imbc.com", 31524, 0],
+            ["2026-10-01", "magazine", "instiz.net", 1608, 0],
+            ["2026-10-01", "magazine", "inven.co.kr", 24904, 4],
+            ["2026-10-01", "magazine", "itssa.co.kr", 4775, 2],
+            ["2026-10-01", "magazine", "jeomsinpf1.co.kr", 6467, 0],
+            ["2026-10-01", "magazine", "khan.co.kr", 5541, 6],
+            ["2026-10-01", "magazine", "luckieverse.com", 1322, 3],
+            ["2026-10-01", "magazine", "mania.kr", 1239, 1],
+            ["2026-10-01", "magazine", "maplescouter.com", 2576, 0],
+            ["2026-10-01", "magazine", "meaegi.com", 1313, 0],
+            ["2026-10-01", "magazine", "munhwa.com", 4241, 0],
+            ["2026-10-01", "magazine", "nate.com", 18041, 13],
+            ["2026-10-01", "magazine", "news1.kr", 1554, 1],
+            ["2026-10-01", "magazine", "ppomppu.co.kr", 7978, 5],
+            ["2026-10-01", "magazine", "prod.danawa.com", 2303, 0],
+            ["2026-10-01", "magazine", "quasarzone.com", 14989, 0],
+            ["2026-10-01", "magazine", "sbs.co.kr", 10082, 0],
+            ["2026-10-01", "magazine", "seoul.co.kr", 1994, 0],
+            ["2026-10-01", "magazine", "slrclub.com", 11421, 3],
+            ["2026-10-01", "magazine", "smartbill.co.kr", 3036, 0],
+            ["2026-10-01", "magazine", "snulife.com", 6220, 1],
+            ["2026-10-01", "magazine", "sportsseoul.com", 1245, 0],
+            ["2026-10-01", "magazine", "teamblind.com", 4168, 2],
+            ["2026-10-01", "magazine", "theqoo.net", 122278, 38],
+            ["2026-10-01", "magazine", "v.daum.net", 19291, 32],
+            ["2026-10-01", "magazine", "wisetoto.com", 17370, 0],
+            ["2026-10-01", "whitered", "82cook.com", 923, 1],
+            ["2026-10-01", "whitered", "cafe.daum.net", 31347, 9],
+            ["2026-10-01", "whitered", "damoang.net", 20363, 3],
+            ["2026-10-01", "whitered", "daum.net", 54096, 5],
+            ["2026-10-01", "whitered", "ddanzi.com", 4058, 5],
+            ["2026-10-01", "whitered", "dmitory.com", 3580, 0],
+            ["2026-10-01", "whitered", "dogdrip.net", 16289, 4],
+            ["2026-10-01", "whitered", "donga.com", 3364, 0],
+            ["2026-10-01", "whitered", "dvdprime.com", 5262, 4],
+            ["2026-10-01", "whitered", "edaily.co.kr", 1936, 0],
+            ["2026-10-01", "whitered", "fc-info.com", 1602, 0],
+            ["2026-10-01", "whitered", "hangloo.co.kr", 1425, 0],
+            ["2026-10-01", "whitered", "hankookilbo.com", 1326, 0],
+            ["2026-10-01", "whitered", "hankyung.com", 1948, 0],
+            ["2026-10-01", "whitered", "imbc.com", 31285, 0],
+            ["2026-10-01", "whitered", "instiz.net", 1540, 0],
+            ["2026-10-01", "whitered", "inven.co.kr", 25087, 3],
+            ["2026-10-01", "whitered", "itssa.co.kr", 4645, 3],
+            ["2026-10-01", "whitered", "jeomsinpf1.co.kr", 6598, 2],
+            ["2026-10-01", "whitered", "khan.co.kr", 5570, 1],
+            ["2026-10-01", "whitered", "luckieverse.com", 1339, 3],
+            ["2026-10-01", "whitered", "mania.kr", 1216, 0],
+            ["2026-10-01", "whitered", "maplescouter.com", 2394, 2],
+            ["2026-10-01", "whitered", "meaegi.com", 1226, 0],
+            ["2026-10-01", "whitered", "munhwa.com", 4238, 1],
+            ["2026-10-01", "whitered", "nate.com", 18073, 5],
+            ["2026-10-01", "whitered", "news1.kr", 1569, 0],
+            ["2026-10-01", "whitered", "ppomppu.co.kr", 7967, 2],
+            ["2026-10-01", "whitered", "prod.danawa.com", 2197, 0],
+            ["2026-10-01", "whitered", "quasarzone.com", 14940, 0],
+            ["2026-10-01", "whitered", "sbs.co.kr", 10016, 0],
+            ["2026-10-01", "whitered", "seoul.co.kr", 1961, 1],
+            ["2026-10-01", "whitered", "slrclub.com", 11329, 5],
+            ["2026-10-01", "whitered", "smartbill.co.kr", 3091, 2],
+            ["2026-10-01", "whitered", "snulife.com", 6170, 0],
+            ["2026-10-01", "whitered", "sportsseoul.com", 1286, 0],
+            ["2026-10-01", "whitered", "teamblind.com", 4073, 0],
+            ["2026-10-01", "whitered", "theqoo.net", 122811, 35],
+            ["2026-10-01", "whitered", "v.daum.net", 19009, 17],
+            ["2026-10-01", "whitered", "wisetoto.com", 17162, 1],
+            ["2026-10-02", "blackgold", "82cook.com", 839, 0],
+            ["2026-10-02", "blackgold", "cafe.daum.net", 36481, 14],
+            ["2026-10-02", "blackgold", "coinpan.com", 1567, 0],
+            ["2026-10-02", "blackgold", "damoang.net", 20198, 3],
+            ["2026-10-02", "blackgold", "daum.net", 84011, 5],
+            ["2026-10-02", "blackgold", "ddanzi.com", 2926, 3],
+            ["2026-10-02", "blackgold", "dogdrip.net", 10619, 4],
+            ["2026-10-02", "blackgold", "donga.com", 3480, 0],
+            ["2026-10-02", "blackgold", "dvdprime.com", 4370, 1],
+            ["2026-10-02", "blackgold", "edaily.co.kr", 1990, 0],
+            ["2026-10-02", "blackgold", "hankookilbo.com", 1805, 0],
+            ["2026-10-02", "blackgold", "hankyung.com", 2130, 0],
+            ["2026-10-02", "blackgold", "imbc.com", 37843, 0],
+            ["2026-10-02", "blackgold", "instiz.net", 2265, 0],
+            ["2026-10-02", "blackgold", "inven.co.kr", 24022, 6],
+            ["2026-10-02", "blackgold", "itssa.co.kr", 4508, 0],
+            ["2026-10-02", "blackgold", "jeomsinpf1.co.kr", 7490, 3],
+            ["2026-10-02", "blackgold", "jtbc.co.kr", 1476, 0],
+            ["2026-10-02", "blackgold", "khan.co.kr", 4690, 1],
+            ["2026-10-02", "blackgold", "lol.ps", 1745, 1],
+            ["2026-10-02", "blackgold", "luckieverse.com", 1554, 1],
+            ["2026-10-02", "blackgold", "mania.kr", 1188, 0],
+            ["2026-10-02", "blackgold", "maplescouter.com", 1766, 1],
+            ["2026-10-02", "blackgold", "munhwa.com", 4079, 0],
+            ["2026-10-02", "blackgold", "nate.com", 18703, 6],
+            ["2026-10-02", "blackgold", "news1.kr", 1990, 1],
+            ["2026-10-02", "blackgold", "onlinealarmkur.com", 2440, 0],
+            ["2026-10-02", "blackgold", "ppomppu.co.kr", 11415, 1],
+            ["2026-10-02", "blackgold", "prod.danawa.com", 1867, 0],
+            ["2026-10-02", "blackgold", "quasarzone.com", 12801, 1],
+            ["2026-10-02", "blackgold", "sbs.co.kr", 9796, 0],
+            ["2026-10-02", "blackgold", "seoul.co.kr", 1535, 0],
+            ["2026-10-02", "blackgold", "slrclub.com", 10685, 5],
+            ["2026-10-02", "blackgold", "smartbill.co.kr", 3869, 3],
+            ["2026-10-02", "blackgold", "snulife.com", 5795, 0],
+            ["2026-10-02", "blackgold", "sportsseoul.com", 1416, 0],
+            ["2026-10-02", "blackgold", "teamblind.com", 3592, 0],
+            ["2026-10-02", "blackgold", "theqoo.net", 131163, 27],
+            ["2026-10-02", "blackgold", "v.daum.net", 16891, 11],
+            ["2026-10-02", "blackgold", "wisetoto.com", 20355, 1],
+            ["2026-10-02", "magazine", "82cook.com", 3120, 0],
+            ["2026-10-02", "magazine", "cafe.daum.net", 35699, 8],
+            ["2026-10-02", "magazine", "coinpan.com", 1781, 0],
+            ["2026-10-02", "magazine", "damoang.net", 19932, 6],
+            ["2026-10-02", "magazine", "daum.net", 83448, 9],
+            ["2026-10-02", "magazine", "ddanzi.com", 2914, 4],
+            ["2026-10-02", "magazine", "dogdrip.net", 10608, 8],
+            ["2026-10-02", "magazine", "donga.com", 3455, 0],
+            ["2026-10-02", "magazine", "dvdprime.com", 4286, 1],
+            ["2026-10-02", "magazine", "edaily.co.kr", 2006, 0],
+            ["2026-10-02", "magazine", "hankookilbo.com", 1761, 0],
+            ["2026-10-02", "magazine", "hankyung.com", 2105, 1],
+            ["2026-10-02", "magazine", "imbc.com", 37351, 0],
+            ["2026-10-02", "magazine", "instiz.net", 2539, 1],
+            ["2026-10-02", "magazine", "inven.co.kr", 24075, 4],
+            ["2026-10-02", "magazine", "itssa.co.kr", 4582, 2],
+            ["2026-10-02", "magazine", "jeomsinpf1.co.kr", 7357, 1],
+            ["2026-10-02", "magazine", "jtbc.co.kr", 1532, 0],
+            ["2026-10-02", "magazine", "khan.co.kr", 4705, 2],
+            ["2026-10-02", "magazine", "lol.ps", 1796, 0],
+            ["2026-10-02", "magazine", "luckieverse.com", 1431, 0],
+            ["2026-10-02", "magazine", "mania.kr", 1196, 2],
+            ["2026-10-02", "magazine", "maplescouter.com", 1841, 1],
+            ["2026-10-02", "magazine", "munhwa.com", 4120, 0],
+            ["2026-10-02", "magazine", "nate.com", 18760, 18],
+            ["2026-10-02", "magazine", "news1.kr", 1924, 0],
+            ["2026-10-02", "magazine", "onlinealarmkur.com", 2436, 0],
+            ["2026-10-02", "magazine", "ppomppu.co.kr", 11580, 2],
+            ["2026-10-02", "magazine", "prod.danawa.com", 1913, 0],
+            ["2026-10-02", "magazine", "quasarzone.com", 12812, 0],
+            ["2026-10-02", "magazine", "sbs.co.kr", 9793, 0],
+            ["2026-10-02", "magazine", "seoul.co.kr", 1592, 0],
+            ["2026-10-02", "magazine", "slrclub.com", 10752, 4],
+            ["2026-10-02", "magazine", "smartbill.co.kr", 3956, 2],
+            ["2026-10-02", "magazine", "snulife.com", 5746, 0],
+            ["2026-10-02", "magazine", "sportsseoul.com", 1437, 0],
+            ["2026-10-02", "magazine", "teamblind.com", 3485, 0],
+            ["2026-10-02", "magazine", "theqoo.net", 131200, 41],
+            ["2026-10-02", "magazine", "v.daum.net", 16891, 18],
+            ["2026-10-02", "magazine", "wisetoto.com", 20241, 4],
+            ["2026-10-02", "whitered", "82cook.com", 850, 1],
+            ["2026-10-02", "whitered", "cafe.daum.net", 35901, 10],
+            ["2026-10-02", "whitered", "coinpan.com", 1589, 1],
+            ["2026-10-02", "whitered", "damoang.net", 19815, 12],
+            ["2026-10-02", "whitered", "daum.net", 83922, 7],
+            ["2026-10-02", "whitered", "ddanzi.com", 2916, 2],
+            ["2026-10-02", "whitered", "dogdrip.net", 10531, 9],
+            ["2026-10-02", "whitered", "donga.com", 3528, 0],
+            ["2026-10-02", "whitered", "dvdprime.com", 4251, 1],
+            ["2026-10-02", "whitered", "edaily.co.kr", 2052, 0],
+            ["2026-10-02", "whitered", "hankookilbo.com", 1706, 0],
+            ["2026-10-02", "whitered", "hankyung.com", 2034, 0],
+            ["2026-10-02", "whitered", "imbc.com", 37254, 0],
+            ["2026-10-02", "whitered", "instiz.net", 2202, 0],
+            ["2026-10-02", "whitered", "inven.co.kr", 24367, 5],
+            ["2026-10-02", "whitered", "itssa.co.kr", 4480, 1],
+            ["2026-10-02", "whitered", "jeomsinpf1.co.kr", 7503, 4],
+            ["2026-10-02", "whitered", "jtbc.co.kr", 1519, 0],
+            ["2026-10-02", "whitered", "khan.co.kr", 4784, 1],
+            ["2026-10-02", "whitered", "lol.ps", 1783, 1],
+            ["2026-10-02", "whitered", "luckieverse.com", 1456, 1],
+            ["2026-10-02", "whitered", "mania.kr", 1261, 0],
+            ["2026-10-02", "whitered", "maplescouter.com", 1887, 1],
+            ["2026-10-02", "whitered", "munhwa.com", 4022, 0],
+            ["2026-10-02", "whitered", "nate.com", 18864, 10],
+            ["2026-10-02", "whitered", "news1.kr", 1877, 2],
+            ["2026-10-02", "whitered", "onlinealarmkur.com", 2363, 0],
+            ["2026-10-02", "whitered", "ppomppu.co.kr", 11795, 1],
+            ["2026-10-02", "whitered", "prod.danawa.com", 1788, 0],
+            ["2026-10-02", "whitered", "quasarzone.com", 12991, 0],
+            ["2026-10-02", "whitered", "sbs.co.kr", 9725, 0],
+            ["2026-10-02", "whitered", "seoul.co.kr", 1562, 0],
+            ["2026-10-02", "whitered", "slrclub.com", 10746, 1],
+            ["2026-10-02", "whitered", "smartbill.co.kr", 3733, 3],
+            ["2026-10-02", "whitered", "snulife.com", 5824, 0],
+            ["2026-10-02", "whitered", "sportsseoul.com", 1418, 0],
+            ["2026-10-02", "whitered", "teamblind.com", 3633, 0],
+            ["2026-10-02", "whitered", "theqoo.net", 130816, 22],
+            ["2026-10-02", "whitered", "v.daum.net", 17010, 12],
+            ["2026-10-02", "whitered", "wisetoto.com", 20440, 2],
+            ["2026-10-03", "blackgold", "82cook.com", 385, 0],
+            ["2026-10-03", "blackgold", "cafe.daum.net", 10186, 6],
+            ["2026-10-03", "blackgold", "coinpan.com", 899, 0],
+            ["2026-10-03", "blackgold", "damoang.net", 8038, 1],
+            ["2026-10-03", "blackgold", "daum.net", 40925, 2],
+            ["2026-10-03", "blackgold", "ddanzi.com", 1074, 1],
+            ["2026-10-03", "blackgold", "dmitory.com", 5676, 2],
+            ["2026-10-03", "blackgold", "dogdrip.net", 9038, 3],
+            ["2026-10-03", "blackgold", "donga.com", 2861, 0],
+            ["2026-10-03", "blackgold", "dvdprime.com", 4220, 2],
+            ["2026-10-03", "blackgold", "edaily.co.kr", 2226, 0],
+            ["2026-10-03", "blackgold", "hankookilbo.com", 1049, 0],
+            ["2026-10-03", "blackgold", "hankyung.com", 1777, 1],
+            ["2026-10-03", "blackgold", "imbc.com", 38993, 0],
+            ["2026-10-03", "blackgold", "instiz.net", 1444, 0],
+            ["2026-10-03", "blackgold", "inven.co.kr", 25663, 5],
+            ["2026-10-03", "blackgold", "itssa.co.kr", 2359, 1],
+            ["2026-10-03", "blackgold", "jeomsinpf1.co.kr", 7219, 1],
+            ["2026-10-03", "blackgold", "jtbc.co.kr", 936, 0],
+            ["2026-10-03", "blackgold", "khan.co.kr", 2057, 0],
+            ["2026-10-03", "blackgold", "lol.ps", 2364, 2],
+            ["2026-10-03", "blackgold", "luckieverse.com", 1754, 0],
+            ["2026-10-03", "blackgold", "maplescouter.com", 1951, 1],
+            ["2026-10-03", "blackgold", "meaegi.com", 1335, 0],
+            ["2026-10-03", "blackgold", "munhwa.com", 3410, 0],
+            ["2026-10-03", "blackgold", "nate.com", 2982, 7],
+            ["2026-10-03", "blackgold", "piku.co.kr", 843, 0],
+            ["2026-10-03", "blackgold", "poki.com", 909, 0],
+            ["2026-10-03", "blackgold", "ppomppu.co.kr", 17628, 8],
+            ["2026-10-03", "blackgold", "prod.danawa.com", 1083, 0],
+            ["2026-10-03", "blackgold", "quasarzone.com", 10860, 0],
+            ["2026-10-03", "blackgold", "sbs.co.kr", 9305, 0],
+            ["2026-10-03", "blackgold", "seoul.co.kr", 1002, 1],
+            ["2026-10-03", "blackgold", "slrclub.com", 6043, 1],
+            ["2026-10-03", "blackgold", "snulife.com", 5263, 0],
+            ["2026-10-03", "blackgold", "supple.kr", 904, 2],
+            ["2026-10-03", "blackgold", "teamblind.com", 893, 0],
+            ["2026-10-03", "blackgold", "theqoo.net", 81168, 21],
+            ["2026-10-03", "blackgold", "v.daum.net", 5376, 10],
+            ["2026-10-03", "blackgold", "wisetoto.com", 16166, 0],
+            ["2026-10-03", "magazine", "82cook.com", 1735, 0],
+            ["2026-10-03", "magazine", "cafe.daum.net", 10065, 13],
+            ["2026-10-03", "magazine", "coinpan.com", 1039, 0],
+            ["2026-10-03", "magazine", "damoang.net", 8060, 4],
+            ["2026-10-03", "magazine", "daum.net", 40961, 3],
+            ["2026-10-03", "magazine", "ddanzi.com", 1026, 1],
+            ["2026-10-03", "magazine", "dmitory.com", 5570, 0],
+            ["2026-10-03", "magazine", "dogdrip.net", 8933, 2],
+            ["2026-10-03", "magazine", "donga.com", 2828, 0],
+            ["2026-10-03", "magazine", "dvdprime.com", 4107, 0],
+            ["2026-10-03", "magazine", "edaily.co.kr", 2256, 0],
+            ["2026-10-03", "magazine", "hankookilbo.com", 1072, 2],
+            ["2026-10-03", "magazine", "hankyung.com", 1739, 0],
+            ["2026-10-03", "magazine", "imbc.com", 39014, 0],
+            ["2026-10-03", "magazine", "instiz.net", 1622, 0],
+            ["2026-10-03", "magazine", "inven.co.kr", 25679, 4],
+            ["2026-10-03", "magazine", "itssa.co.kr", 2349, 1],
+            ["2026-10-03", "magazine", "jeomsinpf1.co.kr", 7158, 2],
+            ["2026-10-03", "magazine", "jtbc.co.kr", 967, 0],
+            ["2026-10-03", "magazine", "khan.co.kr", 1993, 1],
+            ["2026-10-03", "magazine", "lol.ps", 2346, 3],
+            ["2026-10-03", "magazine", "luckieverse.com", 1808, 0],
+            ["2026-10-03", "magazine", "maplescouter.com", 1999, 1],
+            ["2026-10-03", "magazine", "meaegi.com", 1423, 0],
+            ["2026-10-03", "magazine", "munhwa.com", 3494, 0],
+            ["2026-10-03", "magazine", "nate.com", 3097, 2],
+            ["2026-10-03", "magazine", "piku.co.kr", 761, 0],
+            ["2026-10-03", "magazine", "poki.com", 963, 0],
+            ["2026-10-03", "magazine", "ppomppu.co.kr", 17700, 4],
+            ["2026-10-03", "magazine", "prod.danawa.com", 1095, 0],
+            ["2026-10-03", "magazine", "quasarzone.com", 10388, 0],
+            ["2026-10-03", "magazine", "sbs.co.kr", 9537, 0],
+            ["2026-10-03", "magazine", "seoul.co.kr", 1002, 0],
+            ["2026-10-03", "magazine", "slrclub.com", 5907, 5],
+            ["2026-10-03", "magazine", "snulife.com", 5266, 0],
+            ["2026-10-03", "magazine", "supple.kr", 955, 1],
+            ["2026-10-03", "magazine", "teamblind.com", 864, 0],
+            ["2026-10-03", "magazine", "theqoo.net", 81345, 28],
+            ["2026-10-03", "magazine", "v.daum.net", 5327, 3],
+            ["2026-10-03", "magazine", "wisetoto.com", 16267, 1],
+            ["2026-10-03", "whitered", "82cook.com", 367, 0],
+            ["2026-10-03", "whitered", "cafe.daum.net", 10018, 6],
+            ["2026-10-03", "whitered", "coinpan.com", 1022, 0],
+            ["2026-10-03", "whitered", "damoang.net", 8019, 4],
+            ["2026-10-03", "whitered", "daum.net", 40886, 1],
+            ["2026-10-03", "whitered", "ddanzi.com", 997, 1],
+            ["2026-10-03", "whitered", "dmitory.com", 5747, 0],
+            ["2026-10-03", "whitered", "dogdrip.net", 9045, 3],
+            ["2026-10-03", "whitered", "donga.com", 2943, 0],
+            ["2026-10-03", "whitered", "dvdprime.com", 4271, 7],
+            ["2026-10-03", "whitered", "edaily.co.kr", 2292, 0],
+            ["2026-10-03", "whitered", "hankookilbo.com", 996, 0],
+            ["2026-10-03", "whitered", "hankyung.com", 1822, 1],
+            ["2026-10-03", "whitered", "imbc.com", 38768, 0],
+            ["2026-10-03", "whitered", "instiz.net", 1384, 0],
+            ["2026-10-03", "whitered", "inven.co.kr", 25664, 4],
+            ["2026-10-03", "whitered", "itssa.co.kr", 2443, 1],
+            ["2026-10-03", "whitered", "jeomsinpf1.co.kr", 7233, 3],
+            ["2026-10-03", "whitered", "jtbc.co.kr", 922, 0],
+            ["2026-10-03", "whitered", "khan.co.kr", 1956, 1],
+            ["2026-10-03", "whitered", "lol.ps", 2334, 0],
+            ["2026-10-03", "whitered", "luckieverse.com", 1815, 1],
+            ["2026-10-03", "whitered", "maplescouter.com", 2028, 3],
+            ["2026-10-03", "whitered", "meaegi.com", 1294, 0],
+            ["2026-10-03", "whitered", "munhwa.com", 3419, 0],
+            ["2026-10-03", "whitered", "nate.com", 3051, 1],
+            ["2026-10-03", "whitered", "piku.co.kr", 826, 0],
+            ["2026-10-03", "whitered", "poki.com", 918, 0],
+            ["2026-10-03", "whitered", "ppomppu.co.kr", 17462, 3],
+            ["2026-10-03", "whitered", "prod.danawa.com", 1081, 0],
+            ["2026-10-03", "whitered", "quasarzone.com", 10579, 0],
+            ["2026-10-03", "whitered", "sbs.co.kr", 9485, 0],
+            ["2026-10-03", "whitered", "seoul.co.kr", 1024, 0],
+            ["2026-10-03", "whitered", "slrclub.com", 6023, 2],
+            ["2026-10-03", "whitered", "snulife.com", 5202, 1],
+            ["2026-10-03", "whitered", "supple.kr", 956, 3],
+            ["2026-10-03", "whitered", "teamblind.com", 893, 0],
+            ["2026-10-03", "whitered", "theqoo.net", 80792, 17],
+            ["2026-10-03", "whitered", "v.daum.net", 5402, 6],
+            ["2026-10-03", "whitered", "wisetoto.com", 16278, 1],
+            ["2026-10-04", "blackgold", "82cook.com", 632, 0],
+            ["2026-10-04", "blackgold", "cafe.daum.net", 9955, 1],
+            ["2026-10-04", "blackgold", "damoang.net", 9678, 2],
+            ["2026-10-04", "blackgold", "daum.net", 40212, 3],
+            ["2026-10-04", "blackgold", "ddanzi.com", 1333, 1],
+            ["2026-10-04", "blackgold", "dmitory.com", 11558, 2],
+            ["2026-10-04", "blackgold", "dogdrip.net", 10834, 10],
+            ["2026-10-04", "blackgold", "donga.com", 2446, 0],
+            ["2026-10-04", "blackgold", "dvdprime.com", 4202, 1],
+            ["2026-10-04", "blackgold", "edaily.co.kr", 2491, 0],
+            ["2026-10-04", "blackgold", "hankookilbo.com", 838, 2],
+            ["2026-10-04", "blackgold", "hankyung.com", 1583, 1],
+            ["2026-10-04", "blackgold", "imbc.com", 37911, 0],
+            ["2026-10-04", "blackgold", "instiz.net", 1020, 0],
+            ["2026-10-04", "blackgold", "inven.co.kr", 21428, 8],
+            ["2026-10-04", "blackgold", "itssa.co.kr", 2070, 0],
+            ["2026-10-04", "blackgold", "jeomsinpf1.co.kr", 7129, 1],
+            ["2026-10-04", "blackgold", "khan.co.kr", 2312, 0],
+            ["2026-10-04", "blackgold", "lol.ps", 2004, 4],
+            ["2026-10-04", "blackgold", "luckieverse.com", 1712, 3],
+            ["2026-10-04", "blackgold", "mania.kr", 901, 0],
+            ["2026-10-04", "blackgold", "maplescouter.com", 1967, 2],
+            ["2026-10-04", "blackgold", "meaegi.com", 3392, 0],
+            ["2026-10-04", "blackgold", "munhwa.com", 3705, 1],
+            ["2026-10-04", "blackgold", "nate.com", 3235, 3],
+            ["2026-10-04", "blackgold", "news1.kr", 864, 0],
+            ["2026-10-04", "blackgold", "piku.co.kr", 868, 0],
+            ["2026-10-04", "blackgold", "poki.com", 836, 1],
+            ["2026-10-04", "blackgold", "ppomppu.co.kr", 23099, 9],
+            ["2026-10-04", "blackgold", "prod.danawa.com", 1163, 0],
+            ["2026-10-04", "blackgold", "quasarzone.com", 10046, 0],
+            ["2026-10-04", "blackgold", "sbs.co.kr", 7430, 0],
+            ["2026-10-04", "blackgold", "seoul.co.kr", 1200, 0],
+            ["2026-10-04", "blackgold", "slrclub.com", 6350, 1],
+            ["2026-10-04", "blackgold", "snulife.com", 5321, 0],
+            ["2026-10-04", "blackgold", "supple.kr", 1271, 1],
+            ["2026-10-04", "blackgold", "teamblind.com", 717, 0],
+            ["2026-10-04", "blackgold", "theqoo.net", 104726, 23],
+            ["2026-10-04", "blackgold", "v.daum.net", 4655, 4],
+            ["2026-10-04", "blackgold", "wisetoto.com", 18421, 2],
+            ["2026-10-04", "magazine", "82cook.com", 2201, 1],
+            ["2026-10-04", "magazine", "cafe.daum.net", 9867, 3],
+            ["2026-10-04", "magazine", "damoang.net", 9706, 4],
+            ["2026-10-04", "magazine", "daum.net", 40356, 4],
+            ["2026-10-04", "magazine", "ddanzi.com", 1304, 2],
+            ["2026-10-04", "magazine", "dmitory.com", 11506, 2],
+            ["2026-10-04", "magazine", "dogdrip.net", 10966, 5],
+            ["2026-10-04", "magazine", "donga.com", 2570, 0],
+            ["2026-10-04", "magazine", "dvdprime.com", 4324, 5],
+            ["2026-10-04", "magazine", "edaily.co.kr", 2425, 0],
+            ["2026-10-04", "magazine", "hankookilbo.com", 815, 0],
+            ["2026-10-04", "magazine", "hankyung.com", 1612, 0],
+            ["2026-10-04", "magazine", "imbc.com", 37488, 0],
+            ["2026-10-04", "magazine", "instiz.net", 1113, 0],
+            ["2026-10-04", "magazine", "inven.co.kr", 21209, 7],
+            ["2026-10-04", "magazine", "itssa.co.kr", 2135, 0],
+            ["2026-10-04", "magazine", "jeomsinpf1.co.kr", 7297, 3],
+            ["2026-10-04", "magazine", "khan.co.kr", 2411, 0],
+            ["2026-10-04", "magazine", "lol.ps", 1977, 2],
+            ["2026-10-04", "magazine", "luckieverse.com", 1960, 0],
+            ["2026-10-04", "magazine", "mania.kr", 929, 0],
+            ["2026-10-04", "magazine", "maplescouter.com", 2057, 0],
+            ["2026-10-04", "magazine", "meaegi.com", 3291, 0],
+            ["2026-10-04", "magazine", "munhwa.com", 3699, 1],
+            ["2026-10-04", "magazine", "nate.com", 3285, 1],
+            ["2026-10-04", "magazine", "news1.kr", 785, 0],
+            ["2026-10-04", "magazine", "piku.co.kr", 837, 1],
+            ["2026-10-04", "magazine", "poki.com", 831, 0],
+            ["2026-10-04", "magazine", "ppomppu.co.kr", 23270, 2],
+            ["2026-10-04", "magazine", "prod.danawa.com", 1160, 0],
+            ["2026-10-04", "magazine", "quasarzone.com", 9839, 0],
+            ["2026-10-04", "magazine", "sbs.co.kr", 7753, 0],
+            ["2026-10-04", "magazine", "seoul.co.kr", 1190, 0],
+            ["2026-10-04", "magazine", "slrclub.com", 6348, 0],
+            ["2026-10-04", "magazine", "snulife.com", 5189, 0],
+            ["2026-10-04", "magazine", "supple.kr", 1252, 2],
+            ["2026-10-04", "magazine", "teamblind.com", 686, 0],
+            ["2026-10-04", "magazine", "theqoo.net", 104098, 25],
+            ["2026-10-04", "magazine", "v.daum.net", 4679, 10],
+            ["2026-10-04", "magazine", "wisetoto.com", 18649, 0],
+            ["2026-10-04", "whitered", "82cook.com", 623, 0],
+            ["2026-10-04", "whitered", "cafe.daum.net", 9754, 6],
+            ["2026-10-04", "whitered", "damoang.net", 9632, 3],
+            ["2026-10-04", "whitered", "daum.net", 40170, 2],
+            ["2026-10-04", "whitered", "ddanzi.com", 1337, 1],
+            ["2026-10-04", "whitered", "dmitory.com", 11121, 4],
+            ["2026-10-04", "whitered", "dogdrip.net", 10876, 9],
+            ["2026-10-04", "whitered", "donga.com", 2544, 0],
+            ["2026-10-04", "whitered", "dvdprime.com", 4257, 1],
+            ["2026-10-04", "whitered", "edaily.co.kr", 2313, 0],
+            ["2026-10-04", "whitered", "hankookilbo.com", 868, 1],
+            ["2026-10-04", "whitered", "hankyung.com", 1586, 1],
+            ["2026-10-04", "whitered", "imbc.com", 37664, 0],
+            ["2026-10-04", "whitered", "instiz.net", 1056, 0],
+            ["2026-10-04", "whitered", "inven.co.kr", 21531, 4],
+            ["2026-10-04", "whitered", "itssa.co.kr", 1982, 0],
+            ["2026-10-04", "whitered", "jeomsinpf1.co.kr", 7096, 0],
+            ["2026-10-04", "whitered", "khan.co.kr", 2381, 0],
+            ["2026-10-04", "whitered", "lol.ps", 2024, 1],
+            ["2026-10-04", "whitered", "luckieverse.com", 1862, 3],
+            ["2026-10-04", "whitered", "mania.kr", 813, 0],
+            ["2026-10-04", "whitered", "maplescouter.com", 2049, 0],
+            ["2026-10-04", "whitered", "meaegi.com", 3377, 0],
+            ["2026-10-04", "whitered", "munhwa.com", 3722, 1],
+            ["2026-10-04", "whitered", "nate.com", 3212, 3],
+            ["2026-10-04", "whitered", "news1.kr", 830, 0],
+            ["2026-10-04", "whitered", "piku.co.kr", 850, 0],
+            ["2026-10-04", "whitered", "poki.com", 823, 0],
+            ["2026-10-04", "whitered", "ppomppu.co.kr", 23303, 6],
+            ["2026-10-04", "whitered", "prod.danawa.com", 1155, 0],
+            ["2026-10-04", "whitered", "quasarzone.com", 10089, 0],
+            ["2026-10-04", "whitered", "sbs.co.kr", 7582, 0],
+            ["2026-10-04", "whitered", "seoul.co.kr", 1247, 0],
+            ["2026-10-04", "whitered", "slrclub.com", 6448, 2],
+            ["2026-10-04", "whitered", "snulife.com", 5292, 0],
+            ["2026-10-04", "whitered", "supple.kr", 1196, 1],
+            ["2026-10-04", "whitered", "teamblind.com", 695, 0],
+            ["2026-10-04", "whitered", "theqoo.net", 104157, 32],
+            ["2026-10-04", "whitered", "v.daum.net", 4544, 10],
+            ["2026-10-04", "whitered", "wisetoto.com", 18743, 2],
+            ["2026-10-05", "blackgold", "cafe.daum.net", 10782, 5],
+            ["2026-10-05", "blackgold", "coinpan.com", 829, 0],
+            ["2026-10-05", "blackgold", "damoang.net", 12255, 1],
+            ["2026-10-05", "blackgold", "daum.net", 29213, 2],
+            ["2026-10-05", "blackgold", "ddanzi.com", 1320, 1],
+            ["2026-10-05", "blackgold", "dmitory.com", 9433, 1],
+            ["2026-10-05", "blackgold", "dogdrip.net", 10225, 5],
+            ["2026-10-05", "blackgold", "donga.com", 3756, 0],
+            ["2026-10-05", "blackgold", "dvdprime.com", 4139, 4],
+            ["2026-10-05", "blackgold", "edaily.co.kr", 2593, 0],
+            ["2026-10-05", "blackgold", "hankookilbo.com", 1136, 0],
+            ["2026-10-05", "blackgold", "hankyung.com", 2496, 3],
+            ["2026-10-05", "blackgold", "imbc.com", 35762, 0],
+            ["2026-10-05", "blackgold", "instiz.net", 2139, 1],
+            ["2026-10-05", "blackgold", "inven.co.kr", 21398, 6],
+            ["2026-10-05", "blackgold", "itssa.co.kr", 2938, 2],
+            ["2026-10-05", "blackgold", "jeomsinpf1.co.kr", 7955, 1],
+            ["2026-10-05", "blackgold", "khan.co.kr", 2473, 0],
+            ["2026-10-05", "blackgold", "lol.ps", 1945, 2],
+            ["2026-10-05", "blackgold", "luckieverse.com", 2046, 0],
+            ["2026-10-05", "blackgold", "mania.kr", 1043, 0],
+            ["2026-10-05", "blackgold", "maplescouter.com", 1847, 2],
+            ["2026-10-05", "blackgold", "meaegi.com", 2263, 0],
+            ["2026-10-05", "blackgold", "munhwa.com", 4143, 0],
+            ["2026-10-05", "blackgold", "nate.com", 5588, 2],
+            ["2026-10-05", "blackgold", "news1.kr", 864, 0],
+            ["2026-10-05", "blackgold", "onlinealarmkur.com", 2924, 0],
+            ["2026-10-05", "blackgold", "piku.co.kr", 1005, 0],
+            ["2026-10-05", "blackgold", "poki.com", 1442, 0],
+            ["2026-10-05", "blackgold", "ppomppu.co.kr", 20494, 8],
+            ["2026-10-05", "blackgold", "prod.danawa.com", 1378, 0],
+            ["2026-10-05", "blackgold", "quasarzone.com", 9786, 0],
+            ["2026-10-05", "blackgold", "sbs.co.kr", 7863, 0],
+            ["2026-10-05", "blackgold", "seoul.co.kr", 1862, 1],
+            ["2026-10-05", "blackgold", "slrclub.com", 6165, 1],
+            ["2026-10-05", "blackgold", "snulife.com", 6627, 1],
+            ["2026-10-05", "blackgold", "teamblind.com", 939, 0],
+            ["2026-10-05", "blackgold", "theqoo.net", 98984, 14],
+            ["2026-10-05", "blackgold", "v.daum.net", 5754, 8],
+            ["2026-10-05", "blackgold", "wisetoto.com", 16337, 0],
+            ["2026-10-05", "magazine", "cafe.daum.net", 10838, 9],
+            ["2026-10-05", "magazine", "coinpan.com", 969, 0],
+            ["2026-10-05", "magazine", "damoang.net", 12414, 2],
+            ["2026-10-05", "magazine", "daum.net", 28667, 3],
+            ["2026-10-05", "magazine", "ddanzi.com", 1284, 4],
+            ["2026-10-05", "magazine", "dmitory.com", 9233, 1],
+            ["2026-10-05", "magazine", "dogdrip.net", 10389, 6],
+            ["2026-10-05", "magazine", "donga.com", 3817, 0],
+            ["2026-10-05", "magazine", "dvdprime.com", 4213, 2],
+            ["2026-10-05", "magazine", "edaily.co.kr", 2582, 0],
+            ["2026-10-05", "magazine", "hankookilbo.com", 1133, 0],
+            ["2026-10-05", "magazine", "hankyung.com", 2441, 0],
+            ["2026-10-05", "magazine", "imbc.com", 35554, 0],
+            ["2026-10-05", "magazine", "instiz.net", 2172, 0],
+            ["2026-10-05", "magazine", "inven.co.kr", 21395, 6],
+            ["2026-10-05", "magazine", "itssa.co.kr", 2950, 0],
+            ["2026-10-05", "magazine", "jeomsinpf1.co.kr", 7743, 0],
+            ["2026-10-05", "magazine", "khan.co.kr", 2458, 0],
+            ["2026-10-05", "magazine", "lol.ps", 1883, 1],
+            ["2026-10-05", "magazine", "luckieverse.com", 2162, 2],
+            ["2026-10-05", "magazine", "mania.kr", 1026, 1],
+            ["2026-10-05", "magazine", "maplescouter.com", 1809, 0],
+            ["2026-10-05", "magazine", "meaegi.com", 2268, 1],
+            ["2026-10-05", "magazine", "munhwa.com", 4261, 0],
+            ["2026-10-05", "magazine", "nate.com", 5588, 0],
+            ["2026-10-05", "magazine", "news1.kr", 923, 0],
+            ["2026-10-05", "magazine", "onlinealarmkur.com", 2957, 0],
+            ["2026-10-05", "magazine", "piku.co.kr", 986, 0],
+            ["2026-10-05", "magazine", "poki.com", 1354, 0],
+            ["2026-10-05", "magazine", "ppomppu.co.kr", 20214, 7],
+            ["2026-10-05", "magazine", "prod.danawa.com", 1379, 0],
+            ["2026-10-05", "magazine", "quasarzone.com", 9748, 0],
+            ["2026-10-05", "magazine", "sbs.co.kr", 7810, 0],
+            ["2026-10-05", "magazine", "seoul.co.kr", 1821, 0],
+            ["2026-10-05", "magazine", "slrclub.com", 6240, 3],
+            ["2026-10-05", "magazine", "snulife.com", 6601, 0],
+            ["2026-10-05", "magazine", "teamblind.com", 996, 0],
+            ["2026-10-05", "magazine", "theqoo.net", 99346, 24],
+            ["2026-10-05", "magazine", "v.daum.net", 5874, 12],
+            ["2026-10-05", "magazine", "wisetoto.com", 16567, 1],
+            ["2026-10-05", "whitered", "cafe.daum.net", 10882, 2],
+            ["2026-10-05", "whitered", "coinpan.com", 844, 0],
+            ["2026-10-05", "whitered", "damoang.net", 12234, 1],
+            ["2026-10-05", "whitered", "daum.net", 28844, 3],
+            ["2026-10-05", "whitered", "ddanzi.com", 1339, 0],
+            ["2026-10-05", "whitered", "dmitory.com", 9452, 3],
+            ["2026-10-05", "whitered", "dogdrip.net", 10157, 0],
+            ["2026-10-05", "whitered", "donga.com", 3713, 0],
+            ["2026-10-05", "whitered", "dvdprime.com", 4173, 2],
+            ["2026-10-05", "whitered", "edaily.co.kr", 2653, 0],
+            ["2026-10-05", "whitered", "hankookilbo.com", 1168, 0],
+            ["2026-10-05", "whitered", "hankyung.com", 2432, 1],
+            ["2026-10-05", "whitered", "imbc.com", 35827, 0],
+            ["2026-10-05", "whitered", "instiz.net", 2149, 0],
+            ["2026-10-05", "whitered", "inven.co.kr", 21532, 2],
+            ["2026-10-05", "whitered", "itssa.co.kr", 2960, 2],
+            ["2026-10-05", "whitered", "jeomsinpf1.co.kr", 7829, 1],
+            ["2026-10-05", "whitered", "khan.co.kr", 2490, 0],
+            ["2026-10-05", "whitered", "lol.ps", 1857, 0],
+            ["2026-10-05", "whitered", "luckieverse.com", 2096, 0],
+            ["2026-10-05", "whitered", "mania.kr", 1080, 0],
+            ["2026-10-05", "whitered", "maplescouter.com", 1829, 1],
+            ["2026-10-05", "whitered", "meaegi.com", 2321, 0],
+            ["2026-10-05", "whitered", "munhwa.com", 4159, 0],
+            ["2026-10-05", "whitered", "nate.com", 5470, 3],
+            ["2026-10-05", "whitered", "news1.kr", 859, 0],
+            ["2026-10-05", "whitered", "onlinealarmkur.com", 2959, 0],
+            ["2026-10-05", "whitered", "piku.co.kr", 1057, 0],
+            ["2026-10-05", "whitered", "poki.com", 1424, 1],
+            ["2026-10-05", "whitered", "ppomppu.co.kr", 20412, 6],
+            ["2026-10-05", "whitered", "prod.danawa.com", 1330, 0],
+            ["2026-10-05", "whitered", "quasarzone.com", 9595, 0],
+            ["2026-10-05", "whitered", "sbs.co.kr", 7812, 0],
+            ["2026-10-05", "whitered", "seoul.co.kr", 1869, 0],
+            ["2026-10-05", "whitered", "slrclub.com", 6319, 2],
+            ["2026-10-05", "whitered", "snulife.com", 6717, 0],
+            ["2026-10-05", "whitered", "teamblind.com", 957, 0],
+            ["2026-10-05", "whitered", "theqoo.net", 99803, 22],
+            ["2026-10-05", "whitered", "v.daum.net", 5679, 6],
+            ["2026-10-05", "whitered", "wisetoto.com", 16472, 0],
         ];
         /* PDATA:END */
-        /* ⑦ 지면별 기간 누적 [테마, 지면, 노출수, 클릭수] — xlsx 05·06 시트(노출 상위 10 + CTR 상위 10 지면)에서 update_data.bat이 채움. '월 전체'에 씀 */
+        /* 지면별 기간 누적 [테마, 지면, 노출수, 클릭수] */
         /* XPDATA:START */
         const XPDATA = [
-            ["whitered", "theqoo.net", 4711738, 1573],
-            ["whitered", "daum.net", 4181243, 2316],
-            ["blackgold", "theqoo.net", 3004893, 879],
-            ["blackgold", "daum.net", 2753237, 889],
-            ["magazine", "theqoo.net", 1365527, 426],
-            ["magazine", "daum.net", 1268028, 354],
-            ["whitered", "cafe.daum.net", 1119769, 532],
-            ["whitered", "imbc.com", 1112507, 71],
-            ["whitered", "ppomppu.co.kr", 949623, 423],
-            ["blackgold", "cafe.daum.net", 851616, 283],
-            ["blackgold", "imbc.com", 769590, 32],
-            ["whitered", "v.daum.net", 691442, 561],
-            ["whitered", "nate.com", 681224, 573],
-            ["whitered", "inven.co.kr", 660539, 190],
-            ["blackgold", "inven.co.kr", 605695, 164],
-            ["blackgold", "ppomppu.co.kr", 595698, 238],
-            ["whitered", "quasarzone.com", 535303, 35],
-            ["whitered", "wisetoto.com", 489196, 107],
-            ["blackgold", "v.daum.net", 476989, 366],
-            ["whitered", "dogdrip.net", 471083, 237],
-            ["blackgold", "nate.com", 438848, 271],
-            ["magazine", "inven.co.kr", 362878, 73],
-            ["blackgold", "quasarzone.com", 357842, 42],
-            ["magazine", "cafe.daum.net", 356033, 165],
-            ["whitered", "jeomsinpf1.co.kr", 340259, 136],
-            ["blackgold", "wisetoto.com", 339560, 33],
-            ["blackgold", "dogdrip.net", 338533, 171],
-            ["magazine", "imbc.com", 334260, 4],
-            ["whitered", "khan.co.kr", 290396, 127],
-            ["whitered", "dmitory.com", 274953, 112],
-            ["whitered", "munhwa.com", 266200, 40],
-            ["whitered", "damoang.net", 264005, 122],
-            ["whitered", "sbs.co.kr", 255666, 10],
-            ["magazine", "wisetoto.com", 242931, 22],
-            ["magazine", "v.daum.net", 233431, 218],
-            ["whitered", "dvdprime.com", 230454, 120],
-            ["magazine", "quasarzone.com", 227174, 12],
-            ["blackgold", "damoang.net", 225322, 61],
-            ["blackgold", "dmitory.com", 217211, 68],
-            ["magazine", "ppomppu.co.kr", 217004, 96],
-            ["blackgold", "jeomsinpf1.co.kr", 205960, 71],
-            ["whitered", "slrclub.com", 200504, 101],
-            ["whitered", "donga.com", 187922, 10],
-            ["blackgold", "sbs.co.kr", 184430, 2],
-            ["whitered", "snulife.com", 183276, 15],
-            ["whitered", "hankyung.com", 182102, 32],
-            ["whitered", "edaily.co.kr", 177404, 16],
-            ["blackgold", "khan.co.kr", 176131, 78],
-            ["magazine", "dogdrip.net", 175542, 111],
-            ["magazine", "nate.com", 171570, 129],
-            ["magazine", "damoang.net", 170910, 47],
-            ["blackgold", "munhwa.com", 162161, 22],
-            ["blackgold", "dvdprime.com", 155361, 70],
-            ["blackgold", "slrclub.com", 152949, 63],
-            ["blackgold", "snulife.com", 143098, 10],
-            ["whitered", "teamblind.com", 128287, 48],
-            ["blackgold", "donga.com", 122346, 6],
-            ["magazine", "dmitory.com", 121273, 55],
-            ["blackgold", "hankyung.com", 115419, 46],
-            ["whitered", "maplescouter.com", 109880, 36],
-            ["blackgold", "edaily.co.kr", 107070, 9],
-            ["magazine", "sbs.co.kr", 103456, 1],
-            ["whitered", "luckieverse.com", 102828, 81],
-            ["magazine", "slrclub.com", 96020, 49],
-            ["whitered", "hankookilbo.com", 95876, 37],
-            ["blackgold", "teamblind.com", 88987, 17],
-            ["magazine", "snulife.com", 84997, 6],
-            ["magazine", "munhwa.com", 83250, 15],
-            ["magazine", "dvdprime.com", 82740, 42],
-            ["magazine", "jeomsinpf1.co.kr", 81259, 16],
-            ["whitered", "prod.danawa.com", 80029, 16],
-            ["whitered", "itssa.co.kr", 71993, 27],
-            ["whitered", "instiz.net", 68877, 28],
-            ["whitered", "seoul.co.kr", 68524, 24],
-            ["whitered", "meaegi.com", 67857, 2],
-            ["magazine", "khan.co.kr", 66730, 26],
-            ["whitered", "smartbill.co.kr", 64117, 28],
-            ["blackgold", "hankookilbo.com", 62471, 44],
-            ["whitered", "biz.chosun.com", 60746, 22],
-            ["whitered", "lol.ps", 60519, 41],
-            ["whitered", "sportsseoul.com", 60414, 23],
-            ["blackgold", "maplescouter.com", 60070, 14],
-            ["blackgold", "luckieverse.com", 58217, 49],
-            ["whitered", "hani.co.kr", 58013, 54],
-            ["whitered", "news1.kr", 57980, 35],
-            ["blackgold", "itssa.co.kr", 55885, 13],
-            ["magazine", "donga.com", 55808, 4],
-            ["blackgold", "instiz.net", 55506, 15],
-            ["blackgold", "meaegi.com", 54694, 6],
-            ["magazine", "hankyung.com", 53825, 16],
-            ["whitered", "etnews.com", 52432, 20],
-            ["blackgold", "prod.danawa.com", 50608, 4],
-            ["whitered", "yna.co.kr", 48467, 8],
-            ["blackgold", "seoul.co.kr", 48100, 13],
-            ["blackgold", "smartbill.co.kr", 46303, 16],
-            ["blackgold", "news1.kr", 45619, 23],
-            ["magazine", "edaily.co.kr", 45271, 0],
-            ["whitered", "ddanzi.com", 44573, 45],
-            ["whitered", "nownews.seoul.co.kr", 44455, 8],
-            ["whitered", "mania.kr", 44319, 43],
-            ["magazine", "teamblind.com", 41496, 6],
-            ["whitered", "jtbc.co.kr", 40766, 1],
-            ["blackgold", "sportsseoul.com", 39839, 15],
-            ["whitered", "yonhapnewstv.co.kr", 39563, 19],
-            ["magazine", "meaegi.com", 39024, 5],
-            ["whitered", "newsis.com", 37669, 46],
-            ["whitered", "nocutnews.co.kr", 37380, 14],
-            ["blackgold", "hani.co.kr", 37044, 21],
-            ["blackgold", "lol.ps", 36366, 26],
-            ["blackgold", "ddanzi.com", 36329, 58],
-            ["blackgold", "etnews.com", 36101, 15],
-            ["whitered", "noonnu.cc", 34480, 11],
-            ["whitered", "piku.co.kr", 34260, 3],
-            ["magazine", "itssa.co.kr", 33820, 10],
-            ["blackgold", "mania.kr", 32212, 17],
-            ["whitered", "kr.investing.com", 31905, 9],
-            ["blackgold", "yna.co.kr", 31658, 6],
-            ["blackgold", "biz.chosun.com", 31385, 12],
-            ["blackgold", "yonhapnewstv.co.kr", 31093, 8],
-            ["whitered", "mt.co.kr", 31045, 9],
-            ["blackgold", "nownews.seoul.co.kr", 31026, 3],
-            ["whitered", "sportschosun.com", 30135, 1],
-            ["magazine", "maplescouter.com", 29507, 5],
-            ["magazine", "hankookilbo.com", 29154, 7],
-            ["magazine", "instiz.net", 29017, 4],
-            ["magazine", "luckieverse.com", 28613, 19],
-            ["whitered", "kmib.co.kr", 28496, 2],
-            ["blackgold", "jtbc.co.kr", 28035, 3],
-            ["whitered", "wowtv.co.kr", 27776, 11],
-            ["blackgold", "newsis.com", 27641, 25],
-            ["blackgold", "kr.investing.com", 27577, 4],
-            ["whitered", "coinpan.com", 27404, 15],
-            ["whitered", "fc-info.com", 26711, 6],
-            ["blackgold", "nocutnews.co.kr", 26124, 7],
-            ["magazine", "ddanzi.com", 24051, 25],
-            ["blackgold", "noonnu.cc", 23916, 2],
-            ["magazine", "news1.kr", 23735, 10],
-            ["blackgold", "piku.co.kr", 23004, 2],
-            ["whitered", "chosun.com", 22587, 11],
-            ["blackgold", "coinpan.com", 22480, 5],
-            ["blackgold", "mt.co.kr", 22423, 8],
-            ["whitered", "a-ha.io", 22106, 29],
-            ["magazine", "smartbill.co.kr", 21699, 8],
-            ["magazine", "prod.danawa.com", 21271, 1],
-            ["magazine", "namu.wiki", 20908, 21],
-            ["magazine", "sportsseoul.com", 20730, 3],
-            ["magazine", "lol.ps", 20723, 4],
-            ["magazine", "seoul.co.kr", 20616, 4],
-            ["blackgold", "kmib.co.kr", 20459, 0],
-            ["whitered", "poki.com", 20392, 8],
-            ["blackgold", "sportschosun.com", 20115, 0],
-            ["blackgold", "fc-info.com", 19900, 7],
-            ["whitered", "namu.wiki", 19415, 29],
-            ["blackgold", "namu.wiki", 19160, 28],
-            ["blackgold", "chosun.com", 18936, 15],
-            ["magazine", "mania.kr", 18254, 8],
-            ["blackgold", "wowtv.co.kr", 17373, 5],
-            ["magazine", "yna.co.kr", 17347, 0],
-            ["magazine", "coinpan.com", 16295, 3],
-            ["magazine", "hani.co.kr", 16019, 13],
-            ["blackgold", "a-ha.io", 15661, 3],
-            ["blackgold", "poki.com", 15521, 4],
-            ["magazine", "kr.investing.com", 15170, 3],
-            ["magazine", "etnews.com", 15003, 3],
-            ["magazine", "biz.chosun.com", 13891, 2],
-            ["magazine", "nocutnews.co.kr", 13839, 2],
-            ["magazine", "newsis.com", 12912, 6],
-            ["magazine", "yonhapnewstv.co.kr", 12692, 5],
-            ["magazine", "piku.co.kr", 12335, 4],
-            ["magazine", "nownews.seoul.co.kr", 12141, 1],
-            ["magazine", "poki.com", 11734, 7],
-            ["magazine", "jtbc.co.kr", 11106, 1],
-            ["magazine", "chosun.com", 10840, 13],
-            ["magazine", "fc-info.com", 10577, 1],
-            ["magazine", "noonnu.cc", 10348, 0],
-            ["magazine", "mt.co.kr", 10052, 2],
-            ["magazine", "sportschosun.com", 9645, 0],
-            ["magazine", "kmib.co.kr", 9162, 0],
-            ["magazine", "a-ha.io", 7922, 2],
-            ["magazine", "wowtv.co.kr", 6649, 5],
+            ["whitered", "theqoo.net", 5363315, 1734],
+            ["whitered", "daum.net", 4501648, 2350],
+            ["blackgold", "theqoo.net", 3657077, 1020],
+            ["blackgold", "daum.net", 3074754, 918],
+            ["magazine", "theqoo.net", 2017114, 630],
+            ["magazine", "daum.net", 1588559, 386],
+            ["whitered", "imbc.com", 1327255, 72],
+            ["whitered", "cafe.daum.net", 1249450, 571],
+            ["whitered", "ppomppu.co.kr", 1041984, 442],
+            ["blackgold", "imbc.com", 985115, 32],
+            ["blackgold", "cafe.daum.net", 982722, 330],
+            ["whitered", "inven.co.kr", 807925, 215],
+            ["whitered", "v.daum.net", 761120, 626],
+            ["blackgold", "inven.co.kr", 752430, 208],
+            ["whitered", "nate.com", 750664, 600],
+            ["blackgold", "ppomppu.co.kr", 687749, 272],
+            ["whitered", "quasarzone.com", 609221, 35],
+            ["whitered", "wisetoto.com", 592657, 114],
+            ["magazine", "imbc.com", 548738, 4],
+            ["blackgold", "v.daum.net", 547315, 436],
+            ["whitered", "dogdrip.net", 541834, 268],
+            ["magazine", "inven.co.kr", 509507, 102],
+            ["blackgold", "nate.com", 508262, 299],
+            ["magazine", "cafe.daum.net", 486341, 221],
+            ["blackgold", "wisetoto.com", 442176, 37],
+            ["blackgold", "quasarzone.com", 432127, 43],
+            ["blackgold", "dogdrip.net", 409089, 210],
+            ["whitered", "jeomsinpf1.co.kr", 383958, 148],
+            ["whitered", "damoang.net", 350190, 148],
+            ["magazine", "wisetoto.com", 346588, 31],
+            ["whitered", "dmitory.com", 315557, 120],
+            ["whitered", "khan.co.kr", 312504, 132],
+            ["blackgold", "damoang.net", 311710, 81],
+            ["magazine", "ppomppu.co.kr", 309193, 120],
+            ["whitered", "sbs.co.kr", 309134, 10],
+            ["magazine", "v.daum.net", 304026, 319],
+            ["magazine", "quasarzone.com", 300766, 12],
+            ["whitered", "munhwa.com", 289628, 42],
+            ["whitered", "dvdprime.com", 259210, 145],
+            ["blackgold", "dmitory.com", 258191, 74],
+            ["magazine", "damoang.net", 256927, 67],
+            ["whitered", "slrclub.com", 250584, 115],
+            ["blackgold", "jeomsinpf1.co.kr", 249783, 83],
+            ["magazine", "dogdrip.net", 246492, 143],
+            ["magazine", "nate.com", 241298, 171],
+            ["blackgold", "sbs.co.kr", 237953, 2],
+            ["whitered", "snulife.com", 217828, 16],
+            ["whitered", "donga.com", 206841, 10],
+            ["blackgold", "slrclub.com", 202924, 75],
+            ["blackgold", "khan.co.kr", 198197, 85],
+            ["whitered", "hankyung.com", 194112, 35],
+            ["whitered", "edaily.co.kr", 190760, 16],
+            ["blackgold", "munhwa.com", 185417, 24],
+            ["blackgold", "dvdprime.com", 183983, 84],
+            ["blackgold", "snulife.com", 177692, 13],
+            ["magazine", "dmitory.com", 161793, 64],
+            ["magazine", "sbs.co.kr", 157516, 1],
+            ["magazine", "slrclub.com", 145883, 68],
+            ["whitered", "teamblind.com", 142074, 48],
+            ["blackgold", "donga.com", 141057, 6],
+            ["blackgold", "hankyung.com", 127520, 51],
+            ["magazine", "jeomsinpf1.co.kr", 124788, 23],
+            ["whitered", "maplescouter.com", 121591, 43],
+            ["blackgold", "edaily.co.kr", 120530, 9],
+            ["magazine", "snulife.com", 119394, 7],
+            ["whitered", "luckieverse.com", 113112, 90],
+            ["magazine", "dvdprime.com", 111746, 61],
+            ["magazine", "munhwa.com", 106797, 17],
+            ["whitered", "hankookilbo.com", 103003, 38],
+            ["blackgold", "teamblind.com", 102753, 20],
+            ["whitered", "itssa.co.kr", 92007, 35],
+            ["whitered", "prod.danawa.com", 89566, 16],
+            ["magazine", "khan.co.kr", 88599, 36],
+            ["whitered", "meaegi.com", 79593, 2],
+            ["whitered", "instiz.net", 79136, 28],
+            ["whitered", "seoul.co.kr", 77670, 25],
+            ["blackgold", "itssa.co.kr", 76027, 17],
+            ["whitered", "smartbill.co.kr", 75116, 34],
+            ["magazine", "donga.com", 74760, 5],
+            ["blackgold", "maplescouter.com", 71508, 20],
+            ["whitered", "lol.ps", 70588, 44],
+            ["blackgold", "hankookilbo.com", 69821, 46],
+            ["blackgold", "luckieverse.com", 68427, 56],
+            ["whitered", "sportsseoul.com", 66527, 23],
+            ["blackgold", "meaegi.com", 66255, 6],
+            ["blackgold", "instiz.net", 65869, 16],
+            ["magazine", "hankyung.com", 65852, 19],
+            ["whitered", "news1.kr", 65304, 39],
+            ["whitered", "biz.chosun.com", 65137, 24],
+            ["whitered", "hani.co.kr", 60851, 58],
+            ["blackgold", "prod.danawa.com", 60105, 4],
+            ["magazine", "edaily.co.kr", 58594, 1],
+            ["whitered", "ddanzi.com", 58104, 57],
+            ["blackgold", "smartbill.co.kr", 57327, 22],
+            ["blackgold", "seoul.co.kr", 57197, 15],
+            ["whitered", "etnews.com", 55662, 20],
+            ["magazine", "teamblind.com", 55287, 8],
+            ["magazine", "itssa.co.kr", 54114, 16],
+            ["blackgold", "news1.kr", 53046, 27],
+            ["whitered", "yna.co.kr", 52211, 8],
+            ["magazine", "meaegi.com", 50874, 6],
+            ["whitered", "mania.kr", 50482, 47],
+            ["blackgold", "ddanzi.com", 50013, 69],
+            ["whitered", "nownews.seoul.co.kr", 48123, 8],
+            ["blackgold", "lol.ps", 46482, 37],
+            ["whitered", "jtbc.co.kr", 46053, 1],
+            ["blackgold", "sportsseoul.com", 45830, 15],
+            ["whitered", "yonhapnewstv.co.kr", 43182, 19],
+            ["magazine", "maplescouter.com", 41602, 7],
+            ["whitered", "nocutnews.co.kr", 40915, 14],
+            ["whitered", "newsis.com", 40822, 46],
+            ["blackgold", "hani.co.kr", 40049, 21],
+            ["magazine", "instiz.net", 39915, 6],
+            ["blackgold", "etnews.com", 39418, 15],
+            ["magazine", "luckieverse.com", 39071, 26],
+            ["whitered", "piku.co.kr", 39038, 3],
+            ["blackgold", "mania.kr", 38436, 18],
+            ["whitered", "noonnu.cc", 37947, 11],
+            ["magazine", "ddanzi.com", 37490, 42],
+            ["magazine", "82cook.com", 36951, 15],
+            ["magazine", "hankookilbo.com", 36345, 9],
+            ["blackgold", "biz.chosun.com", 35824, 14],
+            ["blackgold", "yna.co.kr", 35455, 7],
+            ["whitered", "kr.investing.com", 35203, 9],
+            ["blackgold", "yonhapnewstv.co.kr", 34688, 9],
+            ["blackgold", "nownews.seoul.co.kr", 34583, 4],
+            ["whitered", "mt.co.kr", 34238, 11],
+            ["whitered", "sportschosun.com", 34049, 1],
+            ["whitered", "coinpan.com", 33950, 17],
+            ["blackgold", "jtbc.co.kr", 33406, 3],
+            ["magazine", "smartbill.co.kr", 32649, 10],
+            ["whitered", "fc-info.com", 31636, 8],
+            ["whitered", "kmib.co.kr", 31565, 2],
+            ["magazine", "prod.danawa.com", 31088, 1],
+            ["magazine", "news1.kr", 31072, 12],
+            ["magazine", "lol.ps", 30939, 12],
+            ["blackgold", "kr.investing.com", 30858, 4],
+            ["blackgold", "newsis.com", 30854, 26],
+            ["blackgold", "nocutnews.co.kr", 29691, 7],
+            ["magazine", "seoul.co.kr", 29653, 4],
+            ["whitered", "wowtv.co.kr", 29469, 12],
+            ["blackgold", "coinpan.com", 28664, 6],
+            ["blackgold", "piku.co.kr", 27676, 2],
+            ["blackgold", "noonnu.cc", 27350, 2],
+            ["magazine", "sportsseoul.com", 26856, 5],
+            ["whitered", "chosun.com", 26398, 12],
+            ["whitered", "poki.com", 25570, 9],
+            ["blackgold", "mt.co.kr", 25438, 9],
+            ["magazine", "namu.wiki", 25034, 24],
+            ["blackgold", "fc-info.com", 24728, 8],
+            ["magazine", "mania.kr", 24449, 14],
+            ["blackgold", "sportschosun.com", 23918, 0],
+            ["magazine", "coinpan.com", 23540, 3],
+            ["blackgold", "kmib.co.kr", 23534, 0],
+            ["whitered", "namu.wiki", 23464, 36],
+            ["blackgold", "namu.wiki", 23235, 40],
+            ["blackgold", "chosun.com", 22784, 15],
+            ["magazine", "yna.co.kr", 21139, 0],
+            ["blackgold", "poki.com", 20642, 5],
+            ["blackgold", "wowtv.co.kr", 19045, 5],
+            ["magazine", "hani.co.kr", 18870, 14],
+            ["magazine", "kr.investing.com", 18341, 3],
+            ["magazine", "etnews.com", 18262, 4],
+            ["magazine", "biz.chosun.com", 18202, 2],
+            ["magazine", "nocutnews.co.kr", 17376, 2],
+            ["magazine", "piku.co.kr", 16929, 5],
+            ["magazine", "poki.com", 16870, 7],
+            ["magazine", "jtbc.co.kr", 16501, 1],
+            ["magazine", "yonhapnewstv.co.kr", 16250, 6],
+            ["magazine", "newsis.com", 16119, 6],
+            ["magazine", "fc-info.com", 15817, 4],
+            ["magazine", "nownews.seoul.co.kr", 15687, 1],
+            ["magazine", "chosun.com", 14591, 14],
+            ["blackgold", "82cook.com", 14425, 13],
+            ["whitered", "82cook.com", 14404, 11],
+            ["magazine", "noonnu.cc", 13806, 0],
+            ["magazine", "sportschosun.com", 13589, 0],
+            ["magazine", "mt.co.kr", 13215, 4],
+            ["magazine", "kmib.co.kr", 12253, 0],
+            ["magazine", "wowtv.co.kr", 8337, 5],
         ];
         /* XPDATA:END */
 
-        /* ④ 사이즈별 누적 [테마, 사이즈, 노출수, 클릭수] · ⑤ 프레임 이름별 누적 [테마, 프레임 이름, 사이즈, 노출수, 클릭수]
-           — rtb_frame_analysis xlsx(01b · 01 시트)에서 update_data.bat이 채움. DATA에 일별 사이즈·이름이 없을 때 ④⑤ '월 전체'가 이걸 씀 */
+        /* SDATA [테마, 사이즈, 노출수, 클릭수], NDATA [테마, 프레임 이름, 사이즈, 노출수, 클릭수] */
         /* SDATA:START */
         const SDATA = [
-            ["blackgold", "120x600", 1234918, 338],
-            ["blackgold", "160x600", 1538011, 588],
-            ["blackgold", "200x200", 649734, 235],
-            ["blackgold", "234x60", 362114, 47],
-            ["blackgold", "250x250", 539689, 348],
-            ["blackgold", "300x100", 256717, 65],
-            ["blackgold", "300x250", 1836466, 991],
-            ["blackgold", "300x50", 354933, 104],
-            ["blackgold", "300x600", 251119, 171],
-            ["blackgold", "320x100", 474628, 289],
-            ["blackgold", "320x50", 1750966, 352],
-            ["blackgold", "336x280", 528990, 424],
-            ["blackgold", "728x90", 4709034, 1321],
-            ["blackgold", "970x250", 153993, 48],
-            ["magazine", "120x600", 575976, 197],
-            ["magazine", "160x600", 757860, 323],
-            ["magazine", "200x200", 352278, 61],
-            ["magazine", "234x60", 116537, 6],
-            ["magazine", "250x250", 219069, 86],
-            ["magazine", "300x100", 91247, 42],
-            ["magazine", "300x250", 1075940, 462],
-            ["magazine", "300x50", 129191, 22],
-            ["magazine", "300x600", 178565, 82],
-            ["magazine", "320x100", 226821, 147],
-            ["magazine", "320x50", 754560, 139],
-            ["magazine", "336x280", 279121, 147],
-            ["magazine", "468x60", 17859, 3],
-            ["magazine", "728x90", 2253678, 696],
-            ["magazine", "970x250", 73856, 29],
-            ["whitered", "120x600", 1829081, 632],
-            ["whitered", "160x600", 2282920, 1026],
-            ["whitered", "200x200", 948360, 347],
-            ["whitered", "234x60", 621278, 99],
-            ["whitered", "250x250", 880318, 417],
-            ["whitered", "300x100", 432139, 170],
-            ["whitered", "300x250", 2590757, 1407],
-            ["whitered", "300x50", 532534, 147],
-            ["whitered", "300x600", 331500, 240],
-            ["whitered", "320x100", 706463, 587],
-            ["whitered", "320x50", 2615473, 685],
-            ["whitered", "336x280", 785966, 495],
-            ["whitered", "728x90", 6734739, 3447],
-            ["whitered", "970x250", 250310, 100],
+            ["blackgold", "120x600", 1466000, 387],
+            ["blackgold", "160x600", 1875411, 686],
+            ["blackgold", "200x200", 781770, 265],
+            ["blackgold", "234x60", 385259, 47],
+            ["blackgold", "250x250", 608123, 379],
+            ["blackgold", "300x100", 266247, 71],
+            ["blackgold", "300x250", 2259178, 1156],
+            ["blackgold", "300x50", 377919, 114],
+            ["blackgold", "300x600", 330280, 214],
+            ["blackgold", "320x100", 563148, 335],
+            ["blackgold", "320x50", 2119195, 387],
+            ["blackgold", "336x280", 650799, 489],
+            ["blackgold", "728x90", 5534463, 1430],
+            ["blackgold", "970x250", 176778, 60],
+            ["magazine", "120x600", 807064, 261],
+            ["magazine", "160x600", 1093896, 454],
+            ["magazine", "200x200", 484094, 82],
+            ["magazine", "234x60", 139757, 7],
+            ["magazine", "250x250", 286600, 109],
+            ["magazine", "300x100", 100999, 46],
+            ["magazine", "300x250", 1498827, 641],
+            ["magazine", "300x50", 152260, 28],
+            ["magazine", "300x600", 258066, 108],
+            ["magazine", "320x100", 315704, 182],
+            ["magazine", "320x50", 1121533, 177],
+            ["magazine", "336x280", 401090, 202],
+            ["magazine", "468x60", 33817, 5],
+            ["magazine", "728x90", 3079477, 858],
+            ["magazine", "970x250", 96638, 43],
+            ["whitered", "120x600", 2059974, 687],
+            ["whitered", "160x600", 2620166, 1155],
+            ["whitered", "200x200", 1081160, 361],
+            ["whitered", "234x60", 644121, 100],
+            ["whitered", "250x250", 948062, 441],
+            ["whitered", "300x100", 441728, 179],
+            ["whitered", "300x250", 3013398, 1536],
+            ["whitered", "300x50", 555385, 150],
+            ["whitered", "300x600", 410413, 270],
+            ["whitered", "320x100", 795319, 638],
+            ["whitered", "320x50", 2982570, 730],
+            ["whitered", "336x280", 908579, 539],
+            ["whitered", "728x90", 7558312, 3570],
+            ["whitered", "970x250", 273113, 111],
         ];
         /* SDATA:END */
         /* NDATA:START */
         const NDATA = [
             ["blackgold", "120_600_blackGold", "120x600", 985010, 277],
-            ["blackgold", "120_600_blackGoldNo", "120x600", 249908, 61],
+            ["blackgold", "120_600_blackGoldNo", "120x600", 480990, 110],
             ["blackgold", "160_600_blackGold", "160x600", 1184273, 476],
-            ["blackgold", "160_600_blackGoldNo", "160x600", 353738, 112],
+            ["blackgold", "160_600_blackGoldNo", "160x600", 691138, 210],
             ["blackgold", "200_200_blackGold", "200x200", 435515, 214],
-            ["blackgold", "200_200_blackGoldNo", "200x200", 214219, 21],
+            ["blackgold", "200_200_blackGoldNo", "200x200", 346255, 51],
             ["blackgold", "234_60_blackGold", "234x60", 341698, 46],
-            ["blackgold", "234_60_blackGoldNo", "234x60", 20416, 1],
+            ["blackgold", "234_60_blackGoldNo", "234x60", 43561, 1],
             ["blackgold", "250_250_blackGold", "250x250", 467891, 315],
-            ["blackgold", "250_250_blackGoldNo", "250x250", 71798, 33],
+            ["blackgold", "250_250_blackGoldNo", "250x250", 140232, 64],
             ["blackgold", "300_100_blackGold", "300x100", 252039, 62],
-            ["blackgold", "300_100_blackGoldNo", "300x100", 4678, 3],
+            ["blackgold", "300_100_blackGoldNo", "300x100", 14208, 9],
             ["blackgold", "300_250_blackGold", "300x250", 1152149, 733],
-            ["blackgold", "300_250_blackGoldNo", "300x250", 684317, 258],
+            ["blackgold", "300_250_blackGoldNo", "300x250", 1107029, 423],
             ["blackgold", "300_50_blackGold", "300x50", 331158, 92],
-            ["blackgold", "300_50_blackGoldNo", "300x50", 23775, 12],
+            ["blackgold", "300_50_blackGoldNo", "300x50", 46761, 22],
             ["blackgold", "300_600_blackGold", "300x600", 129807, 103],
-            ["blackgold", "300_600_blackGoldNo", "300x600", 121312, 68],
+            ["blackgold", "300_600_blackGoldNo", "300x600", 200473, 111],
             ["blackgold", "320_100_blackGold", "320x100", 362894, 245],
-            ["blackgold", "320_100_blackGoldNo", "320x100", 111734, 44],
+            ["blackgold", "320_100_blackGoldNo", "320x100", 200254, 90],
             ["blackgold", "320_50_blackGold", "320x50", 1448738, 310],
-            ["blackgold", "320_50_blackGoldNo", "320x50", 302228, 42],
+            ["blackgold", "320_50_blackGoldNo", "320x50", 670457, 77],
             ["blackgold", "336_280_blackGold", "336x280", 377748, 333],
-            ["blackgold", "336_280_blackGoldNo", "336x280", 151242, 91],
+            ["blackgold", "336_280_blackGoldNo", "336x280", 273051, 156],
             ["blackgold", "728_90_blackGold", "728x90", 3714234, 1184],
-            ["blackgold", "728_90_blackGoldNo", "728x90", 994800, 137],
+            ["blackgold", "728_90_blackGoldNo", "728x90", 1820229, 246],
             ["blackgold", "970_250_blackGold", "970x250", 130673, 39],
-            ["blackgold", "970_250_blackGoldNo", "970x250", 23320, 9],
-            ["magazine", "120_600_magazine", "120x600", 575976, 197],
-            ["magazine", "160_600_magazine", "160x600", 757860, 323],
-            ["magazine", "200_200_magazine", "200x200", 352278, 61],
-            ["magazine", "234_60_magazine", "234x60", 116537, 6],
-            ["magazine", "250_250_magazine", "250x250", 219069, 86],
-            ["magazine", "300_100_magazine", "300x100", 91247, 42],
-            ["magazine", "300_250_magazine", "300x250", 1075940, 462],
-            ["magazine", "300_50_magazine", "300x50", 129191, 22],
-            ["magazine", "300_600_magazine", "300x600", 178565, 82],
-            ["magazine", "320_100_magazine", "320x100", 226821, 147],
-            ["magazine", "320_50_magazine", "320x50", 754560, 139],
-            ["magazine", "336_280_magazine", "336x280", 279121, 147],
-            ["magazine", "468_60_magazine", "468x60", 17859, 3],
-            ["magazine", "728_90_magazine", "728x90", 2253678, 696],
-            ["magazine", "970_250_magazine", "970x250", 73856, 29],
+            ["blackgold", "970_250_blackGoldNo", "970x250", 46105, 21],
+            ["magazine", "120_600_magazine", "120x600", 807064, 261],
+            ["magazine", "160_600_magazine", "160x600", 1093896, 454],
+            ["magazine", "200_200_magazine", "200x200", 484094, 82],
+            ["magazine", "234_60_magazine", "234x60", 139757, 7],
+            ["magazine", "250_250_magazine", "250x250", 286600, 109],
+            ["magazine", "300_100_magazine", "300x100", 100999, 46],
+            ["magazine", "300_250_magazine", "300x250", 1498827, 641],
+            ["magazine", "300_50_magazine", "300x50", 152260, 28],
+            ["magazine", "300_600_magazine", "300x600", 258066, 108],
+            ["magazine", "320_100_magazine", "320x100", 315704, 182],
+            ["magazine", "320_50_magazine", "320x50", 1121533, 177],
+            ["magazine", "336_280_magazine", "336x280", 401090, 202],
+            ["magazine", "468_60_magazine", "468x60", 33817, 5],
+            ["magazine", "728_90_magazine", "728x90", 3079477, 858],
+            ["magazine", "970_250_magazine", "970x250", 96638, 43],
             ["whitered", "120_600_whiteRed", "120x600", 1579871, 568],
-            ["whitered", "120_600_whiteRedNo", "120x600", 249210, 64],
+            ["whitered", "120_600_whiteRedNo", "120x600", 480103, 119],
             ["whitered", "160_600_whiteRed", "160x600", 1928881, 896],
-            ["whitered", "160_600_whiteRedNo", "160x600", 354039, 130],
+            ["whitered", "160_600_whiteRedNo", "160x600", 691285, 259],
             ["whitered", "200_200_whiteRed", "200x200", 733174, 313],
-            ["whitered", "200_200_whiteRedNo", "200x200", 215186, 34],
+            ["whitered", "200_200_whiteRedNo", "200x200", 347986, 48],
             ["whitered", "234_60_whiteRed", "234x60", 601010, 96],
-            ["whitered", "234_60_whiteRedNo", "234x60", 20268, 3],
+            ["whitered", "234_60_whiteRedNo", "234x60", 43111, 4],
             ["whitered", "250_250_whiteRed", "250x250", 808321, 381],
-            ["whitered", "250_250_whiteRedNo", "250x250", 71997, 36],
+            ["whitered", "250_250_whiteRedNo", "250x250", 139741, 60],
             ["whitered", "300_100_whiteRed", "300x100", 427414, 166],
-            ["whitered", "300_100_whiteRedNo", "300x100", 4725, 4],
+            ["whitered", "300_100_whiteRedNo", "300x100", 14314, 13],
             ["whitered", "300_250_whiteRed", "300x250", 1906380, 1172],
-            ["whitered", "300_250_whiteRedNo", "300x250", 684377, 235],
+            ["whitered", "300_250_whiteRedNo", "300x250", 1107018, 364],
             ["whitered", "300_50_whiteRed", "300x50", 508670, 139],
-            ["whitered", "300_50_whiteRedNo", "300x50", 23864, 8],
+            ["whitered", "300_50_whiteRedNo", "300x50", 46715, 11],
             ["whitered", "300_600_whiteRed", "300x600", 209918, 183],
-            ["whitered", "300_600_whiteRedNo", "300x600", 121582, 57],
+            ["whitered", "300_600_whiteRedNo", "300x600", 200495, 87],
             ["whitered", "320_100_whiteRed", "320x100", 594810, 522],
-            ["whitered", "320_100_whiteRedNo", "320x100", 111653, 65],
+            ["whitered", "320_100_whiteRedNo", "320x100", 200509, 116],
             ["whitered", "320_50_whiteRed", "320x50", 2313620, 638],
-            ["whitered", "320_50_whiteRedNo", "320x50", 301853, 47],
+            ["whitered", "320_50_whiteRedNo", "320x50", 668950, 92],
             ["whitered", "336_280_whiteRed", "336x280", 635019, 417],
-            ["whitered", "336_280_whiteRedNo", "336x280", 150947, 78],
+            ["whitered", "336_280_whiteRedNo", "336x280", 273560, 122],
             ["whitered", "728_90_whiteRed", "728x90", 5737937, 3249],
-            ["whitered", "728_90_whiteRedNo", "728x90", 996802, 198],
+            ["whitered", "728_90_whiteRedNo", "728x90", 1820375, 321],
             ["whitered", "970_250_whiteRed", "970x250", 227235, 88],
-            ["whitered", "970_250_whiteRedNo", "970x250", 23075, 12],
+            ["whitered", "970_250_whiteRedNo", "970x250", 45878, 23],
         ];
         /* NDATA:END */
-        /* ⑤⑥ 일별 사이즈·이름 [날짜, 테마, 프레임 이름, 사이즈, 노출수, 클릭수] — 상품 고정 프레임(일별).csv(원본 frame_value_stats)에서 update_data.bat이 채움. '일별' 선택에 씀 */
+        /* 일별 상세 [날짜, 테마, 프레임 이름, 사이즈, 노출수, 클릭수] */
         /* DDATA:START */
         const DDATA = [
             ["2026-09-02", "blackgold", "120_600_blackGold", "120x600", 25365, 8],
@@ -4723,6 +4315,258 @@
             ["2026-09-29", "whitered", "336_280_whiteRedNo", "336x280", 22444, 9],
             ["2026-09-29", "whitered", "728_90_whiteRedNo", "728x90", 166682, 32],
             ["2026-09-29", "whitered", "970_250_whiteRedNo", "970x250", 4360, 1],
+            ["2026-09-30", "blackgold", "120_600_blackGoldNo", "120x600", 42673, 9],
+            ["2026-09-30", "blackgold", "160_600_blackGoldNo", "160x600", 61894, 19],
+            ["2026-09-30", "blackgold", "200_200_blackGoldNo", "200x200", 27115, 4],
+            ["2026-09-30", "blackgold", "234_60_blackGoldNo", "234x60", 3869, 0],
+            ["2026-09-30", "blackgold", "250_250_blackGoldNo", "250x250", 12704, 9],
+            ["2026-09-30", "blackgold", "300_250_blackGoldNo", "300x250", 105211, 36],
+            ["2026-09-30", "blackgold", "300_50_blackGoldNo", "300x50", 3755, 3],
+            ["2026-09-30", "blackgold", "300_600_blackGoldNo", "300x600", 18443, 15],
+            ["2026-09-30", "blackgold", "320_100_blackGoldNo", "320x100", 19338, 14],
+            ["2026-09-30", "blackgold", "320_50_blackGoldNo", "320x50", 61830, 5],
+            ["2026-09-30", "blackgold", "336_280_blackGoldNo", "336x280", 20942, 13],
+            ["2026-09-30", "blackgold", "728_90_blackGoldNo", "728x90", 152471, 33],
+            ["2026-09-30", "blackgold", "970_250_blackGoldNo", "970x250", 4689, 3],
+            ["2026-09-30", "magazine", "120_600_magazine", "120x600", 42703, 12],
+            ["2026-09-30", "magazine", "160_600_magazine", "160x600", 61507, 31],
+            ["2026-09-30", "magazine", "200_200_magazine", "200x200", 27061, 1],
+            ["2026-09-30", "magazine", "234_60_magazine", "234x60", 3866, 0],
+            ["2026-09-30", "magazine", "250_250_magazine", "250x250", 12429, 5],
+            ["2026-09-30", "magazine", "300_250_magazine", "300x250", 104802, 49],
+            ["2026-09-30", "magazine", "300_50_magazine", "300x50", 3694, 1],
+            ["2026-09-30", "magazine", "300_600_magazine", "300x600", 18959, 5],
+            ["2026-09-30", "magazine", "320_100_magazine", "320x100", 19539, 9],
+            ["2026-09-30", "magazine", "320_50_magazine", "320x50", 61480, 9],
+            ["2026-09-30", "magazine", "336_280_magazine", "336x280", 21032, 8],
+            ["2026-09-30", "magazine", "468_60_magazine", "468x60", 2963, 0],
+            ["2026-09-30", "magazine", "728_90_magazine", "728x90", 153664, 34],
+            ["2026-09-30", "magazine", "970_250_magazine", "970x250", 4741, 2],
+            ["2026-09-30", "whitered", "120_600_whiteRedNo", "120x600", 42798, 9],
+            ["2026-09-30", "whitered", "160_600_whiteRedNo", "160x600", 62032, 28],
+            ["2026-09-30", "whitered", "200_200_whiteRedNo", "200x200", 26897, 5],
+            ["2026-09-30", "whitered", "234_60_whiteRedNo", "234x60", 3802, 0],
+            ["2026-09-30", "whitered", "250_250_whiteRedNo", "250x250", 12778, 4],
+            ["2026-09-30", "whitered", "300_250_whiteRedNo", "300x250", 104459, 34],
+            ["2026-09-30", "whitered", "300_50_whiteRedNo", "300x50", 3754, 0],
+            ["2026-09-30", "whitered", "300_600_whiteRedNo", "300x600", 18307, 7],
+            ["2026-09-30", "whitered", "320_100_whiteRedNo", "320x100", 19567, 7],
+            ["2026-09-30", "whitered", "320_50_whiteRedNo", "320x50", 61858, 11],
+            ["2026-09-30", "whitered", "336_280_whiteRedNo", "336x280", 20742, 9],
+            ["2026-09-30", "whitered", "728_90_whiteRedNo", "728x90", 152336, 33],
+            ["2026-09-30", "whitered", "970_250_whiteRedNo", "970x250", 4716, 2],
+            ["2026-10-01", "blackgold", "120_600_blackGoldNo", "120x600", 45912, 12],
+            ["2026-10-01", "blackgold", "160_600_blackGoldNo", "160x600", 66439, 17],
+            ["2026-10-01", "blackgold", "200_200_blackGoldNo", "200x200", 23912, 7],
+            ["2026-10-01", "blackgold", "234_60_blackGoldNo", "234x60", 2980, 0],
+            ["2026-10-01", "blackgold", "250_250_blackGoldNo", "250x250", 13013, 2],
+            ["2026-10-01", "blackgold", "300_250_blackGoldNo", "300x250", 81754, 38],
+            ["2026-10-01", "blackgold", "300_50_blackGoldNo", "300x50", 3224, 1],
+            ["2026-10-01", "blackgold", "300_600_blackGoldNo", "300x600", 14900, 4],
+            ["2026-10-01", "blackgold", "320_100_blackGoldNo", "320x100", 19558, 12],
+            ["2026-10-01", "blackgold", "320_50_blackGoldNo", "320x50", 57618, 7],
+            ["2026-10-01", "blackgold", "336_280_blackGoldNo", "336x280", 19200, 8],
+            ["2026-10-01", "blackgold", "728_90_blackGoldNo", "728x90", 163870, 24],
+            ["2026-10-01", "blackgold", "970_250_blackGoldNo", "970x250", 4955, 1],
+            ["2026-10-01", "magazine", "120_600_magazine", "120x600", 46183, 14],
+            ["2026-10-01", "magazine", "160_600_magazine", "160x600", 66314, 23],
+            ["2026-10-01", "magazine", "200_200_magazine", "200x200", 23708, 2],
+            ["2026-10-01", "magazine", "234_60_magazine", "234x60", 3046, 0],
+            ["2026-10-01", "magazine", "250_250_magazine", "250x250", 12632, 4],
+            ["2026-10-01", "magazine", "300_250_magazine", "300x250", 81682, 47],
+            ["2026-10-01", "magazine", "300_50_magazine", "300x50", 3389, 1],
+            ["2026-10-01", "magazine", "300_600_magazine", "300x600", 15194, 8],
+            ["2026-10-01", "magazine", "320_100_magazine", "320x100", 19569, 6],
+            ["2026-10-01", "magazine", "320_50_magazine", "320x50", 57852, 5],
+            ["2026-10-01", "magazine", "336_280_magazine", "336x280", 18896, 13],
+            ["2026-10-01", "magazine", "468_60_magazine", "468x60", 3337, 1],
+            ["2026-10-01", "magazine", "728_90_magazine", "728x90", 164482, 33],
+            ["2026-10-01", "magazine", "970_250_magazine", "970x250", 5105, 3],
+            ["2026-10-01", "whitered", "120_600_whiteRedNo", "120x600", 45835, 14],
+            ["2026-10-01", "whitered", "160_600_whiteRedNo", "160x600", 66701, 26],
+            ["2026-10-01", "whitered", "200_200_whiteRedNo", "200x200", 24008, 2],
+            ["2026-10-01", "whitered", "234_60_whiteRedNo", "234x60", 3017, 0],
+            ["2026-10-01", "whitered", "250_250_whiteRedNo", "250x250", 12814, 8],
+            ["2026-10-01", "whitered", "300_250_whiteRedNo", "300x250", 80905, 27],
+            ["2026-10-01", "whitered", "300_50_whiteRedNo", "300x50", 3435, 0],
+            ["2026-10-01", "whitered", "300_600_whiteRedNo", "300x600", 14940, 8],
+            ["2026-10-01", "whitered", "320_100_whiteRedNo", "320x100", 19843, 11],
+            ["2026-10-01", "whitered", "320_50_whiteRedNo", "320x50", 57610, 8],
+            ["2026-10-01", "whitered", "336_280_whiteRedNo", "336x280", 19324, 9],
+            ["2026-10-01", "whitered", "728_90_whiteRedNo", "728x90", 164034, 19],
+            ["2026-10-01", "whitered", "970_250_whiteRedNo", "970x250", 4959, 2],
+            ["2026-10-02", "blackgold", "120_600_blackGoldNo", "120x600", 44654, 10],
+            ["2026-10-02", "blackgold", "160_600_blackGoldNo", "160x600", 65300, 23],
+            ["2026-10-02", "blackgold", "200_200_blackGoldNo", "200x200", 21355, 5],
+            ["2026-10-02", "blackgold", "234_60_blackGoldNo", "234x60", 3353, 0],
+            ["2026-10-02", "blackgold", "250_250_blackGoldNo", "250x250", 13788, 6],
+            ["2026-10-02", "blackgold", "300_100_blackGoldNo", "300x100", 2438, 1],
+            ["2026-10-02", "blackgold", "300_250_blackGoldNo", "300x250", 94140, 31],
+            ["2026-10-02", "blackgold", "300_50_blackGoldNo", "300x50", 4494, 2],
+            ["2026-10-02", "blackgold", "300_600_blackGoldNo", "300x600", 13109, 5],
+            ["2026-10-02", "blackgold", "320_100_blackGoldNo", "320x100", 19966, 6],
+            ["2026-10-02", "blackgold", "320_50_blackGoldNo", "320x50", 67098, 4],
+            ["2026-10-02", "blackgold", "336_280_blackGoldNo", "336x280", 19206, 6],
+            ["2026-10-02", "blackgold", "728_90_blackGoldNo", "728x90", 188478, 22],
+            ["2026-10-02", "blackgold", "970_250_blackGoldNo", "970x250", 4221, 4],
+            ["2026-10-02", "magazine", "120_600_magazine", "120x600", 44656, 12],
+            ["2026-10-02", "magazine", "160_600_magazine", "160x600", 64872, 29],
+            ["2026-10-02", "magazine", "200_200_magazine", "200x200", 21252, 0],
+            ["2026-10-02", "magazine", "234_60_magazine", "234x60", 3458, 0],
+            ["2026-10-02", "magazine", "250_250_magazine", "250x250", 13581, 4],
+            ["2026-10-02", "magazine", "300_100_magazine", "300x100", 2441, 0],
+            ["2026-10-02", "magazine", "300_250_magazine", "300x250", 94196, 34],
+            ["2026-10-02", "magazine", "300_50_magazine", "300x50", 4492, 1],
+            ["2026-10-02", "magazine", "300_600_magazine", "300x600", 13142, 2],
+            ["2026-10-02", "magazine", "320_100_magazine", "320x100", 20020, 10],
+            ["2026-10-02", "magazine", "320_50_magazine", "320x50", 66684, 9],
+            ["2026-10-02", "magazine", "336_280_magazine", "336x280", 19049, 10],
+            ["2026-10-02", "magazine", "468_60_magazine", "468x60", 3386, 0],
+            ["2026-10-02", "magazine", "728_90_magazine", "728x90", 187134, 39],
+            ["2026-10-02", "magazine", "970_250_magazine", "970x250", 4124, 2],
+            ["2026-10-02", "whitered", "120_600_whiteRedNo", "120x600", 44458, 8],
+            ["2026-10-02", "whitered", "160_600_whiteRedNo", "160x600", 64797, 20],
+            ["2026-10-02", "whitered", "200_200_whiteRedNo", "200x200", 21485, 0],
+            ["2026-10-02", "whitered", "234_60_whiteRedNo", "234x60", 3297, 1],
+            ["2026-10-02", "whitered", "250_250_whiteRedNo", "250x250", 13509, 2],
+            ["2026-10-02", "whitered", "300_100_whiteRedNo", "300x100", 2424, 0],
+            ["2026-10-02", "whitered", "300_250_whiteRedNo", "300x250", 95082, 26],
+            ["2026-10-02", "whitered", "300_50_whiteRedNo", "300x50", 4432, 2],
+            ["2026-10-02", "whitered", "300_600_whiteRedNo", "300x600", 13134, 3],
+            ["2026-10-02", "whitered", "320_100_whiteRedNo", "320x100", 20206, 12],
+            ["2026-10-02", "whitered", "320_50_whiteRedNo", "320x50", 66450, 11],
+            ["2026-10-02", "whitered", "336_280_whiteRedNo", "336x280", 19074, 7],
+            ["2026-10-02", "whitered", "728_90_whiteRedNo", "728x90", 187418, 33],
+            ["2026-10-02", "whitered", "970_250_whiteRedNo", "970x250", 4147, 2],
+            ["2026-10-03", "blackgold", "120_600_blackGoldNo", "120x600", 27025, 6],
+            ["2026-10-03", "blackgold", "160_600_blackGoldNo", "160x600", 40582, 11],
+            ["2026-10-03", "blackgold", "200_200_blackGoldNo", "200x200", 21603, 5],
+            ["2026-10-03", "blackgold", "234_60_blackGoldNo", "234x60", 3920, 0],
+            ["2026-10-03", "blackgold", "250_250_blackGoldNo", "250x250", 8894, 5],
+            ["2026-10-03", "blackgold", "300_100_blackGoldNo", "300x100", 2434, 3],
+            ["2026-10-03", "blackgold", "300_250_blackGoldNo", "300x250", 46235, 26],
+            ["2026-10-03", "blackgold", "300_50_blackGoldNo", "300x50", 4478, 2],
+            ["2026-10-03", "blackgold", "300_600_blackGoldNo", "300x600", 10162, 2],
+            ["2026-10-03", "blackgold", "320_100_blackGoldNo", "320x100", 9173, 6],
+            ["2026-10-03", "blackgold", "320_50_blackGoldNo", "320x50", 61102, 6],
+            ["2026-10-03", "blackgold", "336_280_blackGoldNo", "336x280", 19931, 11],
+            ["2026-10-03", "blackgold", "728_90_blackGoldNo", "728x90", 102436, 10],
+            ["2026-10-03", "blackgold", "970_250_blackGoldNo", "970x250", 2419, 0],
+            ["2026-10-03", "magazine", "120_600_magazine", "120x600", 26617, 11],
+            ["2026-10-03", "magazine", "160_600_magazine", "160x600", 40448, 18],
+            ["2026-10-03", "magazine", "200_200_magazine", "200x200", 21754, 1],
+            ["2026-10-03", "magazine", "234_60_magazine", "234x60", 3851, 0],
+            ["2026-10-03", "magazine", "250_250_magazine", "250x250", 9100, 1],
+            ["2026-10-03", "magazine", "300_100_magazine", "300x100", 2489, 1],
+            ["2026-10-03", "magazine", "300_250_magazine", "300x250", 46545, 11],
+            ["2026-10-03", "magazine", "300_50_magazine", "300x50", 4502, 1],
+            ["2026-10-03", "magazine", "300_600_magazine", "300x600", 10040, 4],
+            ["2026-10-03", "magazine", "320_100_magazine", "320x100", 9338, 4],
+            ["2026-10-03", "magazine", "320_50_magazine", "320x50", 61262, 7],
+            ["2026-10-03", "magazine", "336_280_magazine", "336x280", 20108, 9],
+            ["2026-10-03", "magazine", "468_60_magazine", "468x60", 2096, 0],
+            ["2026-10-03", "magazine", "728_90_magazine", "728x90", 101735, 23],
+            ["2026-10-03", "magazine", "970_250_magazine", "970x250", 2403, 0],
+            ["2026-10-03", "whitered", "120_600_whiteRedNo", "120x600", 26910, 6],
+            ["2026-10-03", "whitered", "160_600_whiteRedNo", "160x600", 40167, 14],
+            ["2026-10-03", "whitered", "200_200_whiteRedNo", "200x200", 21859, 3],
+            ["2026-10-03", "whitered", "234_60_whiteRedNo", "234x60", 3730, 0],
+            ["2026-10-03", "whitered", "250_250_whiteRedNo", "250x250", 8932, 4],
+            ["2026-10-03", "whitered", "300_100_whiteRedNo", "300x100", 2506, 7],
+            ["2026-10-03", "whitered", "300_250_whiteRedNo", "300x250", 46476, 10],
+            ["2026-10-03", "whitered", "300_50_whiteRedNo", "300x50", 4341, 0],
+            ["2026-10-03", "whitered", "300_600_whiteRedNo", "300x600", 10173, 8],
+            ["2026-10-03", "whitered", "320_100_whiteRedNo", "320x100", 9087, 5],
+            ["2026-10-03", "whitered", "320_50_whiteRedNo", "320x50", 61220, 6],
+            ["2026-10-03", "whitered", "336_280_whiteRedNo", "336x280", 20505, 5],
+            ["2026-10-03", "whitered", "728_90_whiteRedNo", "728x90", 101676, 15],
+            ["2026-10-03", "whitered", "970_250_whiteRedNo", "970x250", 2437, 1],
+            ["2026-10-04", "blackgold", "120_600_blackGoldNo", "120x600", 35344, 8],
+            ["2026-10-04", "blackgold", "160_600_blackGoldNo", "160x600", 52706, 19],
+            ["2026-10-04", "blackgold", "200_200_blackGoldNo", "200x200", 18941, 3],
+            ["2026-10-04", "blackgold", "234_60_blackGoldNo", "234x60", 4361, 0],
+            ["2026-10-04", "blackgold", "250_250_blackGoldNo", "250x250", 9516, 6],
+            ["2026-10-04", "blackgold", "300_100_blackGoldNo", "300x100", 2531, 1],
+            ["2026-10-04", "blackgold", "300_250_blackGoldNo", "300x250", 46473, 16],
+            ["2026-10-04", "blackgold", "300_50_blackGoldNo", "300x50", 3486, 2],
+            ["2026-10-04", "blackgold", "300_600_blackGoldNo", "300x600", 11010, 9],
+            ["2026-10-04", "blackgold", "320_100_blackGoldNo", "320x100", 9579, 5],
+            ["2026-10-04", "blackgold", "320_50_blackGoldNo", "320x50", 60185, 8],
+            ["2026-10-04", "blackgold", "336_280_blackGoldNo", "336x280", 20770, 13],
+            ["2026-10-04", "blackgold", "728_90_blackGoldNo", "728x90", 113683, 7],
+            ["2026-10-04", "blackgold", "970_250_blackGoldNo", "970x250", 3494, 2],
+            ["2026-10-04", "magazine", "120_600_magazine", "120x600", 35458, 8],
+            ["2026-10-04", "magazine", "160_600_magazine", "160x600", 52312, 15],
+            ["2026-10-04", "magazine", "200_200_magazine", "200x200", 19016, 8],
+            ["2026-10-04", "magazine", "234_60_magazine", "234x60", 4381, 0],
+            ["2026-10-04", "magazine", "250_250_magazine", "250x250", 9473, 4],
+            ["2026-10-04", "magazine", "300_100_magazine", "300x100", 2542, 3],
+            ["2026-10-04", "magazine", "300_250_magazine", "300x250", 46735, 18],
+            ["2026-10-04", "magazine", "300_50_magazine", "300x50", 3470, 2],
+            ["2026-10-04", "magazine", "300_600_magazine", "300x600", 10785, 3],
+            ["2026-10-04", "magazine", "320_100_magazine", "320x100", 9658, 3],
+            ["2026-10-04", "magazine", "320_50_magazine", "320x50", 59764, 4],
+            ["2026-10-04", "magazine", "336_280_magazine", "336x280", 21083, 7],
+            ["2026-10-04", "magazine", "468_60_magazine", "468x60", 2241, 1],
+            ["2026-10-04", "magazine", "728_90_magazine", "728x90", 113939, 16],
+            ["2026-10-04", "magazine", "970_250_magazine", "970x250", 3413, 2],
+            ["2026-10-04", "whitered", "120_600_whiteRedNo", "120x600", 35299, 9],
+            ["2026-10-04", "whitered", "160_600_whiteRedNo", "160x600", 52668, 26],
+            ["2026-10-04", "whitered", "200_200_whiteRedNo", "200x200", 19116, 1],
+            ["2026-10-04", "whitered", "234_60_whiteRedNo", "234x60", 4343, 0],
+            ["2026-10-04", "whitered", "250_250_whiteRedNo", "250x250", 9389, 3],
+            ["2026-10-04", "whitered", "300_100_whiteRedNo", "300x100", 2470, 1],
+            ["2026-10-04", "whitered", "300_250_whiteRedNo", "300x250", 46492, 19],
+            ["2026-10-04", "whitered", "300_50_whiteRedNo", "300x50", 3456, 1],
+            ["2026-10-04", "whitered", "300_600_whiteRedNo", "300x600", 10922, 3],
+            ["2026-10-04", "whitered", "320_100_whiteRedNo", "320x100", 9636, 10],
+            ["2026-10-04", "whitered", "320_50_whiteRedNo", "320x50", 59788, 4],
+            ["2026-10-04", "whitered", "336_280_whiteRedNo", "336x280", 20930, 7],
+            ["2026-10-04", "whitered", "728_90_whiteRedNo", "728x90", 113247, 14],
+            ["2026-10-04", "whitered", "970_250_whiteRedNo", "970x250", 3501, 3],
+            ["2026-10-05", "blackgold", "120_600_blackGoldNo", "120x600", 35474, 4],
+            ["2026-10-05", "blackgold", "160_600_blackGoldNo", "160x600", 50479, 9],
+            ["2026-10-05", "blackgold", "200_200_blackGoldNo", "200x200", 19110, 6],
+            ["2026-10-05", "blackgold", "234_60_blackGoldNo", "234x60", 4662, 0],
+            ["2026-10-05", "blackgold", "250_250_blackGoldNo", "250x250", 10519, 3],
+            ["2026-10-05", "blackgold", "300_100_blackGoldNo", "300x100", 2127, 1],
+            ["2026-10-05", "blackgold", "300_250_blackGoldNo", "300x250", 48899, 18],
+            ["2026-10-05", "blackgold", "300_50_blackGoldNo", "300x50", 3549, 0],
+            ["2026-10-05", "blackgold", "300_600_blackGoldNo", "300x600", 11537, 8],
+            ["2026-10-05", "blackgold", "320_100_blackGoldNo", "320x100", 10906, 3],
+            ["2026-10-05", "blackgold", "320_50_blackGoldNo", "320x50", 60396, 5],
+            ["2026-10-05", "blackgold", "336_280_blackGoldNo", "336x280", 21760, 14],
+            ["2026-10-05", "blackgold", "728_90_blackGoldNo", "728x90", 104491, 13],
+            ["2026-10-05", "blackgold", "970_250_blackGoldNo", "970x250", 3007, 2],
+            ["2026-10-05", "magazine", "120_600_magazine", "120x600", 35471, 7],
+            ["2026-10-05", "magazine", "160_600_magazine", "160x600", 50583, 15],
+            ["2026-10-05", "magazine", "200_200_magazine", "200x200", 19025, 9],
+            ["2026-10-05", "magazine", "234_60_magazine", "234x60", 4618, 1],
+            ["2026-10-05", "magazine", "250_250_magazine", "250x250", 10316, 5],
+            ["2026-10-05", "magazine", "300_100_magazine", "300x100", 2280, 0],
+            ["2026-10-05", "magazine", "300_250_magazine", "300x250", 48927, 20],
+            ["2026-10-05", "magazine", "300_50_magazine", "300x50", 3522, 0],
+            ["2026-10-05", "magazine", "300_600_magazine", "300x600", 11381, 4],
+            ["2026-10-05", "magazine", "320_100_magazine", "320x100", 10759, 3],
+            ["2026-10-05", "magazine", "320_50_magazine", "320x50", 59931, 4],
+            ["2026-10-05", "magazine", "336_280_magazine", "336x280", 21801, 8],
+            ["2026-10-05", "magazine", "468_60_magazine", "468x60", 1935, 0],
+            ["2026-10-05", "magazine", "728_90_magazine", "728x90", 104845, 17],
+            ["2026-10-05", "magazine", "970_250_magazine", "970x250", 2996, 5],
+            ["2026-10-05", "whitered", "120_600_whiteRedNo", "120x600", 35593, 9],
+            ["2026-10-05", "whitered", "160_600_whiteRedNo", "160x600", 50881, 15],
+            ["2026-10-05", "whitered", "200_200_whiteRedNo", "200x200", 19435, 3],
+            ["2026-10-05", "whitered", "234_60_whiteRedNo", "234x60", 4654, 0],
+            ["2026-10-05", "whitered", "250_250_whiteRedNo", "250x250", 10322, 3],
+            ["2026-10-05", "whitered", "300_100_whiteRedNo", "300x100", 2189, 1],
+            ["2026-10-05", "whitered", "300_250_whiteRedNo", "300x250", 49227, 13],
+            ["2026-10-05", "whitered", "300_50_whiteRedNo", "300x50", 3433, 0],
+            ["2026-10-05", "whitered", "300_600_whiteRedNo", "300x600", 11437, 1],
+            ["2026-10-05", "whitered", "320_100_whiteRedNo", "320x100", 10517, 6],
+            ["2026-10-05", "whitered", "320_50_whiteRedNo", "320x50", 60171, 5],
+            ["2026-10-05", "whitered", "336_280_whiteRedNo", "336x280", 22038, 7],
+            ["2026-10-05", "whitered", "728_90_whiteRedNo", "728x90", 104862, 9],
+            ["2026-10-05", "whitered", "970_250_whiteRedNo", "970x250", 3043, 1],
         ];
         /* DDATA:END */
 
@@ -4731,20 +4575,18 @@
         const md = s => s.slice(5).replace('-', '/');
 
         const ROWS = DATA.map(([d, t, n, s, imp, clk]) => ({ d, t, n, s, imp, clk }));
-        const DATES = [...new Set(ROWS.map(r => r.d))].sort();       // 데이터가 있는 날짜
+        const DATES = [...new Set(ROWS.map(r => r.d))].sort();
         const TODAY = DATES[DATES.length - 1] || ymd(new Date());     // 마지막 데이터 날짜
-        const PERIOD_FROM = TODAY.slice(0, 8) + '01';                 // 당월 1일 (④⑤ 조회기간 시작)
         THEMES.forEach(T => { const ds = ROWS.filter(r => r.t === T.id).map(r => r.d).sort(); T.from = ds[0]; T.to = ds[ds.length - 1]; });
 
-        /* ---------- 공통 ---------- */
+        /* 공통 */
         const sum = rows => { const o = { imp: 0, clk: 0 }; for (const r of rows) { o.imp += r.imp; o.clk += r.clk; } o.ctr = o.imp ? o.clk / o.imp * 100 : 0; return o; };
         const pick = (fn) => ROWS.filter(fn);
         const SROWS = SDATA.map(([t, s, imp, clk]) => ({ t, s, imp, clk }));
         const NROWS = NDATA.map(([t, n, s, imp, clk]) => ({ t, n, s, imp, clk }));
-        // 일별 사이즈·이름: DATA 에 사이즈가 있으면 그것, 없으면 DDATA(원본 일별) — ⑤⑥ '일별' 선택에 씀
         const DROWS = ROWS.some(r => r.s) ? ROWS.filter(r => r.s) : DDATA.map(([d, t, n, s, imp, clk]) => ({ d, t, n, s, imp, clk }));
         const DAILY_DETAIL = DROWS.length > 0;
-        const DDATES = [...new Set(DROWS.map(r => r.d))].sort(), DTODAY = DDATES[DDATES.length - 1] || TODAY;   // 일별 사이즈 데이터의 마지막 날
+        const DDATES = [...new Set(DROWS.map(r => r.d))].sort(), DTODAY = DDATES[DDATES.length - 1] || TODAY;
         const dpick = fn => DROWS.filter(fn);
         const f = n => Math.round(n).toLocaleString('ko-KR');
         const pct = v => v.toFixed(3) + '%';
@@ -4754,23 +4596,22 @@
             { k: 'ctr', label: '클릭률 (CTR)', fmt: pct },
         ];
         const theme = id => THEMES.find(t => t.id === id);
-        // 프레임 이름 — 마우스를 올리면 배너 툴팁 (frameTip)
+        // 프레임 이름, 호버 시 배너 툴팁
         const nm = (T, short = false) => `<span class="fname" data-frame-tip="${T.id}">${short ? T.name.replace(' 프레임', '') : T.name}</span>`;
         function frameArt(id, o = {}) {
-            // 배너 이미지 자리: 테두리 박스만. THEMES의 src(또는 o.src)에 주소를 넣으면 iframe으로 표시됩니다.
             const T = theme(id), src = o.src || T.src || '';
-            // tpl 테마(레드오토)는 src 대신 data-tpl → fillTemplateBanners()가 목 데이터를 채워 srcdoc으로 넣습니다
+            // tpl 테마는 fillTemplateBanners가 srcdoc으로 채움
             const attr = T.tpl ? `data-tpl="${src}"` : `src="${src}"`;
             return `<div class="ad ad-slot" data-frame="${id}">${src ? `<iframe ${attr} title="${T.name}" loading="lazy" scrolling="no"></iframe>` : ''}</div>`;
         }
 
-        // 배너 iframe(250px)을 칸 폭에 맞게 축소 — 표가 다시 그려지거나 창 크기가 바뀌면 다시 계산
+        // 배너 iframe을 칸 폭에 맞게 축소
         const BANNER_PX = 250;
         const fitBannerSlots = () => document.querySelectorAll('.ad.ad-slot iframe').forEach(f => {
             const w = f.parentElement.clientWidth;
             if (w) f.style.transform = `scale(${w / BANNER_PX})`;
         });
-        // 레드오토(오토 프레임) 템플릿: 뷰어 페이지(dev_openRtbAuto_view.html)와 같은 목 상품 데이터로 채워서 표시
+        // 오토 프레임 템플릿용 목 데이터
         const TPL_MOCK = {
             '{{w}}': BANNER_PX, '{{h}}': BANNER_PX,
             '{{productList}}': `{ pcode: "test-pcode1", pnm: "오토프레임 카라넥 원피스", price: "49,900", prdt_prmct: "39,900", dc_rate: "32",
@@ -4790,11 +4631,11 @@
             const schedule = () => { if (queued) return; queued = true; requestAnimationFrame(() => { queued = false; fitBannerSlots(); fillTemplateBanners(); }); };
             new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
             window.addEventListener('resize', schedule);
-            document.getElementById('tlModal').addEventListener('toggle', schedule);   // 모달이 열릴 때 (닫혀 있으면 폭이 0)
+            document.getElementById('tlModal').addEventListener('toggle', schedule);   // 모달이 열릴 때
             schedule();
         })();
 
-        /* 프레임 이름 호버 → 배너 툴팁 (테마별 배너를 미리 한 번만 만들어 두고 보여줌) */
+        /* 프레임 이름 호버 배너 툴팁 */
         (function () {
             const tip = document.createElement('div');
             tip.id = 'frameTip';
@@ -4806,15 +4647,15 @@
             const place = (x, y) => {
                 const h = tip.offsetHeight || 260;
                 let left = x + GAP, top = y + GAP;
-                if (left + W > innerWidth - 8) left = x - W - GAP;          // 오른쪽 공간이 없으면 왼쪽에
-                if (top + h > innerHeight - 8) top = Math.max(8, y - h - GAP); // 아래 공간이 없으면 위에
+                if (left + W > innerWidth - 8) left = x - W - GAP;
+                if (top + h > innerHeight - 8) top = Math.max(8, y - h - GAP);
                 tip.style.left = left + 'px'; tip.style.top = top + 'px';
             };
             const show = (el, e) => {
                 const id = el.dataset.frameTip;
                 if (!theme(id)?.src) return;
                 cur = el;
-                // 모달(dialog) 안에서는 모달 위에 떠야 하므로 모달 안으로 옮김
+                // 모달 안이면 모달에 붙임
                 const host = el.closest('dialog') || document.body;
                 if (tip.parentElement !== host) host.appendChild(tip);
                 tip.querySelectorAll('.ft-item').forEach(it => it.classList.toggle('on', it.dataset.frameTipFor === id));
@@ -4829,13 +4670,12 @@
             document.addEventListener('scroll', hide, true);
         })();
 
-        initTimeline();   // 프레임 변경 Timeline (frame_timeline.js 공용)
+        initTimeline();   // frame_timeline.js 공용
 
-        /* ① 프레임 테마별 성과 */
+        /* 프레임 테마별 성과 */
         function renderThemes(from, to) {
             const inR = r => r.d >= from && r.d <= to;
             const TS = Object.fromEntries(THEMES.map(T => [T.id, sum(pick(r => inR(r) && r.t === T.id))]));
-            // 4개 프레임 중 순위 (② 와 같은 표시)
             const themeRank = (id, k) => { const n = TS[id][k] > 0 ? 1 + THEMES.filter(T => TS[T.id][k] > TS[id][k]).length : 0; return n ? `<em class="rk-badge rk${Math.min(n, 3)}">${n}위</em>` : ''; };
             document.getElementById('themes').innerHTML = THEMES.map(T => {
                 const s = TS[T.id], ds = [...new Set(pick(r => inR(r) && r.t === T.id).map(r => r.d))].sort();
@@ -4857,13 +4697,13 @@
         }
         (function () {
             const ctrl = document.getElementById('themePeriod'), dateEl = document.getElementById('themeDate');
-            dateEl.min = PERIOD_FROM; dateEl.max = TODAY; dateEl.value = TODAY;
-            ctrl.querySelector('[data-mode="month"]').textContent = `${+TODAY.slice(5, 7)}월 전체`;
+            dateEl.min = DATES[0]; dateEl.max = TODAY; dateEl.value = TODAY;
+            monthButtons(ctrl, DATES);
             const run = () => {
                 const mode = ctrl.querySelector('[aria-pressed="true"]').dataset.mode;
                 dateEl.hidden = mode !== 'day';
                 const d = dateEl.value || TODAY;
-                if (mode === 'day') renderThemes(d, d); else renderThemes(PERIOD_FROM, TODAY);
+                if (mode === 'day') renderThemes(d, d); else renderThemes(...monthRange(ctrl, DATES));
             };
             ctrl.addEventListener('click', e => {
                 const b = e.target.closest('button[data-mode]'); if (!b) return;
@@ -4876,7 +4716,7 @@
 
         const CROWN = `<svg class="crown" viewBox="0 0 24 28" aria-hidden="true"><path d="M6 1h5l3 8H9z" fill="#3f7ee8"/><path d="M18 1h-5l-3 8h5z" fill="#d7262f"/><circle cx="12" cy="17.5" r="9" fill="#f2b705" stroke="#c98f00" stroke-width="1.5"/><circle cx="12" cy="17.5" r="6.3" fill="none" stroke="#fff3c4" stroke-width="1"/><text x="12" y="21.6" text-anchor="middle" font-size="11" font-weight="800" font-family="Arial, sans-serif" fill="#7a5200">1</text></svg>`;
 
-        /* ② 전전일 vs 전일 — 지표별 카드: 제목 + 한 줄 요약, 프레임마다 전전일(연한 색)·전일(진한 색) 막대와 숫자, 이름 옆 1위 배지, 아래 증감 칩 */
+        /* 전전일 vs 전일 */
         (function () {
             const Y = DATES[DATES.length - 1], B = DATES[DATES.length - 2];
             const Ys = Object.fromEntries(THEMES.map(T => [T.id, sum(pick(r => r.t === T.id && r.d === Y))]));
@@ -4885,18 +4725,18 @@
             const short = (k, v) => k === 'ctr' ? v.toFixed(3) + '%' : v >= 1e4 ? f(v / 1e4) + '만' : f(v);
             const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
             const nameOf = T => T.name.replace(' 프레임', '');
-            // 프레임별 증감: { cls: rise·fall·flat·none, txt, diff, flat(요약용 '유지') }
+            // 프레임별 증감
             const change = (T, k) => {
                 const y = Ys[T.id], b = Bs[T.id], yv = y[k], bv = b[k];
                 if (!y.imp && !b.imp) return { cls: 'none', txt: '데이터 없음' };
                 if (!y.imp) return { cls: 'none', txt: '전일 데이터 없음' };
                 if (!b.imp || !bv) return { cls: 'none', txt: '전전일 데이터 없음' };
                 const diff = k === 'ctr' ? yv - bv : (yv / bv - 1) * 100;
-                const flat = k === 'ctr' ? Math.abs(diff) <= 0.001 : Math.abs(diff) <= 1;   // 요약용 '유지' 기준: CTR ±0.001%p · 노출/클릭 ±1%
+                const flat = k === 'ctr' ? Math.abs(diff) <= 0.001 : Math.abs(diff) <= 1;   // 유지 기준: CTR ±0.001%p, 노출과 클릭 ±1%
                 const cls = Math.abs(diff) < 0.0005 ? 'flat' : diff > 0 ? 'rise' : 'fall';
                 return { cls, flat, diff, txt: `${cls === 'flat' ? '−' : diff > 0 ? '▲' : '▼'} ${Math.abs(diff).toFixed(k === 'ctr' ? 3 : 1)}%` };
             };
-            // 카드 오른쪽 한 줄 요약 (예: 세 테마 모두 약 +21% · 화이트레드만 증가 · 화이트레드만 유지)
+            // 카드 한 줄 요약
             const note = (k) => {
                 const cs = THEMES.map(T => ({ T, c: change(T, k) })).filter(x => x.c.cls !== 'none');
                 if (!cs.length) return '';
@@ -4917,7 +4757,6 @@
                 return cs.map(x => `${nameOf(x.T)} ${dir(x)}`).join(' · ');
             };
             const wrap = document.getElementById('yd');
-            // 범례: 막대 색은 프레임 색이고, 진한 색이 전일 · 연한 색이 전전일라는 것만 표시
             wrap.innerHTML = `<div class="legend yd-legend"><span class="yd-legend-note">연한 색 = 전전일 ${md(B)} · 진한 색 = 전일 ${md(Y)}</span></div>`
                 + `<div class="yd-cards">${M3.map(m => `<div class="yd-card">
                     <div class="yd-card-head"><h3>${m.label}</h3><span class="yd-note">${esc(note(m.k))}</span></div>
@@ -4930,7 +4769,7 @@
             function draw() {
                 wrap.querySelectorAll('.yd-chart').forEach(box => {
                     const k = box.dataset.k, m = M3.find(x => x.k === k), svg = box.querySelector('svg'), tip = box.querySelector('.tip');
-                    svg.setAttribute('width', 0);   // 먼저 0으로 줄여야 칸이 좁아졌을 때(메뉴 펼침 등) 새 폭을 제대로 읽음 — 안 그러면 이전 폭의 SVG가 칸을 붙들어 가로 스크롤이 생김
+                    svg.setAttribute('width', 0);   // 새 폭을 읽기 전에 0으로
                     const W = box.clientWidth, H = box.clientHeight, T = 20, ih = H - T - 2;
                     const max = Math.max(...THEMES.flatMap(t => [Ys[t.id][k], Bs[t.id][k]])) || 1;
                     svg.setAttribute('width', W); svg.setAttribute('height', H);
@@ -4941,14 +4780,14 @@
                         [[b[k], b.imp, cx - gap / 2 - bw, .3], [y[k], y.imp, cx + gap / 2, 1]].forEach(([v, has, x, op]) => {
                             const h = v / max * ih;
                             if (h > 0) out += `<rect class="yd-bar" data-day="${op === 1 ? `전일 ${md(Y)}` : `전전일 ${md(B)}`}" data-t="${i}" data-v="${v}" x="${x}" y="${T + ih - h}" width="${bw}" height="${h}" rx="3" fill="${t.color}" opacity="${op}"/>`;
-                            // 숫자 라벨: 막대보다 글자가 길면(CTR 등) 전전일는 왼쪽 막대 오른끝에 맞춰 오른정렬, 전일는 오른쪽 막대 왼끝에 맞춰 왼정렬해서 겹치지 않게
+                            // 긴 라벨은 막대 바깥쪽으로 정렬
                             const label = has ? short(k, v) : '−', wide = label.length * 6.4 > bw + gap - 2;
                             const [lx, anchor] = !wide ? [x + bw / 2, 'middle'] : op === 1 ? [x, 'start'] : [x + bw, 'end'];
                             out += `<text x="${lx}" y="${T + ih - h - 5}" font-size="${op === 1 ? 11.5 : 10.5}" font-weight="${op === 1 ? 700 : 400}" fill="${op === 1 ? '#202124' : '#858a92'}" text-anchor="${anchor}">${label}</text>`;
                         });
                     });
                     svg.innerHTML = out;
-                    // 막대에 마우스를 올리면 전일/전전일 · 프레임 · 값 툴팁
+                    // 막대 툴팁
                     svg.querySelectorAll('.yd-bar').forEach(r => {
                         r.addEventListener('mouseenter', () => {
                             const t = THEMES[+r.dataset.t];
@@ -4966,9 +4805,9 @@
             draw();
         })();
 
-        /* ③ 최근 7일 — 지표별 차트, 날짜마다 테마 4개 막대 */
+        /* 최근 7일 차트 */
         (function () {
-            const D7 = DATES.slice(-7);   // 데이터가 있는 최근 7일
+            const D7 = DATES.slice(-7);
             const data = D7.map(d => Object.fromEntries(THEMES.map(T => [T.id, sum(pick(r => r.t === T.id && r.d === d))])));
             document.getElementById('w7Legend').innerHTML = THEMES.map(T => `<span><i style="${sw(T)}"></i>${nm(T)}</span>`).join('');
             const wrap = document.getElementById('w7');
@@ -4979,7 +4818,7 @@
             function draw() {
                 wrap.querySelectorAll('.w7-chart').forEach(box => {
                     const k = box.dataset.k, m = M3.find(x => x.k === k), svg = box.querySelector('svg'), tip = box.querySelector('.tip');
-                    svg.setAttribute('width', 0);   // 먼저 0으로 줄여야 칸이 좁아졌을 때(메뉴 펼침 등) 새 폭을 제대로 읽음 — 안 그러면 이전 폭의 SVG가 칸을 붙들어 가로 스크롤이 생김
+                    svg.setAttribute('width', 0);   // 새 폭을 읽기 전에 0으로
                     const W = box.clientWidth, H = box.clientHeight, L = 46, R = 6, T = 8, B = 26, iw = W - L - R, ih = H - T - B;
                     const max = nice(Math.max(...data.flatMap(o => THEMES.map(t => o[t.id][k]))) || 1);
                     svg.setAttribute('width', W); svg.setAttribute('height', H);
@@ -4989,7 +4828,7 @@
                         out += `<line x1="${L}" x2="${W - R}" y1="${y}" y2="${y}" stroke="${g ? '#f2f3f5' : '#e6e8ec'}"/><text x="${L - 6}" y="${y + 4}" font-size="10" fill="#b3b8bf" text-anchor="end">${short(k, max * g / 4)}</text>`;
                     }
                     const gw = iw / D7.length, bw = Math.min(12, (gw - 10) / THEMES.length - 2);
-                    const tops = THEMES.map(() => []);   // 테마별 막대 꼭대기 좌표 (호버 선그래프용)
+                    const tops = THEMES.map(() => []);   // 막대 꼭대기 좌표, 호버 선용
                     D7.forEach((d, i) => {
                         const gx = L + gw * i, x0 = gx + (gw - (bw + 2) * THEMES.length + 2) / 2;
                         THEMES.forEach((t, j) => {
@@ -5013,7 +4852,7 @@
                         });
                         h.addEventListener('mouseleave', () => { tip.hidden = true; h.setAttribute('fill', 'transparent'); });
                     });
-                    // 막대에 마우스를 올리면 같은 테마의 7일 추이를 선으로 연결
+                    // 호버한 테마의 추이선
                     const hl = svg.querySelector('.hl-line');
                     let cur = -1;
                     svg.onmousemove = e => {
@@ -5035,7 +4874,7 @@
             draw();
         })();
 
-        /* ---------- 표 정렬 + 합계 행 ---------- */
+        /* 표 정렬 */
         function makeSortable(table) {
             const ths = [...table.querySelectorAll('th[data-col]')];
             ths.forEach(th => {
@@ -5049,7 +4888,7 @@
                 });
             });
         }
-        // 요약: 지표 1위를 차지한 항목 수를 프레임별 비중으로 막대 하나에 (사이즈별 · 지면별 표 위)
+        // 프레임별 1위 비중 막대
         function stackSummary(FR, items, label, unit) {
             const total = items.filter(r => r.win >= 0).length;
             const cnt = FR.map((T, i) => items.filter(r => r.win === i));
@@ -5059,7 +4898,7 @@
             }).join('');
             return `<div class="ss-stack"><div class="ss-stack-title">${label} 1위 비중</div><div class="ss-stack-bar">${seg}</div></div>`;
         }
-        // 비중 막대 구간에 마우스를 올리면 검은 툴팁 (프레임 · 1위 개수)
+        // 비중 막대 툴팁
         document.addEventListener('mouseover', e => {
             const seg = e.target.closest('.ss-stack-bar span[data-tip]'); if (!seg) return;
             const box = seg.closest('.ss-stack'); let tip = box.querySelector('.tip');
@@ -5073,21 +4912,22 @@
         });
         const numTd = (v, fmt, cls = '', c = '', tip = '') => `<td class="${cls}" data-v="${v}"${c ? ` style="${cv(c)}"` : ''}>${cls.includes('top') ? `<span class="crown-wrap" data-tip="${tip}">${CROWN}${fmt(v)}</span>` : fmt(v)}</td>`;
 
-        /* ④ 일별 추이 — 날짜마다 테마별 노출·클릭·CTR + 합산. 구간 = 그날 노출된 테마(단독 / 병행), 구간이 바뀐 날은 강조 */
-        (function () {
+        /* 일별 추이 표, 선택한 월 */
+        function renderTrans(from, to) {
+            const inR = r => r.d >= from && r.d <= to;
             const day = (t, d) => sum(pick(r => r.t === t && r.d === d));
             const active = vals => THEMES.filter((T, i) => vals[i].imp > 0);
             const seg = on => {
                 if (!on.length) return `<span class="seg-chip none">−</span>`;
                 if (on.length === 1) return `<span class="seg-chip one" style="${cv(on[0])}">${on[0].name.replace(' 프레임', '')} 단독</span>`;
-                // 병행 — 노출된 테마 색을 칸으로 나눠 표시
+                // 병행 칩
                 const n = on.length, bg = on.map((T, i) => `color-mix(in srgb, ${T.color} 22%, #fff) ${i / n * 100}% ${(i + 1) / n * 100}%`).join(', ');
                 return `<span class="seg-chip" style="background:linear-gradient(90deg, ${bg})">${on.map(T => T.name.replace(' 프레임', '')).join(' · ')} 병행</span>`;
             };
             const cell = (o, k, m) => `<td class="sep" data-v="${o.imp ? o[k] : -1}">${o.imp ? m.fmt(o[k]) : '−'}</td>`;
             const group = o => M3.map(m => cell(o, m.k, m)).join('');
             const MINV = 1;
-            // 병행(2개 이상 노출)인 날은 클릭률 1위 프레임 칸에만 1위 메달 + 색 강조
+            // 병행인 날 클릭률 1위 칸 강조
             const winGroup = (o, T, list, d) => M3.map(m => {
                 const on = list.filter(x => x.imp >= MINV);
                 const win = m.k === 'ctr' && on.length >= 2 && o.imp >= MINV && o[m.k] > 0 && o[m.k] === Math.max(...on.map(x => x[m.k]));
@@ -5095,35 +4935,46 @@
 ${T.name} ${m.fmt(o[m.k])}`) : cell(o, m.k, m);
             }).join('');
             let prevKey = null;
-            const rows = [...DATES].map(d => {   // 과거 → 최신 순으로 구간 변화를 판단한 뒤 최신순으로 표시
+            const rows = [...DATES].map(d => {   // 구간 변화는 과거순으로 판단
                 const v = THEMES.map(T => day(T.id, d)), on = active(v), key = on.map(T => T.id).join('+');
                 const pivot = prevKey !== null && key !== prevKey;
                 prevKey = key;
                 return { d, v, on, pivot, all: sum(pick(r => r.d === d)) };
-            }).reverse().map(({ d, v, on, pivot, all }) =>
+            }).filter(inR).reverse().map(({ d, v, on, pivot, all }) =>
                 `<tr class="${pivot ? 'pivot' : ''}"><td class="${dayCls(d)}"><b>${md(d)}</b></td><td class="left">${seg(on)}</td>${v.map((o, i) => winGroup(o, THEMES[i], v, d)).join('')}${group(all)}</tr>`).join('');
-            const tot = THEMES.map(T => sum(pick(r => r.t === T.id))), totAll = sum(ROWS);
+            const tot = THEMES.map(T => sum(pick(r => r.t === T.id && inR(r)))), totAll = sum(pick(inR)), nDays = DATES.filter(d => d >= from && d <= to).length;
             document.getElementById('transTable').innerHTML = `<thead>
                 <tr><th rowspan="2">일자</th><th rowspan="2" style="text-align:left">구간</th>
                     ${THEMES.map(T => `<th colspan="3" class="grp sep" style="${cv(T)}"><span class="dot" style="${sw(T)}"></span>${nm(T)}</th>`).join('')}
                     <th colspan="3" class="grp sep">합산</th></tr>
                 <tr>${[...THEMES, { name: '합산' }].map(() => M3.map(m => `<th class="sep">${m.label.replace(' (CTR)', '')}</th>`).join('')).join('')}</tr>
-                <tr class="total-row"><td>합계</td><td class="left">${DATES.length}일</td>${tot.map(group).join('')}${group(totAll)}</tr>
+                <tr class="total-row"><td>합계</td><td class="left">${nDays}일</td>${tot.map(group).join('')}${group(totAll)}</tr>
             </thead><tbody>${rows}</tbody>`;
+        }
+        (function () {
+            const ctrl = document.getElementById('transPeriod');
+            monthButtons(ctrl, DATES);
+            const run = () => renderTrans(...monthRange(ctrl, DATES));
+            ctrl.addEventListener('click', e => {
+                const b = e.target.closest('button[data-mode]'); if (!b) return;
+                ctrl.querySelectorAll('button[data-mode]').forEach(x => x.setAttribute('aria-pressed', x === b));
+                run();
+            });
+            run();
         })();
 
-        /* ⑤ 사이즈별 — 블랙골드 · 화이트레드 · 매거진 (지표 탭 · 9월 전체 / 일별 선택) */
+        /* 사이즈별 표 */
         function renderSize(from, to, mk) {
             const inR = r => r.d >= from && r.d <= to;
             const m = M3.find(x => x.k === mk);
             const FR = ['blackgold', 'whitered', 'magazine'].map(theme);
-            const argmax = list => { let w = -1; list.forEach((o, i) => { if (o.imp && (w < 0 || o[mk] > list[w][mk])) w = i; }); return w; };
-            const whole = from === PERIOD_FROM && to === TODAY && SROWS.length;   // 월 전체는 기간 누적(SDATA · xlsx) · 일별은 원본 일별(DROWS)
+            const argmax = list => { let w = -1; list.forEach((o, i) => { if (o.imp && o[mk] > 0 && (w < 0 || o[mk] > list[w][mk])) w = i; }); return w; };   // 값이 0이면 1위 없음
+            const whole = wholeRange(from, to, DATES) && SROWS.length;   // 월 전체는 SDATA, 일별은 DROWS
             const src = whole ? (fn => SROWS.filter(fn)) : (fn => dpick(r => inR(r) && fn(r)));
             const rows = SIZES.map(S => ({ S, v: FR.map(T => sum(src(r => r.t === T.id && r.s === S.name))) }));
             rows.forEach(r => r.win = argmax(r.v));
             const tot = FR.map(T => sum(src(r => r.t === T.id)));
-            // 3종 합계 열 — 노출·클릭은 세 테마 합계, 클릭률은 합산 클릭 ÷ 합산 노출 (노출 가중 평균)
+            // 3종 합계 열
             const allOf = list => { const o = { imp: 0, clk: 0 }; list.forEach(v => { o.imp += v.imp; o.clk += v.clk; }); o.ctr = o.imp ? o.clk / o.imp * 100 : 0; return o; };
             const allLabel = mk === 'ctr' ? '3종 평균' : '3종 합계';
             const allTip = mk === 'ctr' ? '세 테마의 클릭 합계 ÷ 노출 합계' : '세 테마의 ' + m.label + ' 합계';
@@ -5141,20 +4992,19 @@ ${FR[i].name} ${m.fmt(o[mk])}`)).join('')}${allTd(totAll)}</tr>
             const t = document.getElementById('sizeTable');
             t.innerHTML = head + body;
             makeSortable(t);
-            // 요약: 테마별 1위 사이즈 수
             document.getElementById('sizeSummary').innerHTML = stackSummary(FR, rows.map(r => ({ win: r.win, name: r.S.name })), m.label, '사이즈');
         }
         (function () {
             const ctrl = document.getElementById('sizePeriod'), dateEl = document.getElementById('sizeDate'), tabs = document.getElementById('sizeMetric');
             if (!DAILY_DETAIL) ctrl.querySelector('[data-mode="day"]').hidden = true;
-            dateEl.min = PERIOD_FROM; dateEl.max = DTODAY; dateEl.value = DTODAY;
-            ctrl.querySelector('[data-mode="month"]').textContent = `${+TODAY.slice(5, 7)}월 전체`;
+            dateEl.min = DATES[0]; dateEl.max = DTODAY; dateEl.value = DTODAY;
+            monthButtons(ctrl, DATES);
             const run = () => {
                 const mode = ctrl.querySelector('[aria-pressed="true"]').dataset.mode;
                 const mk = tabs.querySelector('[aria-selected="true"]').dataset.metric;
                 dateEl.hidden = mode !== 'day';
                 const d = dateEl.value || DTODAY;
-                if (mode === 'day') renderSize(d, d, mk); else renderSize(PERIOD_FROM, TODAY, mk);
+                if (mode === 'day') renderSize(d, d, mk); else renderSize(...monthRange(ctrl, DATES), mk);
             };
             ctrl.addEventListener('click', e => {
                 const b = e.target.closest('button[data-mode]'); if (!b) return;
@@ -5170,122 +5020,12 @@ ${FR[i].name} ${m.fmt(o[mk])}`)).join('')}${allTd(totAll)}</tr>
             run();
         })();
 
-        /* ⑧ 추가 사이즈 배너 영향 — 이전 배너에 없던 5개 사이즈가 평균 CTR을 끌어내렸는지 (3종 합산 · 일별 원본 DROWS) */
-        (function () {
-            const NEW_SIZES = ['234x60', '300x50', '300x100', '336x280', '468x60'];
-            const isNew = sz => NEW_SIZES.includes(sz);
-            const sec = document.getElementById('newSizeKpi').closest('section');
-            const rows = DROWS.filter(r => r.s && r.s !== '비규격');
-            if (!rows.length) { sec.hidden = true; return; }
-            const FR = ['blackgold', 'whitered', 'magazine'].map(theme);
-            const all = sum(rows), nw = sum(rows.filter(r => isNew(r.s))), old = sum(rows.filter(r => !isNew(r.s)));
-            const oldCnt = new Set(rows.filter(r => !isNew(r.s)).map(r => r.s)).size;
-            const share = all.imp ? nw.imp / all.imp * 100 : 0;
-            const diff = all.ctr - old.ctr;   // 추가 사이즈가 전체 CTR에 미친 영향 (%p) — 음수면 끌어내림
-            const pp = v => Math.abs(v) < 0.0005 ? '0.000%p' : (v > 0 ? '+' : '−') + Math.abs(v).toFixed(3) + '%p';   // ±0.0005 미만은 0으로
-            const sizeNm = sz => sz.replace('x', '×');
-            document.getElementById('newSizeRange').textContent = `${md(DDATES[0])} ~ ${md(DTODAY)} · 3종 합산`;
-
-            // 요약 4칸
-            const kpi = (label, val, sub, cls = '') => `<div class="ss-item"><span class="k-label">${label}</span><span class="k-val ${cls}">${val}</span><span class="k-sub">${sub}</span></div>`;
-            document.getElementById('newSizeKpi').innerHTML =
-                kpi('추가 5종 CTR', pct(nw.ctr), `노출 ${f(nw.imp)} · 클릭 ${f(nw.clk)}`) +
-                kpi(`기존 ${oldCnt}종 CTR`, pct(old.ctr), `노출 ${f(old.imp)} · 클릭 ${f(old.clk)}`);
-
-            // 사이즈별 표 — 추가 5종 + 합계 행
-            const bySize = NEW_SIZES.map(sz => ({ sz, o: sum(rows.filter(r => r.s === sz)), t: FR.map(T => sum(rows.filter(r => r.s === sz && r.t === T.id))) }))
-                .filter(x => x.o.imp).sort((a, b) => b.o.imp - a.o.imp);
-            const ppTd = v => `<td class="${Math.abs(v) < 0.0005 ? '' : v < 0 ? 'pp-down' : 'pp-up'}" data-v="${v}">${pp(v)}</td>`;
-            const line = (name, o, t, cls = '') => `<tr class="${cls}"><td class="left"><b>${name}</b></td>${numTd(o.imp, f)}<td data-v="${all.imp ? o.imp / all.imp * 100 : 0}">${(all.imp ? o.imp / all.imp * 100 : 0).toFixed(1)}%</td>${numTd(o.clk, f)}${numTd(o.ctr, pct)}${ppTd(o.ctr - old.ctr)}${t.map(v => v.imp ? numTd(v.ctr, pct) : `<td class="na" data-v="-1">−</td>`).join('')}</tr>`;
-            const tbl = document.getElementById('newSizeTable');
-            tbl.innerHTML = `<thead><tr>
-                <th data-col="0" style="text-align:left">사이즈</th><th data-col="1">노출수</th><th data-col="2">노출 비중</th><th data-col="3">클릭수</th><th data-col="4">클릭률 (CTR)</th><th data-col="5" title="기존 ${oldCnt}종 평균 CTR과의 차이">기존 대비</th>
-                ${FR.map((T, i) => `<th data-col="${i + 6}" class="grp" style="${cv(T)}"><span class="dot" style="${sw(T)}"></span>${nm(T, true)} CTR</th>`).join('')}
-            </tr></thead>
-            <tbody>${bySize.map(x => line(sizeNm(x.sz) + ' (추가)', x.o, x.t)).join('')}</tbody>
-            <tbody class="grp">
-                ${line('추가 5종 합계', nw, FR.map(T => sum(rows.filter(r => isNew(r.s) && r.t === T.id))), 'type-row')}
-                ${line(`기존 ${oldCnt}종 합계`, old, FR.map(T => sum(rows.filter(r => !isNew(r.s) && r.t === T.id))), 'type-row')}
-                ${line(`전체 (${oldCnt + bySize.length}종)`, all, FR.map(T => sum(rows.filter(r => r.t === T.id))), 'type-row')}
-            </tbody>`;
-            makeSortable(tbl);
-
-            // 일별: 추가 5종 CTR · 기존 CTR · 추가 사이즈 노출 비중
-            const days = DDATES;
-            const daily = days.map(d => {
-                const dr = rows.filter(r => r.d === d), a = sum(dr), n = sum(dr.filter(r => isNew(r.s))), o = sum(dr.filter(r => !isNew(r.s)));
-                return { d, a, n, o, share: a.imp ? n.imp / a.imp * 100 : 0 };
-            }).filter(x => x.a.imp);
-            const avg = (list, k) => { const o = sum(list.map(x => x[k])); return o.ctr; };
-            const k = Math.min(3, Math.floor(daily.length / 2)) || 1;
-            const head3 = daily.slice(0, k), tail3 = daily.slice(-k);
-            const oldFrom = avg(head3, 'o'), oldTo = avg(tail3, 'o'), newFrom = avg(head3, 'n'), newTo = avg(tail3, 'n');
-            const shFrom = head3.reduce((t, x) => t + x.share, 0) / head3.length, shTo = tail3.reduce((t, x) => t + x.share, 0) / tail3.length;
-            const best = [...bySize].sort((a, b) => b.o.ctr - a.o.ctr)[0], worst = [...bySize].sort((a, b) => a.o.ctr - b.o.ctr)[0];
-
-            // 결론 문장
-            let v;
-            if (Math.abs(diff) < 0.001) v = `추가 사이즈 5종을 빼고 계산해도 전체 CTR은 <b>${pct(all.ctr)} → ${pct(old.ctr)}</b>로 차이가 ${pp(diff)}입니다. 추가 5종 CTR(${pct(nw.ctr)})이 기존 ${oldCnt}종(${pct(old.ctr)})과 거의 같고 노출 비중도 ${share.toFixed(1)}%라 <b>평균 CTR을 끌어내리지 않았습니다.</b>`;
-            else if (diff < 0) v = `추가 사이즈 5종이 전체 CTR을 <b>${pp(diff)}</b> 끌어내렸습니다 (추가 제외 시 ${pct(old.ctr)} → 포함 ${pct(all.ctr)}). 추가 5종 CTR ${pct(nw.ctr)} · 기존 ${oldCnt}종 ${pct(old.ctr)} · 노출 비중 ${share.toFixed(1)}%입니다.`;
-            else v = `추가 사이즈 5종이 전체 CTR을 오히려 <b>${pp(diff)}</b> 끌어올렸습니다 (추가 제외 시 ${pct(old.ctr)} → 포함 ${pct(all.ctr)}). 추가 5종 CTR ${pct(nw.ctr)} · 기존 ${oldCnt}종 ${pct(old.ctr)} · 노출 비중 ${share.toFixed(1)}%입니다.`;
-            if (best && worst && best !== worst) v += ` 사이즈별로는 ${sizeNm(best.sz)}(${pct(best.o.ctr)})이 기존 평균보다 높고 ${sizeNm(worst.sz)}(${pct(worst.o.ctr)})은 낮아 서로 상쇄됩니다.`;
-            if (daily.length >= 4) v += `<br>일별로 보면 기존 ${oldCnt}종 CTR이 ${md(head3[0].d)}~${md(head3[k - 1].d)} ${pct(oldFrom)}에서 ${md(tail3[0].d)}~${md(tail3[k - 1].d)} ${pct(oldTo)}로 ${oldTo < oldFrom ? '내려갔고' : '올라갔고'}, 추가 5종도 ${pct(newFrom)} → ${pct(newTo)}로 같은 방향입니다. 추가 사이즈 노출 비중은 ${shFrom.toFixed(1)}% → ${shTo.toFixed(1)}%로 ${shTo < shFrom ? '오히려 줄었습니다' : '늘었습니다'}. ${oldTo < oldFrom && shTo <= shFrom ? '<b>9월 중 CTR 하락은 추가 사이즈가 아니라 사이즈와 무관한 원인(지면 구성 변화)입니다.</b>' : ''}`;
-            document.getElementById('newSizeVerdict').innerHTML = v;
-
-            // 일별 그래프
-            const C_NEW = '#3446b8', C_OLD = '#9aa0a8';
-            document.getElementById('newSizeLegend').innerHTML = `<span><i style="background:${C_NEW}"></i>추가 5종 CTR</span><span><i style="background:${C_OLD}"></i>기존 ${oldCnt}종 CTR</span><span><i class="bar"></i>추가 사이즈 노출 비중 (오른쪽 축)</span>`;
-            const nice = v => { if (!(v > 0)) return 1; const p = Math.pow(10, Math.floor(Math.log10(v))); for (const q of [1, 2, 2.5, 5, 10]) if (q * p >= v) return q * p; return v; };
-            const box = document.getElementById('newSizeChart'), svg = box.querySelector('svg'), tip = box.querySelector('.tip');
-            function draw() {
-                svg.setAttribute('width', 0);
-                const W = box.clientWidth, H = box.clientHeight, L = 50, R = 44, T = 10, B = 26, iw = W - L - R, ih = H - T - B;
-                const maxC = nice(Math.max(...daily.flatMap(x => [x.n.ctr, x.o.ctr]))), maxS = nice(Math.max(...daily.map(x => x.share)));
-                const gw = iw / daily.length, X = i => L + gw * i + gw / 2, Y = val => T + ih - val / maxC * ih, YS = val => T + ih - val / maxS * ih;
-                svg.setAttribute('width', W); svg.setAttribute('height', H);
-                let out = '';
-                for (let g = 0; g <= 4; g++) {
-                    const y = T + ih - ih * g / 4;
-                    out += `<line x1="${L}" x2="${W - R}" y1="${y}" y2="${y}" stroke="${g ? '#f2f3f5' : '#e6e8ec'}"/>`;
-                    out += `<text x="${L - 6}" y="${y + 4}" font-size="10" fill="#b3b8bf" text-anchor="end">${(maxC * g / 4).toFixed(3)}%</text>`;
-                    out += `<text x="${W - R + 6}" y="${y + 4}" font-size="10" fill="#b3b8bf" text-anchor="start">${Math.round(maxS * g / 4)}%</text>`;
-                }
-                const bw = Math.max(3, Math.min(14, gw * 0.5));
-                daily.forEach((x, i) => { const h = x.share / maxS * ih; if (h > 0) out += `<rect x="${X(i) - bw / 2}" y="${T + ih - h}" width="${bw}" height="${h}" rx="2" fill="#dfe3ea"/>`; });
-                const poly = (key, color, dash) => {
-                    const pts = daily.map((x, i) => x[key].imp ? `${X(i)},${Y(x[key].ctr)}` : null).filter(Boolean);
-                    return `<polyline fill="none" stroke="${color}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"${dash ? ' stroke-dasharray="5 4"' : ''} points="${pts.join(' ')}"/>` +
-                        daily.map((x, i) => x[key].imp ? `<circle cx="${X(i)}" cy="${Y(x[key].ctr)}" r="3" fill="#fff" stroke="${color}" stroke-width="2"/>` : '').join('');
-                };
-                out += poly('o', C_OLD, true) + poly('n', C_NEW, false);
-                const step = Math.max(1, Math.ceil(daily.length / 14));
-                daily.forEach((x, i) => {
-                    out += `<rect class="hit" data-i="${i}" x="${L + gw * i}" y="${T}" width="${gw}" height="${ih}" fill="transparent"/>`;
-                    if (i % step === 0 || i === daily.length - 1) out += `<text x="${X(i)}" y="${H - 8}" font-size="10.5" fill="#888" text-anchor="middle">${md(x.d)}</text>`;
-                });
-                svg.innerHTML = out;
-                svg.querySelectorAll('.hit').forEach(h => {
-                    h.addEventListener('mouseenter', () => {
-                        const x = daily[+h.dataset.i];
-                        tip.innerHTML = `<b>${md(x.d)}</b><span><em style="font-style:normal"><i style="background:${C_NEW}"></i>추가 5종</em>${x.n.imp ? pct(x.n.ctr) + ' (' + f(x.n.imp) + ')' : '−'}</span><span><em style="font-style:normal"><i style="background:${C_OLD}"></i>기존 ${oldCnt}종</em>${x.o.imp ? pct(x.o.ctr) + ' (' + f(x.o.imp) + ')' : '−'}</span><span><em style="font-style:normal"><i style="background:#dfe3ea"></i>추가 비중</em>${x.share.toFixed(1)}%</span>`;
-                        tip.hidden = false;
-                        const gx = L + gw * (+h.dataset.i), tw = tip.offsetWidth;
-                        tip.style.left = (gx + gw + tw > W ? gx - tw - 4 : gx + gw + 4) + 'px'; tip.style.top = '0px';
-                        h.setAttribute('fill', 'rgba(52,70,184,.06)');
-                    });
-                    h.addEventListener('mouseleave', () => { tip.hidden = true; h.setAttribute('fill', 'transparent'); });
-                });
-            }
-            window.addEventListener('resize', draw);
-            draw();
-        })();
-
-        /* ⑤ 프레임 이름별 — 실제 프레임 이름 전부 (9월 전체 / 일별 선택) */
+        /* 프레임 이름별 표 */
         function renderNames(from, to) {
             const inR = r => r.d >= from && r.d <= to;
-            const whole = from === PERIOD_FROM && to === TODAY && NROWS.length;   // 월 전체는 기간 누적(NDATA · xlsx) · 일별은 원본 일별(DROWS)
+            const whole = wholeRange(from, to, DATES) && NROWS.length;   // 월 전체는 NDATA, 일별은 DROWS
             const src = whole ? NROWS : dpick(inR);
-            // 크기 × 디자인 조합으로 합산 (같은 조합의 변형 배너 _ETC · No 등은 하나로)
+            // 테마 x 사이즈로 합산, 변형 배너는 하나로
             const keys = [...new Set(src.map(r => `${r.t}|${r.s}`))];
             const rows = keys.map(k => { const [tid, size] = k.split('|'); return { T: theme(tid), size, s: sum(src.filter(r => r.t === tid && r.s === size)) }; });
             const t = document.getElementById('nameTable');
@@ -5296,27 +5036,27 @@ ${FR[i].name} ${m.fmt(o[mk])}`)).join('')}${allTd(totAll)}</tr>
                 <td class="left"><b>${size === '비규격' ? '비규격 (오토)' : size}</b></td>
                 ${M3.map(m => numTd(s[m.k], m.fmt)).join('')}</tr>`).join('') : '<tr><td colspan="5" class="na" style="text-align:center">이 날짜에는 데이터가 없습니다</td></tr>'}</tbody>`;
             makeSortable(t);
-            // 디자인 앞 1·2·3위 — 정렬한 지표(노출수·클릭수·CTR) 기준, 디자인·사이즈로 정렬하면 CTR 기준
+            // 순위 배지는 정렬한 지표 기준, 이름 정렬이면 CTR
             const rank = () => {
                 const th = t.querySelector('th[aria-sort]'), col = th && +th.dataset.col >= 2 ? +th.dataset.col : 4;
                 const trs = [...t.tBodies[0].rows].filter(r => r.cells.length > 1);
-                const order = [...trs].sort((x, y) => +y.cells[col].dataset.v - +x.cells[col].dataset.v);
+                const order = trs.filter(r => +r.cells[col].dataset.v > 0).sort((x, y) => +y.cells[col].dataset.v - +x.cells[col].dataset.v);   // 0이면 순위 없음
                 trs.forEach(r => r.querySelector('.rk-slot').innerHTML = '');
                 order.slice(0, 3).forEach((r, i) => r.querySelector('.rk-slot').innerHTML = `<span class="rk-badge rk${i + 1}">${i + 1}위</span>`);
             };
             t.tHead.addEventListener('click', () => setTimeout(rank));
-            t.querySelector('th[data-col="4"] .arw-up').click();   // 처음에는 클릭률 (CTR) 높은 순
+            t.querySelector('th[data-col="4"] .arw-up').click();   // 처음엔 CTR 높은 순
         }
         (function () {
             const ctrl = document.getElementById('namePeriod'), dateEl = document.getElementById('nameDate');
             if (!DAILY_DETAIL) ctrl.querySelector('[data-mode="day"]').hidden = true;
-            dateEl.min = PERIOD_FROM; dateEl.max = DTODAY; dateEl.value = DTODAY;
-            ctrl.querySelector('[data-mode="month"]').textContent = `${+TODAY.slice(5, 7)}월 전체`;
+            dateEl.min = DATES[0]; dateEl.max = DTODAY; dateEl.value = DTODAY;
+            monthButtons(ctrl, DATES);
             const run = () => {
                 const mode = ctrl.querySelector('[aria-pressed="true"]').dataset.mode;
                 dateEl.hidden = mode !== 'day';
                 const d = dateEl.value || DTODAY;
-                if (mode === 'day') renderNames(d, d); else renderNames(PERIOD_FROM, TODAY);
+                if (mode === 'day') renderNames(d, d); else renderNames(...monthRange(ctrl, DATES));
             };
             ctrl.addEventListener('click', e => {
                 const b = e.target.closest('button[data-mode]'); if (!b) return;
@@ -5326,23 +5066,23 @@ ${FR[i].name} ${m.fmt(o[mk])}`)).join('')}${allTd(totAll)}</tr>
             dateEl.addEventListener('change', run);
             run();
         })();
-        /* ⑥ 지면별 — 테마 × 지면 (지표 탭 · 9월 전체 / 일별 선택) · 지면 데이터가 들어오면 표시 */
-        // 지면은 사이트 이름만 표시 (매체 · 광고 자리 번호는 표시하지 않고, 같은 사이트의 여러 자리는 합산)
+        /* 지면별 표 */
+        // 지면은 사이트 이름 기준으로 합산
         const siteOf = p => { const m = p.replace(/_N_v2$/, '').match(/^(web|app|mob)_(.+?)_([a-z]+)_(\d+)$/); return m ? m[2] : p; };
         const PROWS = PDATA.map(([d, t, p, imp, clk]) => ({ d, t, p: siteOf(p), imp, clk }));
-        const XPROWS = XPDATA.map(([t, p, imp, clk]) => ({ t, p: siteOf(p), imp, clk }));   // 기간 누적 (xlsx)
+        const XPROWS = XPDATA.map(([t, p, imp, clk]) => ({ t, p: siteOf(p), imp, clk }));
         const ETC_PLACE = '기타 지면';
-        const PLACE_N = 10;   // 표에 보여 줄 지면 수 (노출 상위 · 사이트 기준)
+        const PLACE_N = 10;   // 표에 보여 줄 지면 수
         const placeLabel = p => `<b>${p}</b>`;
         function renderPlace(from, to, mk) {
-            const whole = from === PERIOD_FROM && to !== from && XPROWS.length > 0;   // 월 전체: xlsx 기간 누적 · 일별: 원본 일별
+            const whole = wholeRange(from, to, DATES) && to !== from && XPROWS.length > 0;   // 월 전체는 XPROWS, 일별은 PROWS
             const src = whole ? XPROWS : PROWS;
             const inR = r => whole || (r.d >= from && r.d <= to);
             const m = M3.find(x => x.k === mk);
             const FR = THEMES;
             const psum = fn => sum(src.filter(fn));
-            const argmax = list => { let w = -1; list.forEach((o, i) => { if (o.imp && (w < 0 || o[mk] > list[w][mk])) w = i; }); return w; };
-            // 지면 목록: 기간 내 노출 많은 순 — 상위 PLACE_N개 실제 지면만 ('기타 지면' 묶음은 제외)
+            const argmax = list => { let w = -1; list.forEach((o, i) => { if (o.imp && o[mk] > 0 && (w < 0 || o[mk] > list[w][mk])) w = i; }); return w; };   // 값이 0이면 1위 없음
+            // 노출 상위 PLACE_N개 지면
             const places = [...new Set(src.filter(r => inR(r) && r.p !== ETC_PLACE).map(r => r.p))]
                 .map(p => ({ p, all: psum(r => inR(r) && r.p === p) }))
                 .sort((a, b) => b.all.imp - a.all.imp).slice(0, PLACE_N);
@@ -5366,15 +5106,15 @@ ${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>
         (function () {
             const ctrl = document.getElementById('placePeriod'), dateEl = document.getElementById('placeDate'), tabs = document.getElementById('placeMetric');
             const PD = [...new Set(PROWS.map(r => r.d))].sort(), PTODAY = PD[PD.length - 1] || TODAY;
-            dateEl.min = PERIOD_FROM; dateEl.max = PTODAY; dateEl.value = PTODAY;
-            ctrl.querySelector('[data-mode="month"]').textContent = `${+PTODAY.slice(5, 7)}월 전체`;
-            if (!PROWS.length) ctrl.querySelector('[data-mode="day"]').hidden = true;   // 일별 지면 데이터가 없으면 월 전체만
+            dateEl.min = DATES[0]; dateEl.max = PTODAY; dateEl.value = PTODAY;
+            monthButtons(ctrl, PD);
+            if (!PROWS.length) ctrl.querySelector('[data-mode="day"]').hidden = true;
             const run = () => {
                 const mode = ctrl.querySelector('[aria-pressed="true"]').dataset.mode;
                 const mk = tabs.querySelector('[aria-selected="true"]').dataset.metric;
                 dateEl.hidden = mode !== 'day';
                 const d = dateEl.value || PTODAY;
-                if (mode === 'day') renderPlace(d, d, mk); else renderPlace(PERIOD_FROM, PTODAY, mk);
+                if (mode === 'day') renderPlace(d, d, mk); else renderPlace(...monthRange(ctrl, PD), mk);
             };
             ctrl.addEventListener('click', e => {
                 const b = e.target.closest('button[data-mode]'); if (!b) return;
@@ -5389,15 +5129,14 @@ ${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>
             dateEl.addEventListener('change', run);
             run();
         })();
-        // 날짜 칸 어디를 눌러도 달력이 뜨게
-        // 날짜 칸(①④⑤⑥)은 눌러도 칸 안의 글자가 선택(파랗게)·복사되지 않게 — 포커스 없이 달력만 띄움
+        // 날짜 칸은 포커스 없이 달력만 띄움
         document.querySelectorAll('.date-in').forEach(el => {
             el.addEventListener('mousedown', e => { e.preventDefault(); try { el.showPicker(); } catch (err) { } });
-            el.addEventListener('keydown', e => { if (e.key !== 'Tab') e.preventDefault(); });   // 키보드 복사·선택 막기 (Tab 이동은 허용)
+            el.addEventListener('keydown', e => { if (e.key !== 'Tab') e.preventDefault(); });   // Tab 이동만 허용
         });
     </script>
     <script>
-        /* 맨 위로 버튼 — 300px 이상 내려가면 표시 */
+        /* 맨 위로 버튼 */
         (function () {
             const b = document.getElementById('toTop');
             const on = () => b.classList.toggle('show', window.scrollY > 300);

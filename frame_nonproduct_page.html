@@ -6,1130 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>비상품 프레임</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-    <style>
-        * {
-            box-sizing: border-box
-        }
-
-        body {
-            margin: 0;
-            background: #f5f6f8;
-            color: #202124;
-            font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif
-        }
-
-        .wrap {
-            margin: auto;
-            padding: 28px 32px
-        }
-
-        .head {
-            display: flex;
-            justify-content: space-between;
-            align-items: end;
-            margin-bottom: 22px;
-            gap: 12px
-        }
-
-        .head h1 {
-            margin: 0;
-            font-size: 27px
-        }
-
-        .date {
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 9px;
-            padding: 10px 14px;
-            font-size: 13px
-        }
-
-        .card {
-            background: #fff;
-            border: 1px solid #e6e8ec;
-            border-radius: 12px;
-            padding: 26px 24px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 4px 14px rgba(0, 0, 0, .07);
-            min-width: 0
-        }
-
-        section {
-            margin-bottom: 48px
-        }
-
-        section:last-of-type {
-            margin-bottom: 24px
-        }
-
-        .title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 12px
-        }
-
-        .title h2 {
-            font-size: 17px;
-            font-weight: 800;
-            color: #1a1d23;
-            letter-spacing: -.01em;
-            margin: 0
-        }
-
-        .title span {
-            font-size: 12px;
-            color: #858a92
-        }
-
-        .note {
-            font-size: 11px;
-            color: #858a92;
-            margin-top: 10px
-        }
-
-        .dot {
-            display: inline-block;
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            margin-right: 6px;
-            vertical-align: 0;
-            flex: none
-        }
-
-        /* ① 테마별 성과 박스 */
-        .themes {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 14px
-        }
-
-        .theme {
-            padding: 0;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column
-        }
-
-        .theme-art {
-            background: #f8f9fb;
-            padding: 16px;
-            border-bottom: 1px solid #eceef1
-        }
-
-        .theme-art .ad {
-            max-width: 280px;
-            margin: auto
-        }
-
-        .theme-body {
-            padding: 14px 16px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px
-        }
-
-        .theme-name {
-            font-size: 15px;
-            font-weight: 700;
-            display: flex;
-            align-items: center
-        }
-
-        /* 프레임 이름 호버 툴팁 */
-        .fname { cursor: default; border-bottom: 1px dotted transparent }
-        .fname:hover { border-bottom-color: currentColor }
-        #frameTip { position: fixed; left: -9999px; top: -9999px; z-index: 2000; width: 216px; padding: 8px; background: #fff; border: 1px solid #e3e6ea; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, .16); pointer-events: none; visibility: hidden }
-        #frameTip.show { visibility: visible }
-        #frameTip .ft-item { display: none }
-        #frameTip .ft-item.on { display: block }
-        #frameTip .ad.ad-slot { width: 200px; margin: 0 auto }
-        #frameTip .ft-name { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; font-size: 12px; font-weight: 700; color: #20242a }
-
-        /* ① 프레임 미리보기 링크 (뷰어 페이지 새 탭) */
-        a.theme-art { display: block; text-decoration: none; color: inherit }
-        .theme-view { margin-left: auto; display: inline-flex; align-items: center; gap: 3px; font-size: 11.5px; font-weight: 600; color: #3446b8; text-decoration: none; white-space: nowrap; padding: 2px 7px; border-radius: 999px; background: #eef0f9 }
-        .theme-view:hover { background: #3446b8; color: #fff }
-
-        .theme-period {
-            font-size: 12px;
-            color: #6b7078
-        }
-
-        .theme-period b {
-            color: #3446b8
-        }
-
-        .theme-stats {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 7px 10px;
-            font-size: 13px;
-            border-top: 1px dashed #e1e4e9;
-            padding-top: 10px;
-            margin: 0
-        }
-
-        .theme-stats dt {
-            color: #7b8088
-        }
-
-        .theme-stats dd {
-            margin: 0;
-            text-align: right;
-            font-weight: 700;
-            font-variant-numeric: tabular-nums
-        }
-
-        /* ② 타임라인 */
-        .tl {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            position: relative
-        }
-
-        .tl::before {
-            content: "";
-            position: absolute;
-            left: 82px;
-            top: 8px;
-            bottom: 8px;
-            width: 2px;
-            background: #e6e8ec
-        }
-
-        .tl li {
-            display: grid;
-            grid-template-columns: 70px 26px 1fr 150px;
-            gap: 0 12px;
-            align-items: start;
-            padding: 10px 0
-        }
-
-        .tl li+li {
-            border-top: 1px solid #f1f2f4
-        }
-
-        .tl-date {
-            font-size: 13px;
-            font-weight: 700;
-            text-align: right;
-            padding-top: 2px;
-            font-variant-numeric: tabular-nums
-        }
-
-        .tl-date small {
-            display: block;
-            font-size: 11px;
-            color: #9aa0a8;
-            font-weight: 400
-        }
-
-        .tl-dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            border: 3px solid #fff;
-            box-shadow: 0 0 0 2px var(--c);
-            background: var(--c);
-            margin: 3px auto 0;
-            position: relative;
-            z-index: 1
-        }
-
-        .tl-body {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            min-width: 0
-        }
-
-        .tl-top {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            flex-wrap: wrap
-        }
-
-        .tl-top b {
-            font-size: 14px
-        }
-
-        .tl-body p {
-            margin: 0;
-            font-size: 12.5px;
-            color: #6b7078;
-            line-height: 1.5
-        }
-
-        .chip {
-            display: inline-block;
-            font-size: 11px;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 999px;
-            white-space: nowrap
-        }
-
-        .chip.deploy {
-            background: #e8ecff;
-            color: #3446b8
-        }
-
-        .chip.copy {
-            background: #fff3dc;
-            color: #a86b00
-        }
-
-        .chip.ratio {
-            background: #fbe9ea;
-            color: #c9444d
-        }
-
-        .chip.fix {
-            background: #eceef1;
-            color: #4b5260
-        }
-
-        .chip.ch.google {
-            background: #eef0f3;
-            color: #4b5260
-        }
-
-        .chip.ch.kakao {
-            background: #fff4c2;
-            color: #6b5300
-        }
-
-        .tl-target {
-            font-size: 12px;
-            font-weight: 700;
-            color: #444;
-            display: flex;
-            align-items: center
-        }
-
-        .chip.live {
-            background: #e6f4ec;
-            color: #198754
-        }
-
-        .tl-art .ad {
-            width: 150px
-        }
-        /* ② 전전일 vs 전일 — 지표별 카드 (제목 + 한 줄 요약 · 막대 · 이름/1위 배지 · 증감 칩) */
-        .yd-legend { margin-bottom: 14px }
-        .yd-legend-note { color: #858a92 }
-        .yd-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px }
-        .yd-card { background: #fff; border: 1px solid #e6e8ec; border-radius: 12px; box-shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 4px 14px rgba(0, 0, 0, .06); padding: 16px 18px 14px; min-width: 0 }
-        .yd-card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 10px }
-        .yd-card-head h3 { margin: 0; font-size: 14px; font-weight: 800; color: #202124; white-space: nowrap }
-        .yd-note { font-size: 11.5px; font-weight: 600; color: #858a92; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
-        .yd-chart { position: relative; height: 170px }
-        .yd-chart svg { display: block; overflow: visible }
-        .yd-chart .yd-bar { cursor: default }
-        .yd-labels { display: grid; margin-top: 8px; text-align: center }
-        .yd-labels > div { display: flex; flex-direction: column; align-items: center; gap: 5px; min-width: 0 }
-        .yd-name { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: #202124; white-space: nowrap }
-        .yd-chg { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap }
-        .yd-chg.rise { background: #e6f4ec; color: #198754 }
-        .yd-chg.fall { background: #fbe9ea; color: #c9444d }
-        .yd-chg.flat { background: #eceef1; color: #666 }
-        .yd-chg.none { background: #eceef1; color: #858a92 }
-        @media(max-width:1100px) { .yd-cards { grid-template-columns: 1fr } }
-
-        /* ③ 최근 7일 */
-        .legend {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px 16px;
-            font-size: 12px;
-            color: #555;
-            margin-bottom: 8px
-        }
-
-        .legend i {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 2px;
-            margin-right: 6px;
-            vertical-align: -1px
-        }
-
-        .w7 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px
-        }
-
-        .w7-box h3 {
-            margin: 0 0 6px;
-            font-size: 13px;
-            color: #444
-        }
-
-        .w7-chart {
-            height: 230px;
-            position: relative
-        }
-
-        .w7-chart svg {
-            display: block;
-            overflow: visible
-        }
-
-        .tip {
-            position: absolute;
-            pointer-events: none;
-            background: #20242a;
-            color: #fff;
-            border-radius: 8px;
-            padding: 8px 10px;
-            font-size: 12px;
-            line-height: 1.6;
-            white-space: nowrap;
-            z-index: 3;
-            box-shadow: 0 4px 14px #0003
-        }
-
-        .tip b {
-            display: block
-        }
-
-        .tip i {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin-right: 6px
-        }
-
-        .tip span {
-            display: flex;
-            justify-content: space-between;
-            gap: 14px;
-            font-variant-numeric: tabular-nums
-        }
-
-        /* 표 */
-        .scroll {
-            overflow: auto
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12px
-        }
-
-        th,
-        td {
-            padding: 10px 10px;
-            border-bottom: 1px solid #e9ebef;
-            text-align: right;
-            white-space: nowrap;
-            font-variant-numeric: tabular-nums
-        }
-
-        th:first-child,
-        td:first-child {
-            text-align: left
-        }
-
-        th {
-            color: #777;
-            background: #fafbfc;
-            font-size: 11px;
-            font-weight: 700
-        }
-
-        th.grp {
-            text-align: center;
-            color: #202124;
-            font-size: 12px;
-            border-bottom: 2px solid var(--c)
-        }
-
-        th.sep,
-        td.sep {
-            border-left: 1px solid #e6e8ec
-        }
-
-        td.best {
-            color: #3446b8;
-            font-weight: 700
-        }
-
-        .crown-wrap {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            position: relative;
-            cursor: default
-        }
-
-        .crown-wrap::after {
-            content: attr(data-tip);
-            position: absolute;
-            bottom: calc(100% + 8px);
-            right: -6px;
-            background: #20242a;
-            color: #fff;
-            font-size: 12px;
-            font-weight: 600;
-            line-height: 1.5;
-            text-align: left;
-            white-space: pre;
-            padding: 7px 10px;
-            border-radius: 7px;
-            box-shadow: 0 4px 14px #0003;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity .12s;
-            z-index: 5
-        }
-
-        .crown-wrap::before {
-            content: "";
-            position: absolute;
-            bottom: calc(100% + 2px);
-            right: 10px;
-            border: 6px solid transparent;
-            border-top-color: #20242a;
-            border-bottom: 0;
-            opacity: 0;
-            transition: opacity .12s;
-            z-index: 5
-        }
-
-        td.top:hover .crown-wrap::after,
-        td.top:hover .crown-wrap::before {
-            opacity: 1
-        }
-
-        .crown {
-            width: 17px;
-            height: 20px;
-            flex: none;
-            margin: -3px 0
-        }
-
-        td.top {
-            background: color-mix(in srgb, var(--c) 16%, #fff);
-            font-weight: 700;
-            box-shadow: inset 3px 0 0 var(--c)
-        }
-
-        .win {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: 700;
-            font-size: 12px
-        }
-
-        .win::before {
-            content: "";
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            background: var(--c)
-        }
-
-        .ss {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 14px
-        }
-
-        .ss-item {
-            background: #f8f9fb;
-            border-radius: 10px;
-            padding: 12px 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-            min-width: 0
-        }
-
-        .ss-top {
-            display: flex;
-            align-items: center;
-            font-size: 13px;
-            font-weight: 700
-        }
-
-        .ss-top b {
-            margin-left: auto;
-            font-size: 13px
-        }
-
-        .ss-bar {
-            height: 6px;
-            background: #e6e8ec;
-            border-radius: 3px;
-            overflow: hidden
-        }
-
-        .ss-bar span {
-            display: block;
-            height: 100%;
-            background: var(--c);
-            border-radius: 3px
-        }
-
-        .ss-list {
-            font-size: 11.5px;
-            color: #6b7078;
-            line-height: 1.5
-        }
-
-        @media(max-width:700px) {
-            .ss {
-                grid-template-columns: 1fr
-            }
-        }
-
-        td.left {
-            text-align: left
-        }
-
-        .cell-name .ad {
-            width: 56px;
-            flex: none;
-            box-shadow: none
-        }
-
-        .total-row td {
-            background: #f3f5ff;
-            font-weight: 700;
-            color: #202124;
-            border-bottom: 2px solid #d9ddf5;
-            font-size: 12.5px
-        }
-
-        /* 표 날짜 칸: 토요일 파랑 · 일요일/공휴일 빨강 (holidays.js) */
-        td.day-sat { color: #2a6fdb }
-        td.day-sun { color: #d7262f }
-
-        .total-row td:first-child {
-            color: #3446b8
-        }
-
-        .sort-btn {
-            all: unset;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 3px 6px;
-            margin: -3px -6px;
-            border-radius: 6px;
-            font: inherit;
-            color: inherit
-        }
-
-        .sort-btn:hover {
-            background: #eef0f3
-        }
-
-        .sort-btn:focus-visible {
-            outline: 2px solid #3446b8
-        }
-
-        .sort-btn .arw {
-            display: inline-flex;
-            flex-direction: column;
-            font-size: 7px;
-            line-height: 7px;
-            color: #d3d7dd
-        }
-
-        .sort-btn .arw span {
-            padding: 1px 4px;
-            margin: 0 -4px;
-            cursor: pointer
-        }
-
-        .sort-btn .arw span:hover {
-            color: #6b7078
-        }
-
-        .sort-btn[data-dir="desc"] .arw .arw-up,
-        .sort-btn[data-dir="asc"] .arw .arw-dn {
-            color: #3446b8
-        }
-
-        .sort-btn[data-dir] {
-            color: #3446b8;
-            font-weight: 700
-        }
-
-        /* ---------- 프레임 예시 이미지 (HTML 목업 · 실제 소재 이미지로 교체 가능) ---------- */
-        .ad {
-            container-type: inline-size;
-            aspect-ratio: 6/5;
-            width: 100%;
-            max-width: 100%;
-            position: relative;
-            overflow: hidden;
-            border-radius: 4px;
-            line-height: 1.25;
-            letter-spacing: -.01em;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, .12)
-        }
-
-        .ad svg {
-            display: block;
-            width: 100%;
-            height: 100%
-        }
-
-        .ad-blackgold .img {
-            width: 36cqw;
-            height: 32cqw
-        }
-
-        .ad-blackgold .price {
-            font-size: 6.4cqw;
-            font-weight: 700;
-            color: #e2c270
-        }
-
-        .ad-whitered .img {
-            padding: 5cqw 4cqw
-        }
-
-        .ad-whitered .body {
-            padding: 3cqw 5cqw 3cqw 1cqw;
-            display: flex;
-            flex-direction: column;
-            gap: 2cqw
-        }
-
-        .ad-whitered .price {
-            font-size: 8cqw;
-            font-weight: 800;
-            color: #d7262f
-        }
-
-        .ad-whitered .price s {
-            display: block;
-            font-size: 3.8cqw;
-            color: #999;
-            font-weight: 400
-        }
-
-        .ad-redauto .auto {
-            font-size: 3cqw;
-            background: rgba(255, 255, 255, .18);
-            border-radius: 10cqw;
-            padding: .8cqw 2.4cqw;
-            font-weight: 700
-        }
-
-        .ad-redauto .tile .img {
-            height: 17cqw
-        }
-
-        .ad-magazine .col {
-            display: flex;
-            flex-direction: column;
-            gap: 2cqw;
-            min-width: 0
-        }
-
-        .ad-magazine .hl {
-            font-family: Georgia, "Noto Serif KR", serif;
-            font-size: 7.2cqw;
-            line-height: 1.18;
-            font-weight: 700;
-            letter-spacing: -.03em
-        }
-
-        .ad-magazine .price {
-            font-size: 4.6cqw;
-            font-weight: 700;
-            margin-top: auto
-        }
-
-        .ad-magazine .link {
-            font-size: 3.6cqw;
-            font-weight: 700;
-            border-bottom: 1px solid;
-            align-self: flex-start
-        }
-
-        .ad-magazine .img {
-            background: #e2d9c8;
-            display: flex;
-            align-items: center;
-            padding: 4cqw
-        }
-
-        @media(max-width:1100px) {
-
-            .themes {
-                grid-template-columns: repeat(2, 1fr)
-            }
-
-            .w7 {
-                grid-template-columns: 1fr
-            }
-        }
-
-        @media(max-width:700px) {
-            .wrap {
-                padding: 18px
-            }
-
-            .head {
-                display: block
-            }
-
-            .date {
-                display: inline-block;
-                margin-top: 12px
-            }
-
-            .themes {
-                grid-template-columns: 1fr
-            }
-
-            .tl::before {
-                left: 64px
-            }
-
-            .tl li {
-                grid-template-columns: 52px 26px 1fr
-            }
-
-            .tl-art {
-                grid-column: 3;
-                margin-top: 8px
-            }
-        }
-
-        .ad.ad-slot {
-            background: #fff;
-            border: 1px solid #d6d9de;
-            box-shadow: none;
-            border-radius: 6px
-        }
-
-        .ad.ad-slot:has(iframe) {
-            aspect-ratio: 1;            /* 250x250 배너 */
-            border-color: #e3e6ea
-        }
-
-        .ad.ad-slot iframe {
-            display: block;
-            width: 250px;               /* 배너 원본 크기로 그린 뒤 */
-            height: 250px;
-            border: 0;
-            transform-origin: 0 0;      /* 칸 폭에 맞게 축소 (fitBannerSlots) */
-            pointer-events: none;       /* 대시보드에서 실수로 광고 클릭 방지 */
-        }
-
-        .tl-open {
-            position: fixed;
-            right: 24px;
-            bottom: calc(24px + env(safe-area-inset-bottom, 0px));
-            z-index: 20;
-            width: 58px;
-            height: 58px;
-            border-radius: 50%;
-            border: 0;
-            background: #3446b8;
-            color: #fff;
-            display: grid;
-            place-items: center;
-            cursor: pointer;
-            box-shadow: 0 6px 18px rgba(52, 70, 184, .38);
-            transition: transform .15s, background .15s
-        }
-
-        .tl-open:hover {
-            background: #28389a;
-            transform: translateY(-2px)
-        }
-
-        .tl-open-label {
-            position: absolute;
-            right: calc(100% + 10px);
-            top: 50%;
-            transform: translateY(-50%);
-            background: #20242a;
-            color: #fff;
-            font-size: 12.5px;
-            font-weight: 700;
-            white-space: nowrap;
-            padding: 7px 11px;
-            border-radius: 7px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity .15s
-        }
-
-        .tl-open:hover .tl-open-label,
-        .tl-open:focus-visible .tl-open-label {
-            opacity: 1
-        }
-
-        .tl-open:focus-visible,
-        .tl-close:focus-visible {
-            outline: 2px solid #3446b8;
-            outline-offset: 2px
-        }
-
-        .tl-modal {
-            width: min(920px, calc(100vw - 32px));
-            max-height: calc(100vh - 48px);
-            padding: 0;
-            border: 0;
-            border-radius: 14px;
-            box-shadow: 0 20px 60px #0004;
-            color: #202124
-        }
-
-        .tl-modal::backdrop {
-            background: rgba(20, 24, 30, .45)
-        }
-
-        .tl-modal[open] {
-            display: flex;
-            flex-direction: column;
-            animation: tlIn .16s ease-out
-        }
-
-        @keyframes tlIn {
-            from {
-                opacity: 0;
-                transform: translateY(8px)
-            }
-
-            to {
-                opacity: 1;
-                transform: none
-            }
-        }
-
-        .tl-modal-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            padding: 18px 22px;
-            border-bottom: 1px solid #eceef1
-        }
-
-        .tl-modal-head h2 {
-            margin: 0;
-            font-size: 17px
-        }
-
-        .tl-modal-head span {
-            font-size: 12px;
-            color: #858a92
-        }
-
-        .tl-close {
-            all: unset;
-            cursor: pointer;
-            width: 34px;
-            height: 34px;
-            display: grid;
-            place-items: center;
-            border-radius: 8px;
-            color: #6b7078
-        }
-
-        .tl-close:hover {
-            background: #f1f2f4;
-            color: #202124
-        }
-
-        .tl-modal-body {
-            overflow: auto;
-            padding: 8px 22px 18px
-        }
-
-        @media (max-width:700px) {
-            .head-right {
-                align-items: flex-start;
-                margin-top: 12px
-            }
-
-            .head-right .date {
-                margin-top: 0
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .tl-modal[open] {
-                animation: none
-            }
-        }
-
-        /* ③ 최근 7일 — 위아래 여백 */
-        .legend {
-            margin: 4px 0 20px
-        }
-
-        .w7 {
-            gap: 32px 24px;
-            padding-bottom: 6px
-        }
-
-        .w7-box h3 {
-            margin: 0 0 14px;
-            font-size: 13px;
-            font-weight: 800;
-            color: #202124;
-            display: flex;
-            align-items: center;
-            gap: 7px
-        }
-
-        .w7-box h3::before {
-            content: "";
-            width: 3px;
-            height: 13px;
-            border-radius: 2px;
-            background: #3446b8
-        }
-
-        .w7-chart {
-            height: 240px
-        }
-
-        .legend i {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            margin-right: 6px;
-            vertical-align: 0
-        }
-        /* ④ 사이즈별 — 요약 박스 여백 */
-        .ss { gap: 16px; margin: 6px 0 24px }
-        .ss-item { padding: 28px 22px 26px; gap: 16px; min-height: 160px; justify-content: center }
-        .ss-top { font-size: 14px }
-        .ss-list { line-height: 1.7 }
-        /* ④ 기간 선택 */
-        .period-ctrl { display: flex; align-items: center; gap: 8px; flex-wrap: wrap }
-        .seg { display: inline-flex; background: #f1f2f4; border-radius: 9px; padding: 3px }
-        .seg button { border: 0; background: transparent; padding: 6px 14px; border-radius: 7px; font: inherit; font-size: 12.5px; font-weight: 600; color: #6b7078; cursor: pointer }
-        .seg button[aria-pressed="true"] { background: #fff; color: #3446b8; font-weight: 800; box-shadow: 0 1px 3px #0002 }
-        .seg button:focus-visible, .date-in:focus-visible { outline: 2px solid #3446b8; outline-offset: 1px }
-        .date-in { border: 1px solid #d6d9de; border-radius: 8px; padding: 6px 10px; font: inherit; font-size: 12.5px; color: #202124; background: #fff }
-        td.na { color: #c3c7ce }
-        /* ④ 지표 탭 */
-        .m-tabs { display: flex; gap: 4px; border-bottom: 1px solid #e6e8ec; margin: 2px 0 18px }
-        .m-tabs button { border: 0; background: none; font: inherit; font-size: 13.5px; font-weight: 700; color: #858a92; padding: 10px 16px 11px; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px }
-        .m-tabs button:hover { color: #202124 }
-        .m-tabs button[aria-selected="true"] { color: #3446b8; border-bottom-color: #3446b8 }
-        .m-tabs button:focus-visible { outline: 2px solid #3446b8; outline-offset: -2px; border-radius: 6px }
-        #sizeTable th.grp { text-align: right }
-        /* ⑥ 지면별 — 요약 박스 4개 한 줄 */
-        #placeSummary { grid-template-columns: repeat(4, 1fr) }
-        /* 박스 안 제목·막대·목록 줄을 4개 박스가 공유 (서브그리드) → 라인 높이 일치 */
-        #placeSummary .ss-item { padding: 22px 18px 20px; display: grid; grid-template-rows: subgrid; grid-row: span 3; align-content: start; justify-content: normal }
-        #placeSummary .ss-list { align-self: start }
-        /* 제목 줄: 테마 이름 / 1위 · n개 지면 을 두 줄로 (좁은 칸에서 단어가 끊기지 않게) */
-        #placeSummary .ss-top { flex-wrap: wrap; row-gap: 4px; white-space: nowrap }
-        #placeSummary .ss-top b { flex-basis: 100%; margin-left: 0; font-weight: 600; color: #6b7078 }
-        #placeSummary .ss-list { overflow-wrap: anywhere }
-        @media(max-width:1100px) { #placeSummary { grid-template-columns: repeat(2, 1fr) } }
-        @media(max-width:700px) { #placeSummary { grid-template-columns: 1fr } }
-        #placeTable th, #placeTable td { padding: 6px 8px }
-        #placeTable th.grp { text-align: right }
-        #placeTable td.place-cell { padding-left: 18px; white-space: nowrap }
-        #placeTable td.place-cell small { display: block; font-weight: 400; color: #858a92; font-size: 11px; margin-top: 1px }
-        /* 카드 안쪽 여백 — 표 카드는 기존대로 */
-        .card:has(> .scroll) { padding: 18px }
-
-        /* 블랙골드처럼 테두리색(--r)이 있는 프레임 */
-        .tl-dot { box-shadow: 0 0 0 2px var(--r, var(--c)) }
-        .win::before, .ss-bar span { box-shadow: inset 0 0 0 2px var(--r, transparent) }
-        td.top { background: color-mix(in srgb, var(--r, var(--c)) 16%, #fff); box-shadow: inset 3px 0 0 var(--r, var(--c)) }
-        /* ③ 최근 7일 — 막대 호버 시 선그래프 */
-        .w7-chart .bar { transition: opacity .15s }
-        .w7-chart.hl .bar:not(.on) { opacity: .2 }
-        .date-in { cursor: pointer }
-        /* 날짜 칸 — 눌러도 파랗게 선택·복사되지 않게 */
-        .date-in { -webkit-user-select: none; user-select: none; caret-color: transparent }
-        .date-in:focus, .date-in:focus-visible { outline: none }
-        .date-in::-webkit-datetime-edit-year-field:focus,
-        .date-in::-webkit-datetime-edit-month-field:focus,
-        .date-in::-webkit-datetime-edit-day-field:focus { background: transparent; color: inherit }
-        .h2-note { margin-left: 8px; font-size: 12px; font-weight: 400; color: #858a92 }
-        /* 요약 막대 하나 — 프레임별 1위 비중 */
-        .ss-stack { grid-column: 1 / -1; background: #f8f9fb; border-radius: 10px; padding: 16px 18px 14px; position: relative }
-        .ss-stack-title { font-size: 13px; font-weight: 800; color: #202124; margin-bottom: 10px }
-        .ss-stack-title small { margin-left: 6px; font-size: 12px; font-weight: 600; color: #858a92 }
-        .ss-stack-bar { display: flex; height: 26px; border-radius: 7px; overflow: hidden; background: #e6e8ec }
-        .ss-stack-bar span { display: flex; align-items: center; justify-content: center; color: #fff; font-size: 11.5px; font-weight: 800; white-space: nowrap; overflow: hidden; box-shadow: inset 0 0 0 2px var(--r, transparent) }
-        /* 제목 옆 ? 아이콘 — 마우스를 올리면 설명 툴팁 */
-        .h2-help { display: inline-grid; place-items: center; width: 17px; height: 17px; margin-left: 8px; border-radius: 50%; background: #eceef1; color: #6b7078; font-size: 11px; font-weight: 800; vertical-align: 2px; position: relative; cursor: help }
-        .h2-help:hover, .h2-help:focus-visible { background: #3446b8; color: #fff }
-        .h2-help::after { content: attr(data-tip); position: absolute; left: 0; top: calc(100% + 10px); width: max-content; max-width: 460px; padding: 14px 16px; border-radius: 10px; background: #fff; color: #3b4048; border: 1px solid #e6e8ec; font-size: 12.5px; font-weight: 500; line-height: 1.75; white-space: pre-line; word-break: keep-all; text-align: left; box-shadow: 0 6px 20px rgba(0, 0, 0, .10); opacity: 0; pointer-events: none; transition: opacity .12s; z-index: 6 }
-        .h2-help:hover::after, .h2-help:focus-visible::after { opacity: 1 }
-        /* ⑤ 1·2·3위 표시 */
-        .rk-slot .rk-badge { margin-right: 8px }
-        .rk-badge { display: inline-block; min-width: 34px; text-align: center; padding: 2px 7px; border-radius: 999px; font-size: 11px; font-weight: 800; line-height: 1.4 }
-        .rk-badge.rk1 { background: #ffe9a8; color: #9a6a00 }
-        .rk-badge.rk2 { background: #e9ecf1; color: #5b6270 }
-        .rk-badge.rk3 { background: #f6e0cf; color: #9a5a2a }
-        .theme-stats .rk-badge, .yd-name .rk-badge { font-style: normal; min-width: 30px; padding: 1px 6px; font-size: 10.5px; margin-left: 2px; vertical-align: 1px }   /* ①② 1·2·3위 */
-
-        /* ===== 상품 오토 프레임 페이지 전용 ===== */
-        .themes { grid-template-columns: repeat(2, 1fr) }
-        #placeSummary { grid-template-columns: repeat(2, 1fr) }
-        @media(max-width:800px) { .themes, #placeSummary { grid-template-columns: 1fr } }
-        .theme-name { flex-wrap: wrap; row-gap: 6px; white-space: nowrap }
-        .ab-chip { display: inline-block; margin-right: 6px; padding: 1px 8px; border-radius: 999px; font-size: 10.5px; font-weight: 800; letter-spacing: .2px; line-height: 1.5 }
-        .ab-chip.after { background: #3446b8; color: #fff }
-        .ab-chip.before { background: #e6e8ec; color: #5b6270 }
-        .ab-chip + .kind-chip { margin-left: 0 }
-        .kind-chip { display: inline-block; margin-right: 6px; padding: 1px 7px; border-radius: 5px; background: #eceef1; color: #4b5563; font-size: 11px; font-weight: 700; line-height: 1.5 }   /* ① 상품 / 비상품 */
-        .theme-name .chip.ch { margin-left: 6px; font-size: 10.5px; padding: 1px 7px }
-        .theme-view { margin-left: auto }
-        /* ④ 일별 추이 표 */
-        #transTable th, #transTable td { padding: 6px 8px; white-space: nowrap }
-        #transTable th.grp { text-align: center }
-        #transTable tr.pivot td { background: #fff7e0 }
-        #transTable tr.pivot td.top { background: color-mix(in srgb, var(--r, var(--c)) 16%, #fff) }   /* 강조 행에서도 1위 칸은 프레임 색 */
-        .seg-chip { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; line-height: 1.5; color: #202124 }
-        .seg-chip.one { background: color-mix(in srgb, var(--c) 14%, #fff); color: color-mix(in srgb, var(--c) 78%, #000) }   /* 테마 하나 — 그 테마 색 */
-        .seg-chip.none { background: #eceef1; color: #6b7078 }
-        /* ⑤ 지면 표 */
-        #placeTable th, #placeTable td, #sizeTable th, #sizeTable td { padding: 6px 8px }
-        #placeTable th.grp, #sizeTable th.grp { text-align: right }
-        #placeTable td.place-cell, #sizeTable td.place-cell { padding-left: 18px; white-space: nowrap }
-        #placeTable td.place-cell small, #sizeTable td.place-cell small { display: block; font-weight: 400; color: #858a92; font-size: 11px; margin-top: 1px }
-        #placeTable td.place-cell .chip.ch { margin-left: 6px; font-size: 10px; padding: 0 6px; vertical-align: 1px }
-        .ad-empty { display: grid; place-items: center; height: 100%; padding: 12px; text-align: center; font-size: 12px; color: #858a92; line-height: 1.5 }
-        .ad.ad-slot:has(.ad-empty) { aspect-ratio: 1; background: #fafbfc }
-        /* 이미지 배너 (iauto 336x280) — 칸 폭에 맞춰 축소 */
-        .ad.ad-slot:has(img), .ad.ad-slot:has(.ad-empty) { aspect-ratio: 336 / 280 }   /* 비상품 배너는 336x280 — 빈 칸도 같은 비율로 높이 맞춤 */
-        .ad.ad-slot:has(img) { border-color: #e3e6ea; overflow: hidden }
-        .ad.ad-slot img { display: block; width: 100%; height: 100%; object-fit: contain }
-        /* 맨 위로 버튼 */
-        .to-top { position: fixed; right: 24px; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 20; width: 44px; height: 44px; border-radius: 50%; border: 1px solid #e6e8ec; background: #fff; color: #3446b8; display: grid; place-items: center; cursor: pointer; box-shadow: 0 6px 18px rgba(0, 0, 0, .14); opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .18s, transform .18s, visibility .18s }
-        .to-top.show { opacity: 1; visibility: visible; transform: none }
-        .to-top:hover { background: #3446b8; color: #fff; border-color: #3446b8 }
-        .to-top:focus-visible { outline: 2px solid #3446b8; outline-offset: 2px }
-        body:has(.tl-open) .to-top { bottom: calc(24px + 58px + 12px + env(safe-area-inset-bottom, 0px)); right: 31px }   /* Timeline 버튼 위 */
-        /* 표 행 호버 — 배경 연하게 */
-        tbody tr:hover td { background: #f3f5fa }
-        tbody tr:hover td.top { background: color-mix(in srgb, var(--r, var(--c)) 24%, #fff) }
-        tbody td { transition: background .12s }
-    </style>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/frame_nonproduct_page.css">
 </head>
 <body>
     <div class="wrap">
@@ -1170,6 +48,11 @@
         <section>
             <div class="title">
                 <h2>4. 프레임별 일별 추이 <span class="h2-help" data-tip="구간: 그날 어떤 배너가 나갔는지 보여 줍니다.&#10;&#160;&#160;• 단독 = 배너 하나만 나간 날&#10;&#160;&#160;• 병행 = 여러 배너가 같이 나간 날&#10;&#10;노란색 줄: 나가는 배너 조합이 전날과 달라진 날&#10;1위 메달: 여러 배너가 같이 나간 날 중 클릭률이 가장 높았던 배너" aria-label="구간 설명" tabindex="0">?</span></h2>
+                <div class="period-ctrl" id="transPeriod" role="group" aria-label="기간 선택">
+                    <div class="seg">
+                        <button type="button" data-mode="month" aria-pressed="true">9월 전체</button>
+                    </div>
+                </div>
             </div>
             <div class="card">
                 <div class="scroll">
@@ -1256,24 +139,22 @@
     <button type="button" class="to-top" id="toTop" aria-label="맨 위로">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
     </button>
-    <script src="holidays.js"></script>
-    <script src="frame_timeline.js"></script>
+    <script src="../js/holidays.js"></script>
+    <script src="../js/frame_timeline.js"></script>
     <script>
-        /* =====================================================================
-           설정 — 숫자는 rtb_frame_analysis xlsx(04 시트)에서 update_data.bat이 채웁니다
-           ===================================================================== */
+        /* 설정 */
         const sw = T => `background:${T.color}${T.ring ? `;box-shadow:inset 0 0 0 2px ${T.ring}` : ''}`;
         const cv = T => `--c:${T.color}${T.ring ? `;--r:${T.ring}` : ''}`;
-        // 비상품 프레임 2개: iauto (비상품 auto, 신규) · i사이즈 (이전 방식 — 사이즈별로 따로 만든 프레임 12개, 오토 아님). 배너 미리보기는 아직 없습니다.
+        // iauto: 비상품 오토, isize: 사이즈별 고정 12개
         const THEMES = [
             { id: 'iauto', name: 'iauto 프레임', ab: 'after', ch: '구글', code: 'iauto', desc: '비상품 auto · 09-02 투입', color: '#3446b8', src: '',
-              img: 'https://manage.mobon.net/ad/imgfile//20240617185940-tJb4iOIAxf-336x280.jpg', view: 'https://kyungahkims.github.io/openRtb_banners.github.io/total_banners_view.html' },   // img: 배너 이미지(336x280) · view: 전체 배너 뷰어 (블랙골드·화이트레드와 같은 페이지)
-            { id: 'isize', name: 'i사이즈별 고정 프레임 (12개)', ab: 'before', ch: '구글', code: 'i{가로}_{세로}', desc: 'i사이즈별 고정 프레임 (12개)', color: '#22c55e', src: '' },   // 데이터: update_data.py (rtb_frame_analysis xlsx 04 시트)
+              img: 'https://manage.mobon.net/ad/imgfile//20240617185940-tJb4iOIAxf-336x280.jpg', view: 'https://kyungahkims.github.io/openRtb_banners.github.io/total_banners_view.html' },
+            { id: 'isize', name: 'i사이즈별 고정 프레임 (12개)', ab: 'before', ch: '구글', code: 'i{가로}_{세로}', desc: 'i사이즈별 고정 프레임 (12개)', color: '#22c55e', src: '' },
         ];
-        const AB_LABEL = { after: 'After · 신규', before: 'Before · 기존' };   // 비포/애프터 비교 표시 (ab: 'after' = 새로 만든 프레임)
-        const MIN_IMP = 1000;   // 이보다 노출이 적으면 CTR을 0(집계 제외)으로 — 노출 수십에 클릭만 잡힌 값 방지
+        const AB_LABEL = { after: 'After · 신규', before: 'Before · 기존' };
+        const MIN_IMP = 1000;   // 노출이 이보다 적으면 CTR 집계 제외
 
-        /* 데이터 [날짜, 프레임 id, 노출수, 클릭수] — update_data.bat이 자동으로 바꿉니다 */
+        /* 일별 [날짜, 프레임, 노출, 클릭] */
         /* ADATA:START */
         const ADATA = [
             ["2026-09-01", "iauto", 10595, 0],
@@ -1303,79 +184,85 @@
             ["2026-09-27", "iauto", 685814, 126],
             ["2026-09-28", "iauto", 817035, 176],
             ["2026-09-29", "iauto", 897826, 204],
+            ["2026-09-30", "iauto", 860940, 216],
+            ["2026-10-01", "iauto", 773505, 210],
+            ["2026-10-02", "iauto", 765949, 211],
+            ["2026-10-03", "iauto", 588189, 144],
+            ["2026-10-04", "iauto", 578016, 139],
+            ["2026-10-05", "iauto", 564026, 151],
         ];
         /* ADATA:END */
-        /* 지면별 누적 [프레임 id, 요청 사이즈, 노출수, 클릭수] — 지면별.csv에서 update_data.bat이 자동으로 바꿉니다 */
+        /* 지면별 누적 [프레임, 지면, 노출, 클릭] */
         /* APDATA:START */
         const APDATA = [
-            ["iauto", "daum.net", 5134356, 749],
-            ["iauto", "theqoo.net", 1972060, 586],
-            ["iauto", "inven.co.kr", 1471228, 112],
-            ["iauto", "v.daum.net", 1182086, 340],
-            ["iauto", "maplescouter.com", 983049, 199],
-            ["iauto", "com.read.goodnovel", 874079, 590],
-            ["iauto", "ppomppu.co.kr", 790664, 226],
-            ["iauto", "quasarzone.com", 788916, 27],
-            ["iauto", "imbc.com", 586736, 29],
+            ["iauto", "daum.net", 5352834, 762],
+            ["iauto", "theqoo.net", 2284412, 655],
+            ["iauto", "inven.co.kr", 1752543, 141],
+            ["iauto", "v.daum.net", 1276860, 362],
+            ["iauto", "maplescouter.com", 1085784, 204],
+            ["iauto", "com.read.goodnovel", 1006812, 625],
+            ["iauto", "ppomppu.co.kr", 980642, 270],
+            ["iauto", "quasarzone.com", 893756, 29],
+            ["iauto", "imbc.com", 704607, 29],
+            ["iauto", "jeomsinpf1.co.kr", 532600, 206],
             ["isize", "daum.net", 522300, 119],
-            ["iauto", "jeomsinpf1.co.kr", 388890, 163],
-            ["iauto", "nate.com", 380367, 170],
-            ["iauto", "cafe.daum.net", 350688, 102],
-            ["iauto", "com.nbt.moves", 342066, 54],
-            ["iauto", "wisetoto.com", 335505, 51],
-            ["iauto", "luckieverse.com", 275380, 224],
-            ["iauto", "dogdrip.net", 274734, 114],
-            ["iauto", "meaegi.com", 224255, 4],
-            ["iauto", "com.lottemembers.android", 198997, 109],
-            ["iauto", "droom.sleepIfUCan", 195066, 22],
-            ["iauto", "com.skplanet.ocb.locker", 186903, 444],
-            ["iauto", "slrclub.com", 179147, 37],
-            ["iauto", "lol.ps", 178700, 37],
-            ["iauto", "com.cashwalk.cashwalk", 172881, 58],
-            ["iauto", "com.peak", 165683, 16],
-            ["iauto", "khan.co.kr", 164561, 32],
-            ["iauto", "munhwa.com", 159769, 12],
-            ["iauto", "dvdprime.com", 159265, 27],
-            ["iauto", "sbs.co.kr", 157094, 9],
-            ["iauto", "damoang.net", 146864, 38],
+            ["iauto", "com.nbt.moves", 485776, 61],
+            ["iauto", "wisetoto.com", 427960, 57],
+            ["iauto", "nate.com", 420600, 188],
+            ["iauto", "cafe.daum.net", 400578, 117],
+            ["iauto", "luckieverse.com", 356635, 296],
+            ["iauto", "dogdrip.net", 343511, 144],
+            ["iauto", "droom.sleepIfUCan", 299422, 31],
+            ["iauto", "com.skplanet.ocb.locker", 278590, 605],
+            ["iauto", "meaegi.com", 266830, 8],
+            ["iauto", "com.lottemembers.android", 259355, 135],
+            ["iauto", "com.peak", 243434, 23],
+            ["iauto", "lol.ps", 237139, 54],
+            ["iauto", "slrclub.com", 215513, 43],
+            ["iauto", "com.cashwalk.cashwalk", 203377, 65],
+            ["iauto", "sbs.co.kr", 197272, 9],
+            ["iauto", "khan.co.kr", 186730, 34],
+            ["iauto", "munhwa.com", 185893, 12],
+            ["iauto", "com.cashslide", 173010, 4],
+            ["iauto", "damoang.net", 171945, 46],
+            ["iauto", "dvdprime.com", 169555, 28],
+            ["iauto", "humoruniv.com", 155410, 90],
+            ["iauto", "donga.com", 148443, 5],
+            ["iauto", "co.luckies.app", 147571, 39],
             ["isize", "theqoo.net", 146078, 42],
             ["isize", "com.read.goodnovel", 141150, 96],
-            ["iauto", "humoruniv.com", 134192, 77],
-            ["iauto", "donga.com", 127714, 5],
+            ["iauto", "snulife.com", 134948, 5],
             ["isize", "v.daum.net", 126564, 39],
-            ["iauto", "com.cashslide", 118272, 4],
-            ["iauto", "dmitory.com", 111567, 16],
-            ["iauto", "hankyung.com", 111365, 8],
-            ["iauto", "snulife.com", 106694, 4],
-            ["iauto", "edaily.co.kr", 105274, 6],
-            ["iauto", "co.luckies.app", 101636, 27],
-            ["iauto", "itssa.co.kr", 101164, 14],
-            ["iauto", "instiz.net", 98033, 30],
-            ["iauto", "teamblind.com", 90766, 13],
-            ["iauto", "deeplol.gg", 75034, 18],
-            ["iauto", "com.find.spot.photo.hunt.differences.free.hidden", 73766, 51],
+            ["iauto", "itssa.co.kr", 125758, 15],
+            ["iauto", "hankyung.com", 125738, 9],
+            ["iauto", "dmitory.com", 124125, 17],
+            ["iauto", "edaily.co.kr", 120588, 6],
+            ["iauto", "instiz.net", 116295, 34],
+            ["iauto", "teamblind.com", 106932, 13],
+            ["iauto", "com.find.spot.photo.hunt.differences.free.hidden", 100724, 61],
+            ["iauto", "com.artifyapp.timestamp", 89836, 6],
+            ["iauto", "deeplol.gg", 86076, 22],
+            ["iauto", "com.heroines.heroines", 81421, 14],
+            ["iauto", "semaphore.stockclient", 75257, 35],
+            ["iauto", "seoul.co.kr", 73189, 4],
+            ["iauto", "fc-info.com", 73174, 12],
             ["isize", "ppomppu.co.kr", 72821, 16],
-            ["iauto", "com.artifyapp.timestamp", 63311, 6],
-            ["iauto", "kr.investing.com", 62355, 6],
-            ["iauto", "seoul.co.kr", 61753, 3],
-            ["iauto", "hankookilbo.com", 58797, 10],
-            ["iauto", "fc-info.com", 58481, 10],
-            ["iauto", "semaphore.stockclient", 58416, 28],
-            ["iauto", "news1.kr", 58348, 13],
+            ["iauto", "kr.investing.com", 67639, 6],
+            ["iauto", "hankookilbo.com", 66702, 10],
+            ["iauto", "news1.kr", 66415, 15],
+            ["iauto", "coinpan.com", 64471, 13],
+            ["iauto", "namu.wiki", 60596, 20],
+            ["iauto", "piku.co.kr", 60366, 28],
             ["isize", "quasarzone.com", 53640, 6],
-            ["iauto", "com.heroines.heroines", 53449, 11],
-            ["iauto", "namu.wiki", 50882, 18],
-            ["iauto", "piku.co.kr", 50290, 25],
+            ["iauto", "kr.co.kpcard.palrago", 53433, 0],
+            ["iauto", "kr.co.studio161.newscash", 53268, 6],
+            ["iauto", "etnews.com", 52967, 5],
+            ["iauto", "sportsseoul.com", 51713, 12],
             ["isize", "nate.com", 49963, 7],
-            ["iauto", "coinpan.com", 48185, 10],
-            ["iauto", "etnews.com", 46851, 4],
-            ["iauto", "sportsseoul.com", 45185, 12],
+            ["iauto", "prod.danawa.com", 47353, 3],
+            ["iauto", "mania.kr", 46187, 24],
+            ["iauto", "biz.chosun.com", 42934, 5],
             ["isize", "imbc.com", 40303, 5],
-            ["iauto", "prod.danawa.com", 38823, 2],
-            ["iauto", "mania.kr", 38379, 22],
-            ["iauto", "hani.co.kr", 36925, 25],
-            ["iauto", "biz.chosun.com", 36831, 5],
-            ["iauto", "ddanzi.com", 35800, 13],
             ["isize", "cafe.daum.net", 30947, 5],
             ["isize", "inven.co.kr", 30529, 8],
             ["isize", "jeomsinpf1.co.kr", 28919, 14],
@@ -1414,23 +301,23 @@
             ["isize", "piku.co.kr", 4289, 0],
             ["isize", "com.heroines.heroines", 3958, 2],
             ["isize", "prod.danawa.com", 3879, 0],
-            ["isize", "hani.co.kr", 3651, 9],
             ["isize", "seoul.co.kr", 3391, 1],
             ["isize", "com.artifyapp.timestamp", 3317, 0],
             ["isize", "mania.kr", 3288, 1],
             ["isize", "etnews.com", 2868, 1],
             ["isize", "kr.investing.com", 2778, 0],
-            ["isize", "ddanzi.com", 2677, 2],
             ["isize", "sportsseoul.com", 2443, 0],
             ["isize", "deeplol.gg", 2087, 0],
             ["isize", "meaegi.com", 2035, 0],
             ["isize", "coinpan.com", 1408, 0],
+            ["isize", "kr.co.kpcard.palrago", 802, 0],
             ["isize", "humoruniv.com", 368, 0],
             ["isize", "com.skplanet.ocb.locker", 338, 0],
+            ["isize", "kr.co.studio161.newscash", 190, 0],
         ];
         /* APDATA:END */
 
-        /* ⑥ 지면별 일별 [날짜, 프레임 id, 지면, 노출수, 클릭수] — rtb_theme_ab_result xlsx(A 시트)에서 update_data.bat이 채움 */
+        /* 지면별 일별 [날짜, 프레임, 지면, 노출, 클릭] */
         /* APDDATA:START */
         const APDDATA = [
             ["2026-09-01", "iauto", "cafe.daum.net", 135, 0],
@@ -2513,86 +1400,326 @@
             ["2026-09-29", "iauto", "theqoo.net", 87716, 19],
             ["2026-09-29", "iauto", "v.daum.net", 34297, 13],
             ["2026-09-29", "iauto", "wisetoto.com", 20329, 1],
+            ["2026-09-30", "iauto", "cafe.daum.net", 15167, 1],
+            ["2026-09-30", "iauto", "co.luckies.app", 6866, 0],
+            ["2026-09-30", "iauto", "coinpan.com", 3560, 0],
+            ["2026-09-30", "iauto", "com.cashslide", 10049, 0],
+            ["2026-09-30", "iauto", "com.cashwalk.cashwalk", 6763, 1],
+            ["2026-09-30", "iauto", "com.find.spot.photo.hunt.differences.free.hidden", 5785, 2],
+            ["2026-09-30", "iauto", "com.heroines.heroines", 4786, 1],
+            ["2026-09-30", "iauto", "com.lottemembers.android", 8275, 1],
+            ["2026-09-30", "iauto", "com.nbt.moves", 24243, 1],
+            ["2026-09-30", "iauto", "com.read.goodnovel", 43709, 19],
+            ["2026-09-30", "iauto", "com.skplanet.ocb.locker", 14230, 30],
+            ["2026-09-30", "iauto", "damoang.net", 4993, 1],
+            ["2026-09-30", "iauto", "daum.net", 67633, 8],
+            ["2026-09-30", "iauto", "dmitory.com", 4917, 0],
+            ["2026-09-30", "iauto", "dogdrip.net", 16101, 8],
+            ["2026-09-30", "iauto", "donga.com", 3335, 0],
+            ["2026-09-30", "iauto", "droom.sleepIfUCan", 14076, 3],
+            ["2026-09-30", "iauto", "humoruniv.com", 4082, 6],
+            ["2026-09-30", "iauto", "imbc.com", 25614, 0],
+            ["2026-09-30", "iauto", "instiz.net", 5379, 1],
+            ["2026-09-30", "iauto", "inven.co.kr", 68063, 4],
+            ["2026-09-30", "iauto", "itssa.co.kr", 5998, 0],
+            ["2026-09-30", "iauto", "jeomsinpf1.co.kr", 22919, 4],
+            ["2026-09-30", "iauto", "khan.co.kr", 6297, 1],
+            ["2026-09-30", "iauto", "lol.ps", 7480, 4],
+            ["2026-09-30", "iauto", "luckieverse.com", 11996, 9],
+            ["2026-09-30", "iauto", "maplescouter.com", 15524, 3],
+            ["2026-09-30", "iauto", "meaegi.com", 7944, 0],
+            ["2026-09-30", "iauto", "munhwa.com", 4896, 0],
+            ["2026-09-30", "iauto", "nate.com", 13547, 7],
+            ["2026-09-30", "iauto", "ppomppu.co.kr", 46428, 6],
+            ["2026-09-30", "iauto", "quasarzone.com", 24458, 0],
+            ["2026-09-30", "iauto", "sbs.co.kr", 7830, 0],
+            ["2026-09-30", "iauto", "semaphore.stockclient", 4870, 4],
+            ["2026-09-30", "iauto", "slrclub.com", 9641, 1],
+            ["2026-09-30", "iauto", "snulife.com", 4909, 0],
+            ["2026-09-30", "iauto", "teamblind.com", 3803, 0],
+            ["2026-09-30", "iauto", "theqoo.net", 86171, 22],
+            ["2026-09-30", "iauto", "v.daum.net", 31396, 8],
+            ["2026-09-30", "iauto", "wisetoto.com", 21096, 0],
+            ["2026-10-01", "iauto", "cafe.daum.net", 11527, 4],
+            ["2026-10-01", "iauto", "co.luckies.app", 7485, 2],
+            ["2026-10-01", "iauto", "com.artifyapp.timestamp", 5597, 0],
+            ["2026-10-01", "iauto", "com.cashslide", 9540, 0],
+            ["2026-10-01", "iauto", "com.cashwalk.cashwalk", 7078, 2],
+            ["2026-10-01", "iauto", "com.find.spot.photo.hunt.differences.free.hidden", 4585, 0],
+            ["2026-10-01", "iauto", "com.heroines.heroines", 4974, 0],
+            ["2026-10-01", "iauto", "com.lottemembers.android", 10907, 6],
+            ["2026-10-01", "iauto", "com.nbt.moves", 23956, 2],
+            ["2026-10-01", "iauto", "com.peak", 14763, 2],
+            ["2026-10-01", "iauto", "com.read.goodnovel", 29793, 6],
+            ["2026-10-01", "iauto", "com.skplanet.ocb.locker", 14962, 32],
+            ["2026-10-01", "iauto", "damoang.net", 6028, 2],
+            ["2026-10-01", "iauto", "daum.net", 40356, 3],
+            ["2026-10-01", "iauto", "dogdrip.net", 14580, 4],
+            ["2026-10-01", "iauto", "droom.sleepIfUCan", 16697, 2],
+            ["2026-10-01", "iauto", "fc-info.com", 4101, 1],
+            ["2026-10-01", "iauto", "humoruniv.com", 3426, 1],
+            ["2026-10-01", "iauto", "imbc.com", 25876, 0],
+            ["2026-10-01", "iauto", "inven.co.kr", 42592, 6],
+            ["2026-10-01", "iauto", "itssa.co.kr", 7124, 1],
+            ["2026-10-01", "iauto", "jeomsinpf1.co.kr", 24986, 6],
+            ["2026-10-01", "iauto", "khan.co.kr", 5531, 0],
+            ["2026-10-01", "iauto", "kr.co.studio161.newscash", 4048, 0],
+            ["2026-10-01", "iauto", "lol.ps", 5258, 3],
+            ["2026-10-01", "iauto", "luckieverse.com", 15074, 13],
+            ["2026-10-01", "iauto", "maplescouter.com", 15589, 0],
+            ["2026-10-01", "iauto", "meaegi.com", 7240, 2],
+            ["2026-10-01", "iauto", "munhwa.com", 3527, 0],
+            ["2026-10-01", "iauto", "nate.com", 11021, 5],
+            ["2026-10-01", "iauto", "ppomppu.co.kr", 33487, 9],
+            ["2026-10-01", "iauto", "quasarzone.com", 22640, 1],
+            ["2026-10-01", "iauto", "sbs.co.kr", 6920, 0],
+            ["2026-10-01", "iauto", "semaphore.stockclient", 5925, 2],
+            ["2026-10-01", "iauto", "slrclub.com", 8726, 5],
+            ["2026-10-01", "iauto", "snulife.com", 4593, 1],
+            ["2026-10-01", "iauto", "teamblind.com", 3684, 0],
+            ["2026-10-01", "iauto", "theqoo.net", 67401, 18],
+            ["2026-10-01", "iauto", "v.daum.net", 24284, 7],
+            ["2026-10-01", "iauto", "wisetoto.com", 17796, 2],
+            ["2026-10-02", "iauto", "cafe.daum.net", 12875, 5],
+            ["2026-10-02", "iauto", "co.luckies.app", 6223, 1],
+            ["2026-10-02", "iauto", "com.artifyapp.timestamp", 4753, 0],
+            ["2026-10-02", "iauto", "com.cashslide", 9494, 0],
+            ["2026-10-02", "iauto", "com.cashwalk.cashwalk", 8432, 1],
+            ["2026-10-02", "iauto", "com.find.spot.photo.hunt.differences.free.hidden", 5674, 4],
+            ["2026-10-02", "iauto", "com.heroines.heroines", 4270, 0],
+            ["2026-10-02", "iauto", "com.lottemembers.android", 9427, 2],
+            ["2026-10-02", "iauto", "com.nbt.moves", 20790, 0],
+            ["2026-10-02", "iauto", "com.peak", 15783, 2],
+            ["2026-10-02", "iauto", "com.read.goodnovel", 38126, 8],
+            ["2026-10-02", "iauto", "com.skplanet.ocb.locker", 16255, 27],
+            ["2026-10-02", "iauto", "damoang.net", 5881, 1],
+            ["2026-10-02", "iauto", "daum.net", 56736, 1],
+            ["2026-10-02", "iauto", "dogdrip.net", 13209, 7],
+            ["2026-10-02", "iauto", "donga.com", 3577, 0],
+            ["2026-10-02", "iauto", "droom.sleepIfUCan", 17160, 2],
+            ["2026-10-02", "iauto", "imbc.com", 14917, 0],
+            ["2026-10-02", "iauto", "instiz.net", 4568, 2],
+            ["2026-10-02", "iauto", "inven.co.kr", 33700, 5],
+            ["2026-10-02", "iauto", "itssa.co.kr", 5459, 0],
+            ["2026-10-02", "iauto", "jeomsinpf1.co.kr", 24225, 11],
+            ["2026-10-02", "iauto", "khan.co.kr", 4407, 0],
+            ["2026-10-02", "iauto", "kr.co.studio161.newscash", 4270, 0],
+            ["2026-10-02", "iauto", "lol.ps", 5779, 0],
+            ["2026-10-02", "iauto", "luckieverse.com", 13820, 14],
+            ["2026-10-02", "iauto", "maplescouter.com", 18456, 2],
+            ["2026-10-02", "iauto", "meaegi.com", 4993, 1],
+            ["2026-10-02", "iauto", "munhwa.com", 4203, 0],
+            ["2026-10-02", "iauto", "nate.com", 10500, 5],
+            ["2026-10-02", "iauto", "ppomppu.co.kr", 34220, 10],
+            ["2026-10-02", "iauto", "quasarzone.com", 18199, 1],
+            ["2026-10-02", "iauto", "sbs.co.kr", 6159, 0],
+            ["2026-10-02", "iauto", "semaphore.stockclient", 5146, 1],
+            ["2026-10-02", "iauto", "slrclub.com", 6711, 0],
+            ["2026-10-02", "iauto", "smartbill.co.kr", 4826, 1],
+            ["2026-10-02", "iauto", "snulife.com", 4354, 0],
+            ["2026-10-02", "iauto", "theqoo.net", 68448, 8],
+            ["2026-10-02", "iauto", "v.daum.net", 24119, 4],
+            ["2026-10-02", "iauto", "wisetoto.com", 14651, 1],
+            ["2026-10-03", "iauto", "cafe.daum.net", 3913, 0],
+            ["2026-10-03", "iauto", "co.luckies.app", 9002, 5],
+            ["2026-10-03", "iauto", "com.artifyapp.timestamp", 4895, 0],
+            ["2026-10-03", "iauto", "com.cashslide", 8711, 0],
+            ["2026-10-03", "iauto", "com.cashwalk.cashwalk", 3075, 1],
+            ["2026-10-03", "iauto", "com.find.spot.photo.hunt.differences.free.hidden", 2558, 1],
+            ["2026-10-03", "iauto", "com.heroines.heroines", 4667, 0],
+            ["2026-10-03", "iauto", "com.hills.heyday", 2277, 0],
+            ["2026-10-03", "iauto", "com.lottemembers.android", 10384, 5],
+            ["2026-10-03", "iauto", "com.nbt.moves", 24893, 2],
+            ["2026-10-03", "iauto", "com.peak", 15627, 1],
+            ["2026-10-03", "iauto", "com.read.goodnovel", 7924, 0],
+            ["2026-10-03", "iauto", "com.skplanet.ocb.locker", 16675, 28],
+            ["2026-10-03", "iauto", "damoang.net", 2805, 2],
+            ["2026-10-03", "iauto", "daum.net", 20674, 1],
+            ["2026-10-03", "iauto", "dogdrip.net", 9193, 4],
+            ["2026-10-03", "iauto", "donga.com", 4054, 0],
+            ["2026-10-03", "iauto", "droom.sleepIfUCan", 17122, 1],
+            ["2026-10-03", "iauto", "edaily.co.kr", 2839, 0],
+            ["2026-10-03", "iauto", "hankyung.com", 2397, 0],
+            ["2026-10-03", "iauto", "humoruniv.com", 3415, 2],
+            ["2026-10-03", "iauto", "imbc.com", 15218, 0],
+            ["2026-10-03", "iauto", "inven.co.kr", 52871, 6],
+            ["2026-10-03", "iauto", "io.heybit.bitbunny", 8023, 2],
+            ["2026-10-03", "iauto", "jeomsinpf1.co.kr", 22935, 6],
+            ["2026-10-03", "iauto", "kr.co.kpcard.palrago", 3383, 0],
+            ["2026-10-03", "iauto", "kr.co.studio161.newscash", 4716, 1],
+            ["2026-10-03", "iauto", "lol.ps", 14336, 2],
+            ["2026-10-03", "iauto", "luckieverse.com", 13388, 11],
+            ["2026-10-03", "iauto", "maplescouter.com", 21251, 0],
+            ["2026-10-03", "iauto", "meaegi.com", 6008, 0],
+            ["2026-10-03", "iauto", "munhwa.com", 4481, 0],
+            ["2026-10-03", "iauto", "ppomppu.co.kr", 21852, 7],
+            ["2026-10-03", "iauto", "quasarzone.com", 12235, 0],
+            ["2026-10-03", "iauto", "sbs.co.kr", 6750, 0],
+            ["2026-10-03", "iauto", "slrclub.com", 4198, 0],
+            ["2026-10-03", "iauto", "snulife.com", 4904, 0],
+            ["2026-10-03", "iauto", "theqoo.net", 28603, 7],
+            ["2026-10-03", "iauto", "v.daum.net", 5113, 2],
+            ["2026-10-03", "iauto", "wisetoto.com", 11447, 0],
+            ["2026-10-04", "iauto", "cafe.daum.net", 3116, 4],
+            ["2026-10-04", "iauto", "co.luckies.app", 8053, 2],
+            ["2026-10-04", "iauto", "com.artifyapp.timestamp", 5478, 0],
+            ["2026-10-04", "iauto", "com.cashslide", 7613, 0],
+            ["2026-10-04", "iauto", "com.cashwalk.cashwalk", 2631, 1],
+            ["2026-10-04", "iauto", "com.digitalchemy.timerplus", 2314, 0],
+            ["2026-10-04", "iauto", "com.find.spot.photo.hunt.differences.free.hidden", 3408, 2],
+            ["2026-10-04", "iauto", "com.heroines.heroines", 4776, 0],
+            ["2026-10-04", "iauto", "com.lottemembers.android", 9989, 4],
+            ["2026-10-04", "iauto", "com.nbt.moves", 24720, 2],
+            ["2026-10-04", "iauto", "com.peak", 16622, 2],
+            ["2026-10-04", "iauto", "com.read.goodnovel", 6380, 1],
+            ["2026-10-04", "iauto", "com.skplanet.ocb.locker", 14692, 21],
+            ["2026-10-04", "iauto", "damoang.net", 2296, 1],
+            ["2026-10-04", "iauto", "daum.net", 19126, 0],
+            ["2026-10-04", "iauto", "dmitory.com", 3239, 0],
+            ["2026-10-04", "iauto", "dogdrip.net", 7227, 3],
+            ["2026-10-04", "iauto", "donga.com", 3439, 0],
+            ["2026-10-04", "iauto", "droom.sleepIfUCan", 18816, 1],
+            ["2026-10-04", "iauto", "edaily.co.kr", 2426, 0],
+            ["2026-10-04", "iauto", "humoruniv.com", 3095, 2],
+            ["2026-10-04", "iauto", "imbc.com", 19219, 0],
+            ["2026-10-04", "iauto", "inven.co.kr", 45729, 3],
+            ["2026-10-04", "iauto", "io.heybit.bitbunny", 9341, 1],
+            ["2026-10-04", "iauto", "jeomsinpf1.co.kr", 22647, 7],
+            ["2026-10-04", "iauto", "kr.co.kpcard.palrago", 3101, 0],
+            ["2026-10-04", "iauto", "kr.co.studio161.newscash", 4915, 0],
+            ["2026-10-04", "iauto", "lol.ps", 13822, 1],
+            ["2026-10-04", "iauto", "luckieverse.com", 14857, 13],
+            ["2026-10-04", "iauto", "maplescouter.com", 16520, 0],
+            ["2026-10-04", "iauto", "meaegi.com", 7596, 0],
+            ["2026-10-04", "iauto", "munhwa.com", 4830, 0],
+            ["2026-10-04", "iauto", "ppomppu.co.kr", 27552, 4],
+            ["2026-10-04", "iauto", "quasarzone.com", 15355, 0],
+            ["2026-10-04", "iauto", "sbs.co.kr", 6217, 0],
+            ["2026-10-04", "iauto", "slrclub.com", 3509, 0],
+            ["2026-10-04", "iauto", "snulife.com", 5035, 0],
+            ["2026-10-04", "iauto", "theqoo.net", 28127, 7],
+            ["2026-10-04", "iauto", "v.daum.net", 4927, 1],
+            ["2026-10-04", "iauto", "wisetoto.com", 13241, 2],
+            ["2026-10-05", "iauto", "cafe.daum.net", 3292, 1],
+            ["2026-10-05", "iauto", "co.luckies.app", 8306, 2],
+            ["2026-10-05", "iauto", "coinpan.com", 2983, 0],
+            ["2026-10-05", "iauto", "com.artifyapp.timestamp", 4618, 0],
+            ["2026-10-05", "iauto", "com.cashslide", 9331, 0],
+            ["2026-10-05", "iauto", "com.find.spot.photo.hunt.differences.free.hidden", 4948, 1],
+            ["2026-10-05", "iauto", "com.heroines.heroines", 4499, 2],
+            ["2026-10-05", "iauto", "com.lottemembers.android", 11376, 8],
+            ["2026-10-05", "iauto", "com.nbt.moves", 25108, 0],
+            ["2026-10-05", "iauto", "com.peak", 12230, 0],
+            ["2026-10-05", "iauto", "com.read.goodnovel", 6801, 1],
+            ["2026-10-05", "iauto", "com.skplanet.ocb.locker", 14873, 23],
+            ["2026-10-05", "iauto", "damoang.net", 3078, 1],
+            ["2026-10-05", "iauto", "daum.net", 13953, 0],
+            ["2026-10-05", "iauto", "deeplol.gg", 2871, 1],
+            ["2026-10-05", "iauto", "dogdrip.net", 8467, 4],
+            ["2026-10-05", "iauto", "donga.com", 3352, 0],
+            ["2026-10-05", "iauto", "droom.sleepIfUCan", 20485, 0],
+            ["2026-10-05", "iauto", "edaily.co.kr", 2627, 0],
+            ["2026-10-05", "iauto", "humoruniv.com", 4067, 1],
+            ["2026-10-05", "iauto", "imbc.com", 17027, 0],
+            ["2026-10-05", "iauto", "inven.co.kr", 38360, 5],
+            ["2026-10-05", "iauto", "io.heybit.bitbunny", 9756, 3],
+            ["2026-10-05", "iauto", "jeomsinpf1.co.kr", 25998, 9],
+            ["2026-10-05", "iauto", "khan.co.kr", 2769, 1],
+            ["2026-10-05", "iauto", "kr.co.kpcard.palrago", 3030, 0],
+            ["2026-10-05", "iauto", "kr.co.studio161.newscash", 3472, 0],
+            ["2026-10-05", "iauto", "lol.ps", 11764, 7],
+            ["2026-10-05", "iauto", "luckieverse.com", 12120, 12],
+            ["2026-10-05", "iauto", "maplescouter.com", 15395, 0],
+            ["2026-10-05", "iauto", "meaegi.com", 8794, 1],
+            ["2026-10-05", "iauto", "munhwa.com", 4187, 0],
+            ["2026-10-05", "iauto", "ppomppu.co.kr", 26439, 8],
+            ["2026-10-05", "iauto", "quasarzone.com", 11953, 0],
+            ["2026-10-05", "iauto", "sbs.co.kr", 6302, 0],
+            ["2026-10-05", "iauto", "slrclub.com", 3581, 0],
+            ["2026-10-05", "iauto", "snulife.com", 4459, 0],
+            ["2026-10-05", "iauto", "theqoo.net", 33602, 7],
+            ["2026-10-05", "iauto", "v.daum.net", 4935, 0],
+            ["2026-10-05", "iauto", "wisetoto.com", 14224, 1],
         ];
         /* APDDATA:END */
 
-        /* ⑤ 요청 사이즈별 누적 [프레임 id, 요청 사이즈, 노출수, 클릭수] — rtb_theme_ab_result xlsx(5b 시트)에서 update_data.bat이 채움 */
+        /* 사이즈별 누적 [프레임, 사이즈, 노출, 클릭] */
         /* ASDATA:START */
         const ASDATA = [
-            ["iauto", "320_50", 4017022, 1599],
-            ["iauto", "200_200", 2832982, 412],
-            ["iauto", "250_250", 2717422, 944],
-            ["iauto", "728_90", 2614555, 723],
-            ["iauto", "160_600", 1442639, 379],
-            ["iauto", "120_600", 1041983, 170],
-            ["iauto", "300_250", 893064, 340],
-            ["iauto", "320_100", 784140, 254],
-            ["iauto", "240_133", 646002, 79],
-            ["iauto", "600_62", 619689, 94],
-            ["iauto", "300_100", 581421, 50],
-            ["iauto", "240_120", 467670, 23],
-            ["iauto", "220_90", 454648, 26],
+            ["iauto", "320_50", 5192507, 1914],
+            ["iauto", "200_200", 3257325, 466],
+            ["iauto", "250_250", 3154704, 1161],
+            ["iauto", "728_90", 2999293, 776],
+            ["iauto", "160_600", 1717227, 444],
+            ["iauto", "120_600", 1199811, 187],
+            ["iauto", "300_250", 1025961, 377],
+            ["iauto", "320_100", 965462, 293],
+            ["iauto", "240_133", 661500, 82],
+            ["iauto", "600_62", 658810, 98],
+            ["iauto", "300_100", 647122, 63],
+            ["iauto", "240_120", 515718, 23],
+            ["iauto", "220_90", 457407, 26],
+            ["iauto", "336_280", 450096, 250],
             ["isize", "320_50", 413983, 230],
-            ["iauto", "336_280", 389468, 214],
+            ["iauto", "655_120", 342207, 155],
+            ["iauto", "970_250", 321878, 47],
             ["isize", "300_250", 317310, 111],
-            ["iauto", "655_120", 289469, 138],
-            ["iauto", "584_60", 288815, 44],
-            ["iauto", "970_250", 287243, 45],
+            ["iauto", "300_50", 312821, 73],
+            ["iauto", "584_60", 304083, 46],
             ["isize", "728_90", 263043, 90],
-            ["iauto", "300_50", 260678, 59],
             ["isize", "200_200", 250898, 32],
+            ["iauto", "120_60", 245174, 3],
             ["isize", "250_250", 241035, 45],
-            ["iauto", "120_60", 201619, 3],
-            ["iauto", "176_62", 191502, 3],
-            ["iauto", "468_60", 191233, 34],
-            ["iauto", "970_90", 186606, 59],
-            ["iauto", "970_280", 160902, 86],
-            ["iauto", "300_600", 140260, 50],
+            ["iauto", "468_60", 234341, 38],
+            ["iauto", "176_62", 229308, 3],
+            ["iauto", "970_90", 219782, 65],
+            ["iauto", "970_280", 194708, 101],
+            ["iauto", "300_600", 159006, 56],
+            ["iauto", "234_60", 130181, 13],
             ["isize", "160_600", 122938, 38],
-            ["iauto", "234_60", 114013, 12],
             ["isize", "320_100", 112405, 24],
             ["isize", "120_600", 111115, 19],
-            ["iauto", "1180_250", 90602, 1],
-            ["iauto", "200_600", 85619, 49],
-            ["iauto", "360_50", 74568, 55],
-            ["iauto", "750_100", 68613, 21],
-            ["iauto", "360_100", 64507, 48],
-            ["iauto", "384_50", 57036, 40],
-            ["iauto", "384_100", 54625, 42],
-            ["iauto", "120_400", 52479, 4],
-            ["iauto", "320_80", 51330, 19],
-            ["iauto", "300_57", 50980, 1],
-            ["iauto", "320_150", 46602, 21],
-            ["iauto", "950_90", 45341, 20],
-            ["iauto", "960_90", 45200, 18],
-            ["iauto", "411_50", 43370, 21],
-            ["iauto", "120_240", 40530, 7],
-            ["iauto", "930_280", 38633, 34],
-            ["iauto", "411_100", 38391, 38],
-            ["iauto", "800_100", 35504, 9],
-            ["iauto", "125_125", 30099, 0],
-            ["iauto", "960_64", 29242, 18],
-            ["iauto", "980_90", 29210, 17],
-            ["iauto", "180_150", 28892, 3],
-            ["iauto", "970_66", 28855, 12],
-            ["iauto", "640_100", 25949, 9],
-            ["iauto", "1200_90", 24964, 22],
-            ["iauto", "150_150", 21729, 6],
-            ["iauto", "375_50", 21341, 4],
-            ["iauto", "1005_124", 15301, 22],
-            ["iauto", "204_250", 14836, 0],
-            ["iauto", "980_120", 13828, 0],
-            ["iauto", "1024_90", 13624, 1],
-            ["iauto", "990_90", 13516, 13],
-            ["iauto", "412_100", 13502, 2],
-            ["iauto", "1200_280", 13384, 12],
+            ["iauto", "200_600", 109940, 55],
+            ["iauto", "1180_250", 108074, 1],
+            ["iauto", "360_50", 101464, 68],
+            ["iauto", "750_100", 82919, 24],
+            ["iauto", "384_50", 77429, 50],
+            ["iauto", "360_100", 76650, 60],
+            ["iauto", "384_100", 65283, 52],
+            ["iauto", "120_400", 63720, 7],
+            ["iauto", "320_150", 61070, 21],
+            ["iauto", "411_50", 59173, 31],
+            ["iauto", "320_80", 57540, 21],
+            ["iauto", "930_280", 52936, 41],
+            ["iauto", "300_57", 51852, 1],
+            ["iauto", "950_90", 50681, 20],
+            ["iauto", "960_90", 50482, 20],
+            ["iauto", "411_100", 46785, 42],
+            ["iauto", "800_100", 43862, 11],
+            ["iauto", "120_240", 42917, 8],
+            ["iauto", "980_90", 30474, 18],
+            ["iauto", "125_125", 30473, 0],
+            ["iauto", "1200_90", 30117, 27],
+            ["iauto", "640_100", 29900, 9],
+            ["iauto", "180_150", 29387, 3],
+            ["iauto", "960_64", 29279, 18],
+            ["iauto", "970_66", 28895, 12],
+            ["iauto", "150_150", 24736, 7],
+            ["iauto", "375_50", 22328, 4],
+            ["iauto", "204_250", 19366, 0],
+            ["iauto", "1200_280", 17290, 14],
+            ["iauto", "1005_124", 17254, 25],
+            ["iauto", "412_100", 14508, 2],
+            ["iauto", "990_90", 14405, 16],
+            ["iauto", "980_120", 13841, 0],
+            ["iauto", "1024_90", 13688, 1],
+            ["iauto", "338_50", 12887, 12],
             ["isize", "970_250", 12591, 4],
-            ["iauto", "650_90", 10744, 2],
             ["isize", "300_600", 4387, 5],
         ];
         /* ASDATA:END */
 
-        /* ⑤ 요청 사이즈별 일별 [날짜, 프레임 id, 요청 사이즈, 노출수, 클릭수] — rtb_theme_ab_result xlsx(C 시트)에서 update_data.bat이 채움 */
+        /* 사이즈별 일별 [날짜, 프레임, 사이즈, 노출, 클릭] */
         /* ASDDATA:START */
         const ASDDATA = [
             ["2026-09-01", "isize", "120_600", 63520, 12],
@@ -3574,6 +2701,246 @@
             ["2026-09-29", "iauto", "970_250", 9216, 0],
             ["2026-09-29", "iauto", "970_280", 7845, 0],
             ["2026-09-29", "iauto", "970_90", 9758, 1],
+            ["2026-09-30", "iauto", "1180_250", 4377, 0],
+            ["2026-09-30", "iauto", "120_400", 2717, 0],
+            ["2026-09-30", "iauto", "120_60", 10073, 0],
+            ["2026-09-30", "iauto", "120_600", 43230, 3],
+            ["2026-09-30", "iauto", "160_600", 66133, 19],
+            ["2026-09-30", "iauto", "176_62", 9394, 0],
+            ["2026-09-30", "iauto", "200_200", 88943, 6],
+            ["2026-09-30", "iauto", "200_600", 7539, 2],
+            ["2026-09-30", "iauto", "204_250", 1145, 0],
+            ["2026-09-30", "iauto", "234_60", 3015, 0],
+            ["2026-09-30", "iauto", "240_120", 15939, 0],
+            ["2026-09-30", "iauto", "240_133", 5678, 2],
+            ["2026-09-30", "iauto", "250_250", 84877, 36],
+            ["2026-09-30", "iauto", "300_100", 20051, 3],
+            ["2026-09-30", "iauto", "300_250", 32598, 10],
+            ["2026-09-30", "iauto", "300_50", 9645, 1],
+            ["2026-09-30", "iauto", "300_600", 4335, 2],
+            ["2026-09-30", "iauto", "320_100", 33915, 7],
+            ["2026-09-30", "iauto", "320_150", 1968, 0],
+            ["2026-09-30", "iauto", "320_50", 189982, 55],
+            ["2026-09-30", "iauto", "320_80", 1415, 0],
+            ["2026-09-30", "iauto", "336_280", 14248, 9],
+            ["2026-09-30", "iauto", "360_100", 2353, 4],
+            ["2026-09-30", "iauto", "360_50", 3915, 4],
+            ["2026-09-30", "iauto", "384_100", 1661, 3],
+            ["2026-09-30", "iauto", "384_50", 2825, 3],
+            ["2026-09-30", "iauto", "411_100", 1532, 0],
+            ["2026-09-30", "iauto", "411_50", 2195, 3],
+            ["2026-09-30", "iauto", "468_60", 6865, 0],
+            ["2026-09-30", "iauto", "584_60", 3430, 0],
+            ["2026-09-30", "iauto", "600_62", 8835, 1],
+            ["2026-09-30", "iauto", "640_100", 1181, 0],
+            ["2026-09-30", "iauto", "655_120", 17169, 6],
+            ["2026-09-30", "iauto", "728_90", 96761, 16],
+            ["2026-09-30", "iauto", "750_100", 4114, 0],
+            ["2026-09-30", "iauto", "800_100", 2327, 0],
+            ["2026-09-30", "iauto", "930_280", 3834, 2],
+            ["2026-09-30", "iauto", "970_250", 9812, 0],
+            ["2026-09-30", "iauto", "970_280", 7302, 1],
+            ["2026-09-30", "iauto", "970_90", 8219, 3],
+            ["2026-10-01", "iauto", "1180_250", 4372, 0],
+            ["2026-10-01", "iauto", "120_400", 2801, 3],
+            ["2026-10-01", "iauto", "120_60", 5996, 0],
+            ["2026-10-01", "iauto", "120_600", 34947, 5],
+            ["2026-10-01", "iauto", "160_600", 54337, 13],
+            ["2026-10-01", "iauto", "176_62", 4829, 0],
+            ["2026-10-01", "iauto", "200_200", 72019, 8],
+            ["2026-10-01", "iauto", "200_600", 6460, 1],
+            ["2026-10-01", "iauto", "204_250", 1308, 0],
+            ["2026-10-01", "iauto", "234_60", 2407, 0],
+            ["2026-10-01", "iauto", "240_120", 9878, 0],
+            ["2026-10-01", "iauto", "240_133", 2407, 0],
+            ["2026-10-01", "iauto", "250_250", 69206, 36],
+            ["2026-10-01", "iauto", "300_100", 12686, 1],
+            ["2026-10-01", "iauto", "300_250", 25845, 5],
+            ["2026-10-01", "iauto", "300_50", 7202, 1],
+            ["2026-10-01", "iauto", "300_600", 3852, 1],
+            ["2026-10-01", "iauto", "320_100", 33866, 9],
+            ["2026-10-01", "iauto", "320_150", 1990, 0],
+            ["2026-10-01", "iauto", "320_50", 216038, 65],
+            ["2026-10-01", "iauto", "320_80", 1465, 0],
+            ["2026-10-01", "iauto", "336_280", 10363, 11],
+            ["2026-10-01", "iauto", "360_100", 2002, 2],
+            ["2026-10-01", "iauto", "360_50", 5593, 2],
+            ["2026-10-01", "iauto", "384_100", 1972, 0],
+            ["2026-10-01", "iauto", "384_50", 3631, 1],
+            ["2026-10-01", "iauto", "411_100", 1411, 2],
+            ["2026-10-01", "iauto", "411_50", 2671, 1],
+            ["2026-10-01", "iauto", "468_60", 7386, 0],
+            ["2026-10-01", "iauto", "584_60", 3542, 0],
+            ["2026-10-01", "iauto", "600_62", 9229, 2],
+            ["2026-10-01", "iauto", "640_100", 1032, 0],
+            ["2026-10-01", "iauto", "655_120", 13248, 5],
+            ["2026-10-01", "iauto", "728_90", 81953, 18],
+            ["2026-10-01", "iauto", "750_100", 3437, 0],
+            ["2026-10-01", "iauto", "800_100", 2087, 2],
+            ["2026-10-01", "iauto", "930_280", 2767, 0],
+            ["2026-10-01", "iauto", "970_250", 6306, 0],
+            ["2026-10-01", "iauto", "970_280", 8277, 4],
+            ["2026-10-01", "iauto", "970_90", 6378, 0],
+            ["2026-10-02", "iauto", "1180_250", 3389, 0],
+            ["2026-10-02", "iauto", "120_400", 2036, 0],
+            ["2026-10-02", "iauto", "120_60", 5539, 0],
+            ["2026-10-02", "iauto", "120_600", 33265, 5],
+            ["2026-10-02", "iauto", "160_600", 52464, 14],
+            ["2026-10-02", "iauto", "176_62", 4529, 0],
+            ["2026-10-02", "iauto", "200_200", 64284, 9],
+            ["2026-10-02", "iauto", "200_600", 4814, 2],
+            ["2026-10-02", "iauto", "204_250", 1030, 0],
+            ["2026-10-02", "iauto", "234_60", 2331, 0],
+            ["2026-10-02", "iauto", "240_120", 11398, 0],
+            ["2026-10-02", "iauto", "240_133", 3974, 0],
+            ["2026-10-02", "iauto", "250_250", 73856, 36],
+            ["2026-10-02", "iauto", "300_100", 14216, 1],
+            ["2026-10-02", "iauto", "300_250", 26646, 10],
+            ["2026-10-02", "iauto", "300_50", 9485, 4],
+            ["2026-10-02", "iauto", "300_600", 3514, 1],
+            ["2026-10-02", "iauto", "320_100", 32833, 11],
+            ["2026-10-02", "iauto", "320_150", 2031, 0],
+            ["2026-10-02", "iauto", "320_50", 216218, 66],
+            ["2026-10-02", "iauto", "320_80", 1887, 1],
+            ["2026-10-02", "iauto", "336_280", 10323, 4],
+            ["2026-10-02", "iauto", "360_100", 2310, 0],
+            ["2026-10-02", "iauto", "360_50", 5125, 2],
+            ["2026-10-02", "iauto", "384_100", 1897, 2],
+            ["2026-10-02", "iauto", "384_50", 3675, 3],
+            ["2026-10-02", "iauto", "411_100", 1164, 0],
+            ["2026-10-02", "iauto", "411_50", 3004, 1],
+            ["2026-10-02", "iauto", "468_60", 6753, 2],
+            ["2026-10-02", "iauto", "584_60", 3875, 1],
+            ["2026-10-02", "iauto", "600_62", 9606, 1],
+            ["2026-10-02", "iauto", "640_100", 761, 0],
+            ["2026-10-02", "iauto", "655_120", 13584, 3],
+            ["2026-10-02", "iauto", "728_90", 80162, 8],
+            ["2026-10-02", "iauto", "750_100", 3211, 1],
+            ["2026-10-02", "iauto", "800_100", 1909, 0],
+            ["2026-10-02", "iauto", "930_280", 2493, 1],
+            ["2026-10-02", "iauto", "970_250", 6104, 1],
+            ["2026-10-02", "iauto", "970_280", 8494, 4],
+            ["2026-10-02", "iauto", "970_90", 6307, 1],
+            ["2026-10-03", "iauto", "1180_250", 1933, 0],
+            ["2026-10-03", "iauto", "1200_90", 802, 2],
+            ["2026-10-03", "iauto", "120_400", 1242, 0],
+            ["2026-10-03", "iauto", "120_60", 8836, 0],
+            ["2026-10-03", "iauto", "120_600", 14833, 1],
+            ["2026-10-03", "iauto", "160_600", 34530, 7],
+            ["2026-10-03", "iauto", "176_62", 8078, 0],
+            ["2026-10-03", "iauto", "200_200", 65423, 6],
+            ["2026-10-03", "iauto", "200_600", 1184, 0],
+            ["2026-10-03", "iauto", "220_90", 623, 0],
+            ["2026-10-03", "iauto", "234_60", 2398, 0],
+            ["2026-10-03", "iauto", "240_120", 3970, 0],
+            ["2026-10-03", "iauto", "240_133", 1090, 1],
+            ["2026-10-03", "iauto", "250_250", 69699, 42],
+            ["2026-10-03", "iauto", "300_100", 6833, 4],
+            ["2026-10-03", "iauto", "300_250", 17628, 5],
+            ["2026-10-03", "iauto", "300_50", 10827, 5],
+            ["2026-10-03", "iauto", "300_600", 1700, 0],
+            ["2026-10-03", "iauto", "320_100", 27797, 0],
+            ["2026-10-03", "iauto", "320_150", 2780, 0],
+            ["2026-10-03", "iauto", "320_50", 187669, 40],
+            ["2026-10-03", "iauto", "336_280", 9517, 3],
+            ["2026-10-03", "iauto", "360_100", 1586, 3],
+            ["2026-10-03", "iauto", "360_50", 4095, 0],
+            ["2026-10-03", "iauto", "384_100", 2000, 2],
+            ["2026-10-03", "iauto", "384_50", 3336, 1],
+            ["2026-10-03", "iauto", "411_100", 1324, 0],
+            ["2026-10-03", "iauto", "411_50", 2540, 2],
+            ["2026-10-03", "iauto", "468_60", 6842, 1],
+            ["2026-10-03", "iauto", "584_60", 1549, 0],
+            ["2026-10-03", "iauto", "600_62", 4043, 0],
+            ["2026-10-03", "iauto", "655_120", 2967, 2],
+            ["2026-10-03", "iauto", "728_90", 43103, 3],
+            ["2026-10-03", "iauto", "750_100", 953, 2],
+            ["2026-10-03", "iauto", "930_280", 1681, 1],
+            ["2026-10-03", "iauto", "950_90", 1259, 0],
+            ["2026-10-03", "iauto", "960_90", 1552, 0],
+            ["2026-10-03", "iauto", "970_250", 4230, 0],
+            ["2026-10-03", "iauto", "970_280", 3021, 4],
+            ["2026-10-03", "iauto", "970_90", 4080, 0],
+            ["2026-10-04", "iauto", "1180_250", 1597, 0],
+            ["2026-10-04", "iauto", "1200_280", 747, 0],
+            ["2026-10-04", "iauto", "1200_90", 975, 0],
+            ["2026-10-04", "iauto", "120_400", 1205, 0],
+            ["2026-10-04", "iauto", "120_60", 7766, 0],
+            ["2026-10-04", "iauto", "120_600", 15427, 2],
+            ["2026-10-04", "iauto", "160_600", 33655, 5],
+            ["2026-10-04", "iauto", "176_62", 6881, 0],
+            ["2026-10-04", "iauto", "200_200", 66130, 12],
+            ["2026-10-04", "iauto", "200_600", 2208, 0],
+            ["2026-10-04", "iauto", "234_60", 2552, 0],
+            ["2026-10-04", "iauto", "240_120", 3767, 0],
+            ["2026-10-04", "iauto", "240_133", 1357, 0],
+            ["2026-10-04", "iauto", "250_250", 67532, 33],
+            ["2026-10-04", "iauto", "300_100", 6662, 2],
+            ["2026-10-04", "iauto", "300_250", 14613, 4],
+            ["2026-10-04", "iauto", "300_50", 7540, 2],
+            ["2026-10-04", "iauto", "300_600", 2808, 1],
+            ["2026-10-04", "iauto", "320_100", 26126, 4],
+            ["2026-10-04", "iauto", "320_150", 3099, 0],
+            ["2026-10-04", "iauto", "320_50", 189022, 44],
+            ["2026-10-04", "iauto", "336_280", 7170, 3],
+            ["2026-10-04", "iauto", "360_100", 1627, 1],
+            ["2026-10-04", "iauto", "360_50", 4154, 3],
+            ["2026-10-04", "iauto", "384_100", 1576, 2],
+            ["2026-10-04", "iauto", "384_50", 3457, 0],
+            ["2026-10-04", "iauto", "411_100", 1385, 1],
+            ["2026-10-04", "iauto", "411_50", 2830, 1],
+            ["2026-10-04", "iauto", "468_60", 7897, 0],
+            ["2026-10-04", "iauto", "584_60", 1587, 1],
+            ["2026-10-04", "iauto", "600_62", 4232, 0],
+            ["2026-10-04", "iauto", "655_120", 2717, 1],
+            ["2026-10-04", "iauto", "728_90", 42845, 5],
+            ["2026-10-04", "iauto", "750_100", 1151, 0],
+            ["2026-10-04", "iauto", "930_280", 1768, 1],
+            ["2026-10-04", "iauto", "950_90", 851, 0],
+            ["2026-10-04", "iauto", "960_90", 1159, 1],
+            ["2026-10-04", "iauto", "970_250", 4574, 0],
+            ["2026-10-04", "iauto", "970_280", 3024, 1],
+            ["2026-10-04", "iauto", "970_90", 3729, 1],
+            ["2026-10-05", "iauto", "1180_250", 1804, 0],
+            ["2026-10-05", "iauto", "1200_280", 932, 0],
+            ["2026-10-05", "iauto", "1200_90", 789, 1],
+            ["2026-10-05", "iauto", "120_400", 1240, 0],
+            ["2026-10-05", "iauto", "120_60", 5345, 0],
+            ["2026-10-05", "iauto", "120_600", 16126, 1],
+            ["2026-10-05", "iauto", "160_600", 33469, 7],
+            ["2026-10-05", "iauto", "176_62", 4095, 0],
+            ["2026-10-05", "iauto", "200_200", 67544, 13],
+            ["2026-10-05", "iauto", "200_600", 2116, 1],
+            ["2026-10-05", "iauto", "234_60", 3465, 1],
+            ["2026-10-05", "iauto", "240_120", 3096, 0],
+            ["2026-10-05", "iauto", "240_133", 992, 0],
+            ["2026-10-05", "iauto", "250_250", 72112, 34],
+            ["2026-10-05", "iauto", "300_100", 5253, 2],
+            ["2026-10-05", "iauto", "300_250", 15567, 3],
+            ["2026-10-05", "iauto", "300_50", 7444, 1],
+            ["2026-10-05", "iauto", "300_600", 2537, 1],
+            ["2026-10-05", "iauto", "320_100", 26785, 8],
+            ["2026-10-05", "iauto", "320_150", 2600, 0],
+            ["2026-10-05", "iauto", "320_50", 176556, 45],
+            ["2026-10-05", "iauto", "336_280", 9007, 6],
+            ["2026-10-05", "iauto", "360_100", 2265, 2],
+            ["2026-10-05", "iauto", "360_50", 4014, 2],
+            ["2026-10-05", "iauto", "384_100", 1552, 1],
+            ["2026-10-05", "iauto", "384_50", 3469, 2],
+            ["2026-10-05", "iauto", "411_100", 1578, 1],
+            ["2026-10-05", "iauto", "411_50", 2563, 2],
+            ["2026-10-05", "iauto", "468_60", 7365, 1],
+            ["2026-10-05", "iauto", "584_60", 1285, 0],
+            ["2026-10-05", "iauto", "600_62", 3176, 0],
+            ["2026-10-05", "iauto", "655_120", 3053, 0],
+            ["2026-10-05", "iauto", "728_90", 39914, 3],
+            ["2026-10-05", "iauto", "750_100", 1440, 0],
+            ["2026-10-05", "iauto", "800_100", 803, 0],
+            ["2026-10-05", "iauto", "930_280", 1760, 2],
+            ["2026-10-05", "iauto", "950_90", 800, 0],
+            ["2026-10-05", "iauto", "970_250", 3609, 1],
+            ["2026-10-05", "iauto", "970_280", 3688, 1],
+            ["2026-10-05", "iauto", "970_90", 4463, 1],
         ];
         /* ASDDATA:END */
 
@@ -3584,10 +2951,9 @@
         const ROWS = ADATA.map(([d, t, imp, clk]) => ({ d, t, imp, clk }));
         const DATES = [...new Set(ROWS.map(r => r.d))].sort();
         const TODAY = DATES[DATES.length - 1] || ymd(new Date());
-        const PERIOD_FROM = TODAY.slice(0, 8) + '01';
         THEMES.forEach(T => { const ds = ROWS.filter(r => r.t === T.id && r.imp >= MIN_IMP).map(r => r.d).sort(); T.from = ds[0]; T.to = ds[ds.length - 1]; });
 
-        /* ---------- 공통 ---------- */
+        /* 공통 */
         const sum = rows => { const o = { imp: 0, clk: 0 }; for (const r of rows) { o.imp += r.imp; o.clk += r.clk; } o.ctr = o.imp >= MIN_IMP ? o.clk / o.imp * 100 : 0; return o; };
         const pick = (fn) => ROWS.filter(fn);
         const f = n => Math.round(n).toLocaleString('ko-KR');
@@ -3598,22 +2964,21 @@
             { k: 'ctr', label: '클릭률 (CTR)', fmt: pct },
         ];
         const theme = id => THEMES.find(t => t.id === id);
-        // 프레임 이름 — 마우스를 올리면 배너 툴팁 (frameTip · 배너가 있는 프레임만)
+        // 프레임 이름, 호버 시 배너 툴팁
         const nm = (T, short = false) => `<span class="fname" data-frame-tip="${T.id}">${short ? T.name.replace(' 프레임', '') : T.name}</span>`;
         function frameArt(id, o = {}) {
             const T = theme(id), src = o.src || T.src || '';
             const attr = T.tpl ? `data-tpl="${src}"` : `src="${src}"`;
-            // img 가 있으면 이미지 배너, src 가 있으면 배너 페이지(iframe), 둘 다 없으면 설명만
             return `<div class="ad ad-slot" data-frame="${id}">${T.img ? `<img src="${T.img}" alt="${T.name}" loading="lazy">` : src ? `<iframe ${attr} title="${T.name}" loading="lazy" scrolling="no"></iframe>` : `<div class="ad-empty">${T.desc}</div>`}</div>`;
         }
 
-        // 배너 iframe(250px)을 칸 폭에 맞게 축소 — 표가 다시 그려지거나 창 크기가 바뀌면 다시 계산
+        // 배너 iframe 을 칸 폭에 맞게 축소
         const BANNER_PX = 250;
         const fitBannerSlots = () => document.querySelectorAll('.ad.ad-slot iframe').forEach(f => {
             const w = f.parentElement.clientWidth;
             if (w) f.style.transform = `scale(${w / BANNER_PX})`;
         });
-        // 레드오토(오토 프레임) 템플릿: 뷰어 페이지(dev_openRtbAuto_view.html)와 같은 목 상품 데이터로 채워서 표시
+        // 오토 프레임 템플릿용 목 데이터
         const TPL_MOCK = {
             '{{w}}': BANNER_PX, '{{h}}': BANNER_PX,
             '{{productList}}': `{ pcode: "test-pcode1", pnm: "오토프레임 카라넥 원피스", price: "49,900", prdt_prmct: "39,900", dc_rate: "32",
@@ -3633,11 +2998,11 @@
             const schedule = () => { if (queued) return; queued = true; requestAnimationFrame(() => { queued = false; fitBannerSlots(); fillTemplateBanners(); }); };
             new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
             window.addEventListener('resize', schedule);
-            document.getElementById('tlModal')?.addEventListener('toggle', schedule);   // 모달이 열릴 때 (닫혀 있으면 폭이 0)
+            document.getElementById('tlModal')?.addEventListener('toggle', schedule);   // 닫힌 모달은 폭이 0
             schedule();
         })();
 
-        /* 프레임 이름 호버 → 배너 툴팁 (테마별 배너를 미리 한 번만 만들어 두고 보여줌) */
+        /* 프레임 이름 호버 툴팁 */
         (function () {
             const tip = document.createElement('div');
             tip.id = 'frameTip';
@@ -3649,15 +3014,14 @@
             const place = (x, y) => {
                 const h = tip.offsetHeight || 260;
                 let left = x + GAP, top = y + GAP;
-                if (left + W > innerWidth - 8) left = x - W - GAP;          // 오른쪽 공간이 없으면 왼쪽에
-                if (top + h > innerHeight - 8) top = Math.max(8, y - h - GAP); // 아래 공간이 없으면 위에
+                if (left + W > innerWidth - 8) left = x - W - GAP;
+                if (top + h > innerHeight - 8) top = Math.max(8, y - h - GAP);
                 tip.style.left = left + 'px'; tip.style.top = top + 'px';
             };
             const show = (el, e) => {
                 const id = el.dataset.frameTip;
                 if (!theme(id)?.src && !theme(id)?.img) return;
                 cur = el;
-                // 모달(dialog) 안에서는 모달 위에 떠야 하므로 모달 안으로 옮김
                 const host = el.closest('dialog') || document.body;
                 if (tip.parentElement !== host) host.appendChild(tip);
                 tip.querySelectorAll('.ft-item').forEach(it => it.classList.toggle('on', it.dataset.frameTipFor === id));
@@ -3672,16 +3036,15 @@
             document.addEventListener('scroll', hide, true);
         })();
 
-        initTimeline();   // 프레임 변경 Timeline (frame_timeline.js 공용)
+        initTimeline();   // frame_timeline.js 공용
 
-        /* ① 프레임 테마별 성과 */
+        /* 프레임별 성과 */
         function renderThemes(from, to) {
             const inR = r => r.d >= from && r.d <= to;
             const TS = Object.fromEntries(THEMES.map(T => [T.id, sum(pick(r => inR(r) && r.t === T.id))]));
-            // 프레임 중 순위 (② 와 같은 표시)
             const themeRank = (id, k) => { const n = TS[id][k] > 0 ? 1 + THEMES.filter(T => TS[T.id][k] > TS[id][k]).length : 0; return n ? `<em class="rk-badge rk${Math.min(n, 3)}">${n}위</em>` : ''; };
             document.getElementById('themes').innerHTML = THEMES.map(T => {
-                const s = TS[T.id], ds = [...new Set(pick(r => inR(r) && r.t === T.id && r.imp >= MIN_IMP).map(r => r.d))].sort();   // 데이터 기간: 집계 제외(노출 MIN_IMP 미만)인 날은 뺌
+                const s = TS[T.id], ds = [...new Set(pick(r => inR(r) && r.t === T.id && r.imp >= MIN_IMP).map(r => r.d))].sort();
                 const period = !ds.length ? '데이터 없음' : from === to ? `데이터: <b>${md(from)}</b>` : `데이터: <b>${md(ds[0])} ~ ${md(ds[ds.length - 1])}</b>`;
                 const view = T.view ? `<a class="theme-view" href="${T.view}" target="_blank" rel="noopener" title="${T.name} 전체 사이즈 미리보기 (새 탭)">프레임 미리보기<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></a>` : '';
                 return `<article class="card theme">
@@ -3700,13 +3063,13 @@
         }
         (function () {
             const ctrl = document.getElementById('themePeriod'), dateEl = document.getElementById('themeDate');
-            dateEl.min = PERIOD_FROM; dateEl.max = TODAY; dateEl.value = TODAY;
-            ctrl.querySelector('[data-mode="month"]').textContent = `${+TODAY.slice(5, 7)}월 전체`;
+            dateEl.min = DATES[0]; dateEl.max = TODAY; dateEl.value = TODAY;
+            monthButtons(ctrl, DATES);
             const run = () => {
                 const mode = ctrl.querySelector('[aria-pressed="true"]').dataset.mode;
                 dateEl.hidden = mode !== 'day';
                 const d = dateEl.value || TODAY;
-                if (mode === 'day') renderThemes(d, d); else renderThemes(PERIOD_FROM, TODAY);
+                if (mode === 'day') renderThemes(d, d); else renderThemes(...monthRange(ctrl, DATES));
             };
             ctrl.addEventListener('click', e => {
                 const b = e.target.closest('button[data-mode]'); if (!b) return;
@@ -3718,7 +3081,7 @@
         })();
 
         const CROWN = `<svg class="crown" viewBox="0 0 24 28" aria-hidden="true"><path d="M6 1h5l3 8H9z" fill="#3f7ee8"/><path d="M18 1h-5l-3 8h5z" fill="#d7262f"/><circle cx="12" cy="17.5" r="9" fill="#f2b705" stroke="#c98f00" stroke-width="1.5"/><circle cx="12" cy="17.5" r="6.3" fill="none" stroke="#fff3c4" stroke-width="1"/><text x="12" y="21.6" text-anchor="middle" font-size="11" font-weight="800" font-family="Arial, sans-serif" fill="#7a5200">1</text></svg>`;
-        /* ② 전전일 vs 전일 — 지표별 카드: 제목 + 한 줄 요약, 프레임마다 전전일(연한 색)·전일(진한 색) 막대와 숫자, 이름 옆 1위 배지, 아래 증감 칩 */
+        /* 전전일 vs 전일 카드 */
         (function () {
             const Y = DATES[DATES.length - 1], B = DATES[DATES.length - 2];
             const Ys = Object.fromEntries(THEMES.map(T => [T.id, sum(pick(r => r.t === T.id && r.d === Y))]));
@@ -3727,18 +3090,17 @@
             const short = (k, v) => k === 'ctr' ? v.toFixed(3) + '%' : v >= 1e4 ? f(v / 1e4) + '만' : f(v);
             const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
             const nameOf = T => T.name.replace(' 프레임', '');
-            // 프레임별 증감: { cls: rise·fall·flat·none, txt, diff, flat(요약용 '유지') }
             const change = (T, k) => {
                 const y = Ys[T.id], b = Bs[T.id], yv = y[k], bv = b[k];
                 if (!y.imp && !b.imp) return { cls: 'none', txt: '데이터 없음' };
                 if (!y.imp) return { cls: 'none', txt: '전일 데이터 없음' };
                 if (!b.imp || !bv) return { cls: 'none', txt: '전전일 데이터 없음' };
                 const diff = k === 'ctr' ? yv - bv : (yv / bv - 1) * 100;
-                const flat = k === 'ctr' ? Math.abs(diff) <= 0.001 : Math.abs(diff) <= 1;   // 요약용 '유지' 기준: CTR ±0.001%p · 노출/클릭 ±1%
+                const flat = k === 'ctr' ? Math.abs(diff) <= 0.001 : Math.abs(diff) <= 1;   // 유지 기준: CTR 0.001%p, 그 외 1%
                 const cls = Math.abs(diff) < 0.0005 ? 'flat' : diff > 0 ? 'rise' : 'fall';
                 return { cls, flat, diff, txt: `${cls === 'flat' ? '−' : diff > 0 ? '▲' : '▼'} ${Math.abs(diff).toFixed(k === 'ctr' ? 3 : 1)}%` };
             };
-            // 카드 오른쪽 한 줄 요약 (예: 세 테마 모두 약 +21% · 화이트레드만 증가 · 화이트레드만 유지)
+            // 카드 오른쪽 한 줄 요약
             const note = (k) => {
                 const cs = THEMES.map(T => ({ T, c: change(T, k) })).filter(x => x.c.cls !== 'none');
                 if (!cs.length) return '';
@@ -3759,7 +3121,7 @@
                 return cs.map(x => `${nameOf(x.T)} ${dir(x)}`).join(' · ');
             };
             const wrap = document.getElementById('yd');
-            // 범례: 막대 색은 프레임 색이고, 진한 색이 전일 · 연한 색이 전전일라는 것만 표시
+            // 범례
             wrap.innerHTML = `<div class="legend yd-legend"><span class="yd-legend-note">연한 색 = 전전일 ${md(B)} · 진한 색 = 전일 ${md(Y)}</span></div>`
                 + `<div class="yd-cards">${M3.map(m => `<div class="yd-card">
                     <div class="yd-card-head"><h3>${m.label}</h3><span class="yd-note">${esc(note(m.k))}</span></div>
@@ -3772,7 +3134,7 @@
             function draw() {
                 wrap.querySelectorAll('.yd-chart').forEach(box => {
                     const k = box.dataset.k, m = M3.find(x => x.k === k), svg = box.querySelector('svg'), tip = box.querySelector('.tip');
-                    svg.setAttribute('width', 0);   // 먼저 0으로 줄여야 칸이 좁아졌을 때(메뉴 펼침 등) 새 폭을 제대로 읽음 — 안 그러면 이전 폭의 SVG가 칸을 붙들어 가로 스크롤이 생김
+                    svg.setAttribute('width', 0);   // 새 폭을 읽기 위해 먼저 0으로
                     const W = box.clientWidth, H = box.clientHeight, T = 20, ih = H - T - 2;
                     const max = Math.max(...THEMES.flatMap(t => [Ys[t.id][k], Bs[t.id][k]])) || 1;
                     svg.setAttribute('width', W); svg.setAttribute('height', H);
@@ -3783,14 +3145,14 @@
                         [[b[k], b.imp, cx - gap / 2 - bw, .3], [y[k], y.imp, cx + gap / 2, 1]].forEach(([v, has, x, op]) => {
                             const h = v / max * ih;
                             if (h > 0) out += `<rect class="yd-bar" data-day="${op === 1 ? `전일 ${md(Y)}` : `전전일 ${md(B)}`}" data-t="${i}" data-v="${v}" x="${x}" y="${T + ih - h}" width="${bw}" height="${h}" rx="3" fill="${t.color}" opacity="${op}"/>`;
-                            // 숫자 라벨: 막대보다 글자가 길면(CTR 등) 전전일는 왼쪽 막대 오른끝에 맞춰 오른정렬, 전일는 오른쪽 막대 왼끝에 맞춰 왼정렬해서 겹치지 않게
+                            // 숫자 라벨이 막대보다 길면 바깥쪽 정렬
                             const label = has ? short(k, v) : '−', wide = label.length * 6.4 > bw + gap - 2;
                             const [lx, anchor] = !wide ? [x + bw / 2, 'middle'] : op === 1 ? [x, 'start'] : [x + bw, 'end'];
                             out += `<text x="${lx}" y="${T + ih - h - 5}" font-size="${op === 1 ? 11.5 : 10.5}" font-weight="${op === 1 ? 700 : 400}" fill="${op === 1 ? '#202124' : '#858a92'}" text-anchor="${anchor}">${label}</text>`;
                         });
                     });
                     svg.innerHTML = out;
-                    // 막대에 마우스를 올리면 전일/전전일 · 프레임 · 값 툴팁
+                    // 막대 호버 툴팁
                     svg.querySelectorAll('.yd-bar').forEach(r => {
                         r.addEventListener('mouseenter', () => {
                             const t = THEMES[+r.dataset.t];
@@ -3808,7 +3170,7 @@
             draw();
         })();
 
-        /* ③ 최근 7일 — 지표별 차트, 날짜마다 프레임별 막대 */
+        /* 최근 7일 차트 */
         (function () {
             const D7 = DATES.slice(-7);   // 데이터가 있는 최근 7일
             const data = D7.map(d => Object.fromEntries(THEMES.map(T => [T.id, sum(pick(r => r.t === T.id && r.d === d))])));
@@ -3821,7 +3183,7 @@
             function draw() {
                 wrap.querySelectorAll('.w7-chart').forEach(box => {
                     const k = box.dataset.k, m = M3.find(x => x.k === k), svg = box.querySelector('svg'), tip = box.querySelector('.tip');
-                    svg.setAttribute('width', 0);   // 먼저 0으로 줄여야 칸이 좁아졌을 때(메뉴 펼침 등) 새 폭을 제대로 읽음 — 안 그러면 이전 폭의 SVG가 칸을 붙들어 가로 스크롤이 생김
+                    svg.setAttribute('width', 0);   // 새 폭을 읽기 위해 먼저 0으로
                     const W = box.clientWidth, H = box.clientHeight, L = 46, R = 6, T = 8, B = 26, iw = W - L - R, ih = H - T - B;
                     const max = nice(Math.max(...data.flatMap(o => THEMES.map(t => o[t.id][k]))) || 1);
                     svg.setAttribute('width', W); svg.setAttribute('height', H);
@@ -3831,7 +3193,7 @@
                         out += `<line x1="${L}" x2="${W - R}" y1="${y}" y2="${y}" stroke="${g ? '#f2f3f5' : '#e6e8ec'}"/><text x="${L - 6}" y="${y + 4}" font-size="10" fill="#b3b8bf" text-anchor="end">${short(k, max * g / 4)}</text>`;
                     }
                     const gw = iw / D7.length, bw = Math.min(12, (gw - 10) / THEMES.length - 2);
-                    const tops = THEMES.map(() => []);   // 테마별 막대 꼭대기 좌표 (호버 선그래프용)
+                    const tops = THEMES.map(() => []);   // 호버 선그래프용 막대 꼭대기 좌표
                     D7.forEach((d, i) => {
                         const gx = L + gw * i, x0 = gx + (gw - (bw + 2) * THEMES.length + 2) / 2;
                         THEMES.forEach((t, j) => {
@@ -3855,7 +3217,7 @@
                         });
                         h.addEventListener('mouseleave', () => { tip.hidden = true; h.setAttribute('fill', 'transparent'); });
                     });
-                    // 막대에 마우스를 올리면 같은 테마의 7일 추이를 선으로 연결
+                    // 막대 호버 시 같은 테마 선그래프
                     const hl = svg.querySelector('.hl-line');
                     let cur = -1;
                     svg.onmousemove = e => {
@@ -3877,7 +3239,7 @@
             draw();
         })();
 
-        /* ---------- 표 정렬 + 합계 행 ---------- */
+        /* 표 정렬, 합계 행 */
         function makeSortable(table) {
             const ths = [...table.querySelectorAll('th[data-col]')];
             ths.forEach(th => {
@@ -3891,7 +3253,7 @@
                 });
             });
         }
-        // 요약: 지표 1위를 차지한 항목 수를 프레임별 비중으로 막대 하나에 (사이즈별 · 지면별 표 위)
+        // 프레임별 1위 비중 막대
         function stackSummary(FR, items, label, unit) {
             const total = items.filter(r => r.win >= 0).length;
             const cnt = FR.map((T, i) => items.filter(r => r.win === i));
@@ -3901,7 +3263,7 @@
             }).join('');
             return `<div class="ss-stack"><div class="ss-stack-title">${label} 1위 비중</div><div class="ss-stack-bar">${seg}</div></div>`;
         }
-        // 비중 막대 구간에 마우스를 올리면 검은 툴팁 (프레임 · 1위 개수)
+        // 비중 막대 호버 툴팁
         document.addEventListener('mouseover', e => {
             const seg = e.target.closest('.ss-stack-bar span[data-tip]'); if (!seg) return;
             const box = seg.closest('.ss-stack'); let tip = box.querySelector('.tip');
@@ -3916,21 +3278,21 @@
         const numTd = (v, fmt, cls = '', c = '', tip = '') => `<td class="${cls}" data-v="${v}"${c ? ` style="${cv(c)}"` : ''}>${cls.includes('top') ? `<span class="crown-wrap" data-tip="${tip}">${CROWN}${fmt(v)}</span>` : fmt(v)}</td>`;
 
 
-        /* ④ 일별 추이 — 날짜마다 프레임별 노출·클릭·CTR + 합산. 구간 = 그날 노출된 프레임(단독 / 병행), 구간이 바뀐 날은 강조 */
-        (function () {
+        /* 일별 추이 표, 선택한 월 */
+        function renderTrans(from, to) {
+            const inR = r => r.d >= from && r.d <= to;
             const day = (t, d) => sum(pick(r => r.t === t && r.d === d));
             const active = vals => THEMES.filter((T, i) => vals[i].imp >= MINV);
             const seg = on => {
                 if (!on.length) return `<span class="seg-chip none">−</span>`;
                 if (on.length === 1) return `<span class="seg-chip one" style="${cv(on[0])}">${on[0].name.replace(' 프레임', '')} 단독</span>`;
-                // 병행 — 노출된 프레임 색을 칸으로 나눠 표시
                 const n = on.length, bg = on.map((T, i) => `color-mix(in srgb, ${T.color} 22%, #fff) ${i / n * 100}% ${(i + 1) / n * 100}%`).join(', ');
                 return `<span class="seg-chip" style="background:linear-gradient(90deg, ${bg})">${on.map(T => T.name.replace(' 프레임', '')).join(' · ')} 병행</span>`;
             };
             const cell = (o, k, m) => `<td class="sep" data-v="${o.imp ? o[k] : -1}">${o.imp ? m.fmt(o[k]) : '−'}</td>`;
             const group = o => M3.map(m => cell(o, m.k, m)).join('');
             const MINV = typeof MIN_IMP === 'number' ? MIN_IMP : 1;
-            // 병행(2개 이상 노출)인 날은 클릭률 1위 프레임 칸에만 1위 메달 + 색 강조
+            // 병행인 날만 CTR 1위 표시
             const winGroup = (o, T, list, d) => M3.map(m => {
                 const on = list.filter(x => x.imp >= MINV);
                 const win = m.k === 'ctr' && on.length >= 2 && o.imp >= MINV && o[m.k] > 0 && o[m.k] === Math.max(...on.map(x => x[m.k]));
@@ -3938,43 +3300,54 @@
 ${T.name} ${m.fmt(o[m.k])}`) : cell(o, m.k, m);
             }).join('');
             let prevKey = null;
-            const rows = [...DATES].map(d => {   // 과거 → 최신 순으로 구간 변화를 판단한 뒤 최신순으로 표시
+            const rows = [...DATES].map(d => {   // 과거순으로 구간 변화 판단 뒤 최신순 표시
                 const v = THEMES.map(T => day(T.id, d)), on = active(v), key = on.map(T => T.id).join('+');
                 const pivot = prevKey !== null && key !== prevKey;
                 prevKey = key;
                 return { d, v, on, pivot, all: sum(pick(r => r.d === d)) };
-            }).reverse().map(({ d, v, on, pivot, all }) =>
+            }).filter(inR).reverse().map(({ d, v, on, pivot, all }) =>
                 `<tr class="${pivot ? 'pivot' : ''}"><td class="${dayCls(d)}"><b>${md(d)}</b></td><td class="left">${seg(on)}</td>${v.map((o, i) => winGroup(o, THEMES[i], v, d)).join('')}${group(all)}</tr>`).join('');
-            const tot = THEMES.map(T => sum(pick(r => r.t === T.id))), totAll = sum(ROWS);
+            const tot = THEMES.map(T => sum(pick(r => r.t === T.id && inR(r)))), totAll = sum(pick(inR)), nDays = DATES.filter(d => d >= from && d <= to).length;
             document.getElementById('transTable').innerHTML = `<thead>
                 <tr><th rowspan="2">일자</th><th rowspan="2" style="text-align:left">구간</th>
                     ${THEMES.map(T => `<th colspan="3" class="grp sep" style="${cv(T)}"><span class="dot" style="${sw(T)}"></span>${nm(T)}</th>`).join('')}
                     <th colspan="3" class="grp sep">합산</th></tr>
                 <tr>${[...THEMES, { name: '합산' }].map(() => M3.map(m => `<th class="sep">${m.label.replace(' (CTR)', '')}</th>`).join('')).join('')}</tr>
-                <tr class="total-row"><td>합계</td><td class="left">${DATES.length}일</td>${tot.map(group).join('')}${group(totAll)}</tr>
+                <tr class="total-row"><td>합계</td><td class="left">${nDays}일</td>${tot.map(group).join('')}${group(totAll)}</tr>
             </thead><tbody>${rows}</tbody>`;
+        }
+        (function () {
+            const ctrl = document.getElementById('transPeriod');
+            monthButtons(ctrl, DATES);
+            const run = () => renderTrans(...monthRange(ctrl, DATES));
+            ctrl.addEventListener('click', e => {
+                const b = e.target.closest('button[data-mode]'); if (!b) return;
+                ctrl.querySelectorAll('button[data-mode]').forEach(x => x.setAttribute('aria-pressed', x === b));
+                run();
+            });
+            run();
         })();
 
-        /* ⑤ 요청 사이즈별 — 9월 전체(누적) / 일별, 노출 상위 10개 요청 사이즈 × 프레임 (지표 탭) */
-        const RSROWS = ASDATA.map(([t, p, imp, clk]) => ({ t, p, imp, clk }));   // 9월 누적
+        /* 요청 사이즈별 표 */
+        const RSROWS = ASDATA.map(([t, p, imp, clk]) => ({ t, p, imp, clk }));   // 누적
         const RSDROWS = ASDDATA.map(([d, t, p, imp, clk]) => ({ d, t, p, imp, clk }));   // 일별
-        if (!RSROWS.length) document.getElementById('sizeSection').hidden = true;   // 요청 사이즈 데이터가 없으면 숨김
+        if (!RSROWS.length) document.getElementById('sizeSection').hidden = true;
         const RSIZE_N = 10;
         const rsizeLabel = p => { const m = p.match(/^(\d+)_(\d+)$/); return m ? `<b>${m[1]}×${m[2]}</b><small>요청 사이즈</small>` : `<b>${p}</b>`; };
         function renderRSize(from, to, mk) {
-            const whole = from === PERIOD_FROM && to !== from;   // 월 전체: 누적 · 일별: 그날
+            const whole = wholeRange(from, to, DATES) && to !== from;
             const src = whole ? RSROWS : RSDROWS.filter(r => r.d >= from && r.d <= to);
             const m = M3.find(x => x.k === mk);
             const FR = THEMES;
             const psum = fn => sum(src.filter(fn));
-            const argmax = list => { let w = -1; list.forEach((o, i) => { if (o.imp && (w < 0 || o[mk] > list[w][mk])) w = i; }); return w; };
+            const argmax = list => { let w = -1; list.forEach((o, i) => { if (o.imp && o[mk] > 0 && (w < 0 || o[mk] > list[w][mk])) w = i; }); return w; };   // 값이 0이면 1위 없음
             const sizes = [...new Set(src.map(r => r.p))]
                 .map(p => ({ p, all: psum(r => r.p === p) }))
                 .sort((a, b) => b.all.imp - a.all.imp).slice(0, RSIZE_N);
             const rows = sizes.map(({ p }) => ({ p, v: FR.map(T => psum(r => r.t === T.id && r.p === p)) }));
             rows.forEach(r => r.win = argmax(r.v));
             const shown = new Set(rows.map(r => r.p));
-            const tot = FR.map(T => psum(r => r.t === T.id && shown.has(r.p)));   // 합계는 표에 있는 사이즈 기준
+            const tot = FR.map(T => psum(r => r.t === T.id && shown.has(r.p)));   // 합계는 표시된 사이즈만
             const head = `<thead>
                 <tr><th>사이즈</th>${FR.map((T, i) => `<th data-col="${i + 1}" class="grp sep" style="${cv(T)}"><span class="dot" style="${sw(T)}"></span>${nm(T)}</th>`).join('')}</tr>
                 <tr class="total-row"><td>합계</td>${tot.map((o, i) => !o.imp ? `<td class="sep na" data-v="-1">−</td>` : numTd(o[mk], m.fmt, 'sep' + (i === argmax(tot) ? ' top' : ''), i === argmax(tot) ? FR[i] : '', `합계 · ${m.label} 1위\n${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>
@@ -3990,15 +3363,15 @@ ${T.name} ${m.fmt(o[m.k])}`) : cell(o, m.k, m);
         (function () {
             const ctrl = document.getElementById('sizePeriod'), dateEl = document.getElementById('sizeDate'), tabs = document.getElementById('sizeMetric');
             const PD = [...new Set(RSDROWS.map(r => r.d))].sort(), PTODAY = PD[PD.length - 1] || TODAY;
-            dateEl.min = PERIOD_FROM; dateEl.max = PTODAY; dateEl.value = PTODAY;
-            ctrl.querySelector('[data-mode="month"]').textContent = `${+PTODAY.slice(5, 7)}월 전체`;
-            if (!RSDROWS.length) ctrl.querySelector('[data-mode="day"]').hidden = true;   // 일별 데이터가 없으면 월 전체만
+            dateEl.min = DATES[0]; dateEl.max = PTODAY; dateEl.value = PTODAY;
+            monthButtons(ctrl, PD);
+            if (!RSDROWS.length) ctrl.querySelector('[data-mode="day"]').hidden = true;
             const run = () => {
                 const mode = ctrl.querySelector('[aria-pressed="true"]').dataset.mode;
                 const mk = tabs.querySelector('[aria-selected="true"]').dataset.metric;
                 dateEl.hidden = mode !== 'day';
                 const d = dateEl.value || PTODAY;
-                if (mode === 'day') renderRSize(d, d, mk); else renderRSize(PERIOD_FROM, PTODAY, mk);
+                if (mode === 'day') renderRSize(d, d, mk); else renderRSize(...monthRange(ctrl, PD), mk);
             };
             ctrl.addEventListener('click', e => {
                 const b = e.target.closest('button[data-mode]'); if (!b) return;
@@ -4014,29 +3387,29 @@ ${T.name} ${m.fmt(o[m.k])}`) : cell(o, m.k, m);
             run();
         })();
 
-        /* ⑥ 지면별 — 9월 전체(누적) / 일별, 노출 상위 지면 × 프레임 (지표 탭) */
-        // 지면은 사이트 이름만 표시 (매체 · 광고 자리 번호는 표시하지 않고, 같은 사이트의 여러 자리는 합산)
+        /* 지면별 표 */
+        // 지면은 사이트 이름 기준으로 합산
         const siteOf = p => { const m = p.replace(/_N_v2$/, '').match(/^(web|app|mob)_(.+?)_([a-z]+)_(\d+)$/); return m ? m[2] : p; };
-        const PROWS = APDATA.map(([t, p, imp, clk]) => ({ t, p: siteOf(p), imp, clk }));   // 9월 누적
+        const PROWS = APDATA.map(([t, p, imp, clk]) => ({ t, p: siteOf(p), imp, clk }));   // 누적
         const PDROWS = APDDATA.map(([d, t, p, imp, clk]) => ({ d, t, p: siteOf(p), imp, clk }));   // 일별
-        if (!PROWS.length) document.getElementById('placeSection').hidden = true;   // 지면 데이터가 없으면 숨김
-        const PLACE_N = 10;   // 표에 보여 줄 지면 수 (노출 상위)
+        if (!PROWS.length) document.getElementById('placeSection').hidden = true;
+        const PLACE_N = 10;   // 노출 상위 지면 수
         const placeLabel = p => { const m = p.match(/^(\d+)_(\d+)$/); return m ? `<b>${m[1]}×${m[2]}</b><small>요청 사이즈</small>` : `<b>${p}</b>`; };
         const placeShort = p => p.replace(/^(\d+)_(\d+)$/, '$1×$2');
         function renderPlace(from, to, mk) {
-            const whole = from === PERIOD_FROM && to !== from;   // 월 전체: 누적 · 일별: 그날
+            const whole = wholeRange(from, to, DATES) && to !== from;
             const src = whole ? PROWS : PDROWS.filter(r => r.d >= from && r.d <= to);
             const m = M3.find(x => x.k === mk);
             const FR = THEMES;
             const psum = fn => sum(src.filter(fn));
-            const argmax = list => { let w = -1; list.forEach((o, i) => { if (o.imp && (w < 0 || o[mk] > list[w][mk])) w = i; }); return w; };
+            const argmax = list => { let w = -1; list.forEach((o, i) => { if (o.imp && o[mk] > 0 && (w < 0 || o[mk] > list[w][mk])) w = i; }); return w; };   // 값이 0이면 1위 없음
             const places = [...new Set(src.map(r => r.p))]
                 .map(p => ({ p, all: psum(r => r.p === p) }))
                 .sort((a, b) => b.all.imp - a.all.imp).slice(0, PLACE_N);
             const rows = places.map(({ p }) => ({ p, v: FR.map(T => psum(r => r.t === T.id && r.p === p)) }));
             rows.forEach(r => r.win = argmax(r.v));
             const shown = new Set(rows.map(r => r.p));
-            const tot = FR.map(T => psum(r => r.t === T.id && shown.has(r.p)));   // 합계는 표에 있는 지면 기준
+            const tot = FR.map(T => psum(r => r.t === T.id && shown.has(r.p)));   // 합계는 표시된 지면만
             const head = `<thead>
                 <tr><th>지면</th>${FR.map((T, i) => `<th data-col="${i + 1}" class="grp sep" style="${cv(T)}"><span class="dot" style="${sw(T)}"></span>${nm(T)}${T.ch === '카카오' ? '<br><small>(카카오)</small>' : ''}</th>`).join('')}</tr>
                 <tr class="total-row"><td>합계</td>${tot.map((o, i) => !o.imp ? `<td class="sep na" data-v="-1">−</td>` : numTd(o[mk], m.fmt, 'sep' + (i === argmax(tot) ? ' top' : ''), i === argmax(tot) ? FR[i] : '', `합계 · ${m.label} 1위
@@ -4053,15 +3426,15 @@ ${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>
         (function () {
             const ctrl = document.getElementById('placePeriod'), dateEl = document.getElementById('placeDate'), tabs = document.getElementById('placeMetric');
             const PD = [...new Set(PDROWS.map(r => r.d))].sort(), PTODAY = PD[PD.length - 1] || TODAY;
-            dateEl.min = PERIOD_FROM; dateEl.max = PTODAY; dateEl.value = PTODAY;
-            ctrl.querySelector('[data-mode="month"]').textContent = `${+PTODAY.slice(5, 7)}월 전체`;
-            if (!PDROWS.length) ctrl.querySelector('[data-mode="day"]').hidden = true;   // 일별 데이터가 없으면 월 전체만
+            dateEl.min = DATES[0]; dateEl.max = PTODAY; dateEl.value = PTODAY;
+            monthButtons(ctrl, PD);
+            if (!PDROWS.length) ctrl.querySelector('[data-mode="day"]').hidden = true;
             const run = () => {
                 const mode = ctrl.querySelector('[aria-pressed="true"]').dataset.mode;
                 const mk = tabs.querySelector('[aria-selected="true"]').dataset.metric;
                 dateEl.hidden = mode !== 'day';
                 const d = dateEl.value || PTODAY;
-                if (mode === 'day') renderPlace(d, d, mk); else renderPlace(PERIOD_FROM, PTODAY, mk);
+                if (mode === 'day') renderPlace(d, d, mk); else renderPlace(...monthRange(ctrl, PD), mk);
             };
             ctrl.addEventListener('click', e => {
                 const b = e.target.closest('button[data-mode]'); if (!b) return;
@@ -4077,15 +3450,14 @@ ${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>
             run();
         })();
 
-        // 날짜 칸 어디를 눌러도 달력이 뜨게
-        // 날짜 칸(①④⑤⑥)은 눌러도 칸 안의 글자가 선택(파랗게)·복사되지 않게 — 포커스 없이 달력만 띄움
+        // 날짜 칸 클릭 시 달력만 띄움
         document.querySelectorAll('.date-in').forEach(el => {
             el.addEventListener('mousedown', e => { e.preventDefault(); try { el.showPicker(); } catch (err) { } });
-            el.addEventListener('keydown', e => { if (e.key !== 'Tab') e.preventDefault(); });   // 키보드 복사·선택 막기 (Tab 이동은 허용)
+            el.addEventListener('keydown', e => { if (e.key !== 'Tab') e.preventDefault(); });
         });
     </script>
     <script>
-        /* 맨 위로 버튼 — 300px 이상 내려가면 표시 */
+        /* 맨 위로 버튼 */
         (function () {
             const b = document.getElementById('toTop');
             const on = () => b.classList.toggle('show', window.scrollY > 300);
