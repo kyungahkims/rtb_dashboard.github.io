@@ -76,3 +76,24 @@ function initTimeline() {
     document.getElementById('tlClose').addEventListener('click', () => modal.close());
     modal.addEventListener('click', e => { if (e.target === modal) modal.close(); });   // 바깥 클릭 시 닫기
 }
+
+/* 기간 선택 월 버튼, 'N월 전체' 버튼 하나를 데이터가 있는 달마다 하나씩으로 바꿈 (마지막 달 선택) */
+function monthButtons(ctrl, dates) {
+    const old = ctrl.querySelector('[data-mode="month"]');
+    const months = [...new Set(dates.map(d => d.slice(0, 7)))].sort();
+    if (!old || !months.length) return;
+    const on = old.getAttribute('aria-pressed') === 'true';
+    old.insertAdjacentHTML('beforebegin', months.map((m, i) => `<button type="button" data-mode="month" data-m="${m}" aria-pressed="${on && i === months.length - 1}" title="${m.slice(0, 4)}년 ${+m.slice(5)}월">${+m.slice(5)}월 전체</button>`).join(''));
+    old.remove();
+}
+// 선택한 월 버튼의 [첫 날짜, 마지막 날짜]
+function monthRange(ctrl, dates) {
+    const b = ctrl.querySelector('[data-mode="month"][aria-pressed="true"]');
+    const m = b && b.dataset.m ? b.dataset.m : dates[dates.length - 1].slice(0, 7);
+    const ds = dates.filter(d => d.startsWith(m));
+    return [ds[0], ds[ds.length - 1]];
+}
+// from ~ to 가 데이터의 첫 달부터 마지막 달까지면 true, 누적 데이터(전체 기간 합)를 써도 되는지 판단
+function wholeRange(from, to, dates) {
+    return !!dates.length && from.slice(0, 7) <= dates[0].slice(0, 7) && to.slice(0, 7) >= dates[dates.length - 1].slice(0, 7);
+}

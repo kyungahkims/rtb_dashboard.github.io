@@ -48,6 +48,11 @@
         <section>
             <div class="title">
                 <h2>4. 프레임별 일별 추이 <span class="h2-help" data-tip="구간: 그날 어떤 배너가 나갔는지 보여 줍니다.&#10;&#160;&#160;• 단독 = 배너 하나만 나간 날&#10;&#160;&#160;• 병행 = 여러 배너가 같이 나간 날&#10;&#10;노란색 줄: 나가는 배너 조합이 전날과 달라진 날&#10;1위 메달: 여러 배너가 같이 나간 날 중 클릭률이 가장 높았던 배너" aria-label="구간 설명" tabindex="0">?</span></h2>
+                <div class="period-ctrl" id="transPeriod" role="group" aria-label="기간 선택">
+                    <div class="seg">
+                        <button type="button" data-mode="month" aria-pressed="true">9월 전체</button>
+                    </div>
+                </div>
             </div>
             <div class="card">
                 <div class="scroll">
@@ -158,106 +163,111 @@
             ["2026-09-29", "redauto", 474963, 355],
             ["2026-09-30", "coupangetc", 9790, 8],
             ["2026-09-30", "redauto", 580888, 439],
+            ["2026-10-01", "redauto", 557315, 472],
+            ["2026-10-02", "redauto", 538339, 471],
+            ["2026-10-03", "redauto", 538201, 570],
+            ["2026-10-04", "redauto", 520281, 593],
+            ["2026-10-05", "redauto", 597702, 601],
         ];
         /* ADATA:END */
         /* 요청 사이즈별 누적 [프레임, 요청 사이즈, 노출, 클릭] */
         /* APDATA:START */
         const APDATA = [
             ["coupangetc", "320_50", 4642883, 2068],
-            ["redauto", "320_50", 3295374, 3004],
-            ["redauto", "320_100", 342542, 268],
+            ["redauto", "320_50", 4531926, 3368],
+            ["redauto", "320_100", 508898, 338],
+            ["redauto", "300_250", 499615, 798],
+            ["redauto", "200_200", 333478, 155],
+            ["redauto", "250_250", 331481, 367],
             ["coupangetc", "320_100", 306690, 132],
             ["coupangetc", "300_250", 294048, 391],
-            ["redauto", "300_250", 262425, 451],
-            ["redauto", "250_250", 226370, 350],
             ["coupangetc", "200_200", 218529, 42],
             ["coupangetc", "250_250", 215139, 193],
-            ["redauto", "200_200", 199434, 135],
-            ["redauto", "360_697", 95148, 332],
-            ["redauto", "300_50", 88883, 79],
+            ["redauto", "360_697", 126511, 412],
+            ["redauto", "300_50", 100210, 84],
+            ["redauto", "384_749", 85211, 279],
+            ["redauto", "360_56", 80999, 94],
+            ["redauto", "412_807", 74359, 202],
+            ["redauto", "384_750", 71057, 217],
+            ["redauto", "360_699", 71022, 211],
             ["coupangetc", "320_200", 69928, 32],
-            ["redauto", "384_749", 63900, 222],
+            ["redauto", "384_60", 67176, 51],
+            ["redauto", "320_200", 65957, 29],
+            ["redauto", "360_800", 58578, 217],
             ["coupangetc", "360_697", 58563, 295],
             ["coupangetc", "300_50", 56568, 37],
-            ["redauto", "412_807", 56283, 163],
-            ["redauto", "360_699", 53785, 172],
-            ["redauto", "384_750", 53312, 187],
+            ["redauto", "360_700", 56265, 167],
+            ["redauto", "411_64", 52756, 34],
+            ["redauto", "234_60", 51151, 38],
             ["coupangetc", "234_60", 48766, 4],
-            ["redauto", "360_800", 47119, 186],
             ["coupangetc", "384_749", 42550, 207],
-            ["redauto", "360_700", 42179, 142],
-            ["redauto", "320_200", 41554, 22],
+            ["redauto", "384_748", 41962, 168],
+            ["redauto", "412_804", 41106, 156],
+            ["redauto", "320_80", 40710, 25],
+            ["redauto", "360_705", 39263, 162],
             ["coupangetc", "412_807", 38197, 114],
             ["coupangetc", "360_56", 38130, 25],
             ["coupangetc", "384_750", 36979, 161],
-            ["redauto", "234_60", 35932, 36],
+            ["redauto", "360_50", 35603, 51],
             ["coupangetc", "360_699", 34851, 158],
             ["coupangetc", "384_60", 33804, 24],
+            ["redauto", "360_734", 32483, 146],
             ["coupangetc", "320_80", 32459, 11],
             ["coupangetc", "360_800", 31318, 110],
-            ["redauto", "412_804", 30778, 137],
-            ["redauto", "384_748", 30699, 134],
-            ["redauto", "360_705", 30542, 133],
-            ["redauto", "320_80", 29294, 17],
+            ["redauto", "339_654", 29866, 109],
             ["coupangetc", "360_700", 28183, 112],
-            ["redauto", "220_90", 26482, 14],
-            ["redauto", "360_734", 26239, 122],
-            ["redauto", "300_100", 25505, 16],
+            ["redauto", "220_90", 26687, 14],
+            ["redauto", "384_50", 26574, 20],
+            ["redauto", "320_615", 26108, 96],
+            ["redauto", "300_100", 25562, 16],
             ["coupangetc", "411_64", 25257, 11],
-            ["redauto", "360_56", 25184, 26],
-            ["redauto", "360_50", 23830, 44],
-            ["redauto", "339_654", 22651, 89],
+            ["redauto", "411_50", 24785, 38],
+            ["redauto", "412_806", 24635, 87],
+            ["redauto", "360_701", 24128, 106],
+            ["redauto", "360_725", 23303, 92],
+            ["redauto", "360_695", 22730, 116],
             ["coupangetc", "384_748", 22538, 109],
-            ["redauto", "384_60", 22525, 23],
+            ["redauto", "320_617", 22198, 92],
+            ["redauto", "384_746", 22193, 65],
+            ["redauto", "360_736", 20401, 87],
             ["coupangetc", "360_705", 20326, 92],
             ["coupangetc", "412_804", 20146, 114],
-            ["redauto", "360_701", 19015, 71],
-            ["redauto", "412_806", 18821, 61],
-            ["redauto", "411_64", 17943, 5],
-            ["redauto", "360_725", 17848, 69],
-            ["redauto", "360_695", 17410, 85],
-            ["redauto", "384_50", 17353, 18],
-            ["redauto", "320_615", 17282, 74],
-            ["redauto", "320_617", 16343, 69],
-            ["redauto", "384_746", 15928, 51],
-            ["redauto", "384_751", 15651, 54],
+            ["redauto", "360_698", 20122, 57],
+            ["redauto", "384_751", 20101, 66],
+            ["redauto", "320_616", 18957, 69],
+            ["redauto", "412_922", 18815, 74],
+            ["redauto", "360_755", 18667, 48],
+            ["redauto", "384_757", 18571, 63],
+            ["redauto", "320_707", 18039, 81],
+            ["redauto", "339_656", 17941, 46],
+            ["redauto", "384_755", 17570, 84],
+            ["redauto", "384_786", 17330, 85],
+            ["redauto", "412_808", 17119, 64],
+            ["redauto", "339_655", 16842, 58],
+            ["redauto", "339_657", 16626, 54],
+            ["redauto", "384_773", 15725, 52],
+            ["redauto", "360_707", 15669, 73],
+            ["redauto", "360_722", 15600, 67],
             ["coupangetc", "339_654", 15563, 75],
             ["coupangetc", "360_50", 15532, 12],
-            ["redauto", "411_50", 15385, 34],
-            ["redauto", "412_922", 15229, 62],
-            ["redauto", "360_698", 15085, 43],
+            ["redauto", "412_870", 15460, 74],
+            ["redauto", "384_742", 15093, 74],
+            ["redauto", "360_692", 14974, 89],
             ["coupangetc", "360_734", 14736, 96],
-            ["redauto", "360_736", 14723, 69],
-            ["redauto", "339_656", 14313, 41],
-            ["redauto", "384_755", 14283, 68],
+            ["redauto", "412_809", 14392, 64],
+            ["redauto", "360_726", 14344, 56],
+            ["redauto", "339_751", 14304, 48],
             ["coupangetc", "412_806", 14160, 55],
-            ["redauto", "320_616", 14141, 51],
-            ["redauto", "412_808", 14020, 59],
-            ["redauto", "320_707", 13945, 65],
-            ["redauto", "384_757", 13733, 48],
-            ["redauto", "360_755", 13631, 36],
             ["coupangetc", "360_701", 13585, 67],
-            ["redauto", "339_657", 13144, 43],
-            ["redauto", "412_870", 12472, 67],
-            ["redauto", "339_655", 12330, 47],
-            ["redauto", "384_786", 12221, 75],
-            ["redauto", "384_773", 11952, 46],
-            ["redauto", "360_707", 11931, 58],
+            ["redauto", "339_661", 12575, 47],
             ["coupangetc", "384_773", 11890, 52],
-            ["redauto", "360_722", 11835, 62],
             ["coupangetc", "360_725", 11830, 34],
-            ["redauto", "384_742", 11791, 59],
-            ["redauto", "339_751", 11538, 40],
-            ["redauto", "375_50", 11487, 8],
-            ["redauto", "412_813", 11039, 30],
             ["coupangetc", "339_661", 10926, 72],
             ["coupangetc", "360_698", 10539, 40],
             ["coupangetc", "384_746", 10521, 43],
             ["coupangetc", "384_757", 10508, 48],
-            ["redauto", "412_809", 10305, 43],
             ["coupangetc", "384_50", 10225, 8],
             ["coupangetc", "411_50", 10178, 6],
-            ["redauto", "339_661", 10159, 31],
             ["coupangetc", "320_616", 10134, 59],
             ["coupangetc", "320_617", 9944, 34],
             ["coupangetc", "412_922", 9870, 39],
@@ -280,9 +290,9 @@
             ["coupangetc", "339_657", 7518, 31],
             ["coupangetc", "412_809", 7433, 45],
             ["coupangetc", "360_722", 7163, 41],
-            ["coupangetc", "375_50", 7024, 3],
+            ["coupangetc", "360_726", 6970, 26],
             ["coupangetc", "384_742", 6944, 30],
-            ["coupangetc", "412_813", 6620, 24],
+            ["coupangetc", "360_692", 6501, 24],
         ];
         /* APDATA:END */
 
@@ -1446,6 +1456,206 @@
             ["2026-09-30", "redauto", "412_807", 3063, 5],
             ["2026-09-30", "redauto", "412_841", 1005, 2],
             ["2026-09-30", "redauto", "412_922", 962, 3],
+            ["2026-10-01", "redauto", "200_200", 23640, 4],
+            ["2026-10-01", "redauto", "234_60", 3009, 0],
+            ["2026-10-01", "redauto", "250_250", 19295, 6],
+            ["2026-10-01", "redauto", "300_250", 42570, 51],
+            ["2026-10-01", "redauto", "300_50", 2122, 0],
+            ["2026-10-01", "redauto", "320_100", 30404, 15],
+            ["2026-10-01", "redauto", "320_200", 3804, 2],
+            ["2026-10-01", "redauto", "320_50", 264890, 75],
+            ["2026-10-01", "redauto", "320_615", 1878, 7],
+            ["2026-10-01", "redauto", "320_80", 2356, 1],
+            ["2026-10-01", "redauto", "338_53", 1736, 2],
+            ["2026-10-01", "redauto", "339_654", 1132, 3],
+            ["2026-10-01", "redauto", "360_50", 4280, 1],
+            ["2026-10-01", "redauto", "360_56", 11370, 17],
+            ["2026-10-01", "redauto", "360_695", 1255, 6],
+            ["2026-10-01", "redauto", "360_697", 6558, 12],
+            ["2026-10-01", "redauto", "360_698", 1157, 1],
+            ["2026-10-01", "redauto", "360_699", 3234, 3],
+            ["2026-10-01", "redauto", "360_700", 2819, 3],
+            ["2026-10-01", "redauto", "360_705", 1177, 7],
+            ["2026-10-01", "redauto", "360_725", 1046, 6],
+            ["2026-10-01", "redauto", "360_734", 1348, 4],
+            ["2026-10-01", "redauto", "360_755", 985, 5],
+            ["2026-10-01", "redauto", "360_800", 2259, 8],
+            ["2026-10-01", "redauto", "384_50", 3457, 1],
+            ["2026-10-01", "redauto", "384_60", 10096, 3],
+            ["2026-10-01", "redauto", "384_746", 1149, 4],
+            ["2026-10-01", "redauto", "384_748", 2319, 11],
+            ["2026-10-01", "redauto", "384_749", 3494, 10],
+            ["2026-10-01", "redauto", "384_750", 3477, 5],
+            ["2026-10-01", "redauto", "384_757", 907, 2],
+            ["2026-10-01", "redauto", "384_786", 1271, 1],
+            ["2026-10-01", "redauto", "384_788", 895, 2],
+            ["2026-10-01", "redauto", "411_50", 3630, 1],
+            ["2026-10-01", "redauto", "411_60", 1044, 1],
+            ["2026-10-01", "redauto", "411_64", 9356, 9],
+            ["2026-10-01", "redauto", "412_64", 1881, 5],
+            ["2026-10-01", "redauto", "412_804", 1796, 3],
+            ["2026-10-01", "redauto", "412_806", 874, 3],
+            ["2026-10-01", "redauto", "412_807", 3601, 8],
+            ["2026-10-02", "redauto", "200_200", 24955, 3],
+            ["2026-10-02", "redauto", "234_60", 3059, 0],
+            ["2026-10-02", "redauto", "250_250", 18646, 2],
+            ["2026-10-02", "redauto", "300_250", 45474, 69],
+            ["2026-10-02", "redauto", "300_50", 2232, 0],
+            ["2026-10-02", "redauto", "320_100", 30450, 13],
+            ["2026-10-02", "redauto", "320_200", 5061, 2],
+            ["2026-10-02", "redauto", "320_50", 244593, 66],
+            ["2026-10-02", "redauto", "320_615", 1586, 4],
+            ["2026-10-02", "redauto", "320_616", 1261, 5],
+            ["2026-10-02", "redauto", "320_617", 1134, 2],
+            ["2026-10-02", "redauto", "320_80", 2501, 1],
+            ["2026-10-02", "redauto", "338_53", 1643, 0],
+            ["2026-10-02", "redauto", "339_654", 1197, 2],
+            ["2026-10-02", "redauto", "360_50", 3802, 2],
+            ["2026-10-02", "redauto", "360_56", 12487, 14],
+            ["2026-10-02", "redauto", "360_692", 989, 5],
+            ["2026-10-02", "redauto", "360_695", 954, 12],
+            ["2026-10-02", "redauto", "360_697", 5026, 13],
+            ["2026-10-02", "redauto", "360_699", 3619, 5],
+            ["2026-10-02", "redauto", "360_700", 2506, 7],
+            ["2026-10-02", "redauto", "360_705", 1781, 3],
+            ["2026-10-02", "redauto", "360_734", 1004, 3],
+            ["2026-10-02", "redauto", "360_736", 1465, 2],
+            ["2026-10-02", "redauto", "360_755", 1151, 2],
+            ["2026-10-02", "redauto", "360_800", 2445, 5],
+            ["2026-10-02", "redauto", "384_50", 2704, 1],
+            ["2026-10-02", "redauto", "384_60", 8866, 8],
+            ["2026-10-02", "redauto", "384_746", 1724, 2],
+            ["2026-10-02", "redauto", "384_748", 2321, 6],
+            ["2026-10-02", "redauto", "384_749", 3803, 10],
+            ["2026-10-02", "redauto", "384_750", 3155, 4],
+            ["2026-10-02", "redauto", "384_773", 951, 0],
+            ["2026-10-02", "redauto", "384_786", 921, 1],
+            ["2026-10-02", "redauto", "411_50", 3586, 1],
+            ["2026-10-02", "redauto", "411_64", 7781, 8],
+            ["2026-10-02", "redauto", "412_64", 2522, 4],
+            ["2026-10-02", "redauto", "412_804", 1826, 1],
+            ["2026-10-02", "redauto", "412_806", 975, 2],
+            ["2026-10-02", "redauto", "412_807", 3345, 3],
+            ["2026-10-03", "redauto", "200_200", 27532, 5],
+            ["2026-10-03", "redauto", "234_60", 2917, 1],
+            ["2026-10-03", "redauto", "250_250", 20478, 0],
+            ["2026-10-03", "redauto", "300_250", 48992, 75],
+            ["2026-10-03", "redauto", "300_50", 1838, 2],
+            ["2026-10-03", "redauto", "320_100", 34343, 15],
+            ["2026-10-03", "redauto", "320_200", 5046, 1],
+            ["2026-10-03", "redauto", "320_50", 245121, 74],
+            ["2026-10-03", "redauto", "320_615", 1332, 2],
+            ["2026-10-03", "redauto", "320_616", 1062, 6],
+            ["2026-10-03", "redauto", "320_617", 1639, 9],
+            ["2026-10-03", "redauto", "320_707", 1054, 5],
+            ["2026-10-03", "redauto", "320_80", 2371, 2],
+            ["2026-10-03", "redauto", "338_53", 1626, 6],
+            ["2026-10-03", "redauto", "339_53", 1449, 0],
+            ["2026-10-03", "redauto", "339_654", 1563, 6],
+            ["2026-10-03", "redauto", "339_655", 1332, 4],
+            ["2026-10-03", "redauto", "345_54", 1172, 0],
+            ["2026-10-03", "redauto", "360_50", 1086, 3],
+            ["2026-10-03", "redauto", "360_56", 9221, 11],
+            ["2026-10-03", "redauto", "360_697", 6416, 14],
+            ["2026-10-03", "redauto", "360_699", 3180, 12],
+            ["2026-10-03", "redauto", "360_700", 3256, 6],
+            ["2026-10-03", "redauto", "360_705", 1850, 7],
+            ["2026-10-03", "redauto", "360_725", 981, 3],
+            ["2026-10-03", "redauto", "360_734", 1205, 1],
+            ["2026-10-03", "redauto", "360_736", 1117, 4],
+            ["2026-10-03", "redauto", "360_800", 1862, 3],
+            ["2026-10-03", "redauto", "384_60", 7484, 1],
+            ["2026-10-03", "redauto", "384_746", 1111, 2],
+            ["2026-10-03", "redauto", "384_748", 1967, 4],
+            ["2026-10-03", "redauto", "384_749", 4653, 12],
+            ["2026-10-03", "redauto", "384_750", 3488, 14],
+            ["2026-10-03", "redauto", "384_757", 1085, 3],
+            ["2026-10-03", "redauto", "384_786", 1020, 5],
+            ["2026-10-03", "redauto", "411_64", 5505, 6],
+            ["2026-10-03", "redauto", "412_64", 1758, 4],
+            ["2026-10-03", "redauto", "412_804", 1978, 4],
+            ["2026-10-03", "redauto", "412_806", 1048, 5],
+            ["2026-10-03", "redauto", "412_807", 3779, 11],
+            ["2026-10-04", "redauto", "200_200", 25700, 5],
+            ["2026-10-04", "redauto", "234_60", 3068, 0],
+            ["2026-10-04", "redauto", "250_250", 19713, 5],
+            ["2026-10-04", "redauto", "300_250", 45463, 88],
+            ["2026-10-04", "redauto", "300_50", 2675, 3],
+            ["2026-10-04", "redauto", "320_100", 34816, 16],
+            ["2026-10-04", "redauto", "320_200", 5133, 2],
+            ["2026-10-04", "redauto", "320_50", 228110, 74],
+            ["2026-10-04", "redauto", "320_615", 1910, 7],
+            ["2026-10-04", "redauto", "320_617", 1033, 4],
+            ["2026-10-04", "redauto", "320_80", 2098, 3],
+            ["2026-10-04", "redauto", "338_53", 1147, 5],
+            ["2026-10-04", "redauto", "339_654", 1968, 7],
+            ["2026-10-04", "redauto", "339_655", 1060, 3],
+            ["2026-10-04", "redauto", "360_50", 1131, 1],
+            ["2026-10-04", "redauto", "360_56", 10029, 14],
+            ["2026-10-04", "redauto", "360_695", 1172, 3],
+            ["2026-10-04", "redauto", "360_697", 5994, 15],
+            ["2026-10-04", "redauto", "360_698", 1062, 4],
+            ["2026-10-04", "redauto", "360_699", 3338, 7],
+            ["2026-10-04", "redauto", "360_700", 2711, 5],
+            ["2026-10-04", "redauto", "360_701", 1280, 8],
+            ["2026-10-04", "redauto", "360_705", 1521, 4],
+            ["2026-10-04", "redauto", "360_726", 1081, 4],
+            ["2026-10-04", "redauto", "360_734", 1088, 8],
+            ["2026-10-04", "redauto", "360_736", 1529, 6],
+            ["2026-10-04", "redauto", "360_755", 1064, 1],
+            ["2026-10-04", "redauto", "360_800", 2221, 6],
+            ["2026-10-04", "redauto", "384_60", 9250, 7],
+            ["2026-10-04", "redauto", "384_746", 1329, 3],
+            ["2026-10-04", "redauto", "384_748", 2215, 7],
+            ["2026-10-04", "redauto", "384_749", 4393, 11],
+            ["2026-10-04", "redauto", "384_750", 3447, 5],
+            ["2026-10-04", "redauto", "411_64", 5251, 4],
+            ["2026-10-04", "redauto", "412_64", 1719, 3],
+            ["2026-10-04", "redauto", "412_804", 2030, 7],
+            ["2026-10-04", "redauto", "412_806", 1602, 9],
+            ["2026-10-04", "redauto", "412_807", 3934, 3],
+            ["2026-10-04", "redauto", "412_813", 1056, 0],
+            ["2026-10-04", "redauto", "412_922", 1041, 4],
+            ["2026-10-05", "redauto", "200_200", 32217, 3],
+            ["2026-10-05", "redauto", "234_60", 3166, 1],
+            ["2026-10-05", "redauto", "250_250", 26979, 4],
+            ["2026-10-05", "redauto", "300_250", 54691, 64],
+            ["2026-10-05", "redauto", "300_50", 2460, 0],
+            ["2026-10-05", "redauto", "320_100", 36343, 11],
+            ["2026-10-05", "redauto", "320_200", 5359, 0],
+            ["2026-10-05", "redauto", "320_50", 253838, 75],
+            ["2026-10-05", "redauto", "320_615", 2120, 2],
+            ["2026-10-05", "redauto", "320_617", 1214, 8],
+            ["2026-10-05", "redauto", "320_80", 2090, 1],
+            ["2026-10-05", "redauto", "338_53", 1615, 2],
+            ["2026-10-05", "redauto", "339_654", 1355, 2],
+            ["2026-10-05", "redauto", "360_50", 1474, 0],
+            ["2026-10-05", "redauto", "360_56", 12708, 12],
+            ["2026-10-05", "redauto", "360_695", 1277, 6],
+            ["2026-10-05", "redauto", "360_697", 7369, 26],
+            ["2026-10-05", "redauto", "360_698", 1302, 4],
+            ["2026-10-05", "redauto", "360_699", 3866, 12],
+            ["2026-10-05", "redauto", "360_700", 2794, 4],
+            ["2026-10-05", "redauto", "360_701", 1279, 5],
+            ["2026-10-05", "redauto", "360_705", 2392, 8],
+            ["2026-10-05", "redauto", "360_722", 1202, 3],
+            ["2026-10-05", "redauto", "360_725", 1521, 7],
+            ["2026-10-05", "redauto", "360_734", 1599, 8],
+            ["2026-10-05", "redauto", "360_800", 2672, 9],
+            ["2026-10-05", "redauto", "384_50", 1262, 0],
+            ["2026-10-05", "redauto", "384_60", 8955, 9],
+            ["2026-10-05", "redauto", "384_748", 2441, 6],
+            ["2026-10-05", "redauto", "384_749", 4968, 14],
+            ["2026-10-05", "redauto", "384_750", 4178, 2],
+            ["2026-10-05", "redauto", "384_751", 1330, 4],
+            ["2026-10-05", "redauto", "384_757", 1180, 5],
+            ["2026-10-05", "redauto", "384_786", 1149, 2],
+            ["2026-10-05", "redauto", "384_792", 1220, 3],
+            ["2026-10-05", "redauto", "411_64", 6920, 2],
+            ["2026-10-05", "redauto", "412_64", 5593, 7],
+            ["2026-10-05", "redauto", "412_804", 2698, 4],
+            ["2026-10-05", "redauto", "412_806", 1315, 7],
+            ["2026-10-05", "redauto", "412_807", 3417, 14],
         ];
         /* APDDATA:END */
 
@@ -1456,7 +1666,6 @@
         const ROWS = ADATA.map(([d, t, imp, clk]) => ({ d, t, imp, clk }));
         const DATES = [...new Set(ROWS.map(r => r.d))].sort();
         const TODAY = DATES[DATES.length - 1] || ymd(new Date());
-        const PERIOD_FROM = TODAY.slice(0, 8) + '01';
         THEMES.forEach(T => { const ds = ROWS.filter(r => r.t === T.id && r.imp >= MIN_IMP).map(r => r.d).sort(); T.from = ds[0]; T.to = ds[ds.length - 1]; });
 
         /* 공통 */
@@ -1570,13 +1779,13 @@
         }
         (function () {
             const ctrl = document.getElementById('themePeriod'), dateEl = document.getElementById('themeDate');
-            dateEl.min = PERIOD_FROM; dateEl.max = TODAY; dateEl.value = TODAY;
-            ctrl.querySelector('[data-mode="month"]').textContent = `${+TODAY.slice(5, 7)}월 전체`;
+            dateEl.min = DATES[0]; dateEl.max = TODAY; dateEl.value = TODAY;
+            monthButtons(ctrl, DATES);
             const run = () => {
                 const mode = ctrl.querySelector('[aria-pressed="true"]').dataset.mode;
                 dateEl.hidden = mode !== 'day';
                 const d = dateEl.value || TODAY;
-                if (mode === 'day') renderThemes(d, d); else renderThemes(PERIOD_FROM, TODAY);
+                if (mode === 'day') renderThemes(d, d); else renderThemes(...monthRange(ctrl, DATES));
             };
             ctrl.addEventListener('click', e => {
                 const b = e.target.closest('button[data-mode]'); if (!b) return;
@@ -1785,8 +1994,9 @@
         const numTd = (v, fmt, cls = '', c = '', tip = '') => `<td class="${cls}" data-v="${v}"${c ? ` style="${cv(c)}"` : ''}>${cls.includes('top') ? `<span class="crown-wrap" data-tip="${tip}">${CROWN}${fmt(v)}</span>` : fmt(v)}</td>`;
 
 
-        /* 일별 추이 표 */
-        (function () {
+        /* 일별 추이 표, 선택한 월 */
+        function renderTrans(from, to) {
+            const inR = r => r.d >= from && r.d <= to;
             const day = (t, d) => sum(pick(r => r.t === t && r.d === d));
             const active = vals => THEMES.filter((T, i) => vals[i].imp >= MINV);
             const seg = on => {
@@ -1812,16 +2022,27 @@ ${T.name} ${m.fmt(o[m.k])}`) : cell(o, m.k, m);
                 const pivot = prevKey !== null && key !== prevKey;
                 prevKey = key;
                 return { d, v, on, pivot, all: sum(pick(r => r.d === d)) };
-            }).reverse().map(({ d, v, on, pivot, all }) =>
+            }).filter(inR).reverse().map(({ d, v, on, pivot, all }) =>
                 `<tr class="${pivot ? 'pivot' : ''}"><td class="${dayCls(d)}"><b>${md(d)}</b></td><td class="left">${seg(on)}</td>${v.map((o, i) => winGroup(o, THEMES[i], v, d)).join('')}${group(all)}</tr>`).join('');
-            const tot = THEMES.map(T => sum(pick(r => r.t === T.id))), totAll = sum(ROWS);
+            const tot = THEMES.map(T => sum(pick(r => r.t === T.id && inR(r)))), totAll = sum(pick(inR)), nDays = DATES.filter(d => d >= from && d <= to).length;
             document.getElementById('transTable').innerHTML = `<thead>
                 <tr><th rowspan="2">일자</th><th rowspan="2" style="text-align:left">구간</th>
                     ${THEMES.map(T => `<th colspan="3" class="grp sep" style="${cv(T)}"><span class="dot" style="${sw(T)}"></span>${nm(T)}</th>`).join('')}
                     <th colspan="3" class="grp sep">합산</th></tr>
                 <tr>${[...THEMES, { name: '합산' }].map(() => M3.map(m => `<th class="sep">${m.label.replace(' (CTR)', '')}</th>`).join('')).join('')}</tr>
-                <tr class="total-row"><td>합계</td><td class="left">${DATES.length}일</td>${tot.map(group).join('')}${group(totAll)}</tr>
+                <tr class="total-row"><td>합계</td><td class="left">${nDays}일</td>${tot.map(group).join('')}${group(totAll)}</tr>
             </thead><tbody>${rows}</tbody>`;
+        }
+        (function () {
+            const ctrl = document.getElementById('transPeriod');
+            monthButtons(ctrl, DATES);
+            const run = () => renderTrans(...monthRange(ctrl, DATES));
+            ctrl.addEventListener('click', e => {
+                const b = e.target.closest('button[data-mode]'); if (!b) return;
+                ctrl.querySelectorAll('button[data-mode]').forEach(x => x.setAttribute('aria-pressed', x === b));
+                run();
+            });
+            run();
         })();
 
         /* 사이즈별 표 */
@@ -1835,7 +2056,7 @@ ${T.name} ${m.fmt(o[m.k])}`) : cell(o, m.k, m);
             return `<b>${p}</b>`;
         };
         function renderPlace(from, to, mk) {
-            const whole = from === PERIOD_FROM && to !== from;   // 월 전체면 누적 데이터
+            const whole = wholeRange(from, to, DATES) && to !== from;   // 월 전체면 누적 데이터
             const src = whole ? PROWS : PDROWS.filter(r => r.d >= from && r.d <= to);
             const m = M3.find(x => x.k === mk);
             const FR = THEMES;
@@ -1864,15 +2085,15 @@ ${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>
         (function () {
             const ctrl = document.getElementById('placePeriod'), dateEl = document.getElementById('placeDate'), tabs = document.getElementById('placeMetric');
             const PD = [...new Set(PDROWS.map(r => r.d))].sort(), PTODAY = PD[PD.length - 1] || TODAY;
-            dateEl.min = PERIOD_FROM; dateEl.max = PTODAY; dateEl.value = PTODAY;
-            ctrl.querySelector('[data-mode="month"]').textContent = `${+PTODAY.slice(5, 7)}월 전체`;
+            dateEl.min = DATES[0]; dateEl.max = PTODAY; dateEl.value = PTODAY;
+            monthButtons(ctrl, PD);
             if (!PDROWS.length) ctrl.querySelector('[data-mode="day"]').hidden = true;
             const run = () => {
                 const mode = ctrl.querySelector('[aria-pressed="true"]').dataset.mode;
                 const mk = tabs.querySelector('[aria-selected="true"]').dataset.metric;
                 dateEl.hidden = mode !== 'day';
                 const d = dateEl.value || PTODAY;
-                if (mode === 'day') renderPlace(d, d, mk); else renderPlace(PERIOD_FROM, PTODAY, mk);
+                if (mode === 'day') renderPlace(d, d, mk); else renderPlace(...monthRange(ctrl, PD), mk);
             };
             ctrl.addEventListener('click', e => {
                 const b = e.target.closest('button[data-mode]'); if (!b) return;

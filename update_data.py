@@ -5,12 +5,14 @@ RTB 대시보드 데이터 갱신
   1. 이 폴더에 새로 받은 통계 파일을 넣는다
        google_openRTB_일자별통계.xls        -> Google RTB 페이지
        kakao_rtb_day_report.xls             -> Kakao RTB 페이지
-       rtb_theme_ab_result_YYYYMMDD_HHMM.xlsx -> 프레임 AB 테스트 페이지 4개
+       rtb_google_frame_stats.xlsx          -> 프레임 AB 테스트 페이지 4개 (예전 이름 rtb_theme_ab_result_*.xlsx 도 됨)
   2. update_data.bat 더블클릭 (또는 python update_data.py)
      프레임 페이지만 갱신하려면 python update_data.py --frames
+     Google, Kakao 페이지만 갱신하려면 python update_data.py --rtb
 
-- 파일이 여러 개면 가장 최근에 받은 파일을 사용합니다.
-- Google, Kakao 는 파일을 받은 날이 집계 중이라 제외합니다.
+- Google, Kakao 는 페이지에 쌓인 날짜에 폴더의 파일들을 합칩니다. 지난달 파일은 지워도 페이지에 남습니다.
+  같은 날짜는 최근에 받은 파일 값을 쓰고, 파일을 받은 날은 집계 중이라 제외합니다.
+- 프레임 페이지는 파일이 여러 개면 가장 최근에 받은 파일을 사용합니다.
 - 지면별, 사이즈별 표는 누적 상위 60개, 날짜별 상위 40개 항목만 넣습니다.
 """
 import csv
@@ -40,21 +42,6 @@ def num(v):
     return float(re.sub(r'[^0-9.\-]', '', str(v).split('\n')[0]) or 0)
 
 
-def latest(pattern):
-    files = glob.glob(os.path.join(DIR, pattern))
-    if not files:
-        sys.exit(f'파일을 찾을 수 없습니다: {pattern}')
-    return max(files, key=os.path.getmtime)
-
-
-def file_day(path):
-    """파일을 받은 날 'MM/DD'"""
-    m = re.search(r'20\d\d(\d\d)(\d\d)', os.path.basename(path))
-    if m:
-        return f'{m.group(1)}/{m.group(2)}'
-    return datetime.fromtimestamp(os.path.getmtime(path)).strftime('%m/%d')
-
-
 # ---------------------------------------------------------------- Google · Kakao RTB
 def read_google(path):
     s = xlrd.open_workbook(path, ignore_workbook_corruption=True, encoding_override='cp949').sheet_by_index(0)
@@ -81,44 +68,45 @@ def read_kakao(path):
     return rows
 
 
-def roas(d):
-    return round(d['srev'] / d['spend'] * 100) if d['spend'] else 0
+def file_date(path):
+    """파일을 받은 날 datetime, 파일 이름의 20YYMMDD 우선"""
+    m = re.search(r'(20\d\d)(\d\d)(\d\d)', os.path.basename(path))
+    if m:
+        return datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)))
+    return datetime.fromtimestamp(os.path.getmtime(path))
 
 
-def update_page(page, rows, skip_day):
-    days = sorted((d for d in rows if d['d'] != skip_day), key=lambda d: d['d'], reverse=True)
-    if len(days) < 2:
-        sys.exit(f'{page}: 데이터가 부족합니다')
-    f = lambda x: f'{round(x):,}'
-    T = {k: sum(d[k] for d in days) for k in ('imp', 'clk', 'spend', 'srev')}
+def update_page(page, files, reader):
+    """페이지의 DAYS [날짜, 노출, 클릭, 소진, 세션매출] 에 통계 파일들을 합침
+    - 페이지에 있던 날은 그대로 두고, 파일에 있는 날은 파일 값으로 바꿈 (최근에 받은 파일이 우선)
+    - 각 파일을 받은 날은 집계 중이라 제외"""
     path = os.path.join(HTML_DIR, page)
     src = open(path, encoding='utf-8').read()
-
-    # 핵심 성과
-    kpi = iter([f(T['imp']), f(T['clk']), f"{T['clk'] / T['imp'] * 100:.3f}%", f"{roas(T)}%", f(T['spend']) + '원'])
-    src = re.sub(r'(<div class="value">)[^<]*(</div>)', lambda m: m.group(1) + next(kpi) + m.group(2), src, count=5)
-
-    # 일별 성과 표
-    tr = ''.join(f'''
-                            <tr>
-                                <td>{d['d']}</td>
-                                <td>{f(d['imp'])}</td>
-                                <td>{f(d['clk'])}</td>
-                                <td>{d['clk'] / d['imp'] * 100:.3f}%</td>
-                                <td>{roas(d)}%</td>
-                                <td>{f(d['spend'])}원</td>
-                            </tr>''' for d in days)
-    src, n1 = re.subn(r'(<tbody>)[\s\S]*?(\n\s*</tbody>)', lambda m: m.group(1) + tr + m.group(2), src, count=1)
-
-    # 최근 7일
-    wk = ''.join(f"\n            {{ d: '{d['d']}', imp: {int(d['imp'])}, clk: {int(d['clk'])}, ctr: {d['clk'] / d['imp'] * 100:.4f}, "
-                 f"roas: {roas(d)}, spend: {int(d['spend'])} }}," for d in reversed(days[:7]))
-    src, n2 = re.subn(r'(const WEEK = \[)[\s\S]*?(\n        \];)', lambda m: m.group(1) + wk + m.group(2), src, count=1)
-
-    if not (n1 and n2):
-        sys.exit(f'{page}: 페이지 구조가 달라 갱신하지 못했습니다')
+    block = re.search(r'/\* DAYS:START \*/([\s\S]*?)/\* DAYS:END \*/', src)
+    if not block:
+        sys.exit(f'{page}: 데이터 자리(DAYS)를 찾지 못했습니다')
+    have = {r[0]: r for r in (json.loads(x) for x in re.findall(r'\["\d{4}-\d\d-\d\d"[^\]]*\]', block.group(1)))}
+    for p in sorted(files, key=os.path.getmtime):
+        fd = file_date(p)
+        skip = fd.strftime('%m/%d')
+        rows = [d for d in reader(p) if d['d'] != skip]
+        for d in rows:
+            mm, dd = map(int, d['d'].split('/'))
+            ymd = f'{fd.year - (mm > fd.month):04d}-{mm:02d}-{dd:02d}'   # 1월에 받은 파일의 12월 날짜는 전년도
+            have[ymd] = [ymd, int(d['imp']), int(d['clk']), int(d['spend']), int(d['srev'])]
+        print(f'  {os.path.basename(p)}: {min(r["d"] for r in rows)} ~ {max(r["d"] for r in rows)} ({len(rows)}일, {skip} 집계 중 제외)' if rows else f'  {os.path.basename(p)}: 데이터 없음')
+    days = sorted(have.values())
+    if len(days) < 2:
+        sys.exit(f'{page}: 데이터가 부족합니다')
+    src = set_block(src, 'DAYS', 'DAYS', dump_rows(days), page)
     open(path, 'w', encoding='utf-8', newline='').write(src)
-    print(f'  {page}: {days[-1]["d"]} ~ {days[0]["d"]} ({len(days)}일) · 노출 {f(T["imp"])} · 클릭 {f(T["clk"])} · 소진 {f(T["spend"])}원 · ROAS {roas(T)}%')
+    f = lambda x: f'{round(x):,}'
+    by_m = {}
+    for ymd, imp, clk, spend, srev in days:
+        a = by_m.setdefault(ymd[:7], [0, 0, 0, 0, 0])
+        a[0] += 1; a[1] += imp; a[2] += clk; a[3] += spend; a[4] += srev
+    for m, (n, imp, clk, spend, srev) in by_m.items():
+        print(f'  {page} {m}: {n}일 · 노출 {f(imp)} · 클릭 {f(clk)} · 소진 {f(spend)}원 · ROAS {round(srev / spend * 100) if spend else 0}%')
 
 
 # ---------------------------------------------------------------- 프레임 AB 테스트 페이지 (CSV)
@@ -714,14 +702,17 @@ if __name__ == '__main__':
             ('Google', 'google_openRTB_*.xls', read_google, 'google_rtb_dashboard_page.html'),
             ('Kakao', 'kakao_rtb_day_report*.xls', read_kakao, 'kakao_rtb_dashboard_page.html'),
         ]:
-            src = latest(pattern)
-            skip = file_day(src)
-            print(f'[{label}] {os.path.basename(src)}  (제외: {skip} 집계 중)')
-            update_page(page, reader(src), skip)
+            files = glob.glob(os.path.join(DIR, pattern))
+            if not files:
+                sys.exit(f'파일을 찾을 수 없습니다: {pattern}')
+            print(f'[{label}]')
+            update_page(page, files, reader)
+        if '--rtb' in sys.argv:
+            sys.exit()
 
     xlsx = glob.glob(os.path.join(DIR, 'rtb_frame_analysis_*.xlsx'))
-    ab = glob.glob(os.path.join(DIR, 'rtb_theme_ab_result_*.xlsx'))
+    ab = glob.glob(os.path.join(DIR, 'rtb_theme_ab_result_*.xlsx')) + glob.glob(os.path.join(DIR, 'rtb_google_frame_stats*.xlsx'))
     if not ab and not xlsx:
-        sys.exit('rtb_theme_ab_result_*.xlsx 파일이 없어 프레임 페이지는 갱신하지 못했습니다')
+        sys.exit('rtb_google_frame_stats.xlsx (또는 rtb_theme_ab_result_*.xlsx) 파일이 없어 프레임 페이지는 갱신하지 못했습니다')
     update_frames_xlsx(max(xlsx, key=os.path.getmtime) if xlsx else None, max(ab, key=os.path.getmtime) if ab else None)
     print('완료')

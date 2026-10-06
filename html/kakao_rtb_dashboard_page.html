@@ -14,33 +14,36 @@
     <div class="wrap">
         <section>
             <div class="title">
-                <h2>1. 당월 핵심 성과</h2>
-                <span id="kpiPeriod"></span>
+                <h2>1. 월별 핵심 성과</h2>
+                <div class="title-r">
+                    <span id="kpiPeriod"></span>
+                    <div class="seg month-seg" role="group" aria-label="월 선택"></div>
+                </div>
             </div>
             <div class="kpis">
                 <div class="card kpi" style="--c:#3446b8">
                     <div class="kpi-top"><span class="kpi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span><div class="label">노출수</div></div>
-                    <div class="value">147,922,893</div>
+                    <div class="value" data-v="imp">−</div>
                     <div class="kpi-sub" data-kpi="imp"></div>
                 </div>
                 <div class="card kpi" style="--c:#16a34a">
                     <div class="kpi-top"><span class="kpi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3v4M5.2 5.2l2.8 2.8M3 9h4"/><path d="M10 10l10 4-4.5 1.5L14 20z"/></svg></span><div class="label">클릭수</div></div>
-                    <div class="value">170,634</div>
+                    <div class="value" data-v="clk">−</div>
                     <div class="kpi-sub" data-kpi="clk"></div>
                 </div>
                 <div class="card kpi" style="--c:#8b5cf6">
                     <div class="kpi-top"><span class="kpi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 18L20 6"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg></span><div class="label">클릭률 (CTR)</div></div>
-                    <div class="value">0.115%</div>
+                    <div class="value" data-v="ctr">−</div>
                     <div class="kpi-sub" data-kpi="ctr"></div>
                 </div>
                 <div class="card kpi" style="--c:#f59e0b">
                     <div class="kpi-top"><span class="kpi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></span><div class="label">세션 ROAS (24시간 이내 구매)</div></div>
-                    <div class="value">256%</div>
+                    <div class="value" data-v="roas">−</div>
                     <div class="kpi-sub" data-kpi="roas"></div>
                 </div>
                 <div class="card kpi" style="--c:#e0262f">
                     <div class="kpi-top"><span class="kpi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/><circle cx="16.5" cy="14.5" r="1.2"/></svg></span><div class="label">소진금액</div></div>
-                    <div class="value">103,814,480원</div>
+                    <div class="value" data-v="spend">−</div>
                     <div class="kpi-sub" data-kpi="spend"></div>
                 </div>
             </div>
@@ -72,6 +75,7 @@
         <section>
             <div class="title">
                 <h2>4. 일별 데이터 그래프</h2>
+                <div class="seg month-seg" role="group" aria-label="월 선택"></div>
             </div>
             <div class="card">
                 <div class="dl-toggles" id="dlToggles" role="group" aria-label="그래프에 표시할 지표 (여러 개 선택 가능)"></div>
@@ -85,6 +89,7 @@
         <section>
             <div class="title">
                 <h2>5. 일별 성과 테이블</h2>
+                <div class="seg month-seg" role="group" aria-label="월 선택"></div>
             </div>
             <div class="card">
                 <div class="scroll">
@@ -99,248 +104,7 @@
                                 <th>소진금액</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>09/30</td>
-                                <td>6,412,932</td>
-                                <td>7,872</td>
-                                <td>0.123%</td>
-                                <td>87%</td>
-                                <td>5,210,659원</td>
-                            </tr>
-                            <tr>
-                                <td>09/29</td>
-                                <td>5,683,371</td>
-                                <td>6,715</td>
-                                <td>0.118%</td>
-                                <td>102%</td>
-                                <td>4,603,639원</td>
-                            </tr>
-                            <tr>
-                                <td>09/28</td>
-                                <td>4,623,913</td>
-                                <td>6,116</td>
-                                <td>0.132%</td>
-                                <td>108%</td>
-                                <td>4,354,338원</td>
-                            </tr>
-                            <tr>
-                                <td>09/27</td>
-                                <td>4,015,229</td>
-                                <td>5,754</td>
-                                <td>0.143%</td>
-                                <td>37%</td>
-                                <td>4,094,586원</td>
-                            </tr>
-                            <tr>
-                                <td>09/26</td>
-                                <td>3,476,908</td>
-                                <td>5,640</td>
-                                <td>0.162%</td>
-                                <td>32%</td>
-                                <td>3,991,970원</td>
-                            </tr>
-                            <tr>
-                                <td>09/25</td>
-                                <td>3,297,662</td>
-                                <td>5,531</td>
-                                <td>0.168%</td>
-                                <td>36%</td>
-                                <td>3,884,864원</td>
-                            </tr>
-                            <tr>
-                                <td>09/24</td>
-                                <td>3,220,476</td>
-                                <td>5,584</td>
-                                <td>0.173%</td>
-                                <td>76%</td>
-                                <td>3,949,254원</td>
-                            </tr>
-                            <tr>
-                                <td>09/23</td>
-                                <td>4,585,974</td>
-                                <td>5,924</td>
-                                <td>0.129%</td>
-                                <td>65%</td>
-                                <td>4,414,157원</td>
-                            </tr>
-                            <tr>
-                                <td>09/22</td>
-                                <td>6,771,359</td>
-                                <td>6,864</td>
-                                <td>0.101%</td>
-                                <td>204%</td>
-                                <td>5,240,653원</td>
-                            </tr>
-                            <tr>
-                                <td>09/21</td>
-                                <td>7,786,331</td>
-                                <td>7,522</td>
-                                <td>0.097%</td>
-                                <td>130%</td>
-                                <td>5,721,875원</td>
-                            </tr>
-                            <tr>
-                                <td>09/20</td>
-                                <td>5,555,077</td>
-                                <td>6,374</td>
-                                <td>0.115%</td>
-                                <td>40%</td>
-                                <td>4,624,792원</td>
-                            </tr>
-                            <tr>
-                                <td>09/19</td>
-                                <td>6,661,459</td>
-                                <td>6,901</td>
-                                <td>0.104%</td>
-                                <td>63%</td>
-                                <td>4,842,363원</td>
-                            </tr>
-                            <tr>
-                                <td>09/18</td>
-                                <td>8,577,722</td>
-                                <td>8,433</td>
-                                <td>0.098%</td>
-                                <td>220%</td>
-                                <td>5,923,481원</td>
-                            </tr>
-                            <tr>
-                                <td>09/17</td>
-                                <td>6,690,181</td>
-                                <td>7,174</td>
-                                <td>0.107%</td>
-                                <td>600%</td>
-                                <td>3,948,675원</td>
-                            </tr>
-                            <tr>
-                                <td>09/16</td>
-                                <td>6,497,671</td>
-                                <td>7,268</td>
-                                <td>0.112%</td>
-                                <td>622%</td>
-                                <td>4,077,241원</td>
-                            </tr>
-                            <tr>
-                                <td>09/15</td>
-                                <td>6,681,850</td>
-                                <td>6,773</td>
-                                <td>0.101%</td>
-                                <td>814%</td>
-                                <td>3,745,057원</td>
-                            </tr>
-                            <tr>
-                                <td>09/14</td>
-                                <td>7,522,895</td>
-                                <td>7,167</td>
-                                <td>0.095%</td>
-                                <td>717%</td>
-                                <td>4,000,917원</td>
-                            </tr>
-                            <tr>
-                                <td>09/13</td>
-                                <td>4,680,436</td>
-                                <td>5,684</td>
-                                <td>0.121%</td>
-                                <td>155%</td>
-                                <td>2,665,252원</td>
-                            </tr>
-                            <tr>
-                                <td>09/12</td>
-                                <td>5,295,753</td>
-                                <td>5,822</td>
-                                <td>0.110%</td>
-                                <td>286%</td>
-                                <td>2,591,530원</td>
-                            </tr>
-                            <tr>
-                                <td>09/11</td>
-                                <td>6,585,513</td>
-                                <td>6,970</td>
-                                <td>0.106%</td>
-                                <td>413%</td>
-                                <td>3,518,715원</td>
-                            </tr>
-                            <tr>
-                                <td>09/10</td>
-                                <td>9,216,818</td>
-                                <td>7,167</td>
-                                <td>0.078%</td>
-                                <td>574%</td>
-                                <td>3,480,189원</td>
-                            </tr>
-                            <tr>
-                                <td>09/09</td>
-                                <td>4,299,340</td>
-                                <td>4,999</td>
-                                <td>0.116%</td>
-                                <td>160%</td>
-                                <td>2,562,450원</td>
-                            </tr>
-                            <tr>
-                                <td>09/08</td>
-                                <td>2,679,427</td>
-                                <td>3,402</td>
-                                <td>0.127%</td>
-                                <td>277%</td>
-                                <td>1,664,243원</td>
-                            </tr>
-                            <tr>
-                                <td>09/07</td>
-                                <td>2,597,501</td>
-                                <td>3,224</td>
-                                <td>0.124%</td>
-                                <td>199%</td>
-                                <td>1,569,670원</td>
-                            </tr>
-                            <tr>
-                                <td>09/06</td>
-                                <td>1,391,516</td>
-                                <td>2,119</td>
-                                <td>0.152%</td>
-                                <td>123%</td>
-                                <td>941,214원</td>
-                            </tr>
-                            <tr>
-                                <td>09/05</td>
-                                <td>1,603,995</td>
-                                <td>2,386</td>
-                                <td>0.149%</td>
-                                <td>449%</td>
-                                <td>1,018,219원</td>
-                            </tr>
-                            <tr>
-                                <td>09/04</td>
-                                <td>2,494,459</td>
-                                <td>3,381</td>
-                                <td>0.136%</td>
-                                <td>339%</td>
-                                <td>1,617,940원</td>
-                            </tr>
-                            <tr>
-                                <td>09/03</td>
-                                <td>2,449,010</td>
-                                <td>3,617</td>
-                                <td>0.148%</td>
-                                <td>342%</td>
-                                <td>1,739,463원</td>
-                            </tr>
-                            <tr>
-                                <td>09/02</td>
-                                <td>2,933,300</td>
-                                <td>3,873</td>
-                                <td>0.132%</td>
-                                <td>840%</td>
-                                <td>1,773,941원</td>
-                            </tr>
-                            <tr>
-                                <td>09/01</td>
-                                <td>3,634,815</td>
-                                <td>4,378</td>
-                                <td>0.120%</td>
-                                <td>379%</td>
-                                <td>2,043,133원</td>
-                            </tr>
-                        </tbody>
+                        <tbody></tbody>
                     </table>
                 </div>
             </div>
@@ -351,23 +115,103 @@
     </button>
     <script src="../js/holidays.js"></script>
     <script>
-        // 최근 7일 차트
-        const WEEK = [
-            { d: '09/24', imp: 3220476, clk: 5584, ctr: 0.1734, roas: 76, spend: 3949254 },
-            { d: '09/25', imp: 3297662, clk: 5531, ctr: 0.1677, roas: 36, spend: 3884864 },
-            { d: '09/26', imp: 3476908, clk: 5640, ctr: 0.1622, roas: 32, spend: 3991970 },
-            { d: '09/27', imp: 4015229, clk: 5754, ctr: 0.1433, roas: 37, spend: 4094586 },
-            { d: '09/28', imp: 4623913, clk: 6116, ctr: 0.1323, roas: 108, spend: 4354338 },
-            { d: '09/29', imp: 5683371, clk: 6715, ctr: 0.1182, roas: 102, spend: 4603639 },
-            { d: '09/30', imp: 6412932, clk: 7872, ctr: 0.1228, roas: 87, spend: 5210659 },
+        // 일별 데이터 [날짜, 노출수, 클릭수, 소진금액, 세션매출], update_data.py 가 채움
+        /* DAYS:START */
+        const DAYS = [
+            ["2026-09-01", 3634815, 4378, 2043133, 7746911],
+            ["2026-09-02", 2933300, 3873, 1773941, 14907139],
+            ["2026-09-03", 2449010, 3617, 1739463, 5949561],
+            ["2026-09-04", 2494459, 3381, 1617940, 5480820],
+            ["2026-09-05", 1603995, 2386, 1018219, 4573710],
+            ["2026-09-06", 1391516, 2119, 941214, 1157404],
+            ["2026-09-07", 2597501, 3224, 1569670, 3128523],
+            ["2026-09-08", 2679427, 3402, 1664243, 4613964],
+            ["2026-09-09", 4299340, 4999, 2562450, 4098136],
+            ["2026-09-10", 9216818, 7167, 3480189, 19961378],
+            ["2026-09-11", 6585513, 6970, 3518715, 14535242],
+            ["2026-09-12", 5295753, 5822, 2591530, 7418819],
+            ["2026-09-13", 4680436, 5684, 2665252, 4134407],
+            ["2026-09-14", 7522895, 7167, 4000917, 28705295],
+            ["2026-09-15", 6681850, 6773, 3745057, 30487694],
+            ["2026-09-16", 6497671, 7268, 4077241, 25341452],
+            ["2026-09-17", 6690181, 7174, 3948675, 23688468],
+            ["2026-09-18", 8577722, 8433, 5923481, 13058441],
+            ["2026-09-19", 6661459, 6901, 4842363, 3031376],
+            ["2026-09-20", 5555077, 6374, 4624792, 1838338],
+            ["2026-09-21", 7786331, 7522, 5721875, 7464153],
+            ["2026-09-22", 6771359, 6864, 5240653, 10668857],
+            ["2026-09-23", 4585974, 5924, 4414157, 2847329],
+            ["2026-09-24", 3220476, 5584, 3949254, 2998841],
+            ["2026-09-25", 3297662, 5531, 3884864, 1379448],
+            ["2026-09-26", 3476908, 5640, 3991970, 1289602],
+            ["2026-09-27", 4015229, 5754, 4094586, 1512223],
+            ["2026-09-28", 4623913, 6116, 4354338, 4704905],
+            ["2026-09-29", 5683371, 6715, 4603639, 4708091],
+            ["2026-09-30", 6412932, 7872, 5210659, 4556656],
+            ["2026-10-01", 8777510, 8754, 5713295, 6990369],
+            ["2026-10-02", 10455464, 9975, 6011303, 4234684],
+            ["2026-10-03", 7658687, 9177, 5530493, 4139036],
+            ["2026-10-04", 7378657, 8833, 5158843, 2671533],
+            ["2026-10-05", 7272873, 8370, 5210897, 2375339],
         ];
+        /* DAYS:END */
+
+        const ROWS = DAYS.map(([ymd, imp, clk, spend, srev]) => ({
+            ymd, d: ymd.slice(5).replace('-', '/'), imp, clk, spend, srev,
+            ctr: imp ? clk / imp * 100 : 0, roas: spend ? Math.round(srev / spend * 100) : 0,
+        })).sort((a, b) => a.ymd < b.ymd ? -1 : 1);
+        const MONTHS = [...new Set(ROWS.map(r => r.ymd.slice(0, 7)))];
+        const WEEK = ROWS.slice(-7);   // 최근 7일, 마지막이 전일
+        const f = n => Math.round(n).toLocaleString('ko-KR');
         const WK_METRICS = [
-            { k: 'imp', label: '노출수', color: '#4f6bed', fmt: v => Math.round(v).toLocaleString('ko-KR'), short: v => Math.round(v / 1e4).toLocaleString('ko-KR') + '만' },
-            { k: 'clk', label: '클릭수', color: '#ff7a59', fmt: v => Math.round(v).toLocaleString('ko-KR') },
+            { k: 'imp', label: '노출수', color: '#4f6bed', fmt: v => f(v), short: v => f(v / 1e4) + '만' },
+            { k: 'clk', label: '클릭수', color: '#ff7a59', fmt: v => f(v) },
             { k: 'ctr', label: '클릭률 (CTR)', color: '#1fb5a3', fmt: v => v.toFixed(3) + '%' },
             { k: 'roas', label: '세션 ROAS', color: '#f5a524', fmt: v => v + '%' },
-            { k: 'spend', label: '소진금액', color: '#9b6bdf', fmt: v => Math.round(v).toLocaleString('ko-KR') + '원', short: v => Math.round(v / 1e4).toLocaleString('ko-KR') + '만원' },
+            { k: 'spend', label: '소진금액', color: '#9b6bdf', fmt: v => f(v) + '원', short: v => f(v / 1e4) + '만원' },
         ];
+
+        // 월 선택, 1 · 4 · 5번 버튼이 함께 움직임
+        let month = MONTHS[MONTHS.length - 1];
+        const monthRows = () => ROWS.filter(r => r.ymd.startsWith(month));
+        const onMonth = [];
+        (function () {
+            const multiYear = new Set(MONTHS.map(m => m.slice(0, 4))).size > 1;
+            const label = m => (multiYear ? `${m.slice(2, 4)}년 ` : '') + `${+m.slice(5)}월`;
+            const segs = document.querySelectorAll('.month-seg');
+            const draw = () => segs.forEach(s => {
+                s.innerHTML = MONTHS.map(m => `<button type="button" data-m="${m}" aria-pressed="${m === month}" title="${m.slice(0, 4)}년 ${+m.slice(5)}월">${label(m)}</button>`).join('');
+            });
+            segs.forEach(s => s.addEventListener('click', e => {
+                const b = e.target.closest('button[data-m]'); if (!b || b.dataset.m === month) return;
+                month = b.dataset.m;
+                draw(); onMonth.forEach(fn => fn());
+            }));
+            draw();
+        })();
+
+        // 월별 핵심 성과
+        onMonth.push(function () {
+            const rows = monthRows(), days = rows.length;
+            const T = rows.reduce((a, r) => ({ imp: a.imp + r.imp, clk: a.clk + r.clk, spend: a.spend + r.spend, srev: a.srev + r.srev }), { imp: 0, clk: 0, spend: 0, srev: 0 });
+            const val = {
+                imp: f(T.imp), clk: f(T.clk), ctr: T.imp ? (T.clk / T.imp * 100).toFixed(3) + '%' : '−',
+                roas: T.spend ? Math.round(T.srev / T.spend * 100) + '%' : '−', spend: f(T.spend) + '원',
+            };
+            document.querySelectorAll('.value[data-v]').forEach(el => { el.textContent = val[el.dataset.v]; });
+            const ctrs = rows.map(r => r.ctr);
+            document.getElementById('kpiPeriod').textContent = days ? `${rows[0].d} ~ ${rows[days - 1].d} · ${days}일 누계` : '';
+            const sub = {
+                imp: `일 평균 <b>${f(T.imp / days)}</b>`,
+                clk: `일 평균 <b>${f(T.clk / days)}</b>`,
+                ctr: `일별 최고 <b>${Math.max(...ctrs).toFixed(3)}%</b> · 최저 <b>${Math.min(...ctrs).toFixed(3)}%</b>`,
+                roas: `세션매출 ÷ 소진 <span class="pill">24시간</span>`,
+                spend: `일 평균 <b>${f(T.spend / days)}원</b> · CPC <b>${T.clk ? f(T.spend / T.clk) : '−'}원</b>`,
+            };
+            document.querySelectorAll('.kpi-sub[data-kpi]').forEach(el => { el.innerHTML = sub[el.dataset.kpi] || ''; });
+        });
+
+        // 최근 7일 차트
         (function () {
             const max = Object.fromEntries(WK_METRICS.map(m => [m.k, Math.max(...WEEK.map(r => r[m.k]))]));
             document.getElementById('wkLegend').innerHTML = WK_METRICS.map(m => `<span><i style="background:${m.color}"></i>${m.label}</span>`).join('');
@@ -433,13 +277,9 @@
             }).join('');
         })();
 
-        // 일별 그래프, 데이터는 일별 표에서 읽음
+        // 일별 그래프, 선택한 월
         (function () {
-            const num = t => parseFloat(t.replace(/[^0-9.]/g, ''));
-            const DAYS = [...document.querySelectorAll('.scroll tbody tr')].map(tr => {
-                const c = [...tr.children].map(td => td.textContent.trim());
-                return { d: c[0], imp: num(c[1]), clk: num(c[2]), ctr: num(c[3]), roas: num(c[4]), spend: num(c[5]) };
-            }).reverse();
+            let DAYS = [];
             const sel = new Set(['clk', 'ctr']);
             const box = document.getElementById('dlChart'), svg = document.getElementById('dlSvg'), tip = document.getElementById('dlTip');
             const tg = document.getElementById('dlToggles');
@@ -492,44 +332,56 @@
             svg.addEventListener('mousemove', hover);
             svg.addEventListener('mouseleave', () => { tip.hidden = true; const g = document.getElementById('dlHover'); if (g) g.setAttribute('visibility', 'hidden'); });
             window.addEventListener('resize', draw);
-            drawToggles(); draw();
+            drawToggles();
+            onMonth.push(() => { DAYS = monthRows(); tip.hidden = true; draw(); });
         })();
 
-        // 일별 표 헤더 클릭 정렬
+        // 일별 표, 선택한 월 · 헤더 클릭 정렬 · 합계 행
         (function () {
-            const table = document.querySelector('.scroll table'), tbody = table.querySelector('tbody');
-            const num = t => parseFloat(t.replace(/[^0-9.]/g, ''));
+            const table = document.querySelector('.scroll table'), tbody = table.tBodies[0];
+            const KEYS = ['ymd', 'imp', 'clk', 'ctr', 'roas', 'spend'];
             const ths = [...table.querySelectorAll('thead th')];
+            let sortI = 0, sortDir = 'desc';   // 처음에는 날짜 최신순
+            const total = document.createElement('tr');
+            total.className = 'total-row';
+            table.tHead.appendChild(total);
+
+            function render() {
+                const rows = monthRows();
+                const k = KEYS[sortI], s = sortDir === 'desc' ? -1 : 1;
+                tbody.innerHTML = [...rows].sort((a, b) => (a[k] > b[k] ? 1 : a[k] < b[k] ? -1 : 0) * s).map(r => `
+                            <tr>
+                                <td class="${dayCls(r.ymd)}">${r.d}</td>
+                                <td>${f(r.imp)}</td>
+                                <td>${f(r.clk)}</td>
+                                <td>${r.ctr.toFixed(3)}%</td>
+                                <td>${r.roas}%</td>
+                                <td>${f(r.spend)}원</td>
+                            </tr>`).join('');
+                const T = rows.reduce((a, r) => ({ imp: a.imp + r.imp, clk: a.clk + r.clk, spend: a.spend + r.spend, srev: a.srev + r.srev }), { imp: 0, clk: 0, spend: 0, srev: 0 });
+                total.innerHTML = `<td>합계</td><td>${f(T.imp)}</td><td>${f(T.clk)}</td><td>${T.imp ? (T.clk / T.imp * 100).toFixed(3) : '−'}%</td><td title="세션매출 합 ÷ 소진금액 합">${T.spend ? Math.round(T.srev / T.spend * 100) : '−'}%</td><td>${f(T.spend)}원</td>`;
+            }
+            function mark() {
+                ths.forEach((t, j) => {
+                    const b = t.querySelector('button');
+                    if (j === sortI) { b.dataset.dir = sortDir; t.setAttribute('aria-sort', sortDir === 'desc' ? 'descending' : 'ascending'); }
+                    else { delete b.dataset.dir; t.removeAttribute('aria-sort'); }
+                });
+            }
             ths.forEach((th, i) => {
                 th.innerHTML = `<button type="button" class="sort-btn" title="▲ 큰 순 · ▼ 작은 순 (이름을 누르면 번갈아 정렬)">${th.textContent}<span class="arw" aria-hidden="true"><span class="arw-up">▲</span><span class="arw-dn">▼</span></span></button>`;
                 th.querySelector('button').addEventListener('click', e => {
-                    const b = e.currentTarget, hit = e.target.closest('.arw-up, .arw-dn'), dir = hit ? (hit.classList.contains('arw-up') ? 'desc' : 'asc') : (b.dataset.dir === 'desc' ? 'asc' : 'desc');
-                    ths.forEach(t => { delete t.querySelector('button').dataset.dir; t.removeAttribute('aria-sort'); });
-                    b.dataset.dir = dir; th.setAttribute('aria-sort', dir === 'desc' ? 'descending' : 'ascending');
-                    const rows = [...tbody.rows], key = r => i === 0 ? r.cells[0].textContent.trim() : num(r.cells[i].textContent);
-                    rows.sort((a, c) => { const x = key(a), y = key(c); return (x > y ? 1 : x < y ? -1 : 0) * (dir === 'desc' ? -1 : 1); });
-                    rows.forEach(r => tbody.appendChild(r));
+                    const b = e.currentTarget, hit = e.target.closest('.arw-up, .arw-dn');
+                    sortDir = hit ? (hit.classList.contains('arw-up') ? 'desc' : 'asc') : (b.dataset.dir === 'desc' ? 'asc' : 'desc');
+                    sortI = i;
+                    mark(); render();
                 });
             });
-            // 처음에는 날짜 최신순
-            ths[0].querySelector('button').dataset.dir = 'desc'; ths[0].setAttribute('aria-sort', 'descending');
+            mark();
+            onMonth.push(render);
         })();
 
-        // 일별 표 합계 행
-        (function () {
-            const table = document.querySelector('.scroll table');
-            const num = t => parseFloat(t.replace(/[^0-9.]/g, ''));
-            const rows = [...table.tBodies[0].rows].map(r => [...r.cells].map(c => c.textContent.trim()));
-            const imp = rows.reduce((a, r) => a + num(r[1]), 0);
-            const clk = rows.reduce((a, r) => a + num(r[2]), 0);
-            const spend = rows.reduce((a, r) => a + num(r[5]), 0);
-            const roas = rows.reduce((a, r) => a + num(r[4]) * num(r[5]), 0) / spend;   // 소진금액 가중 평균
-            const f = n => Math.round(n).toLocaleString('ko-KR');
-            const tr = document.createElement('tr');
-            tr.className = 'total-row';
-            tr.innerHTML = `<td>합계</td><td>${f(imp)}</td><td>${f(clk)}</td><td>${(clk / imp * 100).toFixed(3)}%</td><td title="소진금액 가중 평균">${Math.round(roas)}%</td><td>${f(spend)}원</td>`;
-            table.tHead.appendChild(tr);
-        })();
+        onMonth.forEach(fn => fn());
     </script>
     <script>
         /* 맨 위로 버튼 */
@@ -541,29 +393,6 @@
             on();
         })();
     </script>
-    <script>
-        /* KPI 보조 지표, 일별 표에서 계산 */
-        (function () {
-            const rows = [...document.querySelectorAll('#dailyTable tbody tr, table tbody tr')].map(tr => [...tr.cells].map(td => td.textContent.trim())).filter(c => /^\d\d\/\d\d$/.test(c[0] || ''));
-            if (!rows.length) return;
-            const num = s => +String(s).replace(/[^0-9.\-]/g, '');
-            const days = rows.length, dates = rows.map(r => r[0]).sort();
-            const imp = rows.reduce((a, r) => a + num(r[1]), 0), clk = rows.reduce((a, r) => a + num(r[2]), 0), spend = rows.reduce((a, r) => a + num(r[5]), 0);
-            const f = n => Math.round(n).toLocaleString('ko-KR');
-            const ctrs = rows.map(r => num(r[3]));
-            const per = document.getElementById('kpiPeriod');
-            if (per) per.textContent = `${dates[0]} ~ ${dates[dates.length - 1]} · ${days}일 누계`;
-            const sub = {
-                imp: `일 평균 <b>${f(imp / days)}</b>`,
-                clk: `일 평균 <b>${f(clk / days)}</b>`,
-                ctr: `일별 최고 <b>${Math.max(...ctrs).toFixed(3)}%</b> · 최저 <b>${Math.min(...ctrs).toFixed(3)}%</b>`,
-                roas: `세션매출 ÷ 소진 <span class="pill">24시간</span>`,
-                spend: `일 평균 <b>${f(spend / days)}원</b> · CPC <b>${clk ? f(spend / clk) : '−'}원</b>`,
-            };
-            document.querySelectorAll('.kpi-sub[data-kpi]').forEach(el => { el.innerHTML = sub[el.dataset.kpi] || ''; });
-        })();
-    </script>
-    <script>markDateCells();</script>
 </body>
 
 </html>
