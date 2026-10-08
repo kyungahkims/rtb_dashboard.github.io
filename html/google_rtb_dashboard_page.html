@@ -21,29 +21,30 @@
                 </div>
             </div>
             <div class="kpis">
-                <div class="card kpi" style="--c:#3446b8">
+                <div class="card kpi" style="--c:#4f6bed">
                     <div class="kpi-top"><span class="kpi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span><div class="label">노출수</div></div>
                     <div class="value" data-v="imp">−</div>
+                    <div class="kpi-kor" id="impKor"></div>
                     <div class="kpi-sub" data-kpi="imp"></div>
                 </div>
-                <div class="card kpi" style="--c:#16a34a">
+                <div class="card kpi" style="--c:#ff7a59">
                     <div class="kpi-top"><span class="kpi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3v4M5.2 5.2l2.8 2.8M3 9h4"/><path d="M10 10l10 4-4.5 1.5L14 20z"/></svg></span><div class="label">클릭수</div></div>
                     <div class="value" data-v="clk">−</div>
                     <div class="kpi-sub" data-kpi="clk"></div>
                 </div>
-                <div class="card kpi" style="--c:#8b5cf6">
+                <div class="card kpi" style="--c:#1fb5a3">
                     <div class="kpi-top"><span class="kpi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 18L20 6"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg></span><div class="label">클릭률 (CTR)</div></div>
                     <div class="value" data-v="ctr">−</div>
                     <div class="kpi-sub" data-kpi="ctr"></div>
                 </div>
-                <div class="card kpi" style="--c:#f59e0b">
+                <div class="card kpi" style="--c:#f5a524">
                     <div class="kpi-top"><span class="kpi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></span><div class="label">세션 ROAS (24시간 이내 구매)</div></div>
                     <div class="value" data-v="roas">−</div>
                     <div class="kpi-sub" data-kpi="roas"></div>
                 </div>
-                <div class="card kpi" style="--c:#e0262f">
+                <div class="card kpi kpi-spend" style="--c:#e0262f">
                     <div class="kpi-top"><span class="kpi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/><circle cx="16.5" cy="14.5" r="1.2"/></svg></span><div class="label">소진금액</div></div>
-                    <div class="value" data-v="spend">−</div>
+                    <div class="spend-row"><div class="value" data-v="spend">−</div><span class="spend-kor" id="spendKor"></span></div>
                     <div class="kpi-sub" data-kpi="spend"></div>
                 </div>
             </div>
@@ -170,9 +171,30 @@
             { k: 'clk', label: '클릭수', color: '#ff7a59', fmt: v => f(v) },
             { k: 'ctr', label: '클릭률 (CTR)', color: '#1fb5a3', fmt: v => v.toFixed(3) + '%' },
             { k: 'roas', label: '세션 ROAS', color: '#f5a524', fmt: v => v + '%' },
-            { k: 'spend', label: '소진금액', color: '#9b6bdf', fmt: v => f(v) + '원', short: v => f(v / 1e4) + '만원' },
+            { k: 'spend', label: '소진금액', color: '#e0262f', fmt: v => f(v) + '원', short: v => f(v / 1e4) + '만원' },
         ];
 
+        // 큰 수 요약, 만 단위까지 (예: 7306483 → 약 731만, 123456789 → 약 1억 2,346만), unit 은 뒤에 붙는 단위
+        const approxKo = (n, unit = '') => {
+            if (n < 1e4) return `${Math.round(n).toLocaleString('ko-KR')}${unit}`;
+            const man = Math.round(n / 1e4), eok = Math.floor(man / 1e4), rest = man % 1e4;
+            return '약 ' + (eok ? `${eok.toLocaleString('ko-KR')}억` + (rest ? ` ${rest.toLocaleString('ko-KR')}만${unit}` : unit) : `${rest.toLocaleString('ko-KR')}만${unit}`);
+        };
+
+        // 소진금액 호버 시 '약 OO만원' 툴팁
+        (function () {
+            const tip = document.createElement('div');
+            tip.className = 'kor-tip'; tip.hidden = true;
+            document.body.appendChild(tip);
+            document.addEventListener('mouseover', e => {
+                const el = e.target.closest('[data-kor]'); if (!el) return;
+                tip.textContent = el.dataset.kor; tip.hidden = false;
+                const r = el.getBoundingClientRect();
+                tip.style.left = (r.left + r.width / 2) + 'px'; tip.style.top = r.top + 'px';
+            });
+            document.addEventListener('mouseout', e => { const el = e.target.closest('[data-kor]'); if (el && !el.contains(e.relatedTarget)) tip.hidden = true; });
+            window.addEventListener('scroll', () => { tip.hidden = true; }, { passive: true });
+        })();
         // 월 선택, 1 · 4 · 5번 버튼이 함께 움직임
         let month = MONTHS[MONTHS.length - 1];
         const monthRows = () => ROWS.filter(r => r.ymd.startsWith(month));
@@ -201,6 +223,8 @@
                 roas: T.spend ? Math.round(T.srev / T.spend * 100) + '%' : '−', spend: f(T.spend) + '원',
             };
             document.querySelectorAll('.value[data-v]').forEach(el => { el.textContent = val[el.dataset.v]; });
+            document.getElementById('impKor').textContent = T.imp ? `(${approxKo(T.imp)})` : '';
+            document.getElementById('spendKor').textContent = T.spend ? `(${approxKo(T.spend, '원')})` : '';
             const ctrs = rows.map(r => r.ctr);
             document.getElementById('kpiPeriod').textContent = days ? `${rows[0].d} ~ ${rows[days - 1].d} · ${days}일 누계` : '';
             const sub = {
@@ -252,7 +276,11 @@
                 wk.querySelectorAll('.wk-col').forEach(c => c.classList.toggle('on', c.dataset.k === k));
             };
             wk.addEventListener('mouseover', e => { const c = e.target.closest('.wk-col'); if (c) show(c.dataset.k); });
-            wk.addEventListener('mouseleave', () => { cur = null; svg.innerHTML = ''; wk.classList.remove('hl'); });
+            // CTR 추이선은 마우스가 없을 때도 항상 표시
+            const pin = () => { show('ctr'); wk.classList.remove('hl'); wk.querySelectorAll('.wk-col').forEach(c => c.classList.remove('on')); cur = null; };
+            wk.addEventListener('mouseleave', pin);
+            window.addEventListener('resize', pin);
+            requestAnimationFrame(pin);
 
         })();
 
@@ -269,11 +297,11 @@
                 const cls = Math.abs(diff) < 0.0005 ? 'flat' : diff > 0 ? 'up' : 'down';
                 const arrow = cls === 'flat' ? '−' : diff > 0 ? '▲' : '▼';
                 const mx = Math.max(y, b);
-                return `<div class="yd-item">
+                return `<div class="yd-item" data-k="${m.k}">
                     <div class="yd-top"><span class="yd-label">${m.label}</span><span class="yd-chg ${cls}">${arrow} ${txt}</span></div>
-                    <div class="yd-row now"><span class="yd-day">전일</span><span class="yd-num">${m.fmt(y)}</span></div>
+                    <div class="yd-row now"><span class="yd-day">전일</span><span class="yd-num"${m.k === 'spend' ? ` data-kor="${approxKo(y, '원')}"` : ''}>${m.fmt(y)}</span></div>
                     <span class="yd-track"><span style="width:${y / mx * 100}%;background:${YC}"></span></span>
-                    <div class="yd-row"><span class="yd-day">전전일</span><span class="yd-num">${m.fmt(b)}</span></div>
+                    <div class="yd-row"><span class="yd-day">전전일</span><span class="yd-num"${m.k === 'spend' ? ` data-kor="${approxKo(b, '원')}"` : ''}>${m.fmt(b)}</span></div>
                     <span class="yd-track"><span style="width:${b / mx * 100}%;background:${BC}"></span></span>
                 </div>`;
             }).join('');
@@ -282,7 +310,7 @@
         // 일별 그래프, 선택한 월
         (function () {
             let DAYS = [];
-            const sel = new Set(['clk', 'ctr']);
+            const sel = new Set(['ctr', 'spend']);   // 처음 켜 둘 지표
             const box = document.getElementById('dlChart'), svg = document.getElementById('dlSvg'), tip = document.getElementById('dlTip');
             const tg = document.getElementById('dlToggles');
 
@@ -358,10 +386,10 @@
                                 <td>${f(r.clk)}</td>
                                 <td>${r.ctr.toFixed(3)}%</td>
                                 <td>${r.roas}%</td>
-                                <td>${f(r.spend)}원</td>
+                                <td><span class="spend-box" data-kor="${approxKo(r.spend, '원')}">${f(r.spend)}원</span></td>
                             </tr>`).join('');
                 const T = rows.reduce((a, r) => ({ imp: a.imp + r.imp, clk: a.clk + r.clk, spend: a.spend + r.spend, srev: a.srev + r.srev }), { imp: 0, clk: 0, spend: 0, srev: 0 });
-                total.innerHTML = `<td>합계</td><td>${f(T.imp)}</td><td>${f(T.clk)}</td><td>${T.imp ? (T.clk / T.imp * 100).toFixed(3) : '−'}%</td><td title="세션매출 합 ÷ 소진금액 합">${T.spend ? Math.round(T.srev / T.spend * 100) : '−'}%</td><td>${f(T.spend)}원</td>`;
+                total.innerHTML = `<td>합계</td><td>${f(T.imp)}</td><td>${f(T.clk)}</td><td>${T.imp ? (T.clk / T.imp * 100).toFixed(3) : '−'}%</td><td title="세션매출 합 ÷ 소진금액 합">${T.spend ? Math.round(T.srev / T.spend * 100) : '−'}%</td><td><span class="spend-box" data-kor="${approxKo(T.spend, '원')}">${f(T.spend)}원</span></td>`;
             }
             function mark() {
                 ths.forEach((t, j) => {

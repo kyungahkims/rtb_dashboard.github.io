@@ -648,3 +648,116 @@ tbody tr:hover td {
 tbody tr:hover td.top {
 	background: color-mix(in srgb, var(--r, var(--c)) 24%, #fff)
 }
+
+/* 소진금액 포인트: 월별 핵심 성과 금액을 레드 그라데이션 박스로 */
+.kpi-spend .value {
+	align-self: flex-start;
+	color: #fff;
+	padding: 6px 14px;
+	margin: -6px 0 -6px -4px;
+	border-radius: 10px;
+	background: linear-gradient(135deg, #ef4a52 0%, #d0202d 55%, #a8111f 100%);
+	box-shadow: 0 4px 10px rgba(192, 24, 43, .25)
+}
+
+/* 소진금액 포인트: 일별 성과 테이블 소진 열, 월별 핵심 성과와 같은 레드 그라데이션 박스 */
+.spend-box {
+	display: inline-block;
+	color: #fff;
+	font-weight: 700;
+	padding: 2px 9px;
+	margin: -2px -4px -2px 0;
+	border-radius: 7px;
+	background: linear-gradient(135deg, #ef4a52 0%, #d0202d 55%, #a8111f 100%);
+	box-shadow: 0 2px 6px rgba(192, 24, 43, .2)
+}
+
+/* 최근 7일 성과: CTR 값 배지, 추이선은 항상 표시 */
+.wk-col[data-k="ctr"] b {
+	background: #1fb5a3;
+	color: #fff;
+	font-weight: 700;
+	padding: 2px 6px;
+	border-radius: 999px;
+	font-size: 10.5px
+}
+
+.wk-legend span:nth-child(3) {
+	font-weight: 700;
+	color: #0b7f71
+}
+
+/* 전일 vs 전전일: 소진금액 전일 값, 월별 핵심 성과와 같은 레드 그라데이션 박스 */
+.yd-item[data-k="spend"] .yd-row.now .yd-num {
+	color: #fff;
+	padding: 3px 10px;
+	margin: -3px -4px -3px 0;
+	border-radius: 8px;
+	background: linear-gradient(135deg, #ef4a52 0%, #d0202d 55%, #a8111f 100%);
+	box-shadow: 0 3px 8px rgba(192, 24, 43, .22)
+}
+
+/* 소진금액 요약 (약 OO만원), 항상 빨간 박스 아래 */
+.spend-row {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 12px
+}
+
+.spend-kor {
+	font-size: 11.5px;
+	font-weight: 600;
+	color: #a8111f;
+	line-height: 1.3
+}
+
+/* 하단 보조 줄(일 평균 등)을 카드 맨 아래로, 다섯 카드 라인 맞춤 */
+.kpi-sub {
+	margin-top: auto
+}
+
+/* 노출수 요약 (약 OO만), 값 아래 */
+.kpi-kor {
+	font-size: 11.5px;
+	font-weight: 600;
+	color: var(--c);
+	line-height: 1.3;
+	margin-top: -4px
+}
+
+/* 소진금액 호버 툴팁 (약 OO만원) */
+[data-kor] {
+	cursor: default
+}
+
+.kor-tip {
+	position: fixed;
+	z-index: 1000;
+	pointer-events: none;
+	background: #202124;
+	color: #fff;
+	font-size: 12px;
+	font-weight: 600;
+	padding: 6px 10px;
+	border-radius: 8px;
+	white-space: nowrap;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, .18);
+	transform: translate(-50%, calc(-100% - 8px))
+}
+
+.kor-tip::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 100%;
+	margin-left: -5px;
+	border: 5px solid transparent;
+	border-top-color: #202124
+}
+
+/* 최근 7일 성과: 소진금액 값 글씨 빨강 */
+.wk-col[data-k="spend"] b {
+	color: #c0182b;
+	font-weight: 700
+}
