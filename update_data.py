@@ -4,7 +4,7 @@ RTB 대시보드 데이터 갱신
 사용법
   1. 이 폴더에 새로 받은 통계 파일을 넣는다
        google_openRTB_일자별통계.xls        -> Google RTB 페이지
-       kakao_rtb_day_report.xls             -> Kakao RTB 페이지
+       kakao_rtb_day_report.xls             -> Kakao RTB 페이지 (rtb_day_report_YYYYMMDD.xls 이름도 됨)
        rtb_google_frame_stats.xlsx          -> 프레임 AB 테스트 페이지 4개 (예전 이름 rtb_theme_ab_result_*.xlsx 도 됨)
   2. update_data.bat 더블클릭 (또는 python update_data.py)
      프레임 페이지만 갱신하려면 python update_data.py --frames
@@ -221,7 +221,7 @@ def xl_size(frame_value):
     return f'{m.group(1)}x{m.group(2)}' if m else '비규격'
 
 
-XL_FIXED = {'blackGold': 'blackgold', 'blackGoldNo': 'blackgold', 'whiteRed': 'whitered', 'whiteRedNo': 'whitered', 'magazine': 'magazine'}   # xlsx 테마 → 페이지 테마 id
+XL_FIXED = {'blackGold': 'blackgold', 'blackGoldNo': 'blackgold', 'whiteRed': 'whitered', 'whiteRedNo': 'whitered', 'magazine': 'magazine', 'mcnal': 'mcnal'}   # xlsx 테마 → 페이지 테마 id
 XL_AUTO = [   # (시트, 페이지, {프레임 id: 열 접두어}, 지면별.csv frame 매핑)
     # auto_origin 은 기존 프레임의 새 이름
     ('02_autoETC_vs_autoRed_webmob', 'frame_auto_web_page.html', {'redauto': ['autoRedETC(web+mob)'], 'autoetc': ['autoETC(전체)', 'auto_origin(web+mob)']}, {'autoRedETC': 'redauto', 'autoETC': 'autoetc', 'auto_origin': 'autoetc'}),
@@ -230,7 +230,7 @@ XL_AUTO = [   # (시트, 페이지, {프레임 id: 열 접두어}, 지면별.csv
 ]
 
 
-AB_FIXED = {'blackGold': 'blackgold', 'blackGoldNo': 'blackgold', 'whiteRed': 'whitered', 'whiteRedNo': 'whitered', 'magazine': 'magazine'}   # theme_ab 테마 → 페이지 테마 id
+AB_FIXED = {'blackGold': 'blackgold', 'blackGoldNo': 'blackgold', 'whiteRed': 'whitered', 'whiteRedNo': 'whitered', 'magazine': 'magazine', 'mcnal': 'mcnal'}   # theme_ab 테마 → 페이지 테마 id
 AB_DATE = re.compile(r'^\d{4}-\d\d-\d\d')
 
 
@@ -342,7 +342,7 @@ def ab_full_rows(ab, sheet):
     return [r for r in ({k: v for k, v in zip(keys, row) if k} for row in rows[1:] if row and row[0] is not None) if r.get('이상치') != 'Y']
 
 
-def ab_daily_cum(items):
+def ab_daily_cum(items, day_n=None, cum_n=None):
     """(날짜, 프레임 id, 항목, 노출, 클릭) 반복 → 일별 [날짜, 프레임, 항목, 노출, 클릭], 누적 [프레임, 항목, 노출, 클릭]"""
     daily, cum, by_day, by_all = {}, {}, {}, {}
     for d, t, k, v, c in items:
@@ -355,8 +355,8 @@ def ab_daily_cum(items):
     top_day = {}
     for (d, k), v in by_day.items():
         top_day.setdefault(d, []).append((v, k))
-    keep_day = {d: {k for _, k in sorted(lst, reverse=True)[:AB_DAY_N]} for d, lst in top_day.items()}
-    keep_all = {k for _, k in sorted(((v, k) for k, v in by_all.items()), reverse=True)[:AB_CUM_N]}
+    keep_day = {d: {k for _, k in sorted(lst, reverse=True)[:day_n or AB_DAY_N]} for d, lst in top_day.items()}
+    keep_all = {k for _, k in sorted(((v, k) for k, v in by_all.items()), reverse=True)[:cum_n or AB_CUM_N]}
     out_d = sorted([d, t, k, v[0], v[1]] for (d, t, k), v in daily.items() if k in keep_day[d])
     out_c = sorted(([t, k, v[0], v[1]] for (t, k), v in cum.items() if k in keep_all), key=lambda x: (-x[2], x[0]))
     return out_d, out_c
@@ -366,6 +366,18 @@ def ab_full_places(ab, group, frame_of):
     """A_지면일별 → 사이트 기준 일별, 누적"""
     return ab_daily_cum((ab_date(r['날짜']), frame_of(str(r['테마또는프레임'])), ab_site(r['tagid']), xl_int(r['노출']), xl_int(r['클릭']))
                         for r in ab_full_rows(ab, 'A_지면일별') if r['비교군'] == group)
+
+
+AB_TAG_DAY_N, AB_TAG_CUM_N = 40, 100   # 태그×사이즈 표에 넣을 일별, 누적 상위 지면 수
+
+
+def ab_full_tag_sizes(ab):
+    """A_지면일별 theme 비교군 → 태그×사이즈 기준 일별 [날짜, xlsx 테마, tagid, 사이즈, 노출, 클릭], 누적 [xlsx 테마, tagid, 사이즈, 노출, 클릭]
+    테마는 xlsx 이름 그대로 (blackGoldNo 같은 가격 숨김 변형, mcnal 등 새 테마도 그대로 들어감)"""
+    daily, cum = ab_daily_cum(((ab_date(r['날짜']), str(r['테마또는프레임']), f"{r['tagid']}|{r['사이즈']}", xl_int(r['노출']), xl_int(r['클릭']))
+                               for r in ab_full_rows(ab, 'A_지면일별') if r['비교군'] == 'theme' and re.fullmatch(r'\d+_\d+', str(r['사이즈']))),
+                              AB_TAG_DAY_N, AB_TAG_CUM_N)
+    return [[d, t, *k.split('|'), v, c] for d, t, k, v, c in daily], [[t, *k.split('|'), v, c] for t, k, v, c in cum]
 
 
 def ab_full_auto_sizes(ab, media, frame_map):
@@ -423,6 +435,9 @@ def update_fixed_xlsx(sheets, ab=None):
         places, xplaces = read_fixed_places(), xl_places(sheets, fixed_frame_of)
     src = set_block(src, 'PDATA', 'PDATA', dump_rows(places), page)
     src = set_block(src, 'XPDATA', 'XPDATA', dump_rows(xplaces), page)
+    tags, xtags = ab_full_tag_sizes(ab) if ab and 'A_지면일별' in ab else ([], [])
+    src = set_block(src, 'TSDATA', 'TSDATA', dump_rows(tags), page)
+    src = set_block(src, 'XTSDATA', 'XTSDATA', dump_rows(xtags), page)
     open(p, 'w', encoding='utf-8', newline='').write(src)
     dates = sorted({r[0] for r in rows})
     by_t = {}
@@ -435,12 +450,13 @@ def update_fixed_xlsx(sheets, ab=None):
           + f' · 사이즈 {len({r[1] for r in sdata})}개 · 프레임 이름 {len(ndata)}개'
           + (f' · 일별 사이즈 {min(r[0] for r in daily)[5:]} ~ {max(r[0] for r in daily)[5:]}' if daily else ' · 일별 사이즈 없음')
           + (f' · 일별 지면 {len({r[2] for r in places if r[2] != ETC_PLACE})}개 ({min(r[0] for r in places)[5:]} ~ {max(r[0] for r in places)[5:]})' if places else ' · 일별 지면 없음')
-          + f' · xlsx 누적 지면 {len({r[1] for r in xplaces})}개')
+          + f' · xlsx 누적 지면 {len({r[1] for r in xplaces})}개'
+          + (f' · 태그×사이즈 누적 {len({(r[1], r[2]) for r in xtags})}개 (테마 {len({r[0] for r in xtags})}개)' if xtags else ''))
 
 
 ETC_PLACE = '기타 지면'
 PLACE_N = 12
-FIXED_KEYWORD = {'blackgold': 'blackgold', 'whitered': 'whitered', 'magazine': 'magazine'}   # frame_value 키워드 → 테마 id
+FIXED_KEYWORD = {'blackgold': 'blackgold', 'whitered': 'whitered', 'magazine': 'magazine', 'mcnal': 'mcnal'}   # frame_value 키워드 → 테마 id
 
 
 def nonproduct_frame(fv):
@@ -700,7 +716,7 @@ if __name__ == '__main__':
     if '--frames' not in sys.argv:
         for label, pattern, reader, page in [
             ('Google', 'google_openRTB_*.xls', read_google, 'google_rtb_dashboard_page.html'),
-            ('Kakao', 'kakao_rtb_day_report*.xls', read_kakao, 'kakao_rtb_dashboard_page.html'),
+            ('Kakao', '*rtb_day_report*.xls', read_kakao, 'kakao_rtb_dashboard_page.html'),
         ]:
             files = glob.glob(os.path.join(DIR, pattern))
             if not files:

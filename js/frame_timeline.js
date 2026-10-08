@@ -15,6 +15,7 @@ const TL_TARGET = {
     blackgold: { id: 'blackgold', name: '블랙골드 프레임', color: '#2b2d31', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/blackGold/ui/openRtb_blackGold_250x250_ui.html' },
     whitered: { id: 'whitered', name: '화이트레드 프레임', color: '#e0262f', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/whiteRed/ui/openRtb_whiteRed_250x250_ui.html' },
     magazine: { id: 'magazine', name: '매거진 프레임', color: '#8b5cf6', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/simpleMagazine/ui/openRtb_simple_magazine_250x250_ui.html' },
+    mcnal: { id: 'mcnal', name: '맥날 프레임', color: '#e09b00', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/mcnal/ui/openRtb_mcnal_250_250_ui.html' },
     redauto: { id: 'redauto', name: '레드오토 프레임', color: '#e0262f', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/auto/dev/openRtbAuto_red.html', tpl: true },
     autoorigin: { id: 'autoorigin', name: 'auto_origin 프레임 (기존 오토 배너)', color: '#22c55e' },
     common: { id: 'common', name: '공통 (전체 프레임)', color: '#9aa0a8' },
