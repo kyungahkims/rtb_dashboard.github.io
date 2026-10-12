@@ -130,7 +130,7 @@
 
         <section>
             <div class="title">
-                <h2>8. 태그 · 사이즈별 테마 비교 <span class="h2-help" data-tip="광고 자리(TAG ID) 하나와 사이즈 하나를 한 줄로 묶고,&#10;그 자리에 나간 테마별 노출 · 클릭 · 클릭률을 옆으로 펼칩니다.&#10;&#10;같은 자리, 같은 사이즈에서 비교하므로 지면 차이가 빠집니다.&#10;가격 숨김 변형(블랙골드 · 화이트레드)과 새 테마도 따로 보입니다.&#10;&#10;월 전체: 누적 노출 상위 100개 자리&#10;일별: 그날 노출 상위 40개 자리&#10;&#10;노출이 적은 자리는 클릭 1건에 클릭률이 크게 흔들리니&#10;'모든 테마가 나간 자리만' 을 켜고 비교하는 게 안전합니다." aria-label="태그 사이즈별 표 설명" tabindex="0">?</span></h2>
+                <h2>8. 태그 · 사이즈별 테마 비교 <span class="h2-help" data-tip="광고 자리(TAG ID) 하나와 사이즈 하나를 한 줄로 묶고,&#10;그 자리에 나간 테마별 노출 · 클릭 · 클릭률을 옆으로 펼칩니다.&#10;&#10;같은 자리, 같은 사이즈에서 비교하므로 지면 차이가 빠집니다.&#10;가격 숨김 변형(blackGoldNo · whiteRedNo)은 블랙골드 · 화이트레드에 합쳐서 봅니다.&#10;&#10;월 전체: 누적 노출 상위 100개 자리&#10;일별: 그날 노출 상위 40개 자리&#10;&#10;노출이 적은 자리는 클릭 1건에 클릭률이 크게 흔들리니&#10;'모든 테마가 나간 자리만' 을 켜고 비교하는 게 안전합니다." aria-label="태그 사이즈별 표 설명" tabindex="0">?</span></h2>
                 <div class="period-ctrl" id="tagPeriod" role="group" aria-label="기간 선택">
                     <div class="seg">
                         <button type="button" data-mode="month" aria-pressed="true">9월 전체</button>
@@ -151,7 +151,7 @@
                     <span class="tag-count" id="tagCount"></span>
                 </div>
                 <div class="ss" id="tagSummary"></div>
-                <div class="scroll">
+                <div class="scroll tag-scroll">
                     <table id="tagTable"></table>
                 </div>
             </div>
@@ -11827,15 +11827,15 @@ ${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>
             { id: 'blackGold', name: '블랙골드', color: '#2b2d31' },
             { id: 'whiteRed', name: '화이트레드', color: '#e0262f' },
             { id: 'magazine', name: '매거진', color: '#8b5cf6' },
-            { id: 'blackGoldNo', name: '블랙골드 · 가격 숨김', color: '#2b2d31', ring: '#f5b301' },
-            { id: 'whiteRedNo', name: '화이트레드 · 가격 숨김', color: '#e0262f', ring: '#f5b301' },
             { id: 'mcnal', name: '맥날', color: '#e09b00' },
-            { id: '기본', name: '기본 (이전 프레임)', color: '#9aa0a8' },
-            { id: 'verygoodtour', name: 'verygoodtour', color: '#22c55e' },
+            { id: '기본', name: '기본 (이전 프레임)', color: '#9aa0a8', hide: true },   // 9/1~9/2 테마 미기록분, 표에서 제외
+            { id: 'verygoodtour', name: 'verygoodtour', color: '#22c55e', hide: true },   // 표에서 제외
         ];
         const tagTheme = id => TAG_THEMES.find(T => T.id === id) || (TAG_THEMES.push({ id, name: id, color: '#9aa0a8' }), TAG_THEMES[TAG_THEMES.length - 1]);
-        const TROWS = TSDATA.map(([d, t, p, s, imp, clk]) => ({ d, t, p, s, imp, clk }));
-        const XTROWS = XTSDATA.map(([t, p, s, imp, clk]) => ({ t, p, s, imp, clk }));
+        // 가격 숨김 변형(blackGoldNo, whiteRedNo)은 7번 지면별 표와 같이 블랙골드·화이트레드로 합침
+        const TAG_ALIAS = { blackGoldNo: 'blackGold', whiteRedNo: 'whiteRed' };
+        const TROWS = TSDATA.map(([d, t, p, s, imp, clk]) => ({ d, t: TAG_ALIAS[t] || t, p, s, imp, clk }));
+        const XTROWS = XTSDATA.map(([t, p, s, imp, clk]) => ({ t: TAG_ALIAS[t] || t, p, s, imp, clk }));
         [...TROWS, ...XTROWS].forEach(r => tagTheme(r.t));
         const TDATES = [...new Set(TROWS.map(r => r.d))].sort();
         const sizeLabel = s => s.replace('_', '×');
@@ -11843,7 +11843,7 @@ ${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>
             const whole = wholeRange(from, to, TDATES) && to !== from && XTROWS.length > 0;   // 월 전체는 누적, 일별은 일별
             const src = (whole ? XTROWS : TROWS).filter(r => whole || (r.d >= from && r.d <= to));
             const m = M3.find(x => x.k === mk);
-            const FR = TAG_THEMES.filter(T => src.some(r => r.t === T.id && r.imp));
+            const FR = TAG_THEMES.filter(T => !T.hide && src.some(r => r.t === T.id && r.imp));   // hide 테마는 표·합계에서 제외
             const byKey = new Map();
             src.forEach(r => {
                 const k = `${r.p}|${r.s}`, i = FR.findIndex(T => T.id === r.t);
