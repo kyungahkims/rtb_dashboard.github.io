@@ -646,8 +646,15 @@ tbody tr:hover td.top {
 
 .tag-scroll thead {
 	position: sticky;
-	top: 0;
+	top: -1px;
 	z-index: 2
+}
+
+/* collapse 상태에선 고정된 thead를 따라 테두리가 안 움직여 스크롤 중 틈이 보임 → 셀마다 테두리를 갖게 함 */
+.tag-scroll table,
+.name-scroll table {
+	border-collapse: separate;
+	border-spacing: 0
 }
 
 .tag-scroll thead th.grp {
