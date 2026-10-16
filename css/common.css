@@ -231,6 +231,22 @@ a.theme-art {
 	color: #3446b8
 }
 
+.tl-body p.tl-why {
+	color: #3b3f46;
+	background: #fff8e6;
+	border-left: 3px solid #f5a524;
+	border-radius: 0 6px 6px 0;
+	padding: 6px 10px
+}
+
+.tl-body p.tl-why b {
+	display: inline-block;
+	font-size: 11px;
+	font-weight: 700;
+	color: #b7791f;
+	margin-right: 8px
+}
+
 .tl-target {
 	font-size: 12px;
 	font-weight: 700;
@@ -258,6 +274,59 @@ a.theme-art {
 	gap: 14px
 }
 
+/* 테마가 7개 이상(카카오)이면 칸이 좁으므로, 한 줄 3개 배치는 유지하고 여백·글자를 줄이고 라벨은 줄바꿈 */
+.yd-cards.yd-dense .yd-card {
+	padding: 16px 10px 14px
+}
+
+.yd-cards.yd-dense .yd-labels>div {
+	gap: 4px
+}
+
+.yd-cards.yd-dense .yd-name {
+	font-size: 10.5px;
+	gap: 1px 3px
+}
+
+.yd-cards.yd-dense .yd-chart text {
+	font-size: 10px   /* 막대 위 숫자, SVG 속성보다 우선 */
+}
+
+.yd-cards.yd-dense .yd-chg {
+	font-size: 10px;
+	padding: 1px 5px;
+	line-height: 1.25;
+	white-space: normal;
+	max-width: 100%;
+	word-break: keep-all
+}
+
+/* 화살표 + 숫자(▲ 26.0%)는 항상 한 줄. 칸이 좁으면 글자를 더 줄임 ('데이터 없음' 문구만 줄바꿈 허용) */
+.yd-cards.yd-dense .yd-labels>div {
+	container-type: inline-size
+}
+
+.yd-cards.yd-dense .yd-chg.rise,
+.yd-cards.yd-dense .yd-chg.fall,
+.yd-cards.yd-dense .yd-chg.flat {
+	white-space: nowrap;
+	padding: 1px 4px;
+	letter-spacing: -.01em
+}
+
+/* 선택자 우선순위를 위 .yd-cards.yd-dense .yd-chg 규칙보다 높게 유지해야 적용됨 */
+@container (max-width: 64px) {
+	.yd-cards.yd-dense .yd-chg.rise, .yd-cards.yd-dense .yd-chg.fall, .yd-cards.yd-dense .yd-chg.flat { font-size: 9px; padding: 1px 3px }
+}
+
+@container (max-width: 50px) {
+	.yd-cards.yd-dense .yd-chg.rise, .yd-cards.yd-dense .yd-chg.fall, .yd-cards.yd-dense .yd-chg.flat { font-size: 8px; padding: 1px 2px; letter-spacing: -.02em }
+}
+
+@container (max-width: 42px) {
+	.yd-cards.yd-dense .yd-chg.rise, .yd-cards.yd-dense .yd-chg.fall, .yd-cards.yd-dense .yd-chg.flat { font-size: 7px; padding: 1px 2px }
+}
+
 .yd-card {
 	background: #fff;
 	border: 1px solid #e6e8ec;
@@ -283,14 +352,16 @@ a.theme-art {
 	white-space: nowrap
 }
 
+/* 요약 문구는 줄여 쓰되(방향별 묶음 + 짧은 이름) 길면 줄바꿈해서 ...로 자르지 않음 */
 .yd-note {
+	min-width: 0;
 	font-size: 11.5px;
 	font-weight: 600;
 	color: #858a92;
 	text-align: right;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis
+	line-height: 1.35;
+	word-break: keep-all;
+	overflow-wrap: anywhere
 }
 
 .yd-chart {
@@ -324,11 +395,18 @@ a.theme-art {
 .yd-name {
 	display: inline-flex;
 	align-items: center;
-	gap: 4px;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 2px 4px;
 	font-size: 12px;
 	font-weight: 700;
 	color: #202124;
-	white-space: nowrap
+	line-height: 1.15;
+	/* '블랙골드 (가격 표시)' 처럼 긴 이름은 띄어쓰기에서 두 줄로 접혀 옆 칸과 겹치지 않게 */
+	white-space: normal;
+	word-break: keep-all;
+	overflow-wrap: anywhere;   /* 띄어쓰기가 없는 긴 이름도 칸을 넘치면 끊어서 옆 칸을 침범하지 않게 */
+	max-width: 100%
 }
 
 .yd-chg.rise {

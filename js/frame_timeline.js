@@ -1,11 +1,19 @@
 /* 프레임 변경 Timeline, 프레임 AB 테스트 네 페이지가 공유
-   ch: 채널, type: deploy | ratio | copy | fix, theme: 프레임 id */
+   ch: 채널, type: deploy | ratio | copy | fix, theme: 프레임 id, why: 테스트 사유·가설 (있으면 표시) */
 const TIMELINE = [
-    { d: '2026-10-07', ch: '구글', type: 'deploy', theme: 'mcnal', title: '맥날 디자인 추가 · 상품 고정 배너 4종 균등 노출', desc: '상품 고정 배너에 네 번째 디자인인 맥날을 추가했습니다. 이날부터 블랙골드·화이트레드·매거진·맥날 4종을 똑같이 나눠 내보냅니다.' },
+    { d: '2026-10-15', ch: '구글', type: 'ratio', theme: 'mcnal', title: '맥날 프레임 테스트 종료', desc: '맥날 프레임 노출을 중단했습니다. 이날부터 상품 고정 배너는 블랙골드 (가격 표시)·블랙골드 (가격 숨김)·화이트레드·매거진 4종을 똑같이(각 약 24만 노출) 나눠 내보냅니다.', why: '8일 동안 Google·Kakao 모두 클릭률 꼴찌(매거진의 55% 수준)라 "화려해야 클릭된다"는 가설은 기각. 노출을 멈추고 묘비로 표시.' },
+    { d: '2026-10-15', ch: '카카오', type: 'ratio', theme: 'blackgold', title: '블랙골드 가격 표시 버전 재투입 · 가격 숨김 버전과 병행', desc: '구글(10/14)에 이어 카카오에서도 9/23부터 가격 숨김 버전만 나가던 블랙골드에 가격 표시 버전을 다시 넣어 두 버전을 같이 내보냅니다. 첫날은 다른 테마의 절반 비중(약 15만 노출, 숨김 버전은 약 32만)으로 시작했습니다. 대시보드에서는 블랙골드를 (가격 표시)·(가격 숨김) 두 테마로 따로 집계합니다.', why: '가격 표시 여부만 다른 두 버전을 같은 기간·같은 자리에서 비교하기 위해.' },
+    { d: '2026-10-15', ch: '카카오', type: 'ratio', theme: 'mcnal', title: '맥날 프레임 테스트 종료', desc: '카카오에서도 맥날 프레임 노출을 중단했습니다. 같은 날 젤리·화이트 젤리 비중을 다른 테마와 같게 올려, 블랙골드 (가격 숨김)·화이트레드·매거진·젤리·화이트 젤리·기존 디자인 A~D 6종이 각 약 31만 노출로 균등해졌고 블랙골드 (가격 표시)만 절반 비중입니다.', why: '8일 동안 Google·Kakao 모두 클릭률 꼴찌(매거진의 55% 수준)라 "화려해야 클릭된다"는 가설은 기각. 노출을 멈추고 묘비로 표시.' },
+    { d: '2026-10-14', ch: '구글', type: 'ratio', theme: 'blackgold', title: '블랙골드 가격 표시 버전 재투입 · 가격 숨김 버전과 병행', desc: '9/23부터 가격 숨김 버전만 나가던 블랙골드에 가격 표시 버전을 다시 넣어 두 버전을 같이 내보냅니다. 첫날은 다른 테마의 절반 비중(약 17만 노출, 같은 날 맥날도 절반으로 축소)으로 시작했고 10/15부터 같은 비중입니다. 대시보드에서는 블랙골드를 (가격 표시)·(가격 숨김) 두 테마로 따로 집계합니다.', why: '가격 표시 여부만 다른 두 버전을 같은 기간·같은 자리에서 비교하기 위해.' },
+    { d: '2026-10-14', ch: '카카오', type: 'deploy', theme: 'jelly', title: '젤리 · 화이트 젤리 디자인 추가 · 상품 고정 배너 6종 노출', desc: '카카오 상품 고정 배너에 젤리와 화이트 젤리 디자인을 추가했습니다. 블랙골드·화이트레드·매거진보다 절반 비중(각 약 20만 노출)으로 시작했습니다.' },
+    { d: '2026-10-07', ch: '카카오', type: 'deploy', theme: 'mcnal', title: '맥날 디자인 추가 · 상품 고정 배너 4종 균등 노출', desc: '카카오 상품 고정 배너에도 맥날 디자인을 추가해 블랙골드·화이트레드·매거진·맥날 4종을 똑같이 나눠 내보냅니다.', why: '"프레임이 화려해야 클릭률이 잘 나온다"는 의견이 맞는지 확인하는 테스트. 매거진과 구조는 같고 디자인만 화려하게 바꿔 비교.' },
+    { d: '2026-09-23', ch: '카카오', type: 'deploy', theme: 'blackgoldno', title: '블랙골드·화이트레드를 가격 숨김 버전으로 교체', desc: '구글과 같은 날 카카오에서도 가격을 표시하지 않는 버전(blackGoldNo·whiteRedNo)으로 바꿨습니다. 9/22에 일부 나갔고 9/23부터 전부 교체됐습니다. 매거진은 그대로입니다.', why: '"가격을 숨기면 클릭률이 높아진다"는 가설 검증. 다만 가격 표시판과 동시에 나눠 내보낸 것이 아니라 전부 교체한 것이라 기간 차이가 섞여 있어, 아직 결론은 내지 못함.' },
+    { d: '2026-09-22', ch: '카카오', type: 'deploy', theme: 'common', title: '카카오 프레임 AB 테스트 집계 시작 · 테마 3종 + 디자인 A~D', desc: '카카오 RTB의 상품 고정 배너 테마 3종(블랙골드·화이트레드·매거진)과 디자인 A~D(SEL_ 접두 = 할인 프레임) 비교 집계를 시작했습니다. 사이즈는 300×250·728×90·250×250 세 가지입니다. 카카오는 오토 배너가 없고 지면(tagid)이 DAN-… 형식이라 웹·앱 구분이 없습니다.' },
+    { d: '2026-10-07', ch: '구글', type: 'deploy', theme: 'mcnal', title: '맥날 디자인 추가 · 상품 고정 배너 4종 균등 노출', desc: '상품 고정 배너에 네 번째 디자인인 맥날을 추가했습니다. 이날부터 블랙골드·화이트레드·매거진·맥날 4종을 똑같이 나눠 내보냅니다.', why: '"프레임이 화려해야 클릭률이 잘 나온다"는 의견이 맞는지 확인하는 테스트. 매거진과 구조는 같고 디자인만 화려하게 바꿔 비교.' },
     { d: '2026-09-28', ch: '구글', type: 'ratio', theme: 'redauto', title: '상품 오토 배너를 레드오토 디자인으로 복귀', desc: '9/22에 기존 디자인(auto_origin)으로 되돌렸던 오토 배너를 다시 레드오토로 바꿨습니다. 9/28은 두 디자인이 함께 나갔고 9/29부터 레드오토만 나갑니다.' },
-    { d: '2026-09-23', ch: '구글', type: 'deploy', theme: 'blackgold', title: '블랙골드·화이트레드를 가격 숨김 버전으로 교체', desc: '블랙골드·화이트레드 고정 배너를 가격을 표시하지 않는 버전(blackGoldNo·whiteRedNo)으로 바꿨습니다. 9/22에 3분의 1 비중으로 먼저 내보냈고 9/23부터 전부 교체됐습니다. 매거진은 그대로입니다. 대시보드에서는 가격 표시·숨김 버전을 합쳐 블랙골드·화이트레드로 보여 줍니다.' },
+    { d: '2026-09-23', ch: '구글', type: 'deploy', theme: 'blackgoldno', title: '블랙골드·화이트레드를 가격 숨김 버전으로 교체', desc: '블랙골드·화이트레드 고정 배너를 가격을 표시하지 않는 버전(blackGoldNo·whiteRedNo)으로 바꿨습니다. 9/22에 3분의 1 비중으로 먼저 내보냈고 9/23부터 전부 교체됐습니다. 매거진은 그대로입니다. 대시보드에서 블랙골드는 가격 표시·숨김 버전을 따로, 화이트레드는 합쳐서 보여 줍니다.', why: '"가격을 숨기면 클릭률이 높아진다"는 가설 검증. 다만 가격 표시판과 동시에 나눠 내보낸 것이 아니라 전부 교체한 것이라 기간 차이가 섞여 있어, 아직 결론은 내지 못함.' },
     { d: '2026-09-22', ch: '구글', type: 'ratio', theme: 'autoorigin', title: '상품 오토 배너를 기존 디자인(auto_origin)으로 되돌림', desc: '레드오토 디자인 대신 기존 오토 배너(auto_origin 프레임)를 다시 내보내기 시작했습니다.' },
-    { d: '2026-09-15', ch: '구글', type: 'deploy', theme: 'magazine', title: '매거진 디자인 추가 · 상품 개수 자동 조절', desc: '상품 고정 배너에 세 번째 디자인인 매거진을 추가했습니다. 배너 크기에 따라 보여 주는 상품 개수도 자동으로 맞추도록 바꿨습니다.' },
+    { d: '2026-09-15', ch: '구글', type: 'deploy', theme: 'magazine', title: '매거진 디자인 추가 · 상품 개수 자동 조절', desc: '상품 고정 배너에 세 번째 디자인인 매거진을 추가했습니다. 배너 크기에 따라 보여 주는 상품 개수도 자동으로 맞추도록 바꿨습니다.', why: '심플한 잡지 같은 디자인이 오히려 광고라는 거부감이 덜 들어 클릭률이 높게 나오는지 확인하는 테스트.' },
     { d: '2026-09-09', ch: '구글', type: 'deploy', theme: 'redauto', title: '상품 오토 배너를 레드오토 디자인으로 교체', desc: '웹·모바일과 앱의 오토 배너(광고 자리 크기에 따라 알아서 바뀌는 배너)를 기존 디자인(auto_origin 프레임)에서 새 레드오토 디자인으로 바꿨습니다. 새 디자인과 기존 디자인의 성과 비교(AB 테스트)가 이날부터 시작됐습니다.' },
     { d: '2026-09-02', ch: '구글', type: 'deploy', theme: 'whitered', title: '화이트레드 디자인 추가 · 비상품 배너를 오토 배너 하나로 통합', desc: '상품 고정 배너에 화이트레드 디자인을 추가했습니다. 비상품 배너는 크기별로 따로 만들던 14개를 광고 자리 크기에 따라 알아서 바뀌는 오토 배너(iauto) 하나로 합쳤습니다.' },
     { d: '2026-08-26', ch: '구글', type: 'deploy', theme: 'blackgold', title: '블랙골드 디자인 배너 출시', desc: '새 블랙골드 디자인을 상품 고정 배너 14개 크기 전부에 적용했습니다.' },
@@ -16,12 +24,16 @@ const TYPE_LABEL = { deploy: '배포', ratio: '노출 비중 조정', copy: '문
 // 페이지 THEMES에 없는 대상
 const TL_TARGET = {
     blackgold: { id: 'blackgold', name: '블랙골드 프레임', color: '#2b2d31', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/blackGold/ui/openRtb_blackGold_250x250_ui.html' },
+    blackgoldno: { id: 'blackgoldno', name: '블랙골드 (가격 숨김) 프레임', color: '#8a8d93', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/blackGold/ui/openRtb_blackGold_250x250_ui.html' },   // 가격 표시 배너와 같은 미리보기
     whitered: { id: 'whitered', name: '화이트레드 프레임', color: '#e0262f', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/whiteRed/ui/openRtb_whiteRed_250x250_ui.html' },
     magazine: { id: 'magazine', name: '매거진 프레임', color: '#8b5cf6', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/simpleMagazine/ui/openRtb_simple_magazine_250x250_ui.html' },
     mcnal: { id: 'mcnal', name: '맥날 프레임', color: '#e09b00', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/mcnal/ui/openRtb_mcnal_250_250_ui.html' },
+    jelly: { id: 'jelly', name: '젤리 프레임', color: '#d946ef', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/jelly/ui/openRtb_jelly_250x250_ui.html' },
+    wjelly: { id: 'wjelly', name: '화이트 젤리 프레임', color: '#f472b6', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/wjelly/ui/openRtb_wjelly_250x250_ui.html' },
     redauto: { id: 'redauto', name: '레드오토 프레임', color: '#e0262f', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/auto/dev/openRtbAuto_red.html', tpl: true },
     autoorigin: { id: 'autoorigin', name: 'auto_origin 프레임 (기존 오토 배너)', color: '#22c55e' },
     common: { id: 'common', name: '공통 (전체 프레임)', color: '#9aa0a8' },
+    design: { id: 'design', name: '기존 디자인 A~D (카카오)', color: '#3446b8' },
     iseries: { id: 'iseries', name: 'i 시리즈', color: '#9aa0a8' },
     coupang: { id: 'coupang', name: '쿠팡 프레임', color: '#9aa0a8' },
     sel: { id: 'sel', name: 'SEL · A/B/C/D 변형', color: '#9aa0a8' },
@@ -58,11 +70,12 @@ function tlBannerFallback() {
 // 모달이 열린 뒤 배너 축소 다시 계산
 const tlRefit = () => requestAnimationFrame(() => { if (typeof fitBannerSlots === 'function') fitBannerSlots(); if (window.__tlFit) window.__tlFit(); });
 
-/* 페이지의 theme, md, cv, sw, nm 정의 뒤에 호출 */
+/* 페이지의 theme, md, cv, sw, nm 정의 뒤에 호출. 페이지가 window.TL_CH 를 정하면 그 채널 항목만 (기본 구글) */
 function initTimeline() {
     const ol = document.getElementById('timeline'), modal = document.getElementById('tlModal');
     if (!ol || !modal) return;
-    ol.innerHTML = [...TIMELINE].sort((a, b) => b.d.localeCompare(a.d)).map((e, i) => {
+    const ch = window.TL_CH || '구글';
+    ol.innerHTML = TIMELINE.filter(e => e.ch === ch).sort((a, b) => b.d.localeCompare(a.d)).map((e, i) => {
         const T = theme(e.theme) || TL_TARGET[e.theme] || { id: e.theme, name: e.theme, color: '#9aa0a8' };
         return `<li>
             <div class="tl-date">${md(e.d)}<small>${e.d.slice(0, 4)}</small></div>
@@ -71,6 +84,7 @@ function initTimeline() {
                 <div class="tl-top"><span class="chip ch ${e.ch === '카카오' ? 'kakao' : 'google'}">${e.ch}</span><span class="chip ${e.type}">${TYPE_LABEL[e.type]}</span><b>${e.title}</b>${i === 0 ? '<span class="chip live">최신</span>' : ''}</div>
                 <div class="tl-target"><span class="dot" style="${sw(T)}"></span>${nm(T)}</div>
                 <p>${e.desc}</p>
+                ${e.why ? `<p class="tl-why"><b>사유</b>${e.why}</p>` : ''}
             </div>
             <div class="tl-art">${tlArt(T)}</div>
         </li>`;

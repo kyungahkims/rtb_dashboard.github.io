@@ -65,6 +65,270 @@
 	line-height: 1.5
 }
 
+.tag-chip.before {
+	background: #e6e8ec;
+	color: #5b6270
+}
+
+.tag-chip.rip {
+	background: #6b7078;
+	color: #fff
+}
+
+/* 종료된 프레임: 비석을 누르면 포스트잇 유언장 (THEMES.will) */
+.theme-will {
+	display: grid;
+	grid-template-rows: 0fr;
+	transition: grid-template-rows .45s ease;
+	/* 접혀 있을 때 theme-body의 gap(10px)만큼 빈 줄이 생기지 않게 상쇄. 펼치면 안쪽 padding이 그 간격을 대신함 */
+	margin-top: -10px
+}
+
+.theme-will > div {
+	overflow: hidden;
+	padding-top: 10px
+}
+
+.theme.will-open .theme-will {
+	grid-template-rows: 1fr
+}
+
+.postit {
+	position: relative;
+	width: min(236px, 100%);
+	margin: 10px auto 6px;
+	background: #fff3a3;
+	color: #3b352a;
+	padding: 20px 14px 14px;
+	font-family: "Gaegu", "Pretendard", sans-serif;
+	font-size: 17px;
+	font-weight: 700;
+	line-height: 1.3;
+	transform: rotate(-1.5deg);
+	box-shadow: 2px 4px 10px rgba(0, 0, 0, .18)
+}
+
+.postit::before {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: -8px;
+	width: 70px;
+	height: 18px;
+	margin-left: -35px;
+	background: rgba(255, 255, 255, .55);
+	border: 1px solid rgba(0, 0, 0, .06);
+	transform: rotate(2deg)
+}
+
+.postit small {
+	display: block;
+	font-family: "Pretendard", sans-serif;
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: .1em;
+	color: #8a7a2a;
+	margin-bottom: 2px
+}
+
+.postit u {
+	text-decoration-color: #c0362c;
+	text-decoration-thickness: 2px;
+	text-underline-offset: 2px
+}
+
+.postit .x {
+	color: #c0362c
+}
+
+.theme.retired .tomb {
+	cursor: pointer
+}
+
+.theme.retired .tomb:hover .tomb-svg {
+	filter: brightness(1.06)
+}
+
+.theme.retired .tomb:focus-visible {
+	outline: 2px solid #3446b8;
+	outline-offset: 4px;
+	border-radius: 60px 60px 6px 6px
+}
+
+/* 클릭 유도: 비석 테두리가 숨 쉬듯 빛나고, 머리 위 말풍선 "마지막 인사 보기". 유언장이 열리면 둘 다 멈춤 */
+.theme.retired .tomb .tomb-svg {
+	animation: tomb-breathe 2.4s ease-in-out infinite
+}
+
+.theme.will-open .tomb .tomb-svg {
+	animation: none
+}
+
+@keyframes tomb-breathe {
+	0%, 100% { filter: drop-shadow(0 0 2px rgba(255, 209, 102, .4)) }
+	50% { filter: drop-shadow(0 0 14px rgba(255, 209, 102, 1)) drop-shadow(0 0 4px rgba(255, 209, 102, 1)) }
+}
+
+.tomb-say {
+	position: absolute;
+	left: 50%;
+	top: -8px;
+	transform: translateX(-50%);
+	background: #fff;
+	color: #2b2d31;
+	border: 2px solid #2b2d31;
+	border-radius: 10px;
+	padding: 4px 10px;
+	font-size: 12px;
+	font-weight: 700;
+	white-space: nowrap;
+	z-index: 4;
+	pointer-events: none;
+	animation: tomb-say-bob 1.4s ease-in-out infinite;
+	transition: opacity .2s
+}
+
+/* 말풍선 꼬리: 검은 테두리 삼각형 위에 흰 삼각형을 겹쳐 속을 흰색으로 */
+.tomb-say::before,
+.tomb-say::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	border: 7px solid transparent;
+	border-bottom: 0
+}
+
+.tomb-say::before {
+	bottom: -9px;
+	margin-left: -7px;
+	border-top: 9px solid #2b2d31
+}
+
+.tomb-say::after {
+	bottom: -6px;
+	margin-left: -7px;
+	border-top: 9px solid #fff
+}
+
+@keyframes tomb-say-bob {
+	0%, 100% { transform: translate(-50%, 0) }
+	50% { transform: translate(-50%, -5px) }
+}
+
+.theme.will-open .tomb-say {
+	opacity: 0
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.theme.retired .tomb .tomb-svg, .tomb-say { animation: none }
+}
+
+/* 종료된 프레임: 배너 자리에 묘비 + 떠오르는 유령 */
+.theme.retired .theme-body {
+	filter: grayscale(.4)
+}
+
+/* 다른 카드의 배너칸(.ad: 최대 280px 정사각)과 높이가 같도록, 보이지 않는 정사각 칸(::before)을 깔고 그 위에 비석을 바닥 맞춤으로 올림.
+   잔디선은 비석 아래쪽(바닥에서 102px)에 고정 */
+.theme-art.tomb-art {
+	background: linear-gradient(#cfd6e2 0 calc(100% - 102px), #7fa35a 0);
+	display: grid;
+	place-items: end center
+}
+
+.theme-art.tomb-art::before {
+	content: "";
+	grid-area: 1 / 1;
+	width: 100%;
+	max-width: 280px;
+	aspect-ratio: 1
+}
+
+.tomb {
+	grid-area: 1 / 1;
+	align-self: end;
+	position: relative;
+	width: 190px;
+	height: 218px;
+	display: grid;
+	place-items: center
+}
+
+.tomb .tomb-svg {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%
+}
+
+.tomb .ep {
+	position: relative;
+	text-align: center;
+	color: #3b3f46;
+	line-height: 1.2;
+	padding-top: 18px
+}
+
+.tomb .ep small {
+	display: block;
+	font-size: 10px;
+	letter-spacing: .12em;
+	color: #6b7078;
+	font-weight: 700
+}
+
+.tomb .ep b {
+	display: block;
+	font-size: 22px;
+	margin: 2px 0 4px
+}
+
+.tomb .ep i {
+	display: block;
+	font-style: normal;
+	font-size: 11.5px;
+	color: #5b6270;
+	font-variant-numeric: tabular-nums
+}
+
+.tomb .ep q {
+	display: block;
+	font-size: 13px;
+	font-weight: 700;
+	margin-top: 8px;
+	quotes: none
+}
+
+.tomb .ghost {
+	position: absolute;
+	left: 74%;
+	bottom: 22%;
+	width: 52px;
+	height: 62px;
+	margin-left: -26px;
+	/* 비문이 가려지지 않게 비석 오른쪽에서 떠오름 */
+	z-index: 2;
+	filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .25));
+	animation: ghost-rise 5.5s ease-in-out infinite
+}
+
+.tomb .ghost svg {
+	width: 100%;
+	height: 100%
+}
+
+@keyframes ghost-rise {
+	0% { transform: translateY(0) rotate(-3deg); opacity: 0 }
+	10% { opacity: 1 }
+	60% { transform: translateY(-80px) rotate(3deg); opacity: 1 }
+	88% { opacity: .9 }
+	100% { transform: translateY(-160px) rotate(-3deg); opacity: 0 }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.tomb .ghost { animation: none; transform: translateY(-60px); opacity: 1 }
+}
+
 /* 타임라인 */
 .tl {
 	list-style: none;
@@ -383,6 +647,48 @@ td.left {
 	border-color: #e3e6ea
 }
 
+/* 미리보기 배너가 없는 테마(디자인 A~D 등)도 같은 높이로 */
+.ad.ad-slot:empty {
+	aspect-ratio: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-style: dashed;
+	background: #fafbfc
+}
+
+/* 미리보기 없음 + 설명 (THEMES.desc) */
+.ad.ad-slot.ad-desc {
+	aspect-ratio: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	padding: 16px;
+	border-style: dashed;
+	background: #fafbfc;
+	text-align: center
+}
+
+.ad.ad-slot.ad-desc span {
+	font-size: 12px;
+	color: #b0b5bd
+}
+
+.ad.ad-slot.ad-desc small {
+	font-size: 11.5px;
+	line-height: 1.5;
+	color: #858a92;
+	word-break: keep-all
+}
+
+.ad.ad-slot:empty::after {
+	content: "미리보기 없음";
+	font-size: 12px;
+	color: #b0b5bd
+}
+
 .ad.ad-slot iframe {
 	display: block;
 	width: 250px;
@@ -659,4 +965,129 @@ tbody tr:hover td.top {
 
 .tag-scroll thead th.grp {
 	box-shadow: inset 0 -2px 0 var(--c)
+}
+
+/* 맨 마지막 칸: 예정 프레임 (NEXT_FRAME). 살짝 벌어진 알약 + 말풍선 도전장 */
+.theme.soon .theme-art {
+	position: relative
+}
+
+.theme.soon .ad.ad-slot {
+	aspect-ratio: 1;
+	border-style: dashed;
+	background: #fff
+}
+
+.theme.soon .theme-stats dd {
+	color: #b0b5bd
+}
+
+.dot.soon-dot {
+	background: repeating-linear-gradient(45deg, #c9cdd4 0 2px, #fff 2px 4px);
+	box-shadow: inset 0 0 0 1.5px #9aa0a8
+}
+
+.tag-chip.soon {
+	background: #0f8f6e
+}
+
+/* 말풍선: 묘비의 '마지막 인사 보기'와 같은 꼴, 손글씨 두 줄 */
+.soon-say {
+	position: absolute;
+	left: 50%;
+	top: 34px;   /* 배너칸 안쪽, 알약 머리 바로 위 */
+	transform: translateX(-50%);
+	max-width: calc(100% - 24px);
+	background: #fff;
+	color: #2b2d31;
+	border: 2px solid #2b2d31;
+	border-radius: 10px;
+	padding: 5px 12px;
+	font-family: "Gaegu", "Pretendard", sans-serif;
+	font-size: 17px;
+	font-weight: 700;
+	line-height: 1.15;
+	text-align: center;
+	white-space: nowrap;
+	z-index: 4;
+	pointer-events: none;
+	animation: soon-say-bob 1.4s ease-in-out infinite
+}
+
+.soon-say::before,
+.soon-say::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	border: 7px solid transparent;
+	border-bottom: 0
+}
+
+.soon-say::before {
+	bottom: -9px;
+	margin-left: -7px;
+	border-top: 9px solid #2b2d31
+}
+
+.soon-say::after {
+	bottom: -6px;
+	margin-left: -7px;
+	border-top: 9px solid #fff
+}
+
+@keyframes soon-say-bob {
+	0%, 100% { transform: translate(-50%, 0) }
+	50% { transform: translate(-50%, -5px) }
+}
+
+/* 알약: 틈의 빛이 숨 쉬고, 가끔 부르르 떨고, 눈이 깜빡임 */
+.pill-glow {
+	animation: pill-breathe 2.4s ease-in-out infinite
+}
+
+@keyframes pill-breathe {
+	0%, 100% { opacity: .35 }
+	50% { opacity: 1 }
+}
+
+.pill-shake {
+	transform-origin: 125px 125px;
+	animation: pill-shake 2.6s ease-in-out infinite
+}
+
+@keyframes pill-shake {
+	0%, 80%, 100% { transform: rotate(0) }
+	84% { transform: rotate(-3deg) }
+	88% { transform: rotate(3deg) }
+	92% { transform: rotate(-2deg) }
+	96% { transform: rotate(2deg) }
+}
+
+.pill-eyes {
+	transform-box: fill-box;
+	transform-origin: center;
+	animation: pill-blink 3.8s steps(1) infinite
+}
+
+@keyframes pill-blink {
+	0%, 92%, 100% { transform: scaleY(1) }
+	94%, 98% { transform: scaleY(.1) }
+}
+
+.pill-spark {
+	transform-box: fill-box;
+	transform-origin: center;
+	animation: pill-twinkle 1.8s ease-in-out infinite
+}
+
+.pill-spark:nth-child(2) { animation-delay: .5s }
+.pill-spark:nth-child(3) { animation-delay: 1s }
+
+@keyframes pill-twinkle {
+	0%, 100% { opacity: .2; transform: scale(.7) }
+	50% { opacity: 1; transform: scale(1) }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.soon-say, .pill-glow, .pill-shake, .pill-eyes, .pill-spark { animation: none }
 }
