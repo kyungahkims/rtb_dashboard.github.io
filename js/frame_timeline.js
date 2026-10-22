@@ -1,6 +1,7 @@
 /* 프레임 변경 Timeline, 프레임 AB 테스트 네 페이지가 공유
    ch: 채널, type: deploy | ratio | copy | fix, theme: 프레임 id, why: 테스트 사유·가설 (있으면 표시) */
 const TIMELINE = [
+    { d: '2026-10-21', ch: '카카오', type: 'deploy', theme: 'story', title: '스토리 디자인 추가 · 상품 고정 배너 신규 투입', desc: '카카오 상품 고정 배너에 스토리 디자인을 추가했습니다. 첫날 약 32만 노출로 블랙골드 가격 표시·숨김, 화이트 젤리(각 약 24만)보다 많고 매거진(약 56만)보다는 적은 비중으로 시작했습니다. 300×250과 728×90 두 사이즈로 나갑니다.' },
     { d: '2026-10-15', ch: '구글', type: 'ratio', theme: 'mcnal', title: '맥날 프레임 테스트 종료', desc: '맥날 프레임 노출을 중단했습니다. 이날부터 상품 고정 배너는 블랙골드 (가격 표시)·블랙골드 (가격 숨김)·화이트레드·매거진 4종을 똑같이(각 약 24만 노출) 나눠 내보냅니다.', why: '8일 동안 Google·Kakao 모두 클릭률 꼴찌(매거진의 55% 수준)라 "화려해야 클릭된다"는 가설은 기각. 노출을 멈추고 묘비로 표시.' },
     { d: '2026-10-15', ch: '카카오', type: 'ratio', theme: 'blackgold', title: '블랙골드 가격 표시 버전 재투입 · 가격 숨김 버전과 병행', desc: '구글(10/14)에 이어 카카오에서도 9/23부터 가격 숨김 버전만 나가던 블랙골드에 가격 표시 버전을 다시 넣어 두 버전을 같이 내보냅니다. 첫날은 다른 테마의 절반 비중(약 15만 노출, 숨김 버전은 약 32만)으로 시작했고 10/16부터 같은 비중(각 약 28만)입니다. 대시보드에서는 블랙골드를 (가격 표시)·(가격 숨김) 두 테마로 따로 집계합니다.', why: '가격 표시 여부만 다른 두 버전을 같은 기간·같은 자리에서 비교하기 위해.' },
     { d: '2026-10-15', ch: '카카오', type: 'ratio', theme: 'mcnal', title: '맥날 프레임 테스트 종료', desc: '카카오에서도 맥날 프레임 노출을 중단했습니다. 같은 날 젤리·화이트 젤리 비중을 다른 테마와 같게 올려, 블랙골드 (가격 숨김)·화이트레드·매거진·젤리·화이트 젤리·기존 디자인 A~D 6종이 각 약 31만 노출로 균등해졌고 블랙골드 (가격 표시)만 이날 하루 절반 비중이었습니다(10/16부터 7종 균등).', why: '8일 동안 Google·Kakao 모두 클릭률 꼴찌(매거진의 55% 수준)라 "화려해야 클릭된다"는 가설은 기각. 노출을 멈추고 묘비로 표시.' },
@@ -30,6 +31,7 @@ const TL_TARGET = {
     mcnal: { id: 'mcnal', name: '맥날 프레임', color: '#e09b00', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/mcnal/ui/openRtb_mcnal_250_250_ui.html' },
     jelly: { id: 'jelly', name: '젤리 프레임', color: '#d946ef', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/jelly/ui/openRtb_jelly_250x250_ui.html' },
     wjelly: { id: 'wjelly', name: '화이트 젤리 프레임', color: '#f472b6', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/wjelly/ui/openRtb_wjelly_250x250_ui.html' },
+    story: { id: 'story', name: '스토리 프레임', color: '#0ea5e9', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/story/ui/openRtb_story_250_250_ui.html' },
     redauto: { id: 'redauto', name: '레드오토 프레임', color: '#e0262f', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/auto/dev/openRtbAuto_red.html', tpl: true },
     autoorigin: { id: 'autoorigin', name: 'auto_origin 프레임 (기존 오토 배너)', color: '#22c55e' },
     common: { id: 'common', name: '공통 (전체 프레임)', color: '#9aa0a8' },
