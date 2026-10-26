@@ -26,7 +26,8 @@
 .themes {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
-	gap: 14px
+	gap: 14px;
+	align-items: start   /* 묘비를 눌러 유언장을 펼친 카드만 늘어나고 옆 카드는 그대로 */
 }
 
 .theme {
@@ -1119,7 +1120,9 @@ tbody tr:hover td.top {
 /* 접힌 유언장이 안쪽 padding(10px)만큼 자리를 차지해 점선 위 여백이 20px로 벌어지던 것 수정: 펼칠 때만 padding */
 .theme-will > div {
 	padding-top: 0;
-	transition: padding-top .45s ease
+	box-sizing: content-box;
+	/* min-height 는 스크립트가 펼침이 끝난 뒤 인라인으로 넣음 (열린 카드끼리 높이 맞춤). 펼치는 동안은 건드리지 않아 슬라이드가 그대로 */
+	transition: padding-top .45s ease, min-height .45s ease
 }
 
 .theme.will-open .theme-will > div {
