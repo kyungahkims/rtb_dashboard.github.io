@@ -330,6 +330,90 @@
 	.tomb .ghost { animation: none; transform: translateY(-60px); opacity: 1 }
 }
 
+/* 선택한 기간 클릭률 1위 카드: 금빛 테두리 + 왼쪽 위 왕관 배지 + 색종이. 종료된 테마가 1위인 달(예: 9월)에는 비석 위에 붙음 */
+.theme.champ {
+	position: relative;
+	box-shadow: 0 0 0 2px #ffcf4d, 0 8px 24px rgba(245, 179, 1, .25)
+}
+
+.champ-badge {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	z-index: 3;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	pointer-events: none
+}
+
+.champ-badge .crown {
+	width: 36px;
+	height: 30px;
+	filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .25));
+	transform-origin: 50% 100%;
+	animation: crown-bob 1.8s ease-in-out infinite
+}
+
+.champ-ribbon {
+	display: inline-flex;
+	flex-direction: column;
+	line-height: 1.05;
+	padding: 4px 11px;
+	border-radius: 999px;
+	background: linear-gradient(135deg, #ffe18a, #f5b301);
+	border: 1px solid #d99a00;
+	color: #5a3d00;
+	font-size: 12px;
+	font-weight: 800;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, .18)
+}
+
+.champ-ribbon small {
+	font-size: 8.5px;
+	letter-spacing: .14em;
+	font-weight: 700;
+	color: #8a5d00
+}
+
+.champ-badge .confetti {
+	position: absolute;
+	inset: -12px -16px;
+	pointer-events: none
+}
+
+.champ-badge .confetti i {
+	position: absolute;
+	width: 6px;
+	height: 6px;
+	border-radius: 1px;
+	opacity: 0;
+	animation: confetti-pop 2.6s ease-out infinite
+}
+
+.champ-badge .confetti i:nth-child(1) { left: 2%; top: 55%; background: #ff5d73; animation-delay: 0s }
+.champ-badge .confetti i:nth-child(2) { left: 22%; top: 80%; background: #4cc3ff; animation-delay: .4s; border-radius: 50% }
+.champ-badge .confetti i:nth-child(3) { left: 48%; top: 70%; background: #8b5cf6; animation-delay: .9s }
+.champ-badge .confetti i:nth-child(4) { left: 66%; top: 85%; background: #1fb5a3; animation-delay: 1.3s; border-radius: 50% }
+.champ-badge .confetti i:nth-child(5) { left: 86%; top: 60%; background: #ff8c42; animation-delay: 1.7s }
+.champ-badge .confetti i:nth-child(6) { left: 96%; top: 30%; background: #ffd166; animation-delay: 2.1s; border-radius: 50% }
+
+@keyframes crown-bob {
+	0%, 100% { transform: rotate(-7deg) translateY(0) }
+	50% { transform: rotate(7deg) translateY(-3px) }
+}
+
+@keyframes confetti-pop {
+	0% { transform: translateY(6px) rotate(0); opacity: 0 }
+	15% { opacity: 1 }
+	100% { transform: translateY(-30px) rotate(260deg); opacity: 0 }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.champ-badge .crown, .champ-badge .confetti i { animation: none }
+	.champ-badge .confetti i { opacity: .8 }
+}
+
 /* 타임라인 */
 .tl {
 	list-style: none;
