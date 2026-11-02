@@ -3,9 +3,10 @@ RTB 대시보드 데이터 갱신
 
 사용법
   1. 이 폴더에 새로 받은 통계 파일을 넣는다
-       google_openRTB_일자별통계.xls        -> Google RTB 페이지
+       google_openRTB_일자별통계.xls        -> Google RTB 페이지 (openRTB_일자별통계_YYYYMMDDHHMM.xls 이름도 됨)
        kakao_rtb_day_report.xls             -> Kakao RTB 페이지 (rtb_day_report_YYYYMMDD.xls 이름도 됨)
-       rtb_google_frame_stats.xlsx          -> 프레임 AB 테스트 페이지 4개 (예전 이름 rtb_theme_ab_result_*.xlsx 도 됨)
+       rtb_google_frame_stats.xlsx          -> Google 프레임 AB 테스트 페이지 4개 (예전 이름 rtb_theme_ab_result_*.xlsx 도 됨)
+       rtb_kakao_frame_stats.xlsx           -> Kakao 프레임 페이지 2개 (상품 고정 · 비상품), html 폴더에 있어도 찾음
   2. update_data.bat 더블클릭 (또는 python update_data.py)
      프레임 페이지만 갱신하려면 python update_data.py --frames
      Google, Kakao 페이지만 갱신하려면 python update_data.py --rtb
@@ -221,7 +222,7 @@ def xl_size(frame_value):
     return f'{m.group(1)}x{m.group(2)}' if m else '비규격'
 
 
-XL_FIXED = {'blackGold': 'blackgold', 'blackGoldNo': 'blackgold', 'whiteRed': 'whitered', 'whiteRedNo': 'whitered', 'magazine': 'magazine', 'mcnal': 'mcnal'}   # xlsx 테마 → 페이지 테마 id
+XL_FIXED = {'blackGold': 'blackgold', 'blackGoldNo': 'blackgoldno', 'whiteRed': 'whitered', 'whiteRedNo': 'whitered', 'magazine': 'magazine', 'mcnal': 'mcnal'}   # xlsx 테마 → 페이지 테마 id
 XL_AUTO = [   # (시트, 페이지, {프레임 id: 열 접두어}, 지면별.csv frame 매핑)
     # auto_origin 은 기존 프레임의 새 이름
     ('02_autoETC_vs_autoRed_webmob', 'frame_auto_web_page.html', {'redauto': ['autoRedETC(web+mob)'], 'autoetc': ['autoETC(전체)', 'auto_origin(web+mob)']}, {'autoRedETC': 'redauto', 'autoETC': 'autoetc', 'auto_origin': 'autoetc'}),
@@ -230,7 +231,15 @@ XL_AUTO = [   # (시트, 페이지, {프레임 id: 열 접두어}, 지면별.csv
 ]
 
 
-AB_FIXED = {'blackGold': 'blackgold', 'blackGoldNo': 'blackgold', 'whiteRed': 'whitered', 'whiteRedNo': 'whitered', 'magazine': 'magazine', 'mcnal': 'mcnal'}   # theme_ab 테마 → 페이지 테마 id
+# Google: 블랙골드는 가격 표시(blackGold)·가격 숨김(blackGoldNo)을 따로 테마로 (10/14 부터 두 버전 병행). 화이트레드는 9/23 이후 숨김 버전만 나가서 합친 채로 둠
+AB_FIXED = {'blackGold': 'blackgold', 'blackGoldNo': 'blackgoldno', 'whiteRed': 'whitered', 'whiteRedNo': 'whitered', 'magazine': 'magazine', 'mcnal': 'mcnal'}   # theme_ab 테마 → 페이지 테마 id
+# Kakao 상품 고정 페이지: 디자인 A~D 를 하나로 합쳐 다섯 번째 테마로. 블랙골드는 Google 과 같이 가격 표시·숨김을 따로 (카카오는 10/15 부터 두 버전 병행)
+AB_KAKAO_FIXED = {**AB_FIXED, 'A': 'design', 'B': 'design', 'C': 'design', 'D': 'design', 'jelly': 'jelly', 'wjelly': 'wjelly', 'story': 'story'}   # jelly·wjelly 10/14, story 10/21 부터 (카카오만)
+
+
+def ab_groups(group):
+    """비교군 인자: 'theme' 또는 ('theme', 'design') 처럼 여러 개"""
+    return group if isinstance(group, tuple) else (group,)
 AB_DATE = re.compile(r'^\d{4}-\d\d-\d\d')
 
 
@@ -251,12 +260,12 @@ def ab_date(v):
     return str(v)[:10]
 
 
-def update_fixed_ab(ab):
+def update_fixed_ab(ab, themes=AB_FIXED):
     """1_테마_일별, 2_사이즈테마_일별 → (DATA, DDATA, NDATA, SDATA) 행 목록"""
     daily = {}
     for r in ab_table(ab['1_테마_일별']):
         d = ab_date(r['날짜'])
-        for xt, t in AB_FIXED.items():
+        for xt, t in themes.items():
             v = xl_int(r.get(f'{xt}_노출'))
             if v:
                 a = daily.setdefault((d, t), [0, 0])
@@ -265,7 +274,7 @@ def update_fixed_ab(ab):
     rows = sorted([d, t, '', '', v, c] for (d, t), (v, c) in daily.items())
     ddata = []
     for r in ab_table(ab['2_사이즈테마_일별']):
-        t = AB_FIXED.get(str(r['테마']))
+        t = themes.get(str(r['테마']))
         if not t or not xl_int(r['노출']):
             continue
         ddata.append([ab_date(r['날짜']), t, str(r['키']), str(r['사이즈']).replace('_', 'x'), xl_int(r['노출']), xl_int(r['클릭'])])
@@ -335,6 +344,12 @@ def ab_site(tagid):
     return m.group(2) if m else str(tagid)
 
 
+def ab_place_name(r):
+    """지면 표시 이름: 지면명 열이 있으면(Kakao) 그 이름, 없으면(Google) tagid 에서 사이트만"""
+    n = r.get('지면명')
+    return str(n).strip() if n not in (None, '') else ab_site(r['tagid'])
+
+
 def ab_full_rows(ab, sheet):
     """A, B, C 전체 시트 → dict 목록"""
     rows = ab[sheet]
@@ -364,18 +379,18 @@ def ab_daily_cum(items, day_n=None, cum_n=None):
 
 def ab_full_places(ab, group, frame_of):
     """A_지면일별 → 사이트 기준 일별, 누적"""
-    return ab_daily_cum((ab_date(r['날짜']), frame_of(str(r['테마또는프레임'])), ab_site(r['tagid']), xl_int(r['노출']), xl_int(r['클릭']))
-                        for r in ab_full_rows(ab, 'A_지면일별') if r['비교군'] == group)
+    return ab_daily_cum((ab_date(r['날짜']), frame_of(str(r['테마또는프레임'])), ab_place_name(r), xl_int(r['노출']), xl_int(r['클릭']))
+                        for r in ab_full_rows(ab, 'A_지면일별') if r['비교군'] in ab_groups(group))
 
 
 AB_TAG_DAY_N, AB_TAG_CUM_N = 40, 100   # 태그×사이즈 표에 넣을 일별, 누적 상위 지면 수
 
 
-def ab_full_tag_sizes(ab):
+def ab_full_tag_sizes(ab, group='theme'):
     """A_지면일별 theme 비교군 → 태그×사이즈 기준 일별 [날짜, xlsx 테마, tagid, 사이즈, 노출, 클릭], 누적 [xlsx 테마, tagid, 사이즈, 노출, 클릭]
     테마는 xlsx 이름 그대로 (blackGoldNo 같은 가격 숨김 변형, mcnal 등 새 테마도 그대로 들어감)"""
-    daily, cum = ab_daily_cum(((ab_date(r['날짜']), str(r['테마또는프레임']), f"{r['tagid']}|{r['사이즈']}", xl_int(r['노출']), xl_int(r['클릭']))
-                               for r in ab_full_rows(ab, 'A_지면일별') if r['비교군'] == 'theme' and re.fullmatch(r'\d+_\d+', str(r['사이즈']))),
+    daily, cum = ab_daily_cum(((ab_date(r['날짜']), str(r['테마또는프레임']), f"{ab_place_name(r)}|{r['사이즈']}", xl_int(r['노출']), xl_int(r['클릭']))
+                               for r in ab_full_rows(ab, 'A_지면일별') if r['비교군'] in ab_groups(group) and re.fullmatch(r'\d+_\d+', str(r['사이즈']))),
                               AB_TAG_DAY_N, AB_TAG_CUM_N)
     return [[d, t, *k.split('|'), v, c] for d, t, k, v, c in daily], [[t, *k.split('|'), v, c] for t, k, v, c in cum]
 
@@ -393,10 +408,10 @@ def ab_full_np_sizes(ab):
                         for r in ab_full_rows(ab, 'C_비상품요청사이즈일별') if re.fullmatch(r'\d+_\d+', str(r['요청사이즈'])))
 
 
-def update_fixed_xlsx(sheets, ab=None):
+def update_fixed_xlsx(sheets, ab=None, page='frame_test_history_page.html', themes=AB_FIXED, group='theme'):
     """상품 고정 페이지 갱신, DATA [날짜, 테마, '', '', 노출, 클릭], NDATA [테마, 이름, 사이즈, 노출, 클릭], SDATA [테마, 사이즈, 노출, 클릭]"""
     if ab:
-        rows, daily, ndata, sdata = update_fixed_ab(ab)
+        rows, daily, ndata, sdata = update_fixed_ab(ab, themes)
     else:
         daily = {}
         for r in xl_table(sheets['01_테마별_추이'], 'date', 'blackGold_views'):
@@ -420,7 +435,6 @@ def update_fixed_xlsx(sheets, ab=None):
         sdata = sorted([t, size, v, c] for (t, size), (v, c) in by_size.items())
         daily = read_fixed_daily()
         daily += derive_missing_daily(rows, ndata, daily)
-    page = 'frame_test_history_page.html'
     p = os.path.join(HTML_DIR, page)
     src = open(p, encoding='utf-8').read()
     src = set_block(src, 'DATA', 'DATA', dump_rows(rows), page)
@@ -428,14 +442,14 @@ def update_fixed_xlsx(sheets, ab=None):
     src = set_block(src, 'NDATA', 'NDATA', dump_rows(ndata), page)
     src = set_block(src, 'DDATA', 'DDATA', dump_rows(daily), page)
     if ab and 'A_지면일별' in ab:
-        places, xplaces = ab_full_places(ab, 'theme', lambda v: AB_FIXED.get(v))
+        places, xplaces = ab_full_places(ab, group, lambda v: themes.get(v))
     elif ab and '6b_tagid_TOP15_일별' in ab:
         places, xplaces = ab_places_daily(ab), ab_places(ab)
     else:
         places, xplaces = read_fixed_places(), xl_places(sheets, fixed_frame_of)
     src = set_block(src, 'PDATA', 'PDATA', dump_rows(places), page)
     src = set_block(src, 'XPDATA', 'XPDATA', dump_rows(xplaces), page)
-    tags, xtags = ab_full_tag_sizes(ab) if ab and 'A_지면일별' in ab else ([], [])
+    tags, xtags = ab_full_tag_sizes(ab, group) if ab and 'A_지면일별' in ab else ([], [])
     src = set_block(src, 'TSDATA', 'TSDATA', dump_rows(tags), page)
     src = set_block(src, 'XTSDATA', 'XTSDATA', dump_rows(xtags), page)
     open(p, 'w', encoding='utf-8', newline='').write(src)
@@ -456,7 +470,7 @@ def update_fixed_xlsx(sheets, ab=None):
 
 ETC_PLACE = '기타 지면'
 PLACE_N = 12
-FIXED_KEYWORD = {'blackgold': 'blackgold', 'whitered': 'whitered', 'magazine': 'magazine', 'mcnal': 'mcnal'}   # frame_value 키워드 → 테마 id
+FIXED_KEYWORD = {'blackgoldno': 'blackgoldno', 'blackgold': 'blackgold', 'whitered': 'whitered', 'magazine': 'magazine', 'mcnal': 'mcnal'}   # frame_value 키워드 → 테마 id (blackgoldno 를 blackgold 보다 먼저 검사)
 
 
 def nonproduct_frame(fv):
@@ -653,6 +667,7 @@ AB_AUTO = {   # 페이지 → (시트, {프레임 id: [열 접두어]})
     'frame_auto_web_page.html': ('3_autoRED_vs_autoETC', {'redauto': ['RED'], 'autoetc': ['ETC']}),
     'frame_auto_app_page.html': ('4_app_coupang_RED_ETC', {'redauto': ['RED'], 'coupangetc': ['COUPANG', 'ETC']}),
     'frame_nonproduct_page.html': ('5_비상품화_일별', {'iauto': ['auto형(iauto+auto_i)'], 'isize': ['사이즈형(i{size})']}),
+    'kakao_frame_nonproduct_page.html': ('5_비상품화_일별', {'iauto': ['auto형(iauto+auto_i)'], 'isize': ['사이즈형(i{size})']}),
 }
 
 
@@ -709,13 +724,34 @@ def update_frames_xlsx(path, ab_path=None):
         write_auto(page, rows, places, extra=extra)
 
 
+def update_kakao_frames(ab_path):
+    """rtb_kakao_frame_stats.xlsx → Kakao 프레임 페이지 2개 (상품 고정 테마 · 비상품). 디자인 A~D 는 상품 고정 페이지에 하나로 합쳐 들어감
+    시트 구성은 Google 파일과 같고 오토 배너 시트(3_, 4_, B_)만 없음. 디자인 A~D 는 1_테마_일별의 A_~D_ 열과 A_지면일별의 비교군 design 에서 읽어 design 테마로 합침"""
+    ab = load_xlsx(ab_path)
+    print('[Kakao 프레임 xlsx] ' + os.path.basename(ab_path))
+    update_fixed_xlsx({}, ab, 'kakao_frame_test_history_page.html', AB_KAKAO_FIXED, ('theme', 'design'))
+    page = 'kakao_frame_nonproduct_page.html'
+    ab_sheet, ab_cols = AB_AUTO[page]
+    rows = []
+    for r in ab_table(ab[ab_sheet]):
+        d = ab_date(r['날짜'])
+        for t, names in ab_cols.items():
+            v = sum(xl_int(r.get(f'{c}_노출')) for c in names)
+            if v:
+                rows.append([d, t, v, sum(xl_int(r.get(f'{c}_클릭')) for c in names)])
+    rows.sort()
+    sdaily, scum = ab_full_np_sizes(ab)
+    pdaily, places = ab_full_places(ab, 'nonprod', {'iauto': 'iauto', 'i사이즈': 'isize'}.get)
+    write_auto(page, rows, places, extra={'ASDATA': scum, 'ASDDATA': sdaily, 'APDDATA': pdaily})
+
+
 if __name__ == '__main__':
     if '--places' in sys.argv:   # tag_stats 폴더 → 지면별 csv 만 생성
         build_places(sys.argv[sys.argv.index('--places') + 1])
         sys.exit()
     if '--frames' not in sys.argv:
         for label, pattern, reader, page in [
-            ('Google', 'google_openRTB_*.xls', read_google, 'google_rtb_dashboard_page.html'),
+            ('Google', '*openRTB_*.xls', read_google, 'google_rtb_dashboard_page.html'),
             ('Kakao', '*rtb_day_report*.xls', read_kakao, 'kakao_rtb_dashboard_page.html'),
         ]:
             files = glob.glob(os.path.join(DIR, pattern))
@@ -731,4 +767,9 @@ if __name__ == '__main__':
     if not ab and not xlsx:
         sys.exit('rtb_google_frame_stats.xlsx (또는 rtb_theme_ab_result_*.xlsx) 파일이 없어 프레임 페이지는 갱신하지 못했습니다')
     update_frames_xlsx(max(xlsx, key=os.path.getmtime) if xlsx else None, max(ab, key=os.path.getmtime) if ab else None)
+    kakao = glob.glob(os.path.join(DIR, 'rtb_kakao_frame_stats*.xlsx')) + glob.glob(os.path.join(HTML_DIR, 'rtb_kakao_frame_stats*.xlsx'))
+    if kakao:
+        update_kakao_frames(max(kakao, key=os.path.getmtime))
+    else:
+        print('rtb_kakao_frame_stats.xlsx 가 없어 Kakao 프레임 페이지는 갱신하지 않았습니다')
     print('완료')
