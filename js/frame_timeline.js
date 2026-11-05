@@ -1,7 +1,7 @@
 /* 프레임 변경 Timeline, 프레임 AB 테스트 네 페이지가 공유
    ch: 채널, type: deploy | ratio | copy | fix, theme: 프레임 id, why: 테스트 사유·가설 (있으면 표시) */
 const TIMELINE = [
-    { d: '2026-11-04', ch: '구글', type: 'deploy', theme: 'magauto', title: '상품 오토 배너에 매거진오토 디자인 추가', desc: '웹·모바일과 앱의 상품 오토 배너에 매거진 디자인을 추가해 레드오토와 함께 내보냅니다. 가격 표시(auto_magazine)·가격 숨김(auto_magazineNo) 두 버전이 있는데 통계에서는 하나로 합산되며, 첫날 노출은 가격 숨김 버전으로 웹·모바일 약 6.2만(오토 배너의 약 8%), 앱 약 2.7만(약 2%)이었습니다.' },
+    { d: '2026-11-04', ch: '구글', type: 'deploy', theme: 'magauto', title: '상품 오토 배너에 매거진오토 디자인 추가', desc: '웹·모바일과 앱의 상품 오토 배너에 매거진 디자인을 추가해 레드오토와 함께 내보냅니다. 가격 표시(auto_magazine)·가격 숨김(auto_magazineNo) 두 버전을 따로 집계합니다. 첫날 노출은 웹·모바일 가격 표시 약 6.2만 · 가격 숨김 약 6.3만(둘이 오토 배너의 약 15%), 앱 가격 표시 약 2.7만 · 가격 숨김 약 4.9만(약 5%)이었습니다.' },
     { d: '2026-11-04', ch: '구글', type: 'deploy', theme: 'iautoflip', title: '비상품 오토 배너에 플립·글로우 디자인 추가', desc: '비상품 오토 배너(iauto)에 플립·글로우 두 새 디자인을 추가해 기존 블랙골드 디자인과 나눠 내보냅니다. 첫날 기존 블랙골드 약 93만 노출(75%), 플립·글로우 각 약 15.5만 노출(각 12~13%)로 시작했습니다.' },
     { d: '2026-11-04', ch: '카카오', type: 'deploy', theme: 'iautoflip', title: '비상품 오토 배너에 플립·글로우 디자인 추가', desc: '카카오 비상품 오토 배너(iauto)에도 플립·글로우 두 새 디자인을 추가해 기존 블랙골드 디자인과 나눠 내보냅니다. 첫날 기존 블랙골드 약 116만 노출(82%), 플립·글로우 각 약 13만 노출(각 9%)으로 시작했습니다.' },
     { d: '2026-10-29', ch: '카카오', type: 'ratio', theme: 'magazine', title: '스토리·기존 디자인 A~D 테스트 종료 · 매거진 단독 노출', desc: '카카오 상품 고정 배너에서 스토리와 기존 디자인 A~D 노출을 중단했습니다. 기존 디자인은 10/28에 절반(약 34만 노출)으로 줄였다가 10/29부터 안 나가고, 스토리는 10/28(약 67만)까지 나가고 10/29부터 안 나갑니다. 이날부터 구글(10/27~)과 같이 매거진 하나만 나갑니다. 10/22부터 시작한 3종 균등 노출은 10/27까지 이어졌고, 10/26~10/27은 카카오 전체 RTB 노출이 일 약 540만에서 820만으로 늘면서 3종 각 약 100만 노출로 커졌습니다. 9/22 집계 시작 이후 비교한 테마 중 매거진만 남았습니다.', why: '3종 균등 기간(10/22~10/27) 클릭률이 매거진 0.190% > 기존 디자인 A~D 0.173% > 스토리 0.146%. 기준선이던 기존 디자인까지 매거진에 밀려 매거진으로 통일.' },
@@ -45,7 +45,8 @@ const TL_TARGET = {
     wjelly: { id: 'wjelly', name: '화이트 젤리 프레임', color: '#f472b6', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/wjelly/ui/openRtb_wjelly_250x250_ui.html' },
     story: { id: 'story', name: '스토리 프레임', color: '#0ea5e9', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/story/ui/openRtb_story_250_250_ui.html' },
     redauto: { id: 'redauto', name: '레드오토 프레임', color: '#e0262f', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/auto/dev/openRtbAuto_red.html', tpl: true },
-    magauto: { id: 'magauto', name: '매거진오토 (가격 숨김) 프레임', color: '#8b5cf6', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/auto/ui/openRtbAuto_magazine_noprice_ui.html' },
+    magauto: { id: 'magauto', name: '매거진오토 (가격 표시) 프레임', color: '#8b5cf6', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/auto/ui/openRtbAuto_magazine_ui.html' },
+    magautono: { id: 'magautono', name: '매거진오토 (가격 숨김) 프레임', color: '#d946ef', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/auto/ui/openRtbAuto_magazine_noprice_ui.html' },
     iautoflip: { id: 'iautoflip', name: 'iauto 플립 프레임', color: '#f59e0b', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/nonItem/ui/openRtbBanner_nonitem_flip_ui.html' },
     iautoglow: { id: 'iautoglow', name: 'iauto 글로우 프레임', color: '#14b8a6', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/nonItem/ui/openRtbBanner_nonitem_glow_ui.html' },
     autoorigin: { id: 'autoorigin', name: 'auto_origin 프레임 (기존 오토 배너)', color: '#22c55e' },
