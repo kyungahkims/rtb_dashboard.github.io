@@ -33,8 +33,11 @@ const GHOST_OUTFIT = {
     // 매거진: 보라색 베레모 (아직 살아 있어 비석은 없지만 종료되면 바로 입음)
     magazine: `<path d="M11 12q21-18 42 0q-21 5-42 0z" fill="#8b5cf6"/><path d="M14 12q18 4 36 0" stroke="#6d3fd1" stroke-width="2" fill="none"/><circle cx="36" cy="-2" r="2.2" fill="#6d3fd1"/>`,
 };
-// i사이즈별 고정 프레임 (비상품, 9/2 종료): 할머니 — 기존 디자인 A~D 와 같은 쪽진 머리·안경·볼터치에 초록(테마색) 뜨개 숄
-GHOST_OUTFIT.isize = GHOST_OUTFIT.design.split('#1fb5a3').join('#22c55e');
+// i사이즈별 고정 프레임 (비상품, 구글 9/2 · 카카오 데이터 시작 전 종료): 뽀글머리 할머니 — 회색 파마머리 · 동그란 안경 · 볼터치 · 초록(테마색) 뜨개 숄
+GHOST_OUTFIT.isize = `<g fill="#d8dbe0" stroke="#9aa0a8" stroke-width="1.4"><circle cx="11" cy="24" r="5.5"/><circle cx="15" cy="15" r="5.5"/><circle cx="22" cy="8" r="5.5"/><circle cx="32" cy="4" r="6"/><circle cx="42" cy="8" r="5.5"/><circle cx="49" cy="15" r="5.5"/><circle cx="53" cy="24" r="5.5"/><circle cx="20" cy="17" r="5"/><circle cx="27" cy="12" r="5"/><circle cx="37" cy="12" r="5"/><circle cx="44" cy="17" r="5"/><circle cx="14" cy="32" r="4.5"/><circle cx="50" cy="32" r="4.5"/></g>
+        <circle cx="23" cy="30" r="6" fill="none" stroke="#6b7280" stroke-width="1.8"/><circle cx="41" cy="30" r="6" fill="none" stroke="#6b7280" stroke-width="1.8"/><path d="M29 30h6M17 29l-4 2M47 29l4 2" stroke="#6b7280" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="16" cy="39" r="3" fill="#fbcfe8"/><circle cx="48" cy="39" r="3" fill="#fbcfe8"/>
+        <path d="M9 49q23 15 46 0v7q-23 15-46 0z" fill="#22c55e"/><path d="M13 54q19 11 38 0" stroke="#fff" stroke-width="1.4" fill="none" stroke-dasharray="2 3"/><path d="M12 57l-2 7M52 57l2 7M22 61l-1 6M42 61l1 6" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>`;
 // auto_origin 프레임 (상품 오토 기존 디자인, 10/7 종료): 할아버지 — 갈색 중절모 · 흰 눈썹 · 동그란 안경 · 흰 수염 · 초록(테마색) 나비넥타이 · 지팡이
 GHOST_OUTFIT.autoetc = `<path d="M11 17q21-9 42 0l-4-11q-17-6-34 0z" fill="#5b4636"/><path d="M7 18q25-9 50 0q-25 6-50 0z" fill="#3f2f24"/><path d="M15 9q17-4 34 0" stroke="#8b6b4a" stroke-width="2" fill="none"/>
         <path d="M16 23q7-4 13 0M35 23q6-4 13 0" stroke="#e5e7eb" stroke-width="3" stroke-linecap="round"/>
