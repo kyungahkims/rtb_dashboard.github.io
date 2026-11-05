@@ -41,8 +41,9 @@
 /* 테마별 성과 박스 */
 .themes {
 	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	gap: 14px
+	grid-template-columns: repeat(3, 1fr);
+	gap: 14px;
+	align-items: start   /* 상품 고정 페이지와 같은 3열. 유언장을 펼친 카드만 늘어나고 옆 카드는 그대로 */
 }
 
 .theme {
