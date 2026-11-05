@@ -145,10 +145,13 @@
         /* 설정 */
         const sw = T => `background:${T.color}${T.ring ? `;box-shadow:inset 0 0 0 2px ${T.ring}` : ''}`;
         const cv = T => `--c:${T.color}${T.ring ? `;--r:${T.ring}` : ''}`;
-        // iauto: 비상품 오토, isize: 사이즈별 고정 12개
+        // iauto: 비상품 오토 기존 태그(auto_i, 블랙골드 디자인), iautobg: 같은 디자인의 새 태그(auto_i_blackGold, 11/04~), iautoflip·iautoglow: 11/04 투입 새 디자인, isize: 사이즈별 고정 12개
         const THEMES = [
-            { id: 'iauto', name: 'iauto 프레임', ab: 'after', ch: '구글', code: 'iauto', desc: '비상품 auto · 09-02 투입', color: '#3446b8', src: '',
+            { id: 'iauto', name: 'iauto 프레임', ab: 'after', ch: '구글', code: 'iauto', desc: '비상품 auto (블랙골드 디자인) · 09-02 투입 · 11-04 부터는 기존 태그(auto_i) 분만', color: '#3446b8', src: '',
               img: 'https://manage.mobon.net/ad/imgfile//20240617185940-tJb4iOIAxf-336x280.jpg', view: 'https://kyungahkims.github.io/openRtb_banners.github.io/total_banners_view.html' },
+            { id: 'iautobg', name: '블랙골드 (기존 iauto 디자인) 프레임', ab: 'after', ch: '구글', code: 'auto_i_blackGold', desc: '기존 iauto 와 같은 블랙골드 디자인 · 11-04 부터 새 태그로 플립·글로우와 나눠 노출', color: '#2b2d31', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/nonItem/ui/openRtbBanner_blackGold_non_Item_auto_ui.html', view: 'https://kyungahkims.github.io/openRtb_banners.github.io/nonItem_banners_view.html' },
+            { id: 'iautoflip', name: 'iauto 플립 프레임', ab: 'after', ch: '구글', code: 'auto_i_flip', desc: '비상품 auto 플립 디자인 · 11-04 투입', color: '#f59e0b', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/nonItem/ui/openRtbBanner_nonitem_flip_ui.html', view: 'https://kyungahkims.github.io/openRtb_banners.github.io/nonItem_banners_view.html' },
+            { id: 'iautoglow', name: 'iauto 글로우 프레임', ab: 'after', ch: '구글', code: 'auto_i_glow', desc: '비상품 auto 글로우 디자인 · 11-04 투입', color: '#14b8a6', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/nonItem/ui/openRtbBanner_nonitem_glow_ui.html', view: 'https://kyungahkims.github.io/openRtb_banners.github.io/nonItem_banners_view.html' },
             { id: 'isize', name: 'i사이즈별 고정 프레임 (12개)', ab: 'before', ch: '구글', code: 'i{가로}_{세로}', desc: 'i사이즈별 고정 프레임 (12개)', color: '#22c55e', src: '' },
         ];
         const AB_LABEL = { after: 'After · 신규', before: 'Before · 기존' };
@@ -219,7 +222,10 @@
             ["2026-11-01", "iauto", 900191, 230],
             ["2026-11-02", "iauto", 1225279, 293],
             ["2026-11-03", "iauto", 1282185, 265],
-            ["2026-11-04", "iauto", 1240795, 301],
+            ["2026-11-04", "iauto", 775124, 167],
+            ["2026-11-04", "iautobg", 154736, 46],
+            ["2026-11-04", "iautoflip", 155902, 43],
+            ["2026-11-04", "iautoglow", 155033, 45],
         ];
         /* ADATA:END */
         /* 지면별 누적 [프레임, 지면, 노출, 클릭] */

@@ -1,6 +1,9 @@
 /* 프레임 변경 Timeline, 프레임 AB 테스트 네 페이지가 공유
    ch: 채널, type: deploy | ratio | copy | fix, theme: 프레임 id, why: 테스트 사유·가설 (있으면 표시) */
 const TIMELINE = [
+    { d: '2026-11-04', ch: '구글', type: 'deploy', theme: 'magauto', title: '상품 오토 배너에 매거진오토 디자인 추가', desc: '웹·모바일과 앱의 상품 오토 배너에 매거진 디자인을 추가해 레드오토와 함께 내보냅니다. 가격 표시(auto_magazine)·가격 숨김(auto_magazineNo) 두 버전이 있는데 통계에서는 하나로 합산되며, 첫날 노출은 가격 숨김 버전으로 웹·모바일 약 6.2만(오토 배너의 약 8%), 앱 약 2.7만(약 2%)이었습니다.' },
+    { d: '2026-11-04', ch: '구글', type: 'deploy', theme: 'iautobg', title: '비상품 오토 배너에 플립·글로우 디자인 추가', desc: '비상품 오토 배너(iauto)에 플립·글로우 두 새 디자인을 추가했습니다. 기존 블랙골드 디자인은 기존 태그(auto_i)와 새 태그(auto_i_blackGold) 두 갈래로 나가서, 첫날 기존 태그 약 78만 노출, 블랙골드 새 태그·플립·글로우 각 약 15.5만 노출(각 12~13%)로 시작했습니다.' },
+    { d: '2026-11-04', ch: '카카오', type: 'deploy', theme: 'iautobg', title: '비상품 오토 배너에 플립·글로우 디자인 추가', desc: '카카오 비상품 오토 배너(iauto)에도 플립·글로우 두 새 디자인을 추가했습니다. 기존 블랙골드 디자인은 기존 태그와 새 태그(auto_i_blackGold)로 나뉘어, 첫날 기존 태그 약 96만, 블랙골드 새 태그 약 21만(15%), 플립·글로우 각 약 13만(9%) 노출로 시작했습니다.' },
     { d: '2026-10-29', ch: '카카오', type: 'ratio', theme: 'magazine', title: '스토리·기존 디자인 A~D 테스트 종료 · 매거진 단독 노출', desc: '카카오 상품 고정 배너에서 스토리와 기존 디자인 A~D 노출을 중단했습니다. 기존 디자인은 10/28에 절반(약 34만 노출)으로 줄였다가 10/29부터 안 나가고, 스토리는 10/28(약 67만)까지 나가고 10/29부터 안 나갑니다. 이날부터 구글(10/27~)과 같이 매거진 하나만 나갑니다. 10/22부터 시작한 3종 균등 노출은 10/27까지 이어졌고, 10/26~10/27은 카카오 전체 RTB 노출이 일 약 540만에서 820만으로 늘면서 3종 각 약 100만 노출로 커졌습니다. 9/22 집계 시작 이후 비교한 테마 중 매거진만 남았습니다.', why: '3종 균등 기간(10/22~10/27) 클릭률이 매거진 0.190% > 기존 디자인 A~D 0.173% > 스토리 0.146%. 기준선이던 기존 디자인까지 매거진에 밀려 매거진으로 통일.' },
     { d: '2026-10-27', ch: '구글', type: 'ratio', theme: 'magazine', title: '블랙골드 (가격 숨김) 테스트 종료 · 매거진 단독 노출', desc: '구글 상품 고정 배너에서 블랙골드 (가격 숨김) 노출을 중단했습니다. 10/26까지 나가고(마지막 날 약 68만 노출) 10/27부터 안 나갑니다. 이날부터 상품 고정 배너는 매거진 하나만 나갑니다. 같은 시기 구글 전체 RTB 노출이 일 약 280만에서 700만대로 늘어 매거진 노출도 10/25 약 29만에서 10/27 약 305만으로 커졌습니다. 8/26 블랙골드 출시로 시작한 프레임 AB 테스트에서 매거진 외 테마는 모두 종료됐습니다.', why: '둘만 남은 10/20~10/26 동안 매거진 0.031% > 블랙골드 (가격 숨김) 0.023%로 매거진 우세가 유지돼 매거진으로 통일. 단독 노출 첫 이틀(10/27~28) 매거진 클릭률은 0.035%.' },
     { d: '2026-10-22', ch: '카카오', type: 'ratio', theme: 'magazine', title: '블랙골드 (가격 표시·숨김)·화이트 젤리 테스트 종료 · 매거진·스토리·기존 디자인 A~D 3종 균등', desc: '카카오 상품 고정 배너에서 블랙골드 두 버전과 화이트 젤리 노출을 중단했습니다. 이날부터 매거진·스토리·기존 디자인 A~D 3종이 각 약 70만 노출로 균등하게 나갑니다(10/24부터는 각 약 57만). 구글은 변동 없이 블랙골드 (가격 숨김)·매거진 2종이 약 65:35로 나갑니다.', why: '10/20~10/21 클릭률이 매거진 0.221% > 블랙골드 가격 표시 0.208% ≈ 가격 숨김 0.205% > 화이트 젤리 0.179%로 매거진에 못 미쳐, 1위 매거진과 신규 스토리, 기준선인 기존 디자인 A~D만 남겨 비교.' },
@@ -40,6 +43,10 @@ const TL_TARGET = {
     wjelly: { id: 'wjelly', name: '화이트 젤리 프레임', color: '#f472b6', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/wjelly/ui/openRtb_wjelly_250x250_ui.html' },
     story: { id: 'story', name: '스토리 프레임', color: '#0ea5e9', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/story/ui/openRtb_story_250_250_ui.html' },
     redauto: { id: 'redauto', name: '레드오토 프레임', color: '#e0262f', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/auto/dev/openRtbAuto_red.html', tpl: true },
+    magauto: { id: 'magauto', name: '매거진오토 프레임', color: '#8b5cf6', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/auto/dev/openRtbAuto_magazine.html', tpl: true },
+    iautobg: { id: 'iautobg', name: '블랙골드 (기존 iauto 디자인) 프레임', color: '#2b2d31', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/nonItem/ui/openRtbBanner_blackGold_non_Item_auto_ui.html' },
+    iautoflip: { id: 'iautoflip', name: 'iauto 플립 프레임', color: '#f59e0b', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/nonItem/ui/openRtbBanner_nonitem_flip_ui.html' },
+    iautoglow: { id: 'iautoglow', name: 'iauto 글로우 프레임', color: '#14b8a6', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/nonItem/ui/openRtbBanner_nonitem_glow_ui.html' },
     autoorigin: { id: 'autoorigin', name: 'auto_origin 프레임 (기존 오토 배너)', color: '#22c55e' },
     common: { id: 'common', name: '공통 (전체 프레임)', color: '#9aa0a8' },
     design: { id: 'design', name: '기존 디자인 A~D (카카오)', color: '#3446b8' },
