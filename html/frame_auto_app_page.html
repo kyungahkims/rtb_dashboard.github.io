@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>상품 오토 프레임 (앱)</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@700&display=swap">
     <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/tomb.css">
     <link rel="stylesheet" href="../css/frame_auto_app_page.css">
 </head>
 <body>
@@ -117,6 +119,7 @@
     </button>
     <script src="../js/holidays.js"></script>
     <script src="../js/frame_timeline.js"></script>
+    <script src="../js/ghost_outfits.js"></script>
     <script>
         /* 설정 */
         const sw = T => `background:${T.color}${T.ring ? `;box-shadow:inset 0 0 0 2px ${T.ring}` : ''}`;
@@ -125,9 +128,11 @@
         const THEMES = [
             { id: 'redauto', name: '레드오토 프레임', ab: 'after', ch: '구글', code: 'autoRedETC', desc: '상품 auto · 09-09 투입', color: '#e0262f',
               src: 'https://kyungahkims.github.io/openRtb_banners.github.io/auto/dev/openRtbAuto_red.html', tpl: true, view: 'https://kyungahkims.github.io/openRtb_banners.github.io/dev_openRtbAuto_view.html' },
-            { id: 'magauto', name: '매거진오토 프레임', ab: 'after', ch: '구글', code: 'auto_magazineNo', desc: '상품 auto · 11-04 투입 · 가격 표시·숨김 합산 (지금까지 노출은 가격 숨김 auto_magazineNo)', color: '#8b5cf6',
-              src: 'https://kyungahkims.github.io/openRtb_banners.github.io/auto/dev/openRtbAuto_magazine.html', tpl: true, view: 'https://kyungahkims.github.io/openRtb_banners.github.io/openRtbAuto_magazine_noprice_view.html' },
-            { id: 'coupangetc', name: 'auto_origin 프레임', ab: 'before', ch: '구글', code: 'auto_origin', desc: 'auto_origin 프레임 (기존)', color: '#22c55e', src: '' },
+            { id: 'magauto', name: '매거진오토 (가격 숨김) 프레임', ab: 'after', ch: '구글', code: 'auto_magazineNo', desc: '상품 auto · 11-04 투입 · 가격 숨김 버전 (가격 표시 버전은 아직 노출 없음)', color: '#8b5cf6',
+              src: 'https://kyungahkims.github.io/openRtb_banners.github.io/auto/ui/openRtbAuto_magazine_noprice_ui.html', view: 'https://kyungahkims.github.io/openRtb_banners.github.io/openRtbAuto_magazine_noprice_view.html' },
+            { id: 'coupangetc', name: 'auto_origin 프레임', ab: 'before', ch: '구글', code: 'auto_origin', desc: 'auto_origin 프레임 (기존)', color: '#22c55e', src: '',
+              retired: '2026-10-08', epitaph: '원조는 원조였다',
+              will: '나는 처음부터 있던 앱 오토 배너야.<br>9월 9일 <u>레드오토</u>가 와서 비교당했고, 9월 22일 잠깐 자리를 되찾았다가 9월 28일 다시 물러났어.<br>클릭률 0.124%, 레드오토(0.129%)한테 조금 밀렸지.<br>10월 7일을 끝으로 할아버지는 물러난다. <span class="x">새 옷이 더 잘 팔리더라.</span>' },   // retired: 노출 0이 된 첫날 → 카드가 묘비로, 비석을 누르면 유언장
         ];
         const AB_LABEL = { after: 'After · 신규', before: 'Before · 기존' };
         const MIN_IMP = 1000;   // 노출이 이보다 적으면 CTR 집계 제외
@@ -3153,6 +3158,31 @@
         initTimeline();   // frame_timeline.js
 
         /* 프레임 테마별 성과 */
+        // 이름 끝 한글의 받침에 맞춰 이/가를 붙임
+        const josa = w => { const h = [...w].reverse().find(ch => ch >= '가' && ch <= '힣'); return w + (h && (h.charCodeAt(0) - 0xAC00) % 28 ? '이' : '가'); };
+        /* 종료된 프레임(T.retired)은 배너 대신 묘비 + 유령 (상품 고정 페이지와 같은 장치, css/tomb.css · js/ghost_outfits.js 공유). 비문: 데이터 기간 · 최종 클릭률 · 순위 · T.epitaph */
+        function tombArt(T, s, ds, rank) {
+            const period = ds.length ? `${ds[0].replace(/-/g, '.')} – ${ds[ds.length - 1].slice(5).replace('-', '.')}` : '';
+            return `<div class="tomb" role="button" tabindex="0" title="비석을 누르면 유언장" aria-label="${T.name} 유언장 펼치기/접기"><svg class="tomb-svg" viewBox="0 0 190 218" aria-hidden="true"><path d="M30 200V70a65 65 0 0 1 130 0v130z" fill="#9aa3b2" stroke="#6b7482" stroke-width="3"/><path d="M40 196V72a55 55 0 0 1 110 0v124z" fill="#b4bcc8"/><rect x="16" y="196" width="158" height="16" rx="3" fill="#7d8694"/><path d="M8 212h174" stroke="#7a7f38" stroke-width="6" stroke-linecap="round"/><path d="M20 212q4-10 8 0M150 212q4-12 8 0M60 214q3-8 6 0" fill="#9a9c44"/><g transform="translate(6 209) rotate(-12) scale(1)"><path d="M0 0q8-9 17 0q-9 9-17 0z" fill="#d9622a"/><path d="M2 0h13" stroke="rgba(0,0,0,.28)" stroke-width="1"/></g><g transform="translate(24 214) rotate(10) scale(0.85)"><path d="M0 0q8-9 17 0q-9 9-17 0z" fill="#e9a53b"/><path d="M2 0h13" stroke="rgba(0,0,0,.28)" stroke-width="1"/></g><g transform="translate(52 211) rotate(-28) scale(0.9)"><path d="M0 0q8-9 17 0q-9 9-17 0z" fill="#b9452b"/><path d="M2 0h13" stroke="rgba(0,0,0,.28)" stroke-width="1"/></g><g transform="translate(120 213) rotate(18) scale(0.8)"><path d="M0 0q8-9 17 0q-9 9-17 0z" fill="#e9a53b"/><path d="M2 0h13" stroke="rgba(0,0,0,.28)" stroke-width="1"/></g><g transform="translate(140 208) rotate(-8) scale(1)"><path d="M0 0q8-9 17 0q-9 9-17 0z" fill="#d9622a"/><path d="M2 0h13" stroke="rgba(0,0,0,.28)" stroke-width="1"/></g><g transform="translate(166 213) rotate(24) scale(0.9)"><path d="M0 0q8-9 17 0q-9 9-17 0z" fill="#c9752e"/><path d="M2 0h13" stroke="rgba(0,0,0,.28)" stroke-width="1"/></g><g transform="translate(176 207) rotate(-20) scale(0.8)"><path d="M0 0q8-9 17 0q-9 9-17 0z" fill="#b9452b"/><path d="M2 0h13" stroke="rgba(0,0,0,.28)" stroke-width="1"/></g><g transform="translate(84 4) rotate(-14) scale(0.95)"><path d="M0 0q8-9 17 0q-9 9-17 0z" fill="#d9622a"/><path d="M2 0h13" stroke="rgba(0,0,0,.28)" stroke-width="1"/></g><g transform="translate(142 36) rotate(38) scale(0.8)"><path d="M0 0q8-9 17 0q-9 9-17 0z" fill="#e9a53b"/><path d="M2 0h13" stroke="rgba(0,0,0,.28)" stroke-width="1"/></g></svg><div class="ep"><small>HERE LIES</small><b>${T.name.replace(' 프레임', '').replace(' (', '<br>(')}</b><i>${period}</i><i>${s.imp ? `CTR ${pct(s.ctr)}${rank ? ` · ${rank}위` : ''}` : '데이터 없음'}</i>${T.epitaph ? `<q>${T.epitaph}</q>` : ''}</div><div class="ghost" aria-hidden="true"><svg viewBox="0 0 64 76" overflow="visible"><path d="M32 2C17 2 6 14 6 29v40c0 3 3 4 5 2l5-5 5 5c2 2 4 2 6 0l5-5 5 5c2 2 4 2 6 0l5-5 5 5c2 2 5 1 5-2V29C58 14 47 2 32 2z" fill="#fff" stroke="#9aa0a8" stroke-width="2"/><circle cx="23" cy="30" r="4" fill="#2b2d31"/><circle cx="41" cy="30" r="4" fill="#2b2d31"/><path d="M26 44q6 5 12 0" stroke="#2b2d31" stroke-width="2.5" fill="none" stroke-linecap="round"/>${ghostOutfit(T.id)}</svg></div><span class="leaves" aria-hidden="true"><i></i><i></i><i></i></span><span class="tomb-say">마지막 인사 보기</span></div>`;
+        }
+        // 종료된 카드의 비석을 누르면 유언장 펼침/접기 (열린 카드끼리 높이 맞춤)
+        (function () {
+            const host = document.getElementById('themes');
+            const level = () => {
+                const boxes = [...host.querySelectorAll('.theme.will-open .theme-will > div')];
+                const h = Math.max(0, ...boxes.map(b => b.querySelector('.postit').offsetHeight + 16));
+                boxes.forEach(b => { b.style.minHeight = h + 'px'; });
+            };
+            const toggle = t => {
+                const card = t.closest('.theme'), open = card.classList.toggle('will-open');
+                if (!open) card.querySelector('.theme-will > div').style.minHeight = '';
+            };
+            host.addEventListener('transitionend', e => { if (e.propertyName === 'grid-template-rows' && e.target.classList.contains('theme-will') && e.target.closest('.theme').classList.contains('will-open')) level(); });
+            window.addEventListener('resize', level);
+            host.addEventListener('click', e => { const t = e.target.closest('.theme.retired .tomb'); if (t) toggle(t); });
+            host.addEventListener('keydown', e => { const t = e.target.closest('.theme.retired .tomb'); if (t && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); toggle(t); } });
+        })();
+
         function renderThemes(from, to) {
             const inR = r => r.d >= from && r.d <= to;
             const TS = Object.fromEntries(THEMES.map(T => [T.id, sum(pick(r => inR(r) && r.t === T.id))]));
@@ -3161,11 +3191,13 @@
                 const s = TS[T.id], ds = [...new Set(pick(r => inR(r) && r.t === T.id && r.imp >= MIN_IMP).map(r => r.d))].sort();
                 const period = !ds.length ? '데이터 없음' : from === to ? `데이터: <b>${md(from)}</b>` : `데이터: <b>${md(ds[0])} ~ ${md(ds[ds.length - 1])}</b>`;
                 const view = T.view ? `<a class="theme-view" href="${T.view}" target="_blank" rel="noopener" title="${T.name} 전체 사이즈 미리보기 (새 탭)">프레임 미리보기<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></a>` : '';
-                return `<article class="card theme">
-                    ${T.view ? `<a class="theme-art" href="${T.view}" target="_blank" rel="noopener" aria-label="${T.name} 미리보기 (새 탭)">${frameArt(T.id)}</a>` : `<div class="theme-art">${frameArt(T.id)}</div>`}
+                const ctrRank = s.ctr > 0 ? 1 + THEMES.filter(X => TS[X.id].ctr > s.ctr).length : 0;
+                return `<article class="card theme${T.retired ? ' retired' : ''}">
+                    ${T.retired ? `<div class="theme-art tomb-art">${tombArt(T, s, ds, ctrRank)}</div>` : T.view ? `<a class="theme-art" href="${T.view}" target="_blank" rel="noopener" aria-label="${T.name} 미리보기 (새 탭)">${frameArt(T.id)}</a>` : `<div class="theme-art">${frameArt(T.id)}</div>`}
                     <div class="theme-body">
-                        <div class="theme-name"><span class="dot" style="${sw(T)}"></span>${T.ab ? `<span class="ab-chip ${T.ab}">${AB_LABEL[T.ab]}</span>` : ''}${T.kind ? `<span class="kind-chip">${T.kind}</span>` : ''}${T.name}${view}</div>
+                        <div class="theme-name"><span class="dot" style="${sw(T)}"></span>${T.retired ? `<span class="tag-chip rip">테스트 종료 · ${md(T.retired)}</span>` : T.ab ? `<span class="ab-chip ${T.ab}">${AB_LABEL[T.ab]}</span>` : ''}${T.kind ? `<span class="kind-chip">${T.kind}</span>` : ''}${T.name}${view}</div>
                         <div class="theme-period">${period}</div>
+                        ${T.retired && T.will ? `<div class="theme-will"><div><div class="postit"><small>${josa(T.name.replace(' 프레임', ''))} 남김 · ${md(T.retired)}</small>${T.will}</div></div></div>` : ''}
                         <dl class="theme-stats">
                             <dt>노출수 ${themeRank(T.id, 'imp')}</dt><dd>${s.imp ? f(s.imp) : '−'}</dd>
                             <dt>클릭수 ${themeRank(T.id, 'clk')}</dt><dd>${s.imp ? f(s.clk) : '−'}</dd>

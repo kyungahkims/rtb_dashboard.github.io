@@ -1,0 +1,353 @@
+/* 종료된 프레임 카드: 묘비 + 유령 + 포스트잇 유언장. 상품 고정 페이지(css/frame_test_history_page.css)와 같은 규칙을 비상품·오토 페이지가 공유 (2026-11-05) */
+/* 칩 (테스트 종료 · 날짜) */
+.tag-chip {
+	display: inline-block;
+	margin-right: 6px;
+	padding: 1px 8px;
+	border-radius: 999px;
+	background: #3446b8;
+	color: #fff;
+	font-size: 10.5px;
+	font-weight: 800;
+	letter-spacing: .2px;
+	line-height: 1.5
+}
+
+.tag-chip.before {
+	background: #e6e8ec;
+	color: #5b6270
+}
+
+.tag-chip.rip {
+	background: #6b7078;
+	color: #fff
+}
+
+/* 종료된 프레임: 비석을 누르면 포스트잇 유언장 (THEMES.will) */
+.theme-will {
+	display: grid;
+	grid-template-rows: 0fr;
+	transition: grid-template-rows .45s ease;
+	/* 접혀 있을 때 theme-body의 gap(10px)만큼 빈 줄이 생기지 않게 상쇄. 펼치면 안쪽 padding이 그 간격을 대신함 */
+	margin-top: -10px
+}
+
+.theme-will > div {
+	overflow: hidden;
+	padding-top: 10px
+}
+
+.theme.will-open .theme-will {
+	grid-template-rows: 1fr
+}
+
+.postit {
+	position: relative;
+	width: min(236px, 100%);
+	margin: 10px auto 6px;
+	background: #fff3a3;
+	color: #3b352a;
+	padding: 20px 14px 14px;
+	font-family: "Gaegu", "Pretendard", sans-serif;
+	font-size: 17px;
+	font-weight: 700;
+	line-height: 1.3;
+	transform: rotate(-1.5deg);
+	box-shadow: 2px 4px 10px rgba(0, 0, 0, .18)
+}
+
+.postit::before {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: -8px;
+	width: 70px;
+	height: 18px;
+	margin-left: -35px;
+	background: rgba(255, 255, 255, .55);
+	border: 1px solid rgba(0, 0, 0, .06);
+	transform: rotate(2deg)
+}
+
+.postit small {
+	display: block;
+	font-family: "Pretendard", sans-serif;
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: .1em;
+	color: #8a7a2a;
+	margin-bottom: 2px
+}
+
+.postit u {
+	text-decoration-color: #c0362c;
+	text-decoration-thickness: 2px;
+	text-underline-offset: 2px
+}
+
+.postit .x {
+	color: #c0362c
+}
+
+.theme.retired .tomb {
+	cursor: pointer
+}
+
+.theme.retired .tomb:hover .tomb-svg {
+	filter: brightness(1.06)
+}
+
+.theme.retired .tomb:focus-visible {
+	outline: 2px solid #3446b8;
+	outline-offset: 4px;
+	border-radius: 60px 60px 6px 6px
+}
+
+/* 클릭 유도: 비석 테두리가 숨 쉬듯 빛나고, 머리 위 말풍선 "마지막 인사 보기". 유언장이 열리면 둘 다 멈춤 */
+.theme.retired .tomb .tomb-svg {
+	animation: tomb-breathe 2.4s ease-in-out infinite
+}
+
+.theme.will-open .tomb .tomb-svg {
+	animation: none
+}
+
+@keyframes tomb-breathe {
+	0%, 100% { filter: drop-shadow(0 0 2px rgba(255, 209, 102, .4)) }
+	50% { filter: drop-shadow(0 0 14px rgba(255, 209, 102, 1)) drop-shadow(0 0 4px rgba(255, 209, 102, 1)) }
+}
+
+.tomb-say {
+	position: absolute;
+	left: 50%;
+	top: -8px;
+	transform: translateX(-50%);
+	background: #fff;
+	color: #2b2d31;
+	border: 2px solid #2b2d31;
+	border-radius: 10px;
+	padding: 4px 10px;
+	font-size: 12px;
+	font-weight: 700;
+	white-space: nowrap;
+	z-index: 4;
+	pointer-events: none;
+	animation: tomb-say-bob 1.4s ease-in-out infinite;
+	transition: opacity .2s
+}
+
+/* 말풍선 꼬리: 검은 테두리 삼각형 위에 흰 삼각형을 겹쳐 속을 흰색으로 */
+.tomb-say::before,
+.tomb-say::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	border: 7px solid transparent;
+	border-bottom: 0
+}
+
+.tomb-say::before {
+	bottom: -9px;
+	margin-left: -7px;
+	border-top: 9px solid #2b2d31
+}
+
+.tomb-say::after {
+	bottom: -6px;
+	margin-left: -7px;
+	border-top: 9px solid #fff
+}
+
+@keyframes tomb-say-bob {
+	0%, 100% { transform: translate(-50%, 0) }
+	50% { transform: translate(-50%, -5px) }
+}
+
+.theme.will-open .tomb-say {
+	opacity: 0
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.theme.retired .tomb .tomb-svg, .tomb-say { animation: none }
+}
+
+/* 종료된 프레임: 배너 자리에 묘비 + 떠오르는 유령 */
+.theme.retired .theme-body {
+	filter: grayscale(.4)
+}
+
+/* 다른 카드의 배너칸(.ad: 최대 280px 정사각)과 높이가 같도록, 보이지 않는 정사각 칸(::before)을 깔고 그 위에 비석을 바닥 맞춤으로 올림.
+   잔디선은 비석 아래쪽(바닥에서 102px)에 고정 */
+.theme-art.tomb-art {
+	background: linear-gradient(#cfd6e2 0 calc(100% - 102px), #a3a654 0);
+	display: grid;
+	place-items: end center
+}
+
+.theme-art.tomb-art::before {
+	content: "";
+	grid-area: 1 / 1;
+	width: 100%;
+	max-width: 280px;
+	aspect-ratio: 1
+}
+
+.tomb {
+	grid-area: 1 / 1;
+	align-self: end;
+	position: relative;
+	width: 190px;
+	height: 218px;
+	display: grid;
+	place-items: center
+}
+
+.tomb .tomb-svg {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%
+}
+
+.tomb .ep {
+	position: relative;
+	text-align: center;
+	color: #3b3f46;
+	line-height: 1.2;
+	padding-top: 18px
+}
+
+.tomb .ep small {
+	display: block;
+	font-size: 10px;
+	letter-spacing: .12em;
+	color: #6b7078;
+	font-weight: 700
+}
+
+.tomb .ep b {
+	display: block;
+	font-size: 22px;
+	margin: 2px 0 4px
+}
+
+.tomb .ep i {
+	display: block;
+	font-style: normal;
+	font-size: 11.5px;
+	color: #5b6270;
+	font-variant-numeric: tabular-nums
+}
+
+.tomb .ep q {
+	display: block;
+	font-size: 13px;
+	font-weight: 700;
+	margin-top: 8px;
+	quotes: none
+}
+
+.tomb .ghost {
+	position: absolute;
+	left: 74%;
+	bottom: 22%;
+	width: 52px;
+	height: 62px;
+	margin-left: -26px;
+	/* 비문이 가려지지 않게 비석 오른쪽에서 떠오름 */
+	z-index: 2;
+	filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .25));
+	animation: ghost-rise 5.5s ease-in-out infinite
+}
+
+.tomb .ghost svg {
+	width: 100%;
+	height: 100%
+}
+
+@keyframes ghost-rise {
+	0% { transform: translateY(0) rotate(-3deg); opacity: 0 }
+	10% { opacity: 1 }
+	60% { transform: translateY(-80px) rotate(3deg); opacity: 1 }
+	88% { opacity: .9 }
+	100% { transform: translateY(-160px) rotate(-3deg); opacity: 0 }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.tomb .ghost { animation: none; transform: translateY(-60px); opacity: 1 }
+}
+
+/* 가을: 비석 위로 흩날리며 떨어지는 낙엽 (바닥에 깔린 낙엽은 tombArt SVG 안에 그림). 비문이 가려지지 않게 대부분 양쪽 가장자리로 떨어짐 */
+.tomb .leaves {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	z-index: 1
+}
+
+.tomb .leaves i {
+	position: absolute;
+	top: -26px;
+	width: 13px;
+	height: 13px;
+	border-radius: 0 100% 0 100%;
+	background: #e07b2a;
+	opacity: 0;
+	animation: leaf-fall 7.5s linear infinite
+}
+
+.tomb .leaves i::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 110%;
+	height: 1px;
+	background: rgba(0, 0, 0, .25);
+	transform: translate(-50%, -50%) rotate(45deg)
+}
+
+.tomb .leaves i:nth-child(1) { left: 6%; background: #d9622a; animation-delay: 0s; animation-duration: 9s }
+.tomb .leaves i:nth-child(2) { left: 50%; background: #c9752e; width: 10px; height: 10px; animation-delay: -6s; animation-duration: 11s }
+.tomb .leaves i:nth-child(3) { left: 90%; background: #e9a53b; width: 12px; height: 12px; animation-delay: -3.5s; animation-duration: 10s }
+
+@keyframes leaf-fall {
+	0% { transform: translate(0, 0) rotate(0deg); opacity: 0 }
+	6% { opacity: 1 }
+	30% { transform: translate(-14px, 70px) rotate(140deg) }
+	60% { transform: translate(10px, 150px) rotate(250deg) }
+	90% { opacity: 1 }
+	100% { transform: translate(-6px, 238px) rotate(400deg); opacity: 0 }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.tomb .leaves { display: none }
+}
+
+/* 비석 글씨 폭 · 접힌 유언장 여백 (상품 고정 페이지와 같은 보정) */
+/* 비석 글씨가 비석 폭(약 120px)을 넘지 않게: 긴 이름·비문은 단어 단위로 줄바꿈 */
+.tomb .ep {
+	max-width: 122px;
+	word-break: keep-all
+}
+
+.tomb .ep b {
+	font-size: 19px
+}
+
+.tomb .ep q {
+	font-size: 12px;
+	line-height: 1.3
+}
+
+/* 접힌 유언장이 안쪽 padding(10px)만큼 자리를 차지해 점선 위 여백이 20px로 벌어지던 것 수정: 펼칠 때만 padding */
+.theme-will > div {
+	padding-top: 0;
+	box-sizing: content-box;
+	/* min-height 는 스크립트가 펼침이 끝난 뒤 인라인으로 넣음 (열린 카드끼리 높이 맞춤). 펼치는 동안은 건드리지 않아 슬라이드가 그대로 */
+	transition: padding-top .45s ease, min-height .45s ease
+}
+
+.theme.will-open .theme-will > div {
+	padding-top: 10px
+}

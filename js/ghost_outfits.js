@@ -33,4 +33,14 @@ const GHOST_OUTFIT = {
     // 매거진: 보라색 베레모 (아직 살아 있어 비석은 없지만 종료되면 바로 입음)
     magazine: `<path d="M11 12q21-18 42 0q-21 5-42 0z" fill="#8b5cf6"/><path d="M14 12q18 4 36 0" stroke="#6d3fd1" stroke-width="2" fill="none"/><circle cx="36" cy="-2" r="2.2" fill="#6d3fd1"/>`,
 };
+// i사이즈별 고정 프레임 (비상품, 9/2 종료): 할머니 — 기존 디자인 A~D 와 같은 쪽진 머리·안경·볼터치에 초록(테마색) 뜨개 숄
+GHOST_OUTFIT.isize = GHOST_OUTFIT.design.split('#1fb5a3').join('#22c55e');
+// auto_origin 프레임 (상품 오토 기존 디자인, 10/7 종료): 할아버지 — 갈색 중절모 · 흰 눈썹 · 동그란 안경 · 흰 수염 · 초록(테마색) 나비넥타이 · 지팡이
+GHOST_OUTFIT.autoetc = `<path d="M11 17q21-9 42 0l-4-11q-17-6-34 0z" fill="#5b4636"/><path d="M7 18q25-9 50 0q-25 6-50 0z" fill="#3f2f24"/><path d="M15 9q17-4 34 0" stroke="#8b6b4a" stroke-width="2" fill="none"/>
+        <path d="M16 23q7-4 13 0M35 23q6-4 13 0" stroke="#e5e7eb" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="23" cy="30" r="6" fill="none" stroke="#6b7280" stroke-width="1.8"/><circle cx="41" cy="30" r="6" fill="none" stroke="#6b7280" stroke-width="1.8"/><path d="M29 30h6M17 29l-5 3M47 29l5 3" stroke="#6b7280" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M19 44q13 20 26 0q-2 12-13 14q-11-2-13-14z" fill="#e5e7eb" stroke="#cfd4dc" stroke-width="1"/><path d="M26 44q6 5 12 0" stroke="#2b2d31" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M23 60l9 3 9-3v8l-9-3-9 3z" fill="#22c55e"/><circle cx="32" cy="64" r="2" fill="#15803d"/>
+        <path d="M56 42v27" stroke="#8b5e3c" stroke-width="3.5" stroke-linecap="round"/><path d="M56 42q0-8-8-6" stroke="#8b5e3c" stroke-width="3.5" fill="none" stroke-linecap="round"/>`;
+GHOST_OUTFIT.coupangetc = GHOST_OUTFIT.autoetc;
 const ghostOutfit = id => GHOST_OUTFIT[id] || '';

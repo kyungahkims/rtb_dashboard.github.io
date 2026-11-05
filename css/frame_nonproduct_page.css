@@ -803,10 +803,10 @@ td.top {
 	background: #fafbfc
 }
 
-/* 이미지 배너 336x280 */
+/* 이미지 배너·빈 칸도 iframe 배너(1:1)와 같은 정사각으로 → 프레임별 성과 카드의 theme-art 높이가 모두 같음 (2026-11-05) */
 .ad.ad-slot:has(img),
 .ad.ad-slot:has(.ad-empty) {
-	aspect-ratio: 336 / 280
+	aspect-ratio: 1
 }
 
 .ad.ad-slot:has(img) {
@@ -844,4 +844,8 @@ tbody tr:hover td {
 
 tbody tr:hover td.top {
 	background: color-mix(in srgb, var(--r, var(--c)) 24%, #fff)
+}
+/* 정사각 칸 안에서 이미지는 비율 유지 (잘리지 않게) */
+.ad.ad-slot img {
+	object-fit: contain
 }
