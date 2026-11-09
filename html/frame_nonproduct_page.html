@@ -150,7 +150,7 @@
         const cv = T => `--c:${T.color}${T.ring ? `;--r:${T.ring}` : ''}`;
         // iauto: 비상품 오토 (블랙골드 디자인, auto_i + auto_i_blackGold 합산), iautoflip·iautoglow: 11/04 투입 새 디자인, isize: 사이즈별 고정 12개
         const THEMES = [
-            { id: 'iauto', name: 'iauto 프레임', ab: 'after', ch: '구글', code: 'iauto', desc: '비상품 auto (블랙골드 디자인) · 09-02 투입', color: '#3446b8', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/nonItem/ui/openRtbBanner_blackGold_non_Item_auto_ui.html', view: 'https://kyungahkims.github.io/openRtb_banners.github.io/total_banners_view.html' },
+            { id: 'iauto', name: 'iauto 프레임', ab: 'after', ch: '구글', code: 'iauto', desc: '비상품 auto (블랙골드 디자인) · 09-02 투입', color: '#3446b8', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/nonItem/ui/openRtbBanner_blackGold_non_Item_auto_ui.html', bw: 300, bh: 250, view: 'https://kyungahkims.github.io/openRtb_banners.github.io/total_banners_view.html' },
             { id: 'iautoflip', name: 'iauto 플립 프레임', ab: 'after', ch: '구글', code: 'auto_i_flip', desc: '비상품 auto 플립 디자인 · 11-04 투입', color: '#f59e0b', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/nonItem/ui/openRtbBanner_nonitem_flip_ui.html', view: 'https://kyungahkims.github.io/openRtb_banners.github.io/nonItem_banners_view.html' },
             { id: 'iautoglow', name: 'iauto 글로우 프레임', ab: 'after', ch: '구글', code: 'auto_i_glow', desc: '비상품 auto 글로우 디자인 · 11-04 투입', color: '#14b8a6', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/nonItem/ui/openRtbBanner_nonitem_glow_ui.html', view: 'https://kyungahkims.github.io/openRtb_banners.github.io/nonItem_banners_view.html' },
             { id: 'isize', name: 'i사이즈별 고정 프레임 (12개)', ab: 'before', ch: '구글', code: 'i{가로}_{세로}', desc: 'i사이즈별 고정 프레임 (12개)', color: '#22c55e', src: '',
@@ -6697,15 +6697,16 @@
         const nm = (T, short = false) => `<span class="fname" data-frame-tip="${T.id}">${short ? T.name.replace(' 프레임', '') : T.name}</span>`;
         function frameArt(id, o = {}) {
             const T = theme(id), src = o.src || T.src || '';
-            const attr = T.tpl ? `data-tpl="${src}"` : `src="${src}"`;
+            const attr = (T.tpl ? `data-tpl="${src}"` : `src="${src}"`) + (T.bw ? ` data-bw="${T.bw}" data-bh="${T.bh || T.bw}" style="width:${T.bw}px;height:${T.bh || T.bw}px"` : '');
             return `<div class="ad ad-slot" data-frame="${id}">${T.img ? `<img src="${T.img}" alt="${T.name}" loading="lazy">` : src ? `<iframe ${attr} title="${T.name}" loading="lazy" scrolling="no"></iframe>` : `<div class="ad-empty">${T.desc}</div>`}</div>`;
         }
 
         // 배너 iframe 을 칸 폭에 맞게 축소
         const BANNER_PX = 250;
         const fitBannerSlots = () => document.querySelectorAll('.ad.ad-slot iframe').forEach(f => {
-            const w = f.parentElement.clientWidth;
-            if (w) f.style.transform = `scale(${w / BANNER_PX})`;
+            const w = f.parentElement.clientWidth, h = f.parentElement.clientHeight;
+            const bw = +f.dataset.bw || BANNER_PX, bh = +f.dataset.bh || BANNER_PX, k = w / bw;   // 300x250 처럼 정사각이 아닌 배너 파일은 폭에 맞추고 세로 가운데
+            if (w) f.style.transform = `translateY(${Math.max(0, (h - bh * k) / 2)}px) scale(${k})`;
         });
         // 오토 프레임 템플릿용 목 데이터
         const TPL_MOCK = {
