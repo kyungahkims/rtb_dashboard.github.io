@@ -1,6 +1,7 @@
 /* 프레임 변경 Timeline, 프레임 AB 테스트 네 페이지가 공유
    ch: 채널, type: deploy | ratio | copy | fix, theme: 프레임 id, why: 테스트 사유·가설 (있으면 표시) */
 const TIMELINE = [
+    { d: '2026-11-10', ch: '구글', type: 'deploy', theme: 'magazineno', title: '매거진 (가격 숨김)·비비 디자인 추가 · 상품 고정 배너 3종 노출', desc: '10/27부터 매거진 하나만 나가던 구글 상품 고정 배너에 매거진의 가격 숨김 버전(magazineNo)과 비비(bb = Black Friday Blind, 블랙프라이데이 블라인드 · 가격 없음) 두 디자인을 추가했습니다. 11/09에 각 1건 테스트 노출 뒤 11/10부터 나갑니다. 첫날은 매거진 (가격 표시) 약 266만 노출에 두 신규 디자인이 각 약 23만 노출(전체의 약 7%)로 시작했습니다. 첫날 클릭률은 매거진 (가격 숨김) 0.031% · 매거진 (가격 표시) 0.028% · 비비 0.026%.', why: '10/27 이후 단독으로 나가던 매거진을 이길 디자인을 찾는 테스트. 매거진 (가격 숨김)은 블랙골드 때처럼 가격 표시 여부만 다른 두 버전을 같은 기간·같은 자리에서 비교하고, 비비는 블랙프라이데이 시즌용 새 디자인으로 매거진과 비교합니다.' },
     { d: '2026-11-04', ch: '구글', type: 'deploy', theme: 'magauto', title: '상품 오토 배너에 매거진오토 디자인 추가', desc: '웹·모바일과 앱의 상품 오토 배너에 매거진 디자인을 추가해 레드오토와 함께 내보냅니다. 가격 표시(auto_magazine)·가격 숨김(auto_magazineNo) 두 버전을 따로 집계합니다. 첫날 노출은 웹·모바일 가격 표시 약 6.2만 · 가격 숨김 약 6.3만(둘이 오토 배너의 약 15%), 앱 가격 표시 약 2.7만 · 가격 숨김 약 4.9만(약 5%)이었습니다.' },
     { d: '2026-11-04', ch: '구글', type: 'deploy', theme: 'iautoflip', title: '비상품 오토 배너에 플립·글로우 디자인 추가', desc: '비상품 오토 배너(iauto)에 플립·글로우 두 새 디자인을 추가해 기존 블랙골드 디자인과 나눠 내보냅니다. 첫날 기존 블랙골드 약 93만 노출(75%), 플립·글로우 각 약 15.5만 노출(각 12~13%)로 시작했습니다.' },
     { d: '2026-11-04', ch: '카카오', type: 'deploy', theme: 'iautoflip', title: '비상품 오토 배너에 플립·글로우 디자인 추가', desc: '카카오 비상품 오토 배너(iauto)에도 플립·글로우 두 새 디자인을 추가해 기존 블랙골드 디자인과 나눠 내보냅니다. 첫날 기존 블랙골드 약 116만 노출(82%), 플립·글로우 각 약 13만 노출(각 9%)으로 시작했습니다.' },
@@ -40,6 +41,8 @@ const TL_TARGET = {
     blackgoldno: { id: 'blackgoldno', name: '블랙골드 (가격 숨김) 프레임', color: '#8a8d93', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/blackGold/ui/openRtb_blackGold_250x250_ui.html' },   // 가격 표시 배너와 같은 미리보기
     whitered: { id: 'whitered', name: '화이트레드 프레임', color: '#e0262f', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/whiteRed/ui/openRtb_whiteRed_250x250_ui.html' },
     magazine: { id: 'magazine', name: '매거진 프레임', color: '#8b5cf6', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/simpleMagazine/ui/openRtb_simple_magazine_250x250_ui.html' },
+    magazineno: { id: 'magazineno', name: '매거진 (가격 숨김) 프레임', color: '#d946ef', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/magazine_noprice/ui/openRtb_magazine_noprice_250_250_ui.html' },
+    bb: { id: 'bb', name: '비비 프레임 (블랙프라이데이 블라인드)', color: '#1d4ed8', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/bb/ui/openRtb_bb_250_250_ui.html' },
     mcnal: { id: 'mcnal', name: '맥날 프레임', color: '#e09b00', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/mcnal/ui/openRtb_mcnal_250_250_ui.html' },
     jelly: { id: 'jelly', name: '젤리 프레임', color: '#d946ef', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/jelly/ui/openRtb_jelly_250x250_ui.html' },
     wjelly: { id: 'wjelly', name: '화이트 젤리 프레임', color: '#f472b6', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/wjelly/ui/openRtb_wjelly_250x250_ui.html' },
