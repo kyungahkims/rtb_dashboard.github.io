@@ -18358,7 +18358,9 @@
             const inR = r => r.d >= from && r.d <= to;
             const TS = Object.fromEntries(THEMES.map(T => [T.id, sum(pick(r => inR(r) && r.t === T.id))]));
             const themeRank = (id, k) => { const n = TS[id][k] > 0 ? 1 + THEMES.filter(T => TS[T.id][k] > TS[id][k]).length : 0; return n ? `<em class="rk-badge rk${Math.min(n, 3)}">${n}위</em>` : ''; };
-            document.getElementById('themes').innerHTML = THEMES.map(T => {
+            // 카드 순서: 살아 있는 프레임을 앞에, 종료(묘비) 프레임은 뒤에 (각 묶음 안에서는 THEMES 순서 유지)
+            const CARD_ORDER = [...THEMES].sort((a, b) => (a.retired ? 1 : 0) - (b.retired ? 1 : 0));
+            document.getElementById('themes').innerHTML = CARD_ORDER.map(T => {
                 const s = TS[T.id], ds = [...new Set(pick(r => inR(r) && r.t === T.id).map(r => r.d))].sort();
                 const period = !ds.length ? '데이터 없음' : from === to ? `데이터: <b>${md(from)}</b>` : `데이터: <b>${md(ds[0])} ~ ${md(ds[ds.length - 1])}</b>`;
                 const view = T.view ? `<a class="theme-view" href="${T.view}" target="_blank" rel="noopener" title="${T.name} 전체 사이즈 미리보기 (새 탭)">프레임 미리보기<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></a>` : '';
