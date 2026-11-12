@@ -46,4 +46,12 @@ GHOST_OUTFIT.autoetc = `<path d="M11 17q21-9 42 0l-4-11q-17-6-34 0z" fill="#5b46
         <path d="M23 60l9 3 9-3v8l-9-3-9 3z" fill="#22c55e"/><circle cx="32" cy="64" r="2" fill="#15803d"/>
         <path d="M56 42v27" stroke="#8b5e3c" stroke-width="3.5" stroke-linecap="round"/><path d="M56 42q0-8-8-6" stroke="#8b5e3c" stroke-width="3.5" fill="none" stroke-linecap="round"/>`;
 GHOST_OUTFIT.coupangetc = GHOST_OUTFIT.autoetc;
+// iauto 플립 (비상품, 11/11 종료): 머리 위에서 뒤집히는 주황 카드 + 회전 화살표 · 주황 나비넥타이
+GHOST_OUTFIT.iautoflip = `<g transform="rotate(-14 32 -4)"><rect x="18" y="-14" width="28" height="18" rx="2.5" fill="#f59e0b"/><rect x="18" y="-14" width="13" height="18" rx="2.5" fill="#fbbf24"/><path d="M31 -14v18" stroke="#b45309" stroke-width="1.2"/><path d="M35 -9h7M35 -5h5M35 -1h6" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></g>
+        <path d="M50 2a11 11 0 0 1 -4 13" stroke="#f59e0b" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M44 16l5-1-2-4z" fill="#f59e0b"/>
+        <path d="M25 52l7 3 7-3v9l-7-3-7 3z" fill="#f59e0b"/><circle cx="32" cy="56.5" r="2" fill="#b45309"/>`;
+// iauto 글로우 (비상품, 11/11 종료): 머리 위 네온 고리(후광) + 반짝이 · 은은하게 빛나는 청록 목도리
+GHOST_OUTFIT.iautoglow = `<ellipse cx="32" cy="-5" rx="17" ry="5.5" fill="none" stroke="#14b8a6" stroke-width="3.5" opacity=".55"/><ellipse cx="32" cy="-5" rx="17" ry="5.5" fill="none" stroke="#99f6e4" stroke-width="1.4"/>
+        <path d="M9 18l1.4 3 3 1.4-3 1.4L9 27l-1.4-3.2-3-1.4 3-1.4zM55 12l1.1 2.4 2.4 1.1-2.4 1.1L55 19l-1.1-2.4-2.4-1.1 2.4-1.1z" fill="#5eead4"/>
+        <path d="M13 50q19 11 38 0" stroke="#14b8a6" stroke-width="8" fill="none" stroke-linecap="round" opacity=".35"/><path d="M13 50q19 11 38 0" stroke="#14b8a6" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M13 50q19 11 38 0" stroke="#ccfbf1" stroke-width="1.4" fill="none" stroke-dasharray="3 4"/>`;
 const ghostOutfit = id => GHOST_OUTFIT[id] || '';
