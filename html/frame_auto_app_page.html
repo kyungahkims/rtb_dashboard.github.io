@@ -4121,6 +4121,8 @@
             host.addEventListener('keydown', e => { const t = e.target.closest('.theme.retired .tomb'); if (t && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); toggle(t); } });
         })();
 
+        // 선택한 기간 클릭률 1위 카드에 붙는 왕관 배지 (css/tomb.css .champ-badge, 상품 고정 페이지와 같은 장치)
+        const CHAMP_BADGE = `<div class="champ-badge" title="선택한 기간 클릭률 1위"><svg class="crown" viewBox="0 0 48 40" aria-hidden="true"><path d="M4 32L2 10l12 9 10-15 10 15 12-9-2 22z" fill="#ffc83d" stroke="#d99a00" stroke-width="2" stroke-linejoin="round"/><rect x="4" y="32" width="40" height="6" rx="2" fill="#f5b301" stroke="#d99a00" stroke-width="2"/><circle cx="24" cy="4" r="3" fill="#ff5d73"/><circle cx="2.5" cy="9" r="2.5" fill="#4cc3ff"/><circle cx="45.5" cy="9" r="2.5" fill="#4cc3ff"/><circle cx="14" cy="27" r="2.2" fill="#ff5d73"/><circle cx="24" cy="26" r="2.2" fill="#4cc3ff"/><circle cx="34" cy="27" r="2.2" fill="#ff5d73"/></svg><span class="champ-ribbon">클릭률 1위<small>CHAMPION</small></span><span class="confetti" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span></div>`;
         function renderThemes(from, to) {
             const inR = r => r.d >= from && r.d <= to;
             const TS = Object.fromEntries(THEMES.map(T => [T.id, sum(pick(r => inR(r) && r.t === T.id))]));
@@ -4132,7 +4134,8 @@
                 const period = !ds.length ? '데이터 없음' : from === to ? `데이터: <b>${md(from)}</b>` : `데이터: <b>${md(ds[0])} ~ ${md(ds[ds.length - 1])}</b>`;
                 const view = T.view ? `<a class="theme-view" href="${T.view}" target="_blank" rel="noopener" title="${T.name} 전체 사이즈 미리보기 (새 탭)">프레임 미리보기<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></a>` : '';
                 const ctrRank = s.ctr > 0 ? 1 + THEMES.filter(X => TS[X.id].ctr > s.ctr).length : 0;
-                return `<article class="card theme${T.retired ? ' retired' : ''}">
+                return `<article class="card theme${T.retired ? ' retired' : ''}${ctrRank === 1 ? ' champ' : ''}">
+                    ${ctrRank === 1 ? CHAMP_BADGE : ''}
                     ${T.retired ? `<div class="theme-art tomb-art">${tombArt(T, s, ds, ctrRank)}</div>` : T.view ? `<a class="theme-art" href="${T.view}" target="_blank" rel="noopener" aria-label="${T.name} 미리보기 (새 탭)">${frameArt(T.id)}</a>` : `<div class="theme-art">${frameArt(T.id)}</div>`}
                     <div class="theme-body">
                         <div class="theme-name"><span class="dot" style="${sw(T)}"></span>${T.retired ? `<span class="tag-chip rip">테스트 종료 · ${md(T.retired)}</span>` : T.ab ? `<span class="ab-chip ${T.ab}">${AB_LABEL[T.ab]}</span>` : ''}${T.kind ? `<span class="kind-chip">${T.kind}</span>` : ''}${T.name}${view}</div>
