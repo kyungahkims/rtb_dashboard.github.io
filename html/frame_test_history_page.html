@@ -21706,7 +21706,7 @@ ${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>
             if (onlyAll) rows = rows.filter(r => r.n === FR.length);
             if (q) { const qq = q.toLowerCase(); rows = rows.filter(r => r.p.toLowerCase().includes(qq) || r.site.toLowerCase().includes(qq) || sizeLabel(r.s).includes(qq) || r.s.includes(qq)); }
             rows.sort((a, b) => b.all.imp - a.all.imp);
-            const argmax = list => { let w = -1; list.forEach((o, i) => { if (o.imp && o[mk] > 0 && (w < 0 || o[mk] > list[w][mk])) w = i; }); return w; };
+            const argmax = list => { let w = -1; list.forEach((o, i) => { if (o.imp && o[mk] > 0 && m.fmt(o[mk]) !== m.fmt(0) && (w < 0 || o[mk] > list[w][mk])) w = i; }); return w; };   // 표시값이 0(0.000%)이면 1위 없음
             rows.forEach(r => r.win = argmax(r.v));
             const tot = FR.map((T, i) => { const o = { imp: 0, clk: 0 }; rows.forEach(r => { o.imp += r.v[i].imp; o.clk += r.v[i].clk; }); o.ctr = o.imp ? o.clk / o.imp * 100 : 0; return o; });
             const totAll = { imp: tot.reduce((a, o) => a + o.imp, 0), clk: tot.reduce((a, o) => a + o.clk, 0) }; totAll.ctr = totAll.imp ? totAll.clk / totAll.imp * 100 : 0;
