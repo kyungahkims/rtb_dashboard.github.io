@@ -11466,7 +11466,7 @@
                     <div class="yd-card-head"><h3>${m.label}</h3><span class="yd-note">${esc(note(m.k))}</span></div>
                     <div class="yd-chart" data-k="${m.k}"><svg></svg><div class="tip" hidden></div></div>
                     <div class="yd-labels" style="grid-template-columns:repeat(${TH.length},1fr)">${TH.map(T => {
-                        const c = change(T, m.k), win = Ys[T.id][m.k] > 0 && Ys[T.id][m.k] === best[m.k];
+                        const c = change(T, m.k), win = Ys[T.id][m.k] > 0 && m.fmt(Ys[T.id][m.k]) !== m.fmt(0) && Ys[T.id][m.k] === best[m.k];
                         return `<div><div class="yd-name">${nm(T, true)}${win ? '<em class="rk-badge rk1">1위</em>' : ''}</div><span class="yd-chg ${c.cls}">${c.txt}</span></div>`;
                     }).join('')}</div>
                 </div>`).join('')}</div>`;
@@ -11634,7 +11634,7 @@
             // 병행인 날 클릭률 1위 칸 강조
             const winGroup = (o, T, list, d) => M3.map(m => {
                 const on = list.filter(x => x.imp >= MINV);
-                const win = m.k === 'ctr' && on.length >= 2 && o.imp >= MINV && o[m.k] > 0 && o[m.k] === Math.max(...on.map(x => x[m.k]));
+                const win = m.k === 'ctr' && on.length >= 2 && o.imp >= MINV && o[m.k] > 0 && m.fmt(o[m.k]) !== m.fmt(0) && o[m.k] === Math.max(...on.map(x => x[m.k]));
                 return win ? numTd(o[m.k], m.fmt, 'sep top', T, `${md(d)} · ${m.label} 1위
 ${T.name} ${m.fmt(o[m.k])}`) : cell(o, m.k, m);
             }).join('');
@@ -11672,7 +11672,7 @@ ${T.name} ${m.fmt(o[m.k])}`) : cell(o, m.k, m);
             const inR = r => r.d >= from && r.d <= to;
             const m = M3.find(x => x.k === mk);
             const FR = THEMES;
-            const argmax = list => { let w = -1; list.forEach((o, i) => { if (o.imp && o[mk] > 0 && (w < 0 || o[mk] > list[w][mk])) w = i; }); return w; };   // 값이 0이면 1위 없음
+            const argmax = list => { let w = -1; list.forEach((o, i) => { if (o.imp && o[mk] > 0 && m.fmt(o[mk]) !== m.fmt(0) && (w < 0 || o[mk] > list[w][mk])) w = i; }); return w; };   // 값이 0이거나 표시값이 0(0.000%)이면 1위 없음
             const whole = wholeRange(from, to, DATES) && SROWS.length;   // 월 전체는 SDATA, 일별은 DROWS
             const src = whole ? (fn => SROWS.filter(fn)) : (fn => dpick(r => inR(r) && fn(r)));
             const rows = SIZES.map(S => ({ S, v: FR.map(T => sum(src(r => r.t === T.id && r.s === S.name))) }));
@@ -11785,7 +11785,7 @@ ${FR[i].name} ${m.fmt(o[mk])}`)).join('')}${allTd(totAll)}</tr>
             const m = M3.find(x => x.k === mk);
             const FR = THEMES;
             const psum = fn => sum(src.filter(fn));
-            const argmax = list => { let w = -1; list.forEach((o, i) => { if (o.imp && o[mk] > 0 && (w < 0 || o[mk] > list[w][mk])) w = i; }); return w; };   // 값이 0이면 1위 없음
+            const argmax = list => { let w = -1; list.forEach((o, i) => { if (o.imp && o[mk] > 0 && m.fmt(o[mk]) !== m.fmt(0) && (w < 0 || o[mk] > list[w][mk])) w = i; }); return w; };   // 값이 0이거나 표시값이 0(0.000%)이면 1위 없음
             // 노출 상위 PLACE_N개 지면
             const places = [...new Set(src.filter(r => inR(r) && r.p !== ETC_PLACE).map(r => r.p))]
                 .map(p => ({ p, all: psum(r => inR(r) && r.p === p) }))
