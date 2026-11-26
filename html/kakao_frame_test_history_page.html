@@ -223,6 +223,9 @@
             { id: 'story', name: '스토리 프레임', tag: 'After · 신규', color: '#0ea5e9', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/story/ui/openRtb_story_250_250_ui.html', view: 'https://kyungahkims.github.io/openRtb_banners.github.io/story_banners_view.html',
               retired: '2026-10-29', epitaph: '이야기는 짧고 매거진은 길다',
               will: '10/21 데뷔, 10/29 은퇴. 8일짜리 <u>단편 소설</u>이 바로 나야.<br>매거진이랑 똑같은 비중으로 나갔는데 셋 중 꼴찌...<br>프레임에 이야기를 담기엔 내가 너무 수다스러웠나 봐.<br>그래도 막내로 태어나 최후의 3인까지 남았다구! 그건 자랑.<br><span class="x">스토리 끝, 책 덮을게!</span> 매거진, 뒷이야기는 네가 이어 줘~' },   // 10/21 투입
+            // 11/25 투입. xlsx 지면 시트(A_지면일별)에서는 둘 다 '기타'로 묶여 와서 지면별 표에는 따로 안 나옴, 사이즈별은 2_사이즈테마_일별 키 열로 구분
+            { id: 'tetris', name: '테트리스 프레임', tag: 'After · 신규', color: '#f97316', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/tetris/ui/openRtb_tetris_250x250_ui.html', view: 'https://kyungahkims.github.io/openRtb_banners.github.io/tetris_accordion_banners_view.html#section-tetris' },
+            { id: 'accordion', name: '아코디언 프레임', tag: 'After · 신규', color: '#2563eb', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/accordion/ui/openRtb_accordion_250x250_ui.html', view: 'https://kyungahkims.github.io/openRtb_banners.github.io/tetris_accordion_banners_view.html#section-accordion' },
             // 카카오 디자인 A~D 를 하나로 합친 것 (SEL_ 할인 프레임 포함)
             { id: 'design', name: '기존 디자인 A~D 프레임', short: '기존 A~D', tag: 'Before · 기존', ab: 'before', color: '#1fb5a3', src: '', view: '',
               desc: '(카운트다운 배너, 상품 수 많은 배너, 가격 표시 없는 깔끔한 배너)',
@@ -444,8 +447,10 @@
             ["2026-11-23", "magazine", "", "", 1111130, 1838],
             ["2026-11-24", "design", "", "", 3, 0],
             ["2026-11-24", "magazine", "", "", 1098082, 2006],
+            ["2026-11-25", "accordion", "", "", 95541, 122],
             ["2026-11-25", "design", "", "", 6, 0],
             ["2026-11-25", "magazine", "", "", 922219, 1504],
+            ["2026-11-25", "tetris", "", "", 95366, 138],
         ];
         /* DATA:END */
 
@@ -10860,6 +10865,9 @@
         /* SDATA [테마, 사이즈, 노출수, 클릭수], NDATA [테마, 프레임 이름, 사이즈, 노출수, 클릭수] */
         /* SDATA:START */
         const SDATA = [
+            ["accordion", "250x250", 201, 0],
+            ["accordion", "300x250", 62876, 93],
+            ["accordion", "728x90", 32464, 29],
             ["blackgold", "250x250", 6338, 26],
             ["blackgold", "300x250", 1875981, 4002],
             ["blackgold", "728x90", 554997, 184],
@@ -10881,6 +10889,9 @@
             ["story", "250x250", 16548, 25],
             ["story", "300x250", 5422545, 8774],
             ["story", "728x90", 1214262, 694],
+            ["tetris", "250x250", 226, 0],
+            ["tetris", "300x250", 63136, 103],
+            ["tetris", "728x90", 32004, 35],
             ["whitered", "250x250", 31885, 69],
             ["whitered", "300x250", 7636513, 13953],
             ["whitered", "728x90", 2267063, 1596],
@@ -10891,6 +10902,9 @@
         /* SDATA:END */
         /* NDATA:START */
         const NDATA = [
+            ["accordion", "250_250_accordion", "250x250", 201, 0],
+            ["accordion", "300_250_accordion", "300x250", 62876, 93],
+            ["accordion", "728_90_accordion", "728x90", 32464, 29],
             ["blackgold", "250_250_blackGold", "250x250", 6338, 26],
             ["blackgold", "300_250_blackGold", "300x250", 1875981, 4002],
             ["blackgold", "728_90_blackGold", "728x90", 554997, 184],
@@ -10919,6 +10933,9 @@
             ["story", "250_250_story", "250x250", 16548, 25],
             ["story", "300_250_story", "300x250", 5422545, 8774],
             ["story", "728_90_story", "728x90", 1214262, 694],
+            ["tetris", "250_250_tetris", "250x250", 226, 0],
+            ["tetris", "300_250_tetris", "300x250", 63136, 103],
+            ["tetris", "728_90_tetris", "728x90", 32004, 35],
             ["whitered", "250_250_whiteRed", "250x250", 1268, 5],
             ["whitered", "250_250_whiteRedNo", "250x250", 30617, 64],
             ["whitered", "300_250_whiteRed", "300x250", 351424, 494],
@@ -11741,11 +11758,17 @@
             ["2026-11-24", "magazine", "250_250_magazine", "250x250", 2737, 10],
             ["2026-11-24", "magazine", "300_250_magazine", "300x250", 745209, 1625],
             ["2026-11-24", "magazine", "728_90_magazine", "728x90", 350136, 371],
+            ["2026-11-25", "accordion", "250_250_accordion", "250x250", 201, 0],
+            ["2026-11-25", "accordion", "300_250_accordion", "300x250", 62876, 93],
+            ["2026-11-25", "accordion", "728_90_accordion", "728x90", 32464, 29],
             ["2026-11-25", "design", "300_250_B", "300x250", 5, 0],
             ["2026-11-25", "design", "300_250_D", "300x250", 1, 0],
             ["2026-11-25", "magazine", "250_250_magazine", "250x250", 2681, 4],
             ["2026-11-25", "magazine", "300_250_magazine", "300x250", 595677, 1243],
             ["2026-11-25", "magazine", "728_90_magazine", "728x90", 323861, 257],
+            ["2026-11-25", "tetris", "250_250_tetris", "250x250", 226, 0],
+            ["2026-11-25", "tetris", "300_250_tetris", "300x250", 63136, 103],
+            ["2026-11-25", "tetris", "728_90_tetris", "728x90", 32004, 35],
         ];
         /* DDATA:END */
 
@@ -12376,6 +12399,7 @@ ${FR[i].name} ${m.fmt(o[mk])}`)).join('')}</tr>
             { id: 'jelly', name: '젤리', color: '#d946ef' },
             { id: 'wjelly', name: '화이트 젤리', color: '#f472b6' },
             { id: 'story', name: '스토리', color: '#0ea5e9' },
+            { id: '기타', name: '테트리스+아코디언 (xlsx 지면 시트에서 구분 안 됨)', color: '#f97316' },   // 11/25~ 지면 시트가 두 테마를 '기타'로 묶어 줌
             { id: 'design', name: '기존 디자인 A~D', color: '#1fb5a3' },
             { id: '기본', name: '기본 (이전 프레임)', color: '#9aa0a8', hide: true },   // 9/1~9/2 테마 미기록분, 표에서 제외
             { id: 'verygoodtour', name: 'verygoodtour', color: '#22c55e', hide: true },   // 표에서 제외

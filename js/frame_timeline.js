@@ -1,6 +1,7 @@
 /* 프레임 변경 Timeline, 프레임 AB 테스트 네 페이지가 공유
    ch: 채널, type: deploy | ratio | copy | fix, theme: 프레임 id, why: 테스트 사유·가설 (있으면 표시) */
 const TIMELINE = [
+    { d: '2026-11-25', ch: '카카오', type: 'deploy', theme: 'tetris', title: '테트리스·아코디언 디자인 추가 · 상품 고정 배너 3종 노출', desc: '10/29부터 매거진 하나만 나가던 카카오 상품 고정 배너에 테트리스·아코디언 두 새 디자인을 추가했습니다. 첫날 매거진 약 92만 노출, 테트리스·아코디언 각 약 9.5만 노출(각 약 9%)로 시작했습니다. 300×250 · 728×90 · 250×250 세 사이즈로 나갑니다. xlsx 지면 시트에서는 두 디자인이 \'기타\'로 묶여 와서 지면별로는 나눠 볼 수 없습니다.', why: '카카오에서 한 달 가까이 1위를 지킨 매거진을 이길 새 디자인을 찾는 테스트. 신규라 첫날은 낮은 비중으로 시작.' },
     { d: '2026-11-11', ch: '구글', type: 'ratio', theme: 'iautoflip', title: '비상품 플립·글로우 테스트 종료 · 기존 블랙골드 디자인만 노출', desc: '11/04에 투입한 비상품 오토 배너의 플립·글로우 디자인 노출을 중단했습니다. 11/10에 절반 비중(각 약 25만 노출)으로 줄였다가 11/11부터 안 나갑니다. 이날부터 비상품 오토 배너는 기존 블랙골드 디자인 하나만(11/11 약 116만 노출) 나갑니다.', why: '11/04~11/10 같은 비중으로 비교한 클릭률이 기존 블랙골드 0.025% · 글로우 0.025% · 플립 0.024%로 차이가 없어, 새 디자인을 유지할 이유가 없다고 보고 종료.' },
     { d: '2026-11-11', ch: '카카오', type: 'ratio', theme: 'iautoflip', title: '비상품 플립·글로우 테스트 종료 · 기존 블랙골드 디자인만 노출', desc: '카카오에서도 같은 날 플립·글로우 노출을 중단했습니다. 11/10에 절반 비중(각 약 35만 노출)으로 줄였다가 11/11부터 안 나갑니다. 이날부터 비상품 오토 배너는 기존 블랙골드 디자인 하나만(11/11 약 122만 노출) 나갑니다.', why: '11/04~11/10 클릭률이 기존 블랙골드 0.071% > 글로우 0.063% > 플립 0.053%로 기존 디자인이 가장 높아 종료. 구글은 셋이 같았고 카카오는 기존이 앞서, 두 매체 모두 새 디자인의 이점이 없었음.' },
     { d: '2026-11-10', ch: '구글', type: 'deploy', theme: 'magazineno', title: '매거진 (가격 숨김)·비비 디자인 추가 · 상품 고정 배너 3종 노출', desc: '10/27부터 매거진 하나만 나가던 구글 상품 고정 배너에 매거진의 가격 숨김 버전(magazineNo)과 비비(bb = Black Friday Blind, 블랙프라이데이 블라인드 · 가격 없음) 두 디자인을 추가했습니다. 11/09에 각 1건 테스트 노출 뒤 11/10부터 나갑니다. 첫날은 매거진 (가격 표시) 약 266만 노출에 두 신규 디자인이 각 약 23만 노출(전체의 약 7%)로 시작했습니다. 첫날 클릭률은 매거진 (가격 숨김) 0.031% · 매거진 (가격 표시) 0.028% · 비비 0.026%.', why: '10/27 이후 단독으로 나가던 매거진을 이길 디자인을 찾는 테스트. 매거진 (가격 숨김)은 블랙골드 때처럼 가격 표시 여부만 다른 두 버전을 같은 기간·같은 자리에서 비교하고, 비비는 블랙프라이데이 시즌용 새 디자인으로 매거진과 비교합니다.' },
@@ -49,6 +50,8 @@ const TL_TARGET = {
     jelly: { id: 'jelly', name: '젤리 프레임', color: '#d946ef', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/jelly/ui/openRtb_jelly_250x250_ui.html' },
     wjelly: { id: 'wjelly', name: '화이트 젤리 프레임', color: '#f472b6', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/wjelly/ui/openRtb_wjelly_250x250_ui.html' },
     story: { id: 'story', name: '스토리 프레임', color: '#0ea5e9', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/story/ui/openRtb_story_250_250_ui.html' },
+    tetris: { id: 'tetris', name: '테트리스 프레임', color: '#f97316', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/tetris/ui/openRtb_tetris_250x250_ui.html' },
+    accordion: { id: 'accordion', name: '아코디언 프레임', color: '#2563eb', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/accordion/ui/openRtb_accordion_250x250_ui.html' },
     redauto: { id: 'redauto', name: '레드오토 프레임', color: '#e0262f', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/auto/dev/openRtbAuto_red.html', tpl: true },
     magauto: { id: 'magauto', name: '매거진오토 (가격 표시) 프레임', color: '#8b5cf6', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/auto/ui/openRtbAuto_magazine_ui.html' },
     magautono: { id: 'magautono', name: '매거진오토 (가격 숨김) 프레임', color: '#d946ef', src: 'https://kyungahkims.github.io/openRtb_banners.github.io/auto/ui/openRtbAuto_magazine_noprice_ui.html' },
